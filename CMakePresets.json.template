@@ -1,0 +1,37 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "kub3-6-debug",
+      "displayName": "KUB3-6 (Debug)",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/kub6-debug",
+      "cacheVariables": {
+        "CMAKE_PREFIX_PATH": "/home/kloe/Qt/6.8.3/gcc_64",
+        "CMAKE_BUILD_TYPE": "Debug",
+        "KUB_MODEL": "6"
+      }
+    },
+    {
+      "name": "kub3-8-debug",
+      "displayName": "KUB3-8 (Debug)",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/kub8-debug",
+      "cacheVariables": {
+        "CMAKE_PREFIX_PATH": "/home/kloe/Qt/6.8.3/gcc_64",
+        "CMAKE_BUILD_TYPE": "Debug",
+        "KUB_MODEL": "8"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "kub3-6-debug",
+      "configurePreset": "kub3-6-debug"
+    },
+    {
+      "name": "kub3-8-debug",
+      "configurePreset": "kub3-8-debug"
+    }
+  ]
+}
