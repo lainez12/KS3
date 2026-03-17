@@ -102,3 +102,7 @@ CTestTestfile.cmake
 _deps
 CMakeUserPresets.json
 
+build
+CMakePresets.json
+.vscode
+.qtcreator
