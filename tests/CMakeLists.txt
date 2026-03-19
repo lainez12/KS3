@@ -1,5 +1,7 @@
 include(FetchContent)
 
+find_package(Qt6 REQUIRED COMPONENTS Test)
+
 # Fetch Catch2 v3
 fetchcontent_declare(
     Catch2
@@ -12,12 +14,16 @@ fetchcontent_makeavailable(Catch2)
 add_executable(unit_tests
     test_main.cpp
     test_dummy.cpp
+    test_machine_status_repo.cpp
 )
 
 target_link_libraries(unit_tests
     PRIVATE
     Kub3Core
-    Catch2::Catch2WithMain
+    Catch2::Catch2
+    Qt6::Test
 )
 
-add_test(NAME "LogicTests" COMMAND unit_tests)
+include(CTest)
+include(Catch)
+catch_discover_tests(unit_tests)

@@ -6,6 +6,9 @@
 // --- Utils & misc.
 #include "utils.h"
 #include "version.h"
+// --- Machine state repository
+#include "HAL/MachineStatus/MachineStatusRepo.h"
+#include "HAL/MachineStatus/machine_status_builder.h"
 // --- Communications
 #include "HAL/Com/LengthBasedParser.h"
 #include "HAL/Com/SerialCommunicator.h"
@@ -15,6 +18,8 @@
 
 // Private includes
 #include "Logger.h"
+
+using namespace Kub3;
 
 QtMessageHandler originalHandler = nullptr;
 
@@ -50,14 +55,18 @@ int main(int argc, char *argv[])
     qInfo() << "--- Log file path:" << Logger::file_location();
     qInfo() << "----";
 
+    // Initialize machine state (sensors)
+    HAL::MS::MachineStatusRepo statusRepo;
+    HAL::MS::build_machine_status(statusRepo);
+
     QThread mcuDriverThread;
-    auto serialCommunicator = std::make_unique<Kub3::HAL::Com::SerialCommunicator>("/dev/ttyACM0", 115200);
-    auto lenBasedParser     = std::make_unique<Kub3::HAL::Com::LengthBasedParser>();
-    Kub3::HAL::MCUDriver mcuDriver(std::move(serialCommunicator), std::move(lenBasedParser), nullptr);
+    auto serialCommunicator = std::make_unique<HAL::Com::SerialCommunicator>("/dev/ttyACM0", 115200);
+    auto lenBasedParser     = std::make_unique<HAL::Com::LengthBasedParser>();
+    HAL::MCUDriver mcuDriver(std::move(serialCommunicator), std::move(lenBasedParser), nullptr);
 
     mcuDriver.moveToThread(&mcuDriverThread);
-    mcuDriver.connect(&mcuDriver, &Kub3::HAL::MCUDriver::packetReady, &handlePacketReady);
-    mcuDriver.connect(&mcuDriver, &Kub3::HAL::MCUDriver::hardwareError, &handleHardwareError);
+    mcuDriver.connect(&mcuDriver, &HAL::MCUDriver::packetReady, &handlePacketReady);
+    mcuDriver.connect(&mcuDriver, &HAL::MCUDriver::hardwareError, &handleHardwareError);
     mcuDriver.start();
     mcuDriverThread.start();
 

@@ -47,6 +47,8 @@ qt_add_library(Kub3Core STATIC
     ## Master FSM
     ## Services
     ## HAL
+    src/HAL/MachineStatus/MachineStatusRepo.cpp
+    src/HAL/MachineStatus/machine_status_builder.cpp
     src/HAL/MCUDriver.cpp
     src/HAL/Com/SerialCommunicator.cpp
     src/HAL/Com/MockCommunicator.cpp
@@ -58,7 +60,10 @@ qt_add_library(Kub3Core STATIC
     include/utils.h
     ## Master FSM
     ## Services
-    ## HAL 
+    ## HAL
+    include/HAL/MachineStatus/IMachineStatusRepo.h
+    include/HAL/MachineStatus/MachineStatusRepo.h
+    include/HAL/MachineStatus/machine_status_builder.h
     include/HAL/MCUDriver.h
     include/HAL/Com/ICommunicator.h
     include/HAL/Com/SerialCommunicator.h
