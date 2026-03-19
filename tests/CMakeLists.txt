@@ -1,0 +1,23 @@
+include(FetchContent)
+
+# Fetch Catch2 v3
+fetchcontent_declare(
+    Catch2
+    GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+    GIT_TAG v3.13.0
+)
+fetchcontent_makeavailable(Catch2)
+
+# Create a Test Executable for your Logic
+add_executable(unit_tests
+    test_main.cpp
+    test_dummy.cpp
+)
+
+target_link_libraries(unit_tests
+    PRIVATE
+    Kub3Core
+    Catch2::Catch2WithMain
+)
+
+add_test(NAME "LogicTests" COMMAND unit_tests)

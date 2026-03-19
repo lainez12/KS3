@@ -1,128 +1,127 @@
 cmake_minimum_required(VERSION 3.20)
 
-
-# Get version from file
+# ==============================================================================
+# 1. PROJECT SETUP & VERSIONING
+# ==============================================================================
 file(READ "${CMAKE_CURRENT_SOURCE_DIR}/.version" RAW_VERSION)
 string(STRIP "${RAW_VERSION}" CLEAN_VERSION)
 
-# Set version to project
-project(Kub3Software
-    VERSION ${CLEAN_VERSION}
-    LANGUAGES CXX
-)
+project(Kub3Software VERSION ${CLEAN_VERSION} LANGUAGES CXX)
 
-# Generate version file
 configure_file(
     "${CMAKE_CURRENT_SOURCE_DIR}/include/version.h.in"
     "${CMAKE_CURRENT_BINARY_DIR}/generated/version.h"
 )
 
 # ==============================================================================
-# 1. CORE COMPILER SETTINGS (C++20)
+# 2. COMPILER & QT SETUP
 # ==============================================================================
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# ==============================================================================
-# 2. QT 6.8 LTS SETUP (WIDGETS / UI)
-# ==============================================================================
-set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC_SEARCH_PATHS "gui")
 set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
 find_package(Qt6 6.8 REQUIRED COMPONENTS Core Gui Widgets SerialPort)
-# find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Gui Widgets SerialPort Network)
 
 # ==============================================================================
-# 3. CONDITIONAL COMPILATION (Opinionated Modularity)
+# 3. EXTERNAL DEPENDENCIES (MVS Library)
 # ==============================================================================
-# This creates a drop-down in CMake GUIs and a configuration variable
-set(KUB_MODEL "8" CACHE STRING "KUB3 Machine Model Target (4, 6, or 8)")
-set_property(CACHE KUB_MODEL PROPERTY STRINGS "4" "6" "8")
-message(STATUS "Configuring KUB3Software for model: KUB3-${KUB_MODEL}")
+find_path(MVS_INCLUDE_DIR NAMES MvCameraControl.h PATHS /opt/MVS/include $ENV{MVS_ROOT}/include)
+find_library(MVS_LIBRARY NAMES MvCameraControl PATHS /opt/MVS/lib/64 /opt/MVS/lib/32 $ENV{MVS_ROOT}/lib/64)
 
-# ==============================================================================
-# 4. HIKROBOT MVS LIBRARY (Industrial Vision)
-# ==============================================================================
-# Hikrobot MVS is typically installed in /opt/MVS on Linux.
-# We use find_path and find_library so CMake gracefully handles missing dependencies.
-find_path(MVS_INCLUDE_DIR
-    NAMES MvCameraControl.h
-    PATHS /opt/MVS/include $ENV{MVS_ROOT}/include
-)
-
-find_library(MVS_LIBRARY
-    NAMES MvCameraControl
-    PATHS /opt/MVS/lib/64 /opt/MVS/lib/32 $ENV{MVS_ROOT}/lib/64
-)
-
-if(MVS_INCLUDE_DIR AND MVS_LIBRARY)
-    message(STATUS "Found MVS Hikrobot Library: ${MVS_LIBRARY}")
-else()
-    message(WARNING "MVS Hikrobot Library NOT FOUND! Camera features will be disabled or fail to compile.")
+if(NOT MVS_INCLUDE_DIR OR NOT MVS_LIBRARY)
+    message(WARNING "MVS Hikrobot Library NOT FOUND. Vision features disabled.")
 endif()
 
 # ==============================================================================
-# 5. PROJECT ARCHITECTURE & FILES
+# 4. PROJECT'S CORE LIBRARY
 # ==============================================================================
-
-set(PROJECT_SOURCES
-    # Main & utils
-    src/main.cpp
+qt_add_library(Kub3Core STATIC
+    # Sources
+    ## Utils & miscellaneous
     src/utils.cpp
+    ## Master FSM
+    ## Services
+    ## HAL
+    src/HAL/MCUDriver.cpp
+    src/HAL/Com/SerialCommunicator.cpp
+    src/HAL/Com/MockCommunicator.cpp
+    src/HAL/Com/LengthBasedParser.cpp
+    src/HAL/Motor/StepperMotor.cpp
+
+    # Headers
+    ## Utils & miscellaneous
     include/utils.h
-    # Layer 1: Views
-    src/Views/MainWindow.cpp
-    include/Views/MainWindow.h
-    gui/MainWindow.ui
-    # Layer 2: ViewModels
-    # Layer 3: Master Finite State Machine (MFSM)
-    # Layer 4: Services
-    # Layer 5: Hardware Abstraction Layer (HAL)
+    ## Master FSM
+    ## Services
+    ## HAL 
+    include/HAL/MCUDriver.h
+    include/HAL/Com/ICommunicator.h
+    include/HAL/Com/SerialCommunicator.h
+    include/HAL/Com/MockCommunicator.h
+    include/HAL/Com/IProtocolParser.h
+    include/HAL/Com/LengthBasedParser.h
+    include/HAL/Motor/IMotor.h
+    include/HAL/Motor/StepperMotor.h
+    include/HAL/Sensor/ISensor.h
 )
 
-qt_add_executable(Kub3Software
-    MANUAL_FINALIZATION
-    ${PROJECT_SOURCES}
-)
-
-# ==============================================================================
-# 6. INCLUDES & LINKING
-# ==============================================================================
-
-# Include directories
-## Project
-target_include_directories(Kub3Software PRIVATE
-    "${CMAKE_CURRENT_BINARY_DIR}/generated"
+# PUBLIC: Everything that links to Kub3Core automatically gets these headers and macros
+target_include_directories(Kub3Core PUBLIC
     include
-    include/HAL
-    include/MFSM
-    include/Services
-    include/ViewModels
-    include/Views
-)
-## MVS
-if(MVS_INCLUDE_DIR)
-    target_include_directories(Kub3Software PRIVATE ${MVS_INCLUDE_DIR})
-endif()
-
-# Inject the machine model into the C++ code as a preprocessor macro
-target_compile_definitions(Kub3Software PRIVATE
-    KUB_MODEL_${KUB_MODEL}
-    KUB_MODEL_STR="${KUB_MODEL}"
+    "${CMAKE_CURRENT_BINARY_DIR}/generated"
 )
 
-# Link all together
-## Project
-target_link_libraries(Kub3Software PRIVATE
+target_link_libraries(Kub3Core PUBLIC
     Qt6::Core
-    Qt6::Gui
-    Qt6::Widgets
     Qt6::SerialPort
 )
-## MVS
+
 if(MVS_LIBRARY)
-    target_link_libraries(Kub3Software PRIVATE ${MVS_LIBRARY})
+    target_link_libraries(Kub3Core PUBLIC ${MVS_LIBRARY})
+    target_include_directories(Kub3Core PUBLIC ${MVS_INCLUDE_DIR})
 endif()
+
+# Define Machine Model and Build Type globally
+set(KUB_MODEL "8" CACHE STRING "KUB3 Machine Model Target (4, 6, or 8)")
+target_compile_definitions(Kub3Core PUBLIC KUB_MODEL_${KUB_MODEL} KUB_MODEL_STR="${KUB_MODEL}")
+
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    target_compile_definitions(Kub3Core PUBLIC BUILD_DEBUG)
+else()
+    target_compile_definitions(Kub3Core PUBLIC BUILD_RELEASE)
+endif()
+
+# ==============================================================================
+# 5. MAIN EXECUTABLE: Kub3Software
+# ==============================================================================
+qt_add_executable(Kub3Software
+    MANUAL_FINALIZATION
+    # Sources
+    src/main.cpp
+    src/Logger.h
+    src/Views/MainWindow.cpp
+    # Headers
+    include/Views/MainWindow.h
+    # UI
+    gui/MainWindow.ui
+)
+
+qt_finalize_target(Kub3Software)
+
+# Everything defined as PUBLIC on linked libraries is automatically inherited here
+target_link_libraries(Kub3Software PRIVATE
+    Kub3Core
+    Qt6::Gui
+    Qt6::Widgets
+)
+
+# ==============================================================================
+# 6. TESTS
+# ==============================================================================
+enable_testing()
+add_subdirectory(tests)
