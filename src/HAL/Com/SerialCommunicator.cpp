@@ -20,6 +20,7 @@ namespace Kub3::HAL::Com
 
         _setupConnections();
 
+        // TODO: replace with a more event-driven approach if possible
         connect(&m_pingTimer, &QTimer::timeout, this, &SerialCommunicator::_verifyPortConnection);
         m_pingTimer.start(1000);
     }
@@ -40,9 +41,7 @@ namespace Kub3::HAL::Com
             return false;
         }
 
-        // Clear any junk data that might be sitting in the buffer
-        // m_serialPort.clear();
-
+        m_serialPort.clear();
         qInfo() << "[Serial] Successfully opened port" << m_portName << "at" << m_baudRate << "baud.";
         return true;
     }
@@ -114,6 +113,7 @@ namespace Kub3::HAL::Com
 
         if (!found)
         {
+            qCritical() << "[Serial] Connection to port" << m_serialPort.portName() << "lost.";
             m_serialPort.close();
             emit connectionLost();
         }

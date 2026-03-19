@@ -25,7 +25,7 @@ namespace Kub3::HAL::Com
         if (m_buffer.size() - 1 < packetLen)
             return std::nullopt; // Wait for the rest of the packet to arrive
 
-        QByteArray payload = m_buffer.slice(1, packetLen);
+        QByteArray payload = m_buffer.sliced(1, packetLen);
 
         m_buffer.remove(0, packetLen + 1); // +1 for length byte
 
