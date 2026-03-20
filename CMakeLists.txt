@@ -47,13 +47,14 @@ qt_add_library(Kub3Core STATIC
     ## Master FSM
     ## Services
     ## HAL
+    src/HAL/HardwareManager.cpp
     src/HAL/MachineStatus/MachineStatusRepo.cpp
-    src/HAL/MachineStatus/machine_status_builder.cpp
     src/HAL/MCUDriver.cpp
     src/HAL/Com/SerialCommunicator.cpp
     src/HAL/Com/MockCommunicator.cpp
     src/HAL/Com/LengthBasedParser.cpp
-    src/HAL/Motor/StepperMotor.cpp
+    src/HAL/Com/PacketRouter.cpp
+    src/HAL/Actuators/StepperMotor.cpp
 
     # Headers
     ## Utils & miscellaneous
@@ -61,18 +62,21 @@ qt_add_library(Kub3Core STATIC
     ## Master FSM
     ## Services
     ## HAL
+    include/HAL/HardwareManager.h
     include/HAL/MachineStatus/IMachineStatusRepo.h
     include/HAL/MachineStatus/MachineStatusRepo.h
-    include/HAL/MachineStatus/machine_status_builder.h
+    include/HAL/MachineStatus/sensors_labels.h
     include/HAL/MCUDriver.h
     include/HAL/Com/ICommunicator.h
     include/HAL/Com/SerialCommunicator.h
     include/HAL/Com/MockCommunicator.h
     include/HAL/Com/IProtocolParser.h
     include/HAL/Com/LengthBasedParser.h
-    include/HAL/Motor/IMotor.h
-    include/HAL/Motor/StepperMotor.h
-    include/HAL/Sensor/ISensor.h
+    include/HAL/Com/PacketRouter.h
+    include/HAL/Actuators/IMotor.h
+    include/HAL/Actuators/StepperMotor.h
+    include/HAL/Sensors/ISensor.h
+    include/HAL/Sensors/Sensor.h
 )
 
 # PUBLIC: Everything that links to Kub3Core automatically gets these headers and macros

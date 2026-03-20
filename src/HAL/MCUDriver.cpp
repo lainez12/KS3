@@ -10,9 +10,11 @@ namespace Kub3::HAL
         m_comm(std::move(comm)),
         m_parser(std::move(parser))
     {
+        if (m_comm)
+            m_comm->setParent(this);
+
         // Link the raw byte reception to our processing slot
         connect(m_comm.get(), &Com::ICommunicator::dataReceived, this, &MCUDriver::onRawDataReceived);
-
         connect(
             m_comm.get(),
             &Com::ICommunicator::connectionLost,
@@ -23,6 +25,7 @@ namespace Kub3::HAL
 
     MCUDriver::~MCUDriver()
     {
+        this->stop();
         // TODO: notify disconnection to MCU ?
     }
 
@@ -32,6 +35,15 @@ namespace Kub3::HAL
         {
             emit hardwareError("Failed to open communicator");
         }
+    }
+
+    void MCUDriver::stop()
+    {
+        if (m_comm && m_comm->isOpen())
+            m_comm->close();
+
+        if (m_parser)
+            m_parser->reset();
     }
 
     void MCUDriver::onRawDataReceived(const QByteArray &rawBytes)

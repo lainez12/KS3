@@ -1,4 +1,4 @@
-#include "HAL/Motor/StepperMotor.h"
+#include "HAL/Actuators/StepperMotor.h"
 
 namespace Kub3::HAL
 {

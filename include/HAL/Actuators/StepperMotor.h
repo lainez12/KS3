@@ -2,8 +2,8 @@
 
 #include <QString>
 
+#include "HAL/Actuators/IMotor.h"
 #include "HAL/Com/ICommunicator.h"
-#include "HAL/Motor/IMotor.h"
 
 namespace Kub3::HAL
 {

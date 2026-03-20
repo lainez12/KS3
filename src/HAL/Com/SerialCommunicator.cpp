@@ -9,7 +9,8 @@ namespace Kub3::HAL::Com
     SerialCommunicator::SerialCommunicator(const QString &portName, size_t baudRate) :
         m_portName(portName),
         m_baudRate(baudRate),
-        m_pingTimer(this)
+        m_pingTimer(this),
+        m_serialPort(this)
     {
         m_serialPort.setPortName(m_portName);
         m_serialPort.setBaudRate(m_baudRate);
@@ -22,7 +23,6 @@ namespace Kub3::HAL::Com
 
         // TODO: replace with a more event-driven approach if possible
         connect(&m_pingTimer, &QTimer::timeout, this, &SerialCommunicator::_verifyPortConnection);
-        m_pingTimer.start(1000);
     }
 
     SerialCommunicator::~SerialCommunicator()
@@ -42,6 +42,7 @@ namespace Kub3::HAL::Com
         }
 
         m_serialPort.clear();
+        m_pingTimer.start(1000);
         qInfo() << "[Serial] Successfully opened port" << m_portName << "at" << m_baudRate << "baud.";
         return true;
     }
@@ -51,6 +52,7 @@ namespace Kub3::HAL::Com
         if (!m_serialPort.isOpen())
             return;
 
+        m_pingTimer.stop();
         m_serialPort.close();
         qInfo() << "[Serial] Port" << m_portName << "closed.";
     }

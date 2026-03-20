@@ -25,6 +25,7 @@ namespace Kub3::HAL
 
     public slots:
         void start(void);                     // Called to open the port
+        void stop(void);                      // Called to close the port
         void sendCommand(QByteArray payload); // No reference
 
     private slots:

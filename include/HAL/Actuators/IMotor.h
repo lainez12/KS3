@@ -1,5 +1,7 @@
 #pragma once
 
+#include <QObject>
+
 namespace Kub3::HAL
 {
 

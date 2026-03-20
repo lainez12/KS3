@@ -1,3 +1,4 @@
+#include <QDebug>
 #include <QString>
 #include <mutex>
 
