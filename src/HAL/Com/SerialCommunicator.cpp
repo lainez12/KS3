@@ -1,6 +1,5 @@
 #include <QDebug>
 #include <QSerialPortInfo>
-#include <QThread>
 
 #include "HAL/Com/SerialCommunicator.h"
 
