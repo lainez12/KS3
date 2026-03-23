@@ -1,25 +1,17 @@
 #pragma once
 
-#include <QObject>
+#include "IActuator.h"
 
-namespace Kub3::HAL
+namespace Kub3::HAL::Act
 {
 
-    class IMotor : public QObject
+    class IMotor : public virtual IActuator
     {
-        Q_OBJECT
-
     public:
-        explicit IMotor(QObject *parent = nullptr) : QObject(parent)
-        {
-        }
-        virtual ~IMotor() = default;
-
-        virtual bool initialize()            = 0;
-        virtual void moveTo(double position) = 0;
-
-    signals:
-        void requestSend(QByteArray payload);
+        virtual void moveAbsolute(double position_mm)  = 0;
+        virtual void moveRelative(double distance_mm)  = 0;
+        virtual void setVelocity(double velocity_mm_s) = 0;
+        virtual void home()                            = 0;
     };
 
-} // Kub3::HAL
+} // namespace KUB3::HAL

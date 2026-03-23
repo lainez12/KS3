@@ -10,16 +10,6 @@
 namespace Kub3::HAL::Com
 {
 
-    struct StringViewHash
-    {
-        using is_transparent = void;
-
-        [[nodiscard]] size_t operator()(std::string_view sv) const
-        {
-            return std::hash<std::string_view>{}(sv);
-        }
-    };
-
     class PacketRouter : public QObject
     {
         Q_OBJECT
@@ -34,7 +24,7 @@ namespace Kub3::HAL::Com
         void routePacket(const Kub3::HAL::Com::packet_t &packet);
 
     private:
-        using RouteMap = std::unordered_map<std::string, Shared<Sensors::ISensor>, StringViewHash, std::equal_to<>>;
+        using RouteMap = std::unordered_map<std::string, Shared<Sensors::ISensor>, Utils::StringViewHash, std::equal_to<>>;
 
         RouteMap m_routes;
         KeyExtractor m_extractor;
