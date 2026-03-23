@@ -1,7 +1,9 @@
 FROM mcr.microsoft.com/devcontainers/cpp:ubuntu-22.04
 
-RUN apt-get update -y && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get install -y --no-install-recommends \
+RUN apt-get update -y 
+RUN export DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get install -y --no-install-recommends \
     build-essential \
     python3-pip \
     libxkbcommon-x11-0 \
