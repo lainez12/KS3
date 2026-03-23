@@ -1,0 +1,35 @@
+{
+    "name": "C++ Qt Arduino DevContainer",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "runArgs": [
+        // Gives access to the host devices (like /dev/ttyUSB0 or /dev/ttyACM0 for Arduino)
+        "--privileged",
+        "--group-add",
+        "dialout",
+        // Pass the host's DISPLAY variable for the Qt Graphical Interface
+        "-e",
+        "DISPLAY=${env:DISPLAY}",
+        // Share X11 socket for the Qt Graphical Interface
+        "-v",
+        "/tmp/.X11-unix:/tmp/.X11-unix"
+    ],
+    "mounts": [
+        // Pour le moment la solution a MVS
+        "source=/opt/MVS,target=/opt/MVS,type=bind"
+    ],
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-vscode.cpptools",
+                "ms-vscode.cpptools-extension-pack",
+                "ms-vscode.cmake-tools",
+                "twxs.cmake"
+            ]
+        }
+    },
+    // Allows the vscode user to use dialout group for serial port without sudo
+    "postCreateCommand": "sudo usermod -a -G dialout vscode && git config --global --add safe.directory '*'",
+    "remoteUser": "vscode"
+}

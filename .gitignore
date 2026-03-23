@@ -106,3 +106,6 @@ build
 CMakePresets.json
 .vscode
 .qtcreator
+
+#devcontainer
+aqtinstall.log
