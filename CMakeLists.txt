@@ -54,6 +54,7 @@ qt_add_library(Kub3Core STATIC
     src/HAL/Com/MockCommunicator.cpp
     src/HAL/Com/LengthBasedParser.cpp
     src/HAL/Com/PacketRouter.cpp
+    src/HAL/Actuators/ActuatorRegistry.cpp
     src/HAL/Actuators/StepperMotor.cpp
 
     # Headers
@@ -73,6 +74,8 @@ qt_add_library(Kub3Core STATIC
     include/HAL/Com/IProtocolParser.h
     include/HAL/Com/LengthBasedParser.h
     include/HAL/Com/PacketRouter.h
+    include/HAL/Actuators/ActuatorRegistry.h
+    include/HAL/Actuators/IActuator.h
     include/HAL/Actuators/IMotor.h
     include/HAL/Actuators/StepperMotor.h
     include/HAL/Sensors/ISensor.h

@@ -1,23 +1,55 @@
+#include <QMetaObject>
+#include <stdexcept>
+
 #include "HAL/Actuators/StepperMotor.h"
 
-namespace Kub3::HAL
+namespace Kub3::HAL::Act
 {
-    StepperMotor::StepperMotor(QObject *parent) : IMotor(parent)
+
+    StepperMotor::StepperMotor(std::string id, Weak<MCUDriver> driver) :
+        m_id(std::move(id)),
+        m_driver(std::move(driver))
     {
-        // TODO: dependency injection of the encoder value ?
     }
 
-    bool StepperMotor::initialize(void)
+    void StepperMotor::sendPayload(uint8_t *payload, uint32_t size) const
     {
-        // TODO: determine if necessary
-        return true;
+        if (auto driver = m_driver.lock())
+        {
+            QMetaObject::invokeMethod(
+                driver.get(),
+                &MCUDriver::sendCommand,
+                Qt::QueuedConnection,
+                QByteArray(reinterpret_cast<char *>(payload), size));
+        }
+        else
+        {
+            throw std::runtime_error("Attempted to send command, but MCUDriver is dead. Actuator: " + m_id);
+        }
     }
 
-    void StepperMotor::moveTo(double position)
+    void StepperMotor::moveAbsolute(double position_mm)
     {
-        // TODO: setup proper "move to" command
-        QString command = QString("MOVE_TO %1\n").arg(position);
-
-        emit requestSend(command.toUtf8());
     }
-}
+
+    void StepperMotor::moveRelative(double distance_mm)
+    {
+    }
+
+    void StepperMotor::setVelocity(double velocity_mm_s)
+    {
+    }
+
+    void StepperMotor::emergencyStop(void)
+    {
+    }
+
+    void StepperMotor::enable(bool state)
+    {
+    }
+
+    void StepperMotor::home(void)
+    {
+    }
+
+} // namespace Kub3::HAL::Act

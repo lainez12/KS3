@@ -1,8 +1,10 @@
 #include <QDebug>
 
+#include "HAL/Actuators/StepperMotor.h"
 #include "HAL/Com/LengthBasedParser.h"
 #include "HAL/Com/SerialCommunicator.h"
 #include "HAL/HardwareManager.h"
+#include "HAL/MachineStatus/actuators_labels.h"
 #include "HAL/MachineStatus/sensors_labels.h"
 #include "HAL/Sensors/Sensor.h"
 
@@ -21,7 +23,8 @@ namespace Kub3::HAL
 
     HardwareManager::HardwareManager(Shared<MS::IMachineStatusRepo> repo, QObject *parent) :
         QObject(parent),
-        m_repo(std::move(repo))
+        m_repo(std::move(repo)),
+        m_actuatorRegistry(std::make_shared<Act::ActuatorRegistry>())
     {
 // TODO: Build the machine based on CMake configuration
 #ifdef KUB_MODEL_8
@@ -42,8 +45,24 @@ namespace Kub3::HAL
         auto thread         = std::make_unique<QThread>();                                       // Driver thread
         auto comms          = std::make_unique<Com::SerialCommunicator>("/dev/ttyACM0", 115200); // TODO: get port from settings file
         auto parser         = std::make_unique<Com::LengthBasedParser>();
-        auto arduino3Driver = std::make_unique<MCUDriver>(std::move(comms), std::move(parser));
+        auto arduino3Driver = std::make_shared<MCUDriver>(std::move(comms), std::move(parser));
         auto router         = std::make_unique<Com::PacketRouter>(&arduino3KeyExtractor);
+
+        // ===========================================
+        // DOWNWARD PIPELINE (Software --> Hardware)
+        // ===========================================
+
+        // Create Actuators
+        /// --- Motors
+        auto waferDrawerMotor = std::make_shared<Act::StepperMotor>(WAFER_DRAWER_MOTOR, arduino3Driver);
+        auto maskDrawerMotor  = std::make_shared<Act::StepperMotor>(MASK_DRAWER_MOTOR, arduino3Driver);
+
+        m_actuatorRegistry->registerActuator(waferDrawerMotor);
+        m_actuatorRegistry->registerActuator(maskDrawerMotor);
+
+        // ===========================================
+        // UPWARD PIPELINE (Hardware --> Software)
+        // ===========================================
 
         // Create Sensors
         // --- Encoders

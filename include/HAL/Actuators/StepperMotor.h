@@ -1,20 +1,40 @@
 #pragma once
 
-#include <QString>
+#include <memory>
+#include <string>
+#include <vector>
 
-#include "HAL/Actuators/IMotor.h"
-#include "HAL/Com/ICommunicator.h"
+#include "HAL/MCUDriver.h"
+#include "IMotor.h"
 
-namespace Kub3::HAL
+namespace Kub3::HAL::Act
 {
 
-    class StepperMotor : public IMotor
+    class StepperMotor final : public IMotor
     {
     public:
-        explicit StepperMotor(QObject *parent = nullptr);
+        // MCUDriver is injected. We use a `weak_ptr` (if lifecycle is strictly guaranteed by `HardwareManager`)
+        // `weak_ptr` prevents dangling references if MCU drops.
+        StepperMotor(std::string id, Weak<MCUDriver> driver);
 
-        bool initialize(void) override final;
-        void moveTo(double position) override final;
+        [[nodiscard]] std::string_view getId() const noexcept override
+        {
+            return m_id;
+        }
+
+        void moveAbsolute(double position_mm) override;
+        void moveRelative(double distance_mm) override;
+        void setVelocity(double velocity_mm_s) override;
+        void emergencyStop() override;
+        void enable(bool state) override;
+        void home() override;
+
+    private:
+        void sendPayload(uint8_t *payload, uint32_t size) const;
+
+    private:
+        const std::string m_id;
+        Weak<MCUDriver> m_driver;
     };
 
-} // namespace Kub3::HAL
+} // namespace KUB3::HAL
