@@ -28,15 +28,15 @@ namespace Kub3::HAL::Act
         }
     }
 
-    void StepperMotor::moveAbsolute(double position_mm)
+    void StepperMotor::moveAbsolute(int32_t position_mm)
     {
     }
 
-    void StepperMotor::moveRelative(double distance_mm)
+    void StepperMotor::moveRelative(int32_t distance_mm)
     {
     }
 
-    void StepperMotor::setVelocity(double velocity_mm_s)
+    void StepperMotor::setTargetSpeed(uint32_t velocity_mm_s)
     {
     }
 
@@ -50,6 +50,16 @@ namespace Kub3::HAL::Act
 
     void StepperMotor::home(void)
     {
+    }
+
+    bool StepperMotor::isMoving(void) const
+    {
+        return m_moving;
+    }
+
+    uint32_t StepperMotor::getTargetSpeed(void) const
+    {
+        return m_targetSpeed;
     }
 
 } // namespace Kub3::HAL::Act
