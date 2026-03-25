@@ -30,7 +30,9 @@ namespace Kub3::HAL::Act
         [[nodiscard]] Shared<T> get(std::string_view id) const;
 
     private:
-        std::unordered_map<std::string, Shared<IActuator>, Utils::StringViewHash, std::equal_to<>> m_actuators;
+        using ActuatorMap = std::unordered_map<std::string, Shared<IActuator>, Utils::StringViewHash, std::equal_to<>>;
+
+        ActuatorMap m_actuators;
     };
 
 } // namespace Kub3::HAL::Act

@@ -46,9 +46,16 @@ qt_add_library(Kub3Core STATIC
     src/utils.cpp
     ## Master FSM
     ## Services
+    src/Services/Drawers/DualConveyorDrawerService.cpp
+    src/Services/Drawers/SingleConveyorDrawerService.cpp
+    src/Services/Drawers/tasks/MaskInsertionTask.cpp
+    src/Services/Drawers/tasks/MaskEjectionTask.cpp
+    src/Services/Drawers/tasks/WaferInsertionTask.cpp
+    src/Services/Drawers/tasks/WaferEjectionTask.cpp
     ## HAL
     src/HAL/HardwareManager.cpp
     src/HAL/MachineStatus/MachineStatusRepo.cpp
+    src/HAL/MachineStatus/utils.cpp
     src/HAL/MCUDriver.cpp
     src/HAL/Com/SerialCommunicator.cpp
     src/HAL/Com/MockCommunicator.cpp
@@ -62,10 +69,21 @@ qt_add_library(Kub3Core STATIC
     include/utils.h
     ## Master FSM
     ## Services
+    include/Services/ITask.h
+    include/Services/IService.h
+    include/Services/BaseTaskService.h
+    include/Services/Drawers/IDrawerService.h
+    include/Services/Drawers/DualConveyorDrawerService.h
+    include/Services/Drawers/SingleConveyorDrawerService.h
+    include/Services/Drawers/tasks/MaskInsertionTask.h
+    include/Services/Drawers/tasks/MaskEjectionTask.h
+    include/Services/Drawers/tasks/WaferInsertionTask.h
+    include/Services/Drawers/tasks/WaferEjectionTask.h
     ## HAL
     include/HAL/HardwareManager.h
     include/HAL/MachineStatus/IMachineStatusRepo.h
     include/HAL/MachineStatus/MachineStatusRepo.h
+    include/HAL/MachineStatus/utils.h
     include/HAL/MachineStatus/sensors_labels.h
     include/HAL/MCUDriver.h
     include/HAL/Com/ICommunicator.h

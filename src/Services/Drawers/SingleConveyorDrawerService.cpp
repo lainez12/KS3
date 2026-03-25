@@ -1,0 +1,46 @@
+#ifndef KUB_MODEL_8
+
+// HAL
+#include "HAL/Actuators/IMotor.h"
+#include "HAL/MachineStatus/actuators_labels.h"
+#include "HAL/MachineStatus/sensors_labels.h"
+#include "HAL/MachineStatus/utils.h"
+// Services
+#include "Services/Drawers/SingleConveyorDrawerService.h"
+
+namespace Kub3::Services
+{
+
+    SingleConveyorDrawerService::SingleConveyorDrawerService(Shared<HAL::Act::ActuatorRegistry> registry, Shared<HAL::MS::IMachineStatusRepo> repo) :
+        m_registry(std::move(registry)),
+        m_repo(std::move(repo))
+    {
+    }
+
+    void SingleConveyorDrawerService::insert(DrawerTarget target)
+    {
+        this->clearTasks();
+
+        // TODO: setup sequence using `this->enqueueTask`
+
+        this->startSequence();
+    }
+
+    void SingleConveyorDrawerService::eject(DrawerTarget target)
+    {
+        this->clearTasks();
+
+        // TODO: setup sequence using `this->enqueueTask`
+
+        this->startSequence();
+    }
+
+    void SingleConveyorDrawerService::stop(void)
+    {
+        // TODO: stop drawer motor
+        BaseTaskService::stop();
+    }
+
+}
+
+#endif // KUB_MODEL_8
