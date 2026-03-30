@@ -1,17 +1,19 @@
 #include "Services/Drawers/tasks/MaskInsertionTask.h"
 #include "HAL/MachineStatus/utils.h"
 
-// TODO: load params from config file
-#define CONTACT_SPEED_MM_S 1
-#define SLOW_SPEED_MM_S    10
-#define FAST_SPEED_MM_S    100
-
 namespace Kub3::Services
 {
 
-    MaskInsertionTask::MaskInsertionTask(Shared<HAL::Act::IMotor> motor, Shared<HAL::MS::IMachineStatusRepo> repo) :
+    MaskInsertionTask::MaskInsertionTask(Shared<HAL::Act::IMotor> motor,
+                                         Shared<HAL::MS::IMachineStatusRepo> repo,
+                                         Config::kinematic_profile_t fastProfile,
+                                         Config::kinematic_profile_t fineProfile,
+                                         Config::kinematic_profile_t contactProfile) :
         m_motor(std::move(motor)),
-        m_repo(std::move(repo))
+        m_repo(std::move(repo)),
+        m_fastProfile(std::move(fastProfile)),
+        m_fineProfile(std::move(fineProfile)),
+        m_contactProfile(std::move(contactProfile))
     {
     }
 
@@ -27,29 +29,25 @@ namespace Kub3::Services
             return;
         }
 
-        const bool cm0            = HAL::MS::readBool(m_repo, CM0);
-        const bool cm1            = HAL::MS::readBool(m_repo, CM1);
-        const bool cm2            = HAL::MS::readBool(m_repo, CM2);
-        uint32_t relativeMovement = NEGATIVE_INFINITE;
+        const bool cm0 = HAL::MS::readBool(m_repo, CM0);
+        const bool cm1 = HAL::MS::readBool(m_repo, CM1);
+        const bool cm2 = HAL::MS::readBool(m_repo, CM2);
 
         if (cm2)
         {
             m_step = Step::ReverseClearance;
-            m_motor->setTargetSpeed(CONTACT_SPEED_MM_S);
-            relativeMovement = POSITIVE_INFINITE;
+            m_motor->moveDirection(HAL::Act::MotorDirection::Positive, m_contactProfile);
         }
         else if (cm1)
         {
             m_step = Step::SlowApproach;
-            m_motor->setTargetSpeed(SLOW_SPEED_MM_S);
+            m_motor->moveDirection(HAL::Act::MotorDirection::Negative, m_fineProfile);
         }
         else
         {
             m_step = Step::FastApproach;
-            m_motor->setTargetSpeed(FAST_SPEED_MM_S);
+            m_motor->moveDirection(HAL::Act::MotorDirection::Negative, m_fastProfile);
         }
-
-        m_motor->moveRelative(relativeMovement);
     }
 
     bool MaskInsertionTask::tick(void)
@@ -93,20 +91,18 @@ namespace Kub3::Services
 
         if (cm3)
         {
-            m_step = Step::Finished;
             m_motor->emergencyStop();
+            m_step = Step::Finished;
         }
         else if (cm2)
         {
+            m_motor->moveDirection(HAL::Act::MotorDirection::Positive, m_contactProfile);
             m_step = Step::ReverseClearance;
-            m_motor->setTargetSpeed(CONTACT_SPEED_MM_S);
-            m_motor->moveRelative(POSITIVE_INFINITE);
         }
         else if (cm1)
         {
+            m_motor->moveDirection(HAL::Act::MotorDirection::Negative, m_fineProfile);
             m_step = Step::SlowApproach;
-            m_motor->setTargetSpeed(SLOW_SPEED_MM_S);
-            m_motor->moveRelative(NEGATIVE_INFINITE);
         }
     }
 
@@ -117,14 +113,13 @@ namespace Kub3::Services
 
         if (cm3)
         {
-            m_step = Step::Finished;
             m_motor->emergencyStop();
+            m_step = Step::Finished;
         }
         else if (cm2)
         {
+            m_motor->moveDirection(HAL::Act::MotorDirection::Positive, m_contactProfile);
             m_step = Step::ReverseClearance;
-            m_motor->setTargetSpeed(CONTACT_SPEED_MM_S);
-            m_motor->moveRelative(POSITIVE_INFINITE);
         }
     }
 
@@ -134,9 +129,8 @@ namespace Kub3::Services
 
         if (!cm2)
         {
+            m_motor->moveDirection(HAL::Act::MotorDirection::Negative, m_fineProfile);
             m_step = Step::ContactMode;
-            m_motor->setTargetSpeed(CONTACT_SPEED_MM_S);
-            m_motor->moveRelative(NEGATIVE_INFINITE);
         }
     }
 

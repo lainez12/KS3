@@ -1,7 +1,7 @@
 #ifndef KUB_MODEL_8
 
 // HAL
-#include "HAL/Actuators/IMotor.h"
+#include "HAL/Actuators/Motors/IMotor.h"
 #include "HAL/MachineStatus/actuators_labels.h"
 #include "HAL/MachineStatus/sensors_labels.h"
 #include "HAL/MachineStatus/utils.h"

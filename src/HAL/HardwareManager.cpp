@@ -1,11 +1,12 @@
 #include <QDebug>
 
-#include "HAL/Actuators/StepperMotor.h"
+#include "HAL/Actuators/Motors/StepperMotor.h"
 #include "HAL/Com/LengthBasedParser.h"
 #include "HAL/Com/SerialCommunicator.h"
 #include "HAL/HardwareManager.h"
 #include "HAL/MachineStatus/actuators_labels.h"
 #include "HAL/MachineStatus/sensors_labels.h"
+#include "HAL/MachineStatus/utils.h"
 #include "HAL/Sensors/Sensor.h"
 
 using namespace std::string_literals;
@@ -26,9 +27,12 @@ namespace Kub3::HAL
         m_repo(std::move(repo)),
         m_actuatorRegistry(std::make_shared<Act::ActuatorRegistry>())
     {
+        const Config::hardware_config_t hardwwareConfig = Config::ConfigLoader::loadHardwareConfig("/tmp/hardware.ini");
+        const Config::process_config_t processConfig    = Config::ConfigLoader::loadProcessConfig("/tmp/process.ini");
+
 // TODO: Build the machine based on CMake configuration
 #ifdef KUB_MODEL_8
-        setupArduino3Subsystem();
+        setupArduino3Subsystem(hardwwareConfig);
 #endif
     }
 
@@ -37,7 +41,7 @@ namespace Kub3::HAL
         stopAll();
     }
 
-    void HardwareManager::setupArduino3Subsystem()
+    void HardwareManager::setupArduino3Subsystem(const Config::hardware_config_t &config)
     {
         using namespace Kub3::HAL::Sensors;
 
@@ -47,18 +51,6 @@ namespace Kub3::HAL
         auto parser         = std::make_unique<Com::LengthBasedParser>();
         auto arduino3Driver = std::make_shared<MCUDriver>(std::move(comms), std::move(parser));
         auto router         = std::make_unique<Com::PacketRouter>(&arduino3KeyExtractor);
-
-        // ===========================================
-        // DOWNWARD PIPELINE (Software --> Hardware)
-        // ===========================================
-
-        // Create Actuators
-        /// --- Motors
-        auto waferDrawerMotor = std::make_shared<Act::StepperMotor>(WAFER_DRAWER_MOTOR, arduino3Driver);
-        auto maskDrawerMotor  = std::make_shared<Act::StepperMotor>(MASK_DRAWER_MOTOR, arduino3Driver);
-
-        m_actuatorRegistry->registerActuator(waferDrawerMotor);
-        m_actuatorRegistry->registerActuator(maskDrawerMotor);
 
         // ===========================================
         // UPWARD PIPELINE (Hardware --> Software)
@@ -127,6 +119,39 @@ namespace Kub3::HAL
         this->registerSensor(router.get(), "F1"s, std::move(leftForce));
         this->registerSensor(router.get(), "F2"s, std::move(rightForce));
         this->registerSensor(router.get(), "F3"s, std::move(backForce));
+
+        // ===========================================
+        // DOWNWARD PIPELINE (Software --> Hardware)
+        // ===========================================
+
+        auto generateEncoderGetter = [repo = m_repo](const std::string encoderId)
+        {
+            return [repo, encoderId = std::move(encoderId)]()
+            { return HAL::MS::readInt(repo, encoderId); };
+        };
+
+        // Create Actuators
+        /// --- Motors
+        auto itMask = config.motors.find(MASK_DRAWER_MOTOR);
+        if (itMask == config.motors.end())
+            throw std::runtime_error(std::format("Hardware configuration not found for MASK_DRAWER_MOTOR={}", MASK_DRAWER_MOTOR));
+        const auto &maskMotorConfig = itMask->second;
+        auto *maskHwProps           = std::get_if<Config::stepper_hw_properties_t>(&maskMotorConfig.hwProperties);
+        if (!maskHwProps)
+            throw std::runtime_error("MASK_DRAWER_MOTOR is defined, but defined configuration doesn't match the motor type (expected type: stepper)");
+        auto maskDrawerMotor = std::make_shared<Act::StepperMotor>(MASK_DRAWER_MOTOR, '4', arduino3Driver, *maskHwProps, generateEncoderGetter(MASK_ENCODER));
+
+        auto itWafer = config.motors.find(WAFER_DRAWER_MOTOR);
+        if (itWafer == config.motors.end())
+            throw std::runtime_error(std::format("Hardware configuration not found for WAFER_DRAWER_MOTOR={}", WAFER_DRAWER_MOTOR));
+        const auto &waferMotorConfig = itWafer->second;
+        auto *waferHwProps           = std::get_if<Config::stepper_hw_properties_t>(&waferMotorConfig.hwProperties);
+        if (!waferHwProps)
+            throw std::runtime_error("WAFER_DRAWER_MOTOR is defined, but defined configuration doesn't match the motor type (expected type: stepper)");
+        auto waferDrawerMotor = std::make_shared<Act::StepperMotor>(WAFER_DRAWER_MOTOR, '5', arduino3Driver, *waferHwProps, generateEncoderGetter(WAFER_ENCODER));
+
+        m_actuatorRegistry->registerActuator(waferDrawerMotor);
+        m_actuatorRegistry->registerActuator(maskDrawerMotor);
 
         // Move MCUDriver to its own thread
         arduino3Driver->moveToThread(thread.get());

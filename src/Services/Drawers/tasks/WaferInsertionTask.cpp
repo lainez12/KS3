@@ -1,16 +1,17 @@
 #include "Services/Drawers/tasks/WaferInsertionTask.h"
 #include "HAL/MachineStatus/utils.h"
 
-// TODO: load params from config file
-#define SLOW_SPEED_MM_S 10
-#define FAST_SPEED_MM_S 100
-
 namespace Kub3::Services
 {
 
-    WaferInsertionTask::WaferInsertionTask(Shared<HAL::Act::IMotor> motor, Shared<HAL::MS::IMachineStatusRepo> repo) :
+    WaferInsertionTask::WaferInsertionTask(Shared<HAL::Act::IMotor> motor,
+                                           Shared<HAL::MS::IMachineStatusRepo> repo,
+                                           Config::kinematic_profile_t fastProfile,
+                                           Config::kinematic_profile_t fineProfile) :
         m_motor(std::move(motor)),
-        m_repo(std::move(repo))
+        m_repo(std::move(repo)),
+        m_fastProfile(std::move(fastProfile)),
+        m_fineProfile(std::move(fineProfile))
     {
     }
 
@@ -25,8 +26,17 @@ namespace Kub3::Services
             return;
         }
 
-        m_motor->setTargetSpeed(cw1 ? SLOW_SPEED_MM_S : FAST_SPEED_MM_S);
-        m_motor->moveRelative(NEGATIVE_INFINITE);
+        // Checks if the current position is already beyond the deceleration threshold
+        if (cw1)
+        {
+            m_step = Step::SlowApproach;
+            m_motor->moveDirection(HAL::Act::MotorDirection::Negative, m_fineProfile);
+        }
+        else
+        {
+            m_step = Step::FastApproach;
+            m_motor->moveDirection(HAL::Act::MotorDirection::Negative, m_fastProfile);
+        }
     }
 
     bool WaferInsertionTask::tick()
@@ -43,13 +53,15 @@ namespace Kub3::Services
             return true;
         }
 
-        const bool cw1              = HAL::MS::readBool(m_repo, CW1);
-        const uint32_t desiredSpeed = cw1 ? SLOW_SPEED_MM_S : FAST_SPEED_MM_S;
-
-        if (m_motor->getTargetSpeed() != desiredSpeed || !m_motor->isMoving())
+        if (m_step == Step::FastApproach)
         {
-            m_motor->setTargetSpeed(desiredSpeed);
-            m_motor->moveRelative(NEGATIVE_INFINITE);
+            const bool cw1 = HAL::MS::readBool(m_repo, CW1);
+
+            if (cw1)
+            {
+                m_step = Step::SlowApproach;
+                m_motor->moveDirection(HAL::Act::MotorDirection::Positive, m_fineProfile);
+            }
         }
 
         return false;

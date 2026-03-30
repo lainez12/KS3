@@ -32,7 +32,7 @@ namespace Kub3::HAL
         // Triggered automatically when the Communicator emits dataReceived
         void onRawDataReceived(const QByteArray &rawBytes);
 
-    private:
+    protected:
         Unique<Com::ICommunicator> m_comm;
         Unique<Com::IProtocolParser> m_parser;
     };

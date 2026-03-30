@@ -1,15 +1,19 @@
 #include "Services/Drawers/tasks/MaskEjectionTask.h"
 #include "HAL/MachineStatus/utils.h"
 
-// TODO: load params from config file
-#define FAST_SPEED_MM_S 100
-
 namespace Kub3::Services
 {
 
-    MaskEjectionTask::MaskEjectionTask(Shared<HAL::Act::IMotor> motor, Shared<HAL::MS::IMachineStatusRepo> repo) :
+    MaskEjectionTask::MaskEjectionTask(Shared<HAL::Act::IMotor> motor,
+                                       Shared<HAL::MS::IMachineStatusRepo> repo,
+                                       Config::kinematic_profile_t fastProfile,
+                                       Config::kinematic_profile_t fineProfile,
+                                       int32_t finePositionThreshold) :
         m_motor(std::move(motor)),
-        m_repo(std::move(repo))
+        m_repo(std::move(repo)),
+        m_fastProfile(std::move(fastProfile)),
+        m_fineProfile(std::move(fineProfile)),
+        m_finePositionThreshold(finePositionThreshold)
     {
     }
 
@@ -23,9 +27,19 @@ namespace Kub3::Services
             return;
         }
 
-        m_step = Step::FastApproach;
-        m_motor->setTargetSpeed(FAST_SPEED_MM_S);
-        m_motor->moveRelative(POSITIVE_INFINITE);
+        const int32_t position = HAL::MS::readInt(m_repo, MASK_ENCODER);
+
+        // Checks if the current position is already beyond the deceleration threshold
+        if (position >= m_finePositionThreshold)
+        {
+            m_step = Step::SlowApproach;
+            m_motor->moveDirection(HAL::Act::MotorDirection::Positive, m_fineProfile);
+        }
+        else
+        {
+            m_step = Step::FastApproach;
+            m_motor->moveDirection(HAL::Act::MotorDirection::Positive, m_fastProfile);
+        }
     }
 
     bool MaskEjectionTask::tick(void)
@@ -43,15 +57,15 @@ namespace Kub3::Services
             return true;
         }
 
-        // TODO: code this:
-        // - Define target speed based on encoder position
-        // --- Set `desiredSpeed` to the correct value
-        const uint32_t desiredSpeed = 0;
-
-        if (m_motor->getTargetSpeed() != desiredSpeed || !m_motor->isMoving())
+        if (m_step == Step::FastApproach)
         {
-            m_motor->setTargetSpeed(desiredSpeed);
-            m_motor->moveRelative(POSITIVE_INFINITE);
+            const int32_t position = HAL::MS::readInt(m_repo, MASK_ENCODER);
+
+            if (position >= m_finePositionThreshold)
+            {
+                m_step = Step::SlowApproach;
+                m_motor->moveDirection(HAL::Act::MotorDirection::Positive, m_fineProfile);
+            }
         }
 
         return false;
