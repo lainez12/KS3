@@ -46,7 +46,7 @@ namespace Kub3::HAL::MS
 
     Optional<SensorValue> MachineStatusRepo::getSensorRaw(const std::string &key) const
     {
-        // Acquire a shared lock (Read Lock,  multiple readers allowed)
+        // Acquire a shared lock (Read Lock, multiple readers allowed)
         std::shared_lock lock(m_mutex);
         auto it = m_sensors.find(key);
 

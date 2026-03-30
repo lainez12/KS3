@@ -44,6 +44,7 @@ qt_add_library(Kub3Core STATIC
     # Sources
     ## Utils & miscellaneous
     src/utils.cpp
+    src/Config/ConfigLoader.cpp
     ## Master FSM
     ## Services
     src/Services/Drawers/DualConveyorDrawerService.cpp
@@ -62,11 +63,15 @@ qt_add_library(Kub3Core STATIC
     src/HAL/Com/LengthBasedParser.cpp
     src/HAL/Com/PacketRouter.cpp
     src/HAL/Actuators/ActuatorRegistry.cpp
-    src/HAL/Actuators/StepperMotor.cpp
+    src/HAL/Actuators/Motors/TrapezoidalGenerator.cpp
+    src/HAL/Actuators/Motors/StepperMotor.cpp
 
     # Headers
     ## Utils & miscellaneous
     include/utils.h
+    include/Config/ConfigLoader.h
+    include/Config/kinematics.h
+    include/Config/machine_config.h
     ## Master FSM
     ## Services
     include/Services/ITask.h
@@ -94,8 +99,9 @@ qt_add_library(Kub3Core STATIC
     include/HAL/Com/PacketRouter.h
     include/HAL/Actuators/ActuatorRegistry.h
     include/HAL/Actuators/IActuator.h
-    include/HAL/Actuators/IMotor.h
-    include/HAL/Actuators/StepperMotor.h
+    include/HAL/Actuators/Motors/IMotor.h
+    include/HAL/Actuators/Motors/TrapezoidalGenerator.h
+    include/HAL/Actuators/Motors/StepperMotor.h
     include/HAL/Sensors/ISensor.h
     include/HAL/Sensors/Sensor.h
 )

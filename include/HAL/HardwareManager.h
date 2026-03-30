@@ -4,6 +4,7 @@
 #include <QThread>
 #include <vector>
 
+#include "Config/ConfigLoader.h"
 #include "HAL/Actuators/ActuatorRegistry.h"
 #include "HAL/Com/PacketRouter.h"
 #include "HAL/MCUDriver.h"
@@ -29,7 +30,7 @@ namespace Kub3::HAL
         }
 
     private:
-        void setupArduino3Subsystem();
+        void setupArduino3Subsystem(const Config::hardware_config_t &config);
         void registerSensor(Com::PacketRouter *router, std::string &&route, Shared<Kub3::HAL::Sensors::ISensor> sensor);
 
     private:
