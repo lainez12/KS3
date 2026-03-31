@@ -9,6 +9,7 @@ namespace Kub3::HAL::Act
     {
         m_mode             = Mode::Position;
         m_state.position   = currentPosition;
+        m_state.velocity   = 0.0;
         m_state.isFinished = false;
 
         m_targetPosition = targetPosition;
@@ -21,6 +22,7 @@ namespace Kub3::HAL::Act
     {
         m_mode             = Mode::Velocity;
         m_state.position   = currentPosition;
+        m_state.velocity   = 0.0;
         m_state.isFinished = false;
 
         m_directionSign = (directionSign >= 0.0) ? 1.0 : -1.0;
@@ -29,7 +31,29 @@ namespace Kub3::HAL::Act
         m_stopRequested = false;
     }
 
-    void TrapezoidalGenerator::commandSmoothStop()
+    void TrapezoidalGenerator::updatePositionMove(double targetPosition, double maxVelocity, double acceleration)
+    {
+        m_mode             = Mode::Position;
+        m_state.isFinished = false;
+
+        m_targetPosition = targetPosition;
+        m_maxVelocity    = std::abs(maxVelocity);
+        m_acceleration   = std::abs(acceleration);
+        m_stopRequested  = false;
+    }
+
+    void TrapezoidalGenerator::updateVelocityMove(double directionSign, double maxVelocity, double acceleration)
+    {
+        m_mode             = Mode::Velocity;
+        m_state.isFinished = false;
+
+        m_directionSign = (directionSign >= 0.0) ? 1.0 : -1.0;
+        m_maxVelocity   = std::abs(maxVelocity);
+        m_acceleration  = std::abs(acceleration);
+        m_stopRequested = false;
+    }
+
+    void TrapezoidalGenerator::commandSmoothStop(void)
     {
         m_stopRequested = true;
     }

@@ -27,8 +27,14 @@ namespace Kub3::HAL::Act
         void startPositionMove(double currentPosition, double targetPosition, double maxVelocity, double acceleration);
         // Start a continuous velocity move (directionSign: 1.0 for forward, -1.0 for reverse)
         void startVelocityMove(double currentPosition, double directionSign, double maxVelocity, double acceleration);
+
+        // Update parameters for a move to a specific absolute position
+        void updatePositionMove(double targetPosition, double maxVelocity, double acceleration);
+        // Update a continuous velocity move (directionSign: 1.0 for forward, -1.0 for reverse)
+        void updateVelocityMove(double directionSign, double maxVelocity, double acceleration);
+
         // Gracefully ramps the velocity down to 0 at the current acceleration rate
-        void commandSmoothStop();
+        void commandSmoothStop(void);
 
         kinematic_state_t calculateNext(double dt);
 
