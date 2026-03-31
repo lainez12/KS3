@@ -58,17 +58,23 @@ namespace Kub3::HAL::Act
         uint8_t stepFrac = 1;
         if (auto *p = std::get_if<Config::stepper_kinematics_params_t>(&profile.params))
             stepFrac = p->stepFraction;
+
         m_currentStepFraction = stepFrac; // Store for MCU translation
+        m_lastSentHz.reset();             // Reset cached "last sent frequency" value;
 
-        // Initialize the pure math engine
-        m_mathEngine.startPositionMove(getEncoderPositionMm(), position_mm, safeVel, safeAcc);
-
-        m_lastSentHz.reset();           // Reset cached "last sent frequency" value;
         if (!m_controlTimer.isActive()) // Start the control timer
         {
+            // Initialize the math engine
+            m_mathEngine.startPositionMove(getEncoderPositionMm(), position_mm, safeVel, safeAcc);
+
             m_lastTickNsecs = 0; // Reset last tick timestamp
             m_dtTimer.start();   // reset elapsed timer
             m_controlTimer.start(CONTROL_TIMER_VALUE_MS);
+        }
+        else // Motor already moving
+        {
+            // Update the math engine
+            m_mathEngine.updatePositionMove(position_mm, safeVel, safeAcc);
         }
     }
 
@@ -82,19 +88,27 @@ namespace Kub3::HAL::Act
         uint8_t stepFrac = 1;
         if (auto *p = std::get_if<Config::stepper_kinematics_params_t>(&profile.params))
             stepFrac = p->stepFraction;
+
         m_currentStepFraction = stepFrac; // Store for MCU translation
+        m_lastSentHz.reset();             // Reset cached "last sent frequency" value;
 
-        // Initialize the pure math engine
-        double sign                  = (distance_mm >= 0) ? 1.0 : -1.0;
-        const double currentPosition = getEncoderPositionMm();
-        m_mathEngine.startPositionMove(currentPosition, currentPosition + distance_mm, safeVel, safeAcc);
-
-        m_lastSentHz.reset();           // Reset cached "last sent frequency" value;
         if (!m_controlTimer.isActive()) // Start the control timer
         {
+            const double encoderPos = getEncoderPositionMm();
+
+            // Initialize the math engine
+            m_mathEngine.startPositionMove(encoderPos, encoderPos + distance_mm, safeVel, safeAcc);
+
             m_lastTickNsecs = 0; // Reset last tick timestamp
             m_dtTimer.start();   // reset elapsed timer
             m_controlTimer.start(CONTROL_TIMER_VALUE_MS);
+        }
+        else // Motor already moving
+        {
+            const double currentMathEnginePos = m_mathEngine.getCurrentState().position;
+
+            // Update the math engine
+            m_mathEngine.updatePositionMove(currentMathEnginePos + distance_mm, safeVel, safeAcc);
         }
     }
 
@@ -108,18 +122,25 @@ namespace Kub3::HAL::Act
         uint16_t stepFrac = 1;
         if (auto *p = std::get_if<Config::stepper_kinematics_params_t>(&profile.params))
             stepFrac = p->stepFraction;
+
         m_currentStepFraction = stepFrac; // Store for MCU translation
+        m_lastSentHz.reset();             // Reset cached "last sent frequency" value;
 
-        // Initialize the pure math engine
-        double sign = (dir == MotorDirection::Positive) ? 1.0 : -1.0;
-        m_mathEngine.startVelocityMove(getEncoderPositionMm(), sign, safeVel, safeAcc);
+        const double sign = (dir == MotorDirection::Positive) ? 1.0 : -1.0;
 
-        m_lastSentHz.reset();           // Reset cached "last sent frequency" value;
         if (!m_controlTimer.isActive()) // Start the control timer
         {
+            // Initialize the pure math engine
+            m_mathEngine.startVelocityMove(getEncoderPositionMm(), sign, safeVel, safeAcc);
+
             m_lastTickNsecs = 0; // Reset last tick timestamp
             m_dtTimer.start();   // reset elapsed timer
             m_controlTimer.start(CONTROL_TIMER_VALUE_MS);
+        }
+        else // Motor already moving
+        {
+            // Update the math engine
+            m_mathEngine.updateVelocityMove(sign, safeVel, safeAcc);
         }
     }
 

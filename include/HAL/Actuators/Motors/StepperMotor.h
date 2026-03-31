@@ -29,7 +29,7 @@ namespace Kub3::HAL::Act
             std::function<double()> positionGetter,
             QObject *parent = nullptr);
 
-        [[nodiscard]] std::string_view getId() const noexcept override
+        [[nodiscard]] std::string_view getId(void) const noexcept override
         {
             return m_id;
         }
@@ -37,9 +37,9 @@ namespace Kub3::HAL::Act
         void moveAbsolute(double position_mm, Config::kinematic_profile_t profile) override;
         void moveRelative(double distance_mm, Config::kinematic_profile_t profile) override;
         void moveDirection(MotorDirection dir, Config::kinematic_profile_t profile) override;
-        void emergencyStop() override;
+        void emergencyStop(void) override;
         void enable(bool state) override;
-        void home() override;
+        void home(void) override;
 
         // Getters
         bool isMoving(void) const;

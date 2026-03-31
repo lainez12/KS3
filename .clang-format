@@ -1,0 +1,14 @@
+---
+BasedOnStyle: LLVM
+AccessModifierOffset: -4
+BreakBeforeBraces: Allman
+BreakConstructorInitializers: AfterColon
+ColumnLimit: 0
+FixNamespaceComments: false
+IndentWidth: 4
+NamespaceIndentation: All
+PackConstructorInitializers: CurrentLine
+TabWidth: 4
+AllowShortFunctionsOnASingleLine: None
+AlignConsecutiveAssignments: true
+AlignConsecutiveMacros: true
