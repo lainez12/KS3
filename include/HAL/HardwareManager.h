@@ -18,7 +18,7 @@ namespace Kub3::HAL
     {
         Q_OBJECT
     public:
-        explicit HardwareManager(Shared<MS::IMachineStatusRepo> repo, QObject *parent = nullptr);
+        explicit HardwareManager(Shared<MS::IMachineStatusRepo> repo, const Config::hardware_config_t &hardwareConfig, QObject *parent = nullptr);
         ~HardwareManager() override;
 
         void startAll();
@@ -30,6 +30,7 @@ namespace Kub3::HAL
         }
 
     private:
+        void setupArduino2Subsystem(const Config::hardware_config_t &config);
         void setupArduino3Subsystem(const Config::hardware_config_t &config);
         void registerSensor(Com::PacketRouter *router, std::string &&route, Shared<Kub3::HAL::Sensors::ISensor> sensor);
 

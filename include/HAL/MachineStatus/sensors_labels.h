@@ -1,5 +1,7 @@
 #pragma once
 
+#define EMERGENCY_STOP "emergencyStop"
+
 #define WAFER_ENCODER   "waferDrawerEncoderPosition"
 #define MASK_ENCODER    "maskDrawerEncoderPosition"
 #define Z_LEFT_ENCODER  "zLeftEncoderPosition"

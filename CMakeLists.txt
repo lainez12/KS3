@@ -46,6 +46,7 @@ qt_add_library(Kub3Core STATIC
     src/utils.cpp
     src/Config/ConfigLoader.cpp
     ## Master FSM
+    src/MFSM/MasterFSM.cpp
     ## Services
     src/Services/Drawers/DualConveyorDrawerService.cpp
     src/Services/Drawers/SingleConveyorDrawerService.cpp
@@ -62,7 +63,6 @@ qt_add_library(Kub3Core STATIC
     src/HAL/Com/MockCommunicator.cpp
     src/HAL/Com/LengthBasedParser.cpp
     src/HAL/Com/PacketRouter.cpp
-    src/HAL/Actuators/ActuatorRegistry.cpp
     src/HAL/Actuators/Motors/TrapezoidalGenerator.cpp
     src/HAL/Actuators/Motors/StepperMotor.cpp
 
@@ -73,6 +73,9 @@ qt_add_library(Kub3Core STATIC
     include/Config/kinematics.h
     include/Config/machine_config.h
     ## Master FSM
+    include/MFSM/MasterFSM.h
+    include/MFSM/events.h
+    include/MFSM/states.h
     ## Services
     include/Services/ITask.h
     include/Services/IService.h
@@ -140,11 +143,19 @@ qt_add_executable(Kub3Software
     # Sources
     src/main.cpp
     src/Logger.h
+    src/ApplicationBuilder.cpp
     src/Views/MainWindow.cpp
+    src/Views/DebugView.cpp
+    src/Views/MachineStatusView.cpp
     # Headers
+    include/ApplicationBuilder.h
     include/Views/MainWindow.h
+    include/Views/DebugView.h
+    include/Views/MachineStatusView.h
     # UI
     gui/MainWindow.ui
+    gui/DebugView.ui
+    gui/MachineStatusView.ui
 )
 
 qt_finalize_target(Kub3Software)

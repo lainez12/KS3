@@ -1,11 +1,11 @@
-#ifdef KUB_MODEL_8
+#if defined(KUB_MODEL_8)
 
 // HAL
 #include "HAL/Actuators/Motors/IMotor.h"
 #include "HAL/MachineStatus/actuators_labels.h"
 #include "HAL/MachineStatus/sensors_labels.h"
 #include "HAL/MachineStatus/utils.h"
-// Services
+// Service & Tasks
 #include "Services/Drawers/DualConveyorDrawerService.h"
 #include "Services/Drawers/tasks/MaskEjectionTask.h"
 #include "Services/Drawers/tasks/MaskInsertionTask.h"
@@ -116,9 +116,9 @@ namespace Kub3::Services
 
     void DualConveyorDrawerService::loadMotorsKinematicProfiles(void)
     {
-        m_waferFastProfile   = m_processConfig.getKinematicProfile(WAFER_DRAWER_MOTOR, "fast");
+        m_waferFastProfile   = m_processConfig.getKinematicProfile(WAFER_DRAWER_MOTOR, "normal");
         m_waferFineProfile   = m_processConfig.getKinematicProfile(WAFER_DRAWER_MOTOR, "fine");
-        m_maskFastProfile    = m_processConfig.getKinematicProfile(MASK_DRAWER_MOTOR, "fast");
+        m_maskFastProfile    = m_processConfig.getKinematicProfile(MASK_DRAWER_MOTOR, "normal");
         m_maskFineProfile    = m_processConfig.getKinematicProfile(MASK_DRAWER_MOTOR, "fine");
         m_maskContactProfile = m_processConfig.getKinematicProfile(MASK_DRAWER_MOTOR, "contact");
     }

@@ -3,18 +3,7 @@
 #include <QObject>
 #include <QThread>
 
-// Public includes
-// --- Utils & misc.
-#include "utils.h"
-#include "version.h"
-// --- Hardware manager
-#include "HAL/HardwareManager.h"
-// --- Machine state repository
-#include "HAL/MachineStatus/MachineStatusRepo.h"
-// --- UI
-#include "Views/MainWindow.h"
-
-// Private includes
+#include "ApplicationBuilder.h"
 #include "Logger.h"
 
 using namespace Kub3;
@@ -43,19 +32,13 @@ int main(int argc, char *argv[])
     qInfo() << "  Log path:" << Logger::file_location();
     qInfo() << "========================================";
 
-    // Create machine state (sensors)
-    auto machineStatusRepo = std::make_shared<HAL::MS::MachineStatusRepo>();
-    // Create hardware manager
-    HAL::HardwareManager hwManager(machineStatusRepo);
-    // Create UI
-    MainWindow w;
+    ApplicationBuilder appBuilder;
 
-    hwManager.startAll();
-    w.show();
-
-    const int ret = app.exec();
-
-    hwManager.stopAll(); // Gracefull shutdown
-
-    return ret;
+    return appBuilder
+        .loadConfigurations("/tmp/hardware.ini", "/tmp/process.ini")
+        .buildHardwareTier()
+        .buildLogicTier()
+        .buildUserInterfaceTier()
+        .wireArchitecture()
+        .run(app);
 }
