@@ -1,4 +1,4 @@
-#ifdef KUB_MODEL_8
+#if defined(KUB_MODEL_8)
 #pragma once
 
 #include <QElapsedTimer>

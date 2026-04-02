@@ -1,7 +1,7 @@
 ---
 BasedOnStyle: LLVM
 AccessModifierOffset: -4
-BreakBeforeBraces: Allman
+# BreakBeforeBraces: Allman
 BreakConstructorInitializers: AfterColon
 ColumnLimit: 0
 FixNamespaceComments: false

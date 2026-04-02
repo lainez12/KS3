@@ -20,13 +20,13 @@ namespace Kub3::HAL
 
     signals:
         // This is the clean, validated packet sent to your Services/FSM!
-        void packetReady(const Com::packet_t &packet);
-        void hardwareError(const QString &reason);
+        void s_packetReady(const Com::packet_t &packet);
+        void s_hardwareError(const QString &reason);
 
     public slots:
-        void start(void);                     // Called to open the port
-        void stop(void);                      // Called to close the port
-        void sendCommand(QByteArray payload); // No reference
+        void ps_start(void);                     // Called to open the port
+        void ps_stop(void);                      // Called to close the port
+        void ps_sendCommand(QByteArray payload); // No reference
 
     private slots:
         // Triggered automatically when the Communicator emits dataReceived

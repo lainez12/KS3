@@ -1,4 +1,4 @@
-#ifndef KUB_MODEL_8
+#if defined(KUB_MODEL_4) || defined(KUB_MODEL_6)
 
 // HAL
 #include "HAL/Actuators/Motors/IMotor.h"
@@ -43,4 +43,4 @@ namespace Kub3::Services
 
 }
 
-#endif // KUB_MODEL_8
+#endif // defined(KUB_MODEL_4) || defined(KUB_MODEL_6)

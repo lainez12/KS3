@@ -38,7 +38,7 @@ namespace Kub3::HAL::Act
         {
             QMetaObject::invokeMethod(
                 driver.get(),
-                &MCUDriver::sendCommand,
+                &MCUDriver::ps_sendCommand,
                 Qt::QueuedConnection,
                 QByteArray(reinterpret_cast<const char *>(payload), size));
         }
@@ -146,7 +146,12 @@ namespace Kub3::HAL::Act
 
     void StepperMotor::emergencyStop(void)
     {
-        throw "Not implemented";
+        m_controlTimer.stop();
+        m_lastSentHz.reset();
+        m_lastTickNsecs = 0;
+
+        const uint8_t payload[] = {'1', m_byteId};
+        sendPayload(payload, sizeof(payload));
     }
 
     void StepperMotor::enable(bool state)
@@ -181,12 +186,7 @@ namespace Kub3::HAL::Act
 
         if (state.isFinished) // Shutdown if complete
         {
-            m_controlTimer.stop();
-            m_lastSentHz.reset();
-            m_lastTickNsecs = 0;
-
-            const uint8_t payload[] = {'1', m_byteId};
-            sendPayload(payload, sizeof(payload));
+            emergencyStop();
             return;
         }
 

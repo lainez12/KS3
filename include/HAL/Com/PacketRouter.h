@@ -21,7 +21,7 @@ namespace Kub3::HAL::Com
         void registerRoute(const std::string &key, Shared<Sensors::ISensor> sensor);
 
     public slots:
-        void routePacket(const Kub3::HAL::Com::packet_t &packet);
+        void ps_routePacket(const Kub3::HAL::Com::packet_t &packet);
 
     private:
         using RouteMap = std::unordered_map<std::string, Shared<Sensors::ISensor>, Utils::StringViewHash, std::equal_to<>>;

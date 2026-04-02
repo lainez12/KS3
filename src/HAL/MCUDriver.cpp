@@ -20,24 +20,24 @@ namespace Kub3::HAL
             &Com::ICommunicator::connectionLost,
             this,
             [this]()
-            { emit hardwareError("Connection Lost"); });
+            { emit s_hardwareError("Connection Lost"); });
     }
 
     MCUDriver::~MCUDriver()
     {
-        this->stop();
+        this->ps_stop();
         // TODO: notify disconnection to MCU ?
     }
 
-    void MCUDriver::start()
+    void MCUDriver::ps_start()
     {
         if (!m_comm->open())
         {
-            emit hardwareError("Failed to open communicator");
+            emit s_hardwareError("Failed to open communicator");
         }
     }
 
-    void MCUDriver::stop()
+    void MCUDriver::ps_stop()
     {
         if (m_comm && m_comm->isOpen())
             m_comm->close();
@@ -55,13 +55,13 @@ namespace Kub3::HAL
         while (Optional<Com::packet_t> packetOpt = m_parser->tryExtractPacket())
         {
             if (packetOpt->isValid)
-                emit packetReady(packetOpt.value()); // Emit the full, validated packet to the subscribers
+                emit s_packetReady(packetOpt.value()); // Emit the full, validated packet to the subscribers
             else
                 qCritical() << "Corrupted packet parsed"; // TODO: better logging & handling
         }
     }
 
-    void MCUDriver::sendCommand(QByteArray payload)
+    void MCUDriver::ps_sendCommand(QByteArray payload)
     {
         m_comm->send(std::move(payload));
     }

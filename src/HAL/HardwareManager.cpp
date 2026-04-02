@@ -12,33 +12,69 @@
 using namespace std::string_literals;
 
 // Packet key extractors
+static std::string_view arduino2KeyExtractor(const Kub3::HAL::Com::packet_t &packet);
 static std::string_view arduino3KeyExtractor(const Kub3::HAL::Com::packet_t &packet);
 // Payload parsers
 static bool limitSwitchParser(const QByteArray &d);
 static uint16_t forceSensorParser(const QByteArray &d);
 static bool forceSensorEnabledParser(const QByteArray &d);
 static int32_t encoderValueParser(const QByteArray &d);
+static bool physicalButtonParser(const QByteArray &d);
 
 namespace Kub3::HAL
 {
 
-    HardwareManager::HardwareManager(Shared<MS::IMachineStatusRepo> repo, QObject *parent) :
+    HardwareManager::HardwareManager(Shared<MS::IMachineStatusRepo> repo, const Config::hardware_config_t &config, QObject *parent) :
         QObject(parent),
         m_repo(std::move(repo)),
         m_actuatorRegistry(std::make_shared<Act::ActuatorRegistry>())
     {
-        const Config::hardware_config_t hardwwareConfig = Config::ConfigLoader::loadHardwareConfig("/tmp/hardware.ini");
-        const Config::process_config_t processConfig    = Config::ConfigLoader::loadProcessConfig("/tmp/process.ini");
-
-// TODO: Build the machine based on CMake configuration
-#ifdef KUB_MODEL_8
-        setupArduino3Subsystem(hardwwareConfig);
+// TODO: Build the machine based on the CMake configuration
+#if defined(KUB_MODEL_8)
+        // setupArduino1Subsystem(config);
+        setupArduino2Subsystem(config);
+        setupArduino3Subsystem(config);
 #endif
     }
 
     HardwareManager::~HardwareManager()
     {
         stopAll();
+    }
+
+    void HardwareManager::setupArduino2Subsystem(const Config::hardware_config_t &config)
+    {
+        using namespace Kub3::HAL::Sensors;
+
+        // Create thread & Driver for Arduino3
+        auto thread         = std::make_unique<QThread>();                                       // Driver thread
+        auto comms          = std::make_unique<Com::SerialCommunicator>("/dev/ttyACM1", 115200); // TODO: get port from settings file
+        auto parser         = std::make_unique<Com::LengthBasedParser>();
+        auto arduino2Driver = std::make_shared<MCUDriver>(std::move(comms), std::move(parser));
+        auto router         = std::make_unique<Com::PacketRouter>(&arduino2KeyExtractor);
+
+        // ===========================================
+        // UPWARD PIPELINE (Hardware --> Software)
+        // ===========================================
+
+        // Create Sensors
+        // --- Physical buttons
+        auto emergencyStopBtn = std::make_shared<Sensor<bool>>(m_repo, EMERGENCY_STOP, false, &physicalButtonParser);
+
+        // Register sensors
+        // --- Physical buttons
+        this->registerSensor(router.get(), "E\x7F\x7F"s, std::move(emergencyStopBtn));
+
+        // Move MCUDriver to its own thread
+        arduino2Driver->moveToThread(thread.get());
+
+        // Wire MCUDriver -> Router
+        QObject::connect(arduino2Driver.get(), &MCUDriver::s_packetReady, router.get(), &Com::PacketRouter::ps_routePacket);
+
+        // Store in lifecycle manager
+        m_drivers.push_back(std::move(arduino2Driver));
+        m_routers.push_back(std::move(router));
+        m_threads.push_back(std::move(thread));
     }
 
     void HardwareManager::setupArduino3Subsystem(const Config::hardware_config_t &config)
@@ -157,7 +193,7 @@ namespace Kub3::HAL
         arduino3Driver->moveToThread(thread.get());
 
         // Wire MCUDriver -> Router
-        QObject::connect(arduino3Driver.get(), &MCUDriver::packetReady, router.get(), &Com::PacketRouter::routePacket);
+        QObject::connect(arduino3Driver.get(), &MCUDriver::s_packetReady, router.get(), &Com::PacketRouter::ps_routePacket);
 
         // Store in lifecycle manager
         m_drivers.push_back(std::move(arduino3Driver));
@@ -178,7 +214,7 @@ namespace Kub3::HAL
         for (size_t i = 0; i < m_threads.size(); ++i)
         {
             m_threads[i]->start();
-            QMetaObject::invokeMethod(m_drivers[i].get(), &MCUDriver::start);
+            QMetaObject::invokeMethod(m_drivers[i].get(), &MCUDriver::ps_start);
         }
     }
 
@@ -189,7 +225,7 @@ namespace Kub3::HAL
             if (!m_threads[i] || !m_threads[i]->isRunning())
                 continue;
 
-            QMetaObject::invokeMethod(m_drivers[i].get(), &MCUDriver::stop, Qt::QueuedConnection);
+            QMetaObject::invokeMethod(m_drivers[i].get(), &MCUDriver::ps_stop, Qt::QueuedConnection);
             m_threads[i]->exit(0);
             if (!m_threads[i]->wait(2000))
             {
@@ -202,6 +238,28 @@ namespace Kub3::HAL
 } // namespace Kub3::HAL
 
 // Key extractors
+
+static std::string_view arduino2KeyExtractor(const Kub3::HAL::Com::packet_t &packet)
+{
+    if (packet.length < 2)
+        return std::string_view(); // Not enough bytes to have key + data
+
+    // TODO: implement more keys
+    switch (packet.payload[0])
+    {
+    case 'E':
+    {
+        if (packet.payload[1] == 'E') // Shutdown request
+            return std::string_view(packet.payload.data(), 2);
+        else if (packet.length >= 3 && packet.payload[1] == 0x7F && packet.payload[2] == 0x7F) // Emergency stop
+            return std::string_view(packet.payload.data(), 3);
+        break;
+    }
+    default:
+        break;
+    }
+    return std::string_view(); // 404
+}
 
 static std::string_view arduino3KeyExtractor(const Kub3::HAL::Com::packet_t &packet)
 {
@@ -270,4 +328,9 @@ static int32_t encoderValueParser(const QByteArray &d)
            (static_cast<int32_t>(static_cast<uint8_t>(d[1])) << 16) |
            (static_cast<int32_t>(static_cast<uint8_t>(d[2])) << 8) |
            (static_cast<int32_t>(static_cast<uint8_t>(d[3])));
+}
+
+static bool physicalButtonParser(const QByteArray &d)
+{
+    return true; // @note: Receiving message only when button was pressed
 }

@@ -16,15 +16,6 @@ namespace Kub3::Services
         Both
     };
 
-    enum class DrawerStatus
-    {
-        Unknown,
-        Opened,
-        Closed,
-        Moving,
-        Error
-    };
-
     class IDrawerService : public IService
     {
     public:

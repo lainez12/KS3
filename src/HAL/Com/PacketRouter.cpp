@@ -17,7 +17,7 @@ namespace Kub3::HAL::Com
         m_routes[key] = std::move(sensor);
     }
 
-    void PacketRouter::routePacket(const Kub3::HAL::Com::packet_t &packet)
+    void PacketRouter::ps_routePacket(const Kub3::HAL::Com::packet_t &packet)
     {
         if (packet.payload.isEmpty() || !m_extractor)
             return;
