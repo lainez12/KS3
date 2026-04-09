@@ -17,16 +17,10 @@ namespace Kub3::Algorithms::Kinematic
 
     typedef Unique<IKinematicGenerator> (*kinematic_generator_builder)(void);
 
-    const kinematic_generator_builder kinematicsGenBuilders[KinematicGeneratorKind::TYPES_COUNT] = {
+    static const kinematic_generator_builder kinematicsGenBuilders[KinematicGeneratorKind::TYPES_COUNT] = {
         [KinematicGeneratorKind::TRAPEZOIDAL] = []() -> Unique<IKinematicGenerator> { return std::move(std::make_unique<TrapezoidalGenerator>()); },
     };
 
-    Unique<IKinematicGenerator> buildKinematicGenerator(KinematicGeneratorKind kind)
-    {
-        if (kind < 0 || kind >= TYPES_COUNT)
-            throw std::out_of_range(std::format("Invalid KinematicGeneratorKind: {}", kind));
-
-        return kinematicsGenBuilders[kind]();
-    }
+    Unique<IKinematicGenerator> buildKinematicGenerator(KinematicGeneratorKind kind);
 
 }

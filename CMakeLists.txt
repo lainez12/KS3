@@ -65,6 +65,7 @@ qt_add_library(Kub3Core STATIC
     src/HAL/Com/PacketRouter.cpp
     src/HAL/Actuators/Motors/StepperMotor.cpp
     ## Algorithms
+    src/Algorithms/Kinematic/utils.cpp
     src/Algorithms/Kinematic/TrapezoidalGenerator.cpp
 
     # Headers
