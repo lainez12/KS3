@@ -49,7 +49,7 @@ MainWindow::MainWindow(QWidget *parent) :
         connect(m_machineStatusView, &MachineStatusView::s_home, this, &MainWindow::goBackHome);
     }
 
-    ui->stackedWidget->setCurrentIndex(m_homeViewIndex);
+    ui->stackedWidget->setCurrentWidget(m_debugView);
 }
 
 MainWindow::~MainWindow()

@@ -6,14 +6,17 @@
 #include <string>
 #include <vector>
 
-#include "Config/machine_config.h"
-#include "HAL/MCUDriver.h"
+#include <Algorithms/Kinematic/IKinematicGenerator.h>
+#include <Config/machine_config.h>
+#include <HAL/MCUDriver.h>
+#include <utils.h>
+
 #include "IMotor.h"
-#include "TrapezoidalGenerator.h"
-#include "utils.h"
 
 namespace Kub3::HAL::Act
 {
+
+    using namespace Algorithms::Kinematic;
 
     class StepperMotor final : public QObject, public IMotor
     {
@@ -27,6 +30,7 @@ namespace Kub3::HAL::Act
             Weak<MCUDriver> driver,
             Config::stepper_hw_properties_t hwConfig,
             std::function<double()> positionGetter,
+            Unique<IKinematicGenerator> kinematicEngine,
             QObject *parent = nullptr);
 
         [[nodiscard]] std::string_view getId(void) const noexcept override
@@ -61,7 +65,7 @@ namespace Kub3::HAL::Act
 
         // Velocity curve and trajectory member variables
         uint8_t m_currentStepFraction = 1;
-        TrapezoidalGenerator m_mathEngine;
+        Unique<IKinematicGenerator> m_kinematicEngine;
         // --- Timers
         QTimer m_controlTimer;
         QElapsedTimer m_dtTimer;

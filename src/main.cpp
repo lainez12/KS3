@@ -1,10 +1,12 @@
-// Libs
 #include <QApplication>
 #include <QFontDatabase>
+#include <QMessageBox>
 #include <QObject>
 #include <QThread>
+#include <exception>
 
-#include "ApplicationBuilder.h"
+#include <ApplicationBuilder.h>
+
 #include "Logger.h"
 
 using namespace Kub3;
@@ -59,12 +61,30 @@ int main(int argc, char *argv[])
     qInfo() << "========================================";
 
     ApplicationBuilder appBuilder;
+    int ret;
 
-    return appBuilder
-        .loadConfigurations("/tmp/hardware.ini", "/tmp/process.ini")
-        .buildHardwareTier()
-        .buildLogicTier()
-        .buildUserInterfaceTier()
-        .wireArchitecture()
-        .run(app);
+    try
+    {
+        ret = appBuilder
+                  .loadConfigurations("/tmp/hardware.ini", "/tmp/process.ini")
+                  .buildHardwareTier()
+                  .buildLogicTier()
+                  .buildUserInterfaceTier()
+                  .wireArchitecture()
+                  .run(app);
+    }
+    catch (const std::exception &e)
+    {
+        qCritical() << "Fatal exception:" << e.what();
+        QMessageBox::critical(nullptr, "Fatal Error", QString("An unhandled error occurred:\n%1").arg(e.what()));
+        return -1;
+    }
+    catch (...)
+    {
+        qCritical() << "Fatal exception: unknown (non-std::exception type)";
+        QMessageBox::critical(nullptr, "Fatal Error", "An unknown fatal error occurred. The application will now close.");
+        return -1;
+    }
+
+    return ret;
 }

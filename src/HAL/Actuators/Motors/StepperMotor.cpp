@@ -14,6 +14,7 @@ namespace Kub3::HAL::Act
                                Weak<MCUDriver> driver,
                                Config::stepper_hw_properties_t hwConfig,
                                std::function<double()> posGetter,
+                               Unique<IKinematicGenerator> kinematicEngine,
                                QObject *parent) :
         QObject(parent),
         m_id(std::move(id)),
@@ -21,6 +22,7 @@ namespace Kub3::HAL::Act
         m_hwConfig(std::move(hwConfig)),
         m_driver(std::move(driver)),
         m_positionGetter(std::move(posGetter)),
+        m_kinematicEngine(std::move(kinematicEngine)),
         m_controlTimer(this)
     {
         qDebug() << std::format("Stepper[{}] Loaded config:", m_id);
@@ -28,6 +30,11 @@ namespace Kub3::HAL::Act
         qDebug() << std::format("--- screwPitchMm={}", m_hwConfig.screwPitchMm);
         qDebug() << std::format("--- maxVelocityMmS={}", m_hwConfig.maxVelocityMmS);
         qDebug() << std::format("--- maxAccelerationMmS2={}", m_hwConfig.maxAccelerationMmS2);
+
+        if (!m_kinematicEngine)
+        {
+            throw std::format("Stepper[{}] was provided a null kinematic engine.", m_id);
+        }
 
         connect(&m_controlTimer, &QTimer::timeout, this, &StepperMotor::onControlTick);
     }
@@ -65,7 +72,7 @@ namespace Kub3::HAL::Act
         if (!m_controlTimer.isActive()) // Start the control timer
         {
             // Initialize the math engine
-            m_mathEngine.startPositionMove(getEncoderPositionMm(), position_mm, safeVel, safeAcc);
+            m_kinematicEngine->startPositionMove(getEncoderPositionMm(), position_mm, safeVel, safeAcc);
 
             m_lastTickNsecs = 0; // Reset last tick timestamp
             m_dtTimer.start();   // reset elapsed timer
@@ -74,7 +81,7 @@ namespace Kub3::HAL::Act
         else // Motor already moving
         {
             // Update the math engine
-            m_mathEngine.updatePositionMove(position_mm, safeVel, safeAcc);
+            m_kinematicEngine->updatePositionMove(position_mm, safeVel, safeAcc);
         }
     }
 
@@ -97,7 +104,7 @@ namespace Kub3::HAL::Act
             const double encoderPos = getEncoderPositionMm();
 
             // Initialize the math engine
-            m_mathEngine.startPositionMove(encoderPos, encoderPos + distance_mm, safeVel, safeAcc);
+            m_kinematicEngine->startPositionMove(encoderPos, encoderPos + distance_mm, safeVel, safeAcc);
 
             m_lastTickNsecs = 0; // Reset last tick timestamp
             m_dtTimer.start();   // reset elapsed timer
@@ -105,10 +112,10 @@ namespace Kub3::HAL::Act
         }
         else // Motor already moving
         {
-            const double currentMathEnginePos = m_mathEngine.getCurrentState().position;
+            const double currentMathEnginePos = m_kinematicEngine->getCurrentState().position;
 
             // Update the math engine
-            m_mathEngine.updatePositionMove(currentMathEnginePos + distance_mm, safeVel, safeAcc);
+            m_kinematicEngine->updatePositionMove(currentMathEnginePos + distance_mm, safeVel, safeAcc);
         }
     }
 
@@ -131,7 +138,7 @@ namespace Kub3::HAL::Act
         if (!m_controlTimer.isActive()) // Start the control timer
         {
             // Initialize the pure math engine
-            m_mathEngine.startVelocityMove(getEncoderPositionMm(), sign, safeVel, safeAcc);
+            m_kinematicEngine->startVelocityMove(getEncoderPositionMm(), sign, safeVel, safeAcc);
 
             m_lastTickNsecs = 0; // Reset last tick timestamp
             m_dtTimer.start();   // reset elapsed timer
@@ -140,7 +147,7 @@ namespace Kub3::HAL::Act
         else // Motor already moving
         {
             // Update the math engine
-            m_mathEngine.updateVelocityMove(sign, safeVel, safeAcc);
+            m_kinematicEngine->updateVelocityMove(sign, safeVel, safeAcc);
         }
     }
 
@@ -156,17 +163,17 @@ namespace Kub3::HAL::Act
 
     void StepperMotor::enable(bool state)
     {
-        throw "Not implemented";
+        throw std::runtime_error("Not implemented");
     }
 
     void StepperMotor::home(void)
     {
-        throw "Not implemented";
+        throw std::runtime_error("Not implemented");
     }
 
     bool StepperMotor::isMoving(void) const
     {
-        throw "Not implemented";
+        throw std::runtime_error("Not implemented");
     }
 
     double StepperMotor::getEncoderPositionMm(void) const
@@ -182,7 +189,7 @@ namespace Kub3::HAL::Act
 
         m_lastTickNsecs = currentNsecs;
 
-        const kinematic_state_t state = m_mathEngine.calculateNext(dt);
+        const kinematic_state_t state = m_kinematicEngine->calculateNext(dt);
 
         if (state.isFinished) // Shutdown if complete
         {

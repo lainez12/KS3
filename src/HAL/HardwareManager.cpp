@@ -1,6 +1,6 @@
 #include <QDebug>
 
-#include "HAL/Actuators/Motors/StepperMotor.h"
+#include "Algorithms/Kinematic/IKinematicGenerator.h"
 #include "HAL/Com/LengthBasedParser.h"
 #include "HAL/Com/SerialCommunicator.h"
 #include "HAL/HardwareManager.h"
@@ -42,6 +42,38 @@ namespace Kub3::HAL
         stopAll();
     }
 
+    void HardwareManager::startAll()
+    {
+        for (size_t i = 0; i < m_threads.size(); ++i)
+        {
+            m_threads[i]->start();
+            QMetaObject::invokeMethod(m_drivers[i].get(), &MCUDriver::ps_start);
+        }
+    }
+
+    void HardwareManager::stopAll()
+    {
+        for (size_t i = 0; i < m_threads.size(); ++i)
+        {
+            if (!m_threads[i] || !m_threads[i]->isRunning())
+                continue;
+
+            QMetaObject::invokeMethod(m_drivers[i].get(), &MCUDriver::ps_stop, Qt::QueuedConnection);
+            m_threads[i]->exit(0);
+            if (!m_threads[i]->wait(2000))
+            {
+                m_threads[i]->terminate(); // Force kill
+                m_threads[i]->wait();
+            }
+        }
+    }
+
+#if defined(KUB_MODEL_8)
+
+    // ======================================================
+    // KUB3-8i HAL instanciation functions (split by MCU)
+    // ======================================================
+
     void HardwareManager::setupArduino2Subsystem(const Config::hardware_config_t &config)
     {
         using namespace Kub3::HAL::Sensors;
@@ -79,14 +111,35 @@ namespace Kub3::HAL
 
     void HardwareManager::setupArduino3Subsystem(const Config::hardware_config_t &config)
     {
-        using namespace Kub3::HAL::Sensors;
-
         // Create thread & Driver for Arduino3
         auto thread         = std::make_unique<QThread>();                                       // Driver thread
         auto comms          = std::make_unique<Com::SerialCommunicator>("/dev/ttyACM0", 115200); // TODO: get port from settings file
         auto parser         = std::make_unique<Com::LengthBasedParser>();
         auto arduino3Driver = std::make_shared<MCUDriver>(std::move(comms), std::move(parser));
         auto router         = std::make_unique<Com::PacketRouter>(&arduino3KeyExtractor);
+
+        this->createArduino3Sensors(router.get());
+        this->createArduino3Actuators(config, arduino3Driver);
+
+        // Move MCUDriver to its own thread
+        arduino3Driver->moveToThread(thread.get());
+
+        // Wire MCUDriver -> Router
+        QObject::connect(arduino3Driver.get(), &MCUDriver::s_packetReady, router.get(), &Com::PacketRouter::ps_routePacket);
+
+        // Store in lifecycle manager
+        m_drivers.push_back(std::move(arduino3Driver));
+        m_routers.push_back(std::move(router));
+        m_threads.push_back(std::move(thread));
+    }
+
+    // ========================================
+    // Arduino 3 HAL instanciation helpers
+    // ========================================
+
+    void HardwareManager::createArduino3Sensors(Com::PacketRouter *router)
+    {
+        using namespace Kub3::HAL::Sensors;
 
         // ===========================================
         // UPWARD PIPELINE (Hardware --> Software)
@@ -126,78 +179,58 @@ namespace Kub3::HAL
 
         // Register sensors
         // --- Encoders
-        this->registerSensor(router.get(), "1"s, std::move(zLeftEncoder));
-        this->registerSensor(router.get(), "2"s, std::move(zRightEncoder));
-        this->registerSensor(router.get(), "3"s, std::move(zBackEncoder));
-        this->registerSensor(router.get(), "4"s, std::move(maskEncoder));
-        this->registerSensor(router.get(), "5"s, std::move(waferEncoder));
+        this->registerSensor(router, "1"s, std::move(zLeftEncoder));
+        this->registerSensor(router, "2"s, std::move(zRightEncoder));
+        this->registerSensor(router, "3"s, std::move(zBackEncoder));
+        this->registerSensor(router, "4"s, std::move(maskEncoder));
+        this->registerSensor(router, "5"s, std::move(waferEncoder));
         // --- Limit switches
-        this->registerSensor(router.get(), "S\x00"s, std::move(zLeftHighLimit));
-        this->registerSensor(router.get(), "S\x01"s, std::move(zLeftLowLimit));
-        this->registerSensor(router.get(), "S\x02"s, std::move(zRightHighLimit));
-        this->registerSensor(router.get(), "S\x03"s, std::move(zRightLowLimit));
-        this->registerSensor(router.get(), "S\x04"s, std::move(zBackHighLimit));
-        this->registerSensor(router.get(), "S\x05"s, std::move(zBackLowLimit));
-        this->registerSensor(router.get(), "S\x06"s, std::move(cm0Limit));
-        this->registerSensor(router.get(), "S\x07"s, std::move(cm1Limit));
-        this->registerSensor(router.get(), "S\x08"s, std::move(cm2Limit));
-        this->registerSensor(router.get(), "S\x09"s, std::move(cm3Limit));
-        this->registerSensor(router.get(), "S\x0A"s, std::move(cw0Limit));
-        this->registerSensor(router.get(), "S\x0B"s, std::move(cw1Limit));
-        this->registerSensor(router.get(), "S\x0C"s, std::move(cw2Limit));
-        this->registerSensor(router.get(), "Z1"s, std::move(z1Limit));
-        this->registerSensor(router.get(), "Z2"s, std::move(z2Limit));
-        this->registerSensor(router.get(), "Z3"s, std::move(zWaferOnLimit));
+        this->registerSensor(router, "S\x00"s, std::move(zLeftHighLimit));
+        this->registerSensor(router, "S\x01"s, std::move(zLeftLowLimit));
+        this->registerSensor(router, "S\x02"s, std::move(zRightHighLimit));
+        this->registerSensor(router, "S\x03"s, std::move(zRightLowLimit));
+        this->registerSensor(router, "S\x04"s, std::move(zBackHighLimit));
+        this->registerSensor(router, "S\x05"s, std::move(zBackLowLimit));
+        this->registerSensor(router, "S\x06"s, std::move(cm0Limit));
+        this->registerSensor(router, "S\x07"s, std::move(cm1Limit));
+        this->registerSensor(router, "S\x08"s, std::move(cm2Limit));
+        this->registerSensor(router, "S\x09"s, std::move(cm3Limit));
+        this->registerSensor(router, "S\x0A"s, std::move(cw0Limit));
+        this->registerSensor(router, "S\x0B"s, std::move(cw1Limit));
+        this->registerSensor(router, "S\x0C"s, std::move(cw2Limit));
+        this->registerSensor(router, "Z1"s, std::move(z1Limit));
+        this->registerSensor(router, "Z2"s, std::move(z2Limit));
+        this->registerSensor(router, "Z3"s, std::move(zWaferOnLimit));
         // --- Force sensors
-        this->registerSensor(router.get(), "F?1"s, std::move(leftForceEn));
-        this->registerSensor(router.get(), "F?2"s, std::move(rightForceEn));
-        this->registerSensor(router.get(), "F?3"s, std::move(backForceEn));
-        this->registerSensor(router.get(), "F1"s, std::move(leftForce));
-        this->registerSensor(router.get(), "F2"s, std::move(rightForce));
-        this->registerSensor(router.get(), "F3"s, std::move(backForce));
+        this->registerSensor(router, "F?1"s, std::move(leftForceEn));
+        this->registerSensor(router, "F?2"s, std::move(rightForceEn));
+        this->registerSensor(router, "F?3"s, std::move(backForceEn));
+        this->registerSensor(router, "F1"s, std::move(leftForce));
+        this->registerSensor(router, "F2"s, std::move(rightForce));
+        this->registerSensor(router, "F3"s, std::move(backForce));
+    }
+
+    void HardwareManager::createArduino3Actuators(const Config::hardware_config_t &config, const std::shared_ptr<MCUDriver> &driver)
+    {
+        using namespace Algorithms::Kinematic;
 
         // ===========================================
         // DOWNWARD PIPELINE (Software --> Hardware)
         // ===========================================
 
-        auto generateEncoderGetter = [repo = m_repo](const std::string encoderId) {
-            return [repo, encoderId = std::move(encoderId)]() { return HAL::MS::readInt(repo, encoderId); };
-        };
-
-        // Create Actuators
         /// --- Motors
-        auto itMask = config.motors.find(MASK_DRAWER_MOTOR);
-        if (itMask == config.motors.end())
-            throw std::runtime_error(std::format("Hardware configuration not found for MASK_DRAWER_MOTOR={}", MASK_DRAWER_MOTOR));
-        const auto &maskMotorConfig = itMask->second;
-        auto *maskHwProps           = std::get_if<Config::stepper_hw_properties_t>(&maskMotorConfig.hwProperties);
-        if (!maskHwProps)
-            throw std::runtime_error("MASK_DRAWER_MOTOR is defined, but defined configuration doesn't match the motor type (expected type: stepper)");
-        auto maskDrawerMotor = std::make_shared<Act::StepperMotor>(MASK_DRAWER_MOTOR, '4', arduino3Driver, *maskHwProps, generateEncoderGetter(MASK_ENCODER));
+        auto maskMotor  = createStepperMotor(config, MASK_DRAWER_MOTOR, '4', KinematicGeneratorKind::TRAPEZOIDAL, driver, MASK_ENCODER);
+        auto waferMotor = createStepperMotor(config, WAFER_DRAWER_MOTOR, '5', KinematicGeneratorKind::TRAPEZOIDAL, driver, WAFER_ENCODER);
 
-        auto itWafer = config.motors.find(WAFER_DRAWER_MOTOR);
-        if (itWafer == config.motors.end())
-            throw std::runtime_error(std::format("Hardware configuration not found for WAFER_DRAWER_MOTOR={}", WAFER_DRAWER_MOTOR));
-        const auto &waferMotorConfig = itWafer->second;
-        auto *waferHwProps           = std::get_if<Config::stepper_hw_properties_t>(&waferMotorConfig.hwProperties);
-        if (!waferHwProps)
-            throw std::runtime_error("WAFER_DRAWER_MOTOR is defined, but defined configuration doesn't match the motor type (expected type: stepper)");
-        auto waferDrawerMotor = std::make_shared<Act::StepperMotor>(WAFER_DRAWER_MOTOR, '5', arduino3Driver, *waferHwProps, generateEncoderGetter(WAFER_ENCODER));
-
-        m_actuatorRegistry->registerActuator(waferDrawerMotor);
-        m_actuatorRegistry->registerActuator(maskDrawerMotor);
-
-        // Move MCUDriver to its own thread
-        arduino3Driver->moveToThread(thread.get());
-
-        // Wire MCUDriver -> Router
-        QObject::connect(arduino3Driver.get(), &MCUDriver::s_packetReady, router.get(), &Com::PacketRouter::ps_routePacket);
-
-        // Store in lifecycle manager
-        m_drivers.push_back(std::move(arduino3Driver));
-        m_routers.push_back(std::move(router));
-        m_threads.push_back(std::move(thread));
+        m_actuatorRegistry->registerActuator(std::move(maskMotor));
+        m_actuatorRegistry->registerActuator(std::move(waferMotor));
     }
+
+#endif // defined(KUB_MODEL_8)
+
+    // =====================================
+    // Sensors HAL instanciation helpers
+    // =====================================
 
     void HardwareManager::registerSensor(Com::PacketRouter *router, std::string &&route, Shared<Kub3::HAL::Sensors::ISensor> sensor)
     {
@@ -207,30 +240,30 @@ namespace Kub3::HAL
         m_sensors.push_back(std::move(sensor));
     }
 
-    void HardwareManager::startAll()
-    {
-        for (size_t i = 0; i < m_threads.size(); ++i)
-        {
-            m_threads[i]->start();
-            QMetaObject::invokeMethod(m_drivers[i].get(), &MCUDriver::ps_start);
-        }
-    }
+    // =====================================
+    // Motors HAL instanciation helpers
+    // =====================================
 
-    void HardwareManager::stopAll()
+    Shared<Act::StepperMotor> HardwareManager::createStepperMotor(
+        const Config::hardware_config_t &config,
+        const std::string &motorId,
+        uint8_t byteId,
+        Algorithms::Kinematic::KinematicGeneratorKind kineGenKind,
+        const Shared<MCUDriver> &driver,
+        const std::string &encoderId)
     {
-        for (size_t i = 0; i < m_threads.size(); ++i)
-        {
-            if (!m_threads[i] || !m_threads[i]->isRunning())
-                continue;
+        auto it = config.motors.find(motorId);
+        if (it == config.motors.end())
+            throw std::runtime_error(std::format("Hardware configuration not found for key: '{}'", motorId));
 
-            QMetaObject::invokeMethod(m_drivers[i].get(), &MCUDriver::ps_stop, Qt::QueuedConnection);
-            m_threads[i]->exit(0);
-            if (!m_threads[i]->wait(2000))
-            {
-                m_threads[i]->terminate(); // Force kill
-                m_threads[i]->wait();
-            }
-        }
+        auto *hwProps = std::get_if<Config::stepper_hw_properties_t>(&it->second.hwProperties);
+        if (!hwProps)
+            throw std::runtime_error(std::format("'{}' configuration doesn't match expected type (stepper)", motorId));
+
+        auto kinematicEngine = Algorithms::Kinematic::buildKinematicGenerator(kineGenKind);
+        auto encoderGetter   = [repo = m_repo, encoderId]() { return HAL::MS::readInt(repo, encoderId); };
+
+        return std::make_shared<Act::StepperMotor>(motorId, byteId, driver, *hwProps, std::move(encoderGetter), std::move(kinematicEngine));
     }
 
 } // namespace Kub3::HAL
