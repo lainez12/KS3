@@ -1,0 +1,58 @@
+#include "Views/Components/NavButton.h"
+#include "ui_NavButton.h"
+
+NavButton::NavButton(QWidget *parent) :
+    QWidget(parent)
+{
+    QVBoxLayout *layout = new QVBoxLayout(this);
+
+    layout->setAlignment(Qt::AlignCenter);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0); // No gap between circle and text
+
+    m_circle = new BottomCroppedCircle(this);
+    m_circle->setFixedSize(60, 60); // Lock the size of the icon circle
+
+    {
+        QVBoxLayout *circleLayout = new QVBoxLayout(m_circle);
+        circleLayout->setAlignment(Qt::AlignCenter);
+        circleLayout->setContentsMargins(0, 0, 0, 2);
+
+        m_iconLabel = new QLabel(m_circle);
+        m_iconLabel->setAlignment(Qt::AlignCenter);
+        m_iconLabel->setStyleSheet("color: white;");
+        m_iconLabel->setScaledContents(true); // Allow image to scale
+        m_iconLabel->setFixedSize(40, 40);    // Size of the white icon
+
+        circleLayout->addWidget(m_iconLabel);
+    }
+
+    m_text = new QLabel(this);
+    m_text->setAlignment(Qt::AlignCenter);
+    m_text->setStyleSheet("color: #0072ba; font-size: 12px;");
+
+    layout->addWidget(m_circle, 0, Qt::AlignHCenter);
+    layout->addWidget(m_text, 0, Qt::AlignHCenter);
+}
+
+void NavButton::setup(const QString &text, const QColor &color, const QString &iconPath)
+{
+    m_text->setText(text);
+    m_circle->setColor(color);
+
+    if (!iconPath.isEmpty())
+        this->setIcon(iconPath);
+}
+
+void NavButton::setIcon(const QString &path)
+{
+    QPixmap pix(path);
+
+    if (!pix.isNull())
+        m_iconLabel->setPixmap(pix);
+}
+
+void NavButton::mouseReleaseEvent(QMouseEvent *event)
+{
+    emit clicked();
+}

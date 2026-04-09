@@ -2,7 +2,7 @@
 
 # Ensure .version exists
 if [ ! -f .version ]; then
-    echo "1.0.0.0" > .version
+    echo "0.0.0.0" > ../.version
 fi
 
 # Read current version

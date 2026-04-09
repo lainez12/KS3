@@ -109,3 +109,4 @@ CMakePresets.json
 
 #devcontainer
 aqtinstall.log
+dist

@@ -22,9 +22,8 @@ namespace Kub3::HAL::Act
     class IMotor : public virtual IActuator
     {
     public:
-        virtual void moveAbsolute(double position_mm, Config::kinematic_profile_t profile) = 0;
-        virtual void moveRelative(double distance_mm, Config::kinematic_profile_t profile) = 0;
-        // TODO: define direction enum instead of uint8_t
+        virtual void moveAbsolute(double position_mm, Config::kinematic_profile_t profile)  = 0;
+        virtual void moveRelative(double distance_mm, Config::kinematic_profile_t profile)  = 0;
         virtual void moveDirection(MotorDirection dir, Config::kinematic_profile_t profile) = 0;
         virtual void home(void)                                                             = 0;
 

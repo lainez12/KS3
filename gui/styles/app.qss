@@ -1,0 +1,55 @@
+* {
+    color: black;
+}
+
+QMainWindow {
+    background-color: #FFFFFF;
+}
+
+QWidget#HomeView, QWidget#DebugView, QWidget#MachineStatusView {
+    background: transparent;
+}
+
+QMainWindow QWidget#kloeLogo QLabel {
+    font-size: 60px;
+    /* font-style: italic; */
+}
+
+QLabel#machineLogo {
+    font-family: "Art ttnorm";
+    font-size: 44px;
+    font-weight: 700;
+    font-style: italic;
+    color: #0072ba; 
+}
+
+QLabel#machineLogoSubtrateSize {
+    font-family: "Art ttnorm";
+    font-size: 28px;
+    font-weight: 700;
+    font-style: italic;
+    color: #e85420;
+}
+
+QFrame#bottomBar {
+    background-color: white;
+    border: none;
+    min-height: 96px;
+    max-height: 96px;
+}
+
+QLabel#kloeLogo {
+    font-family: "Art ttnorm";
+    font-size: 56px;
+    font-weight: 900;
+    font-style: italic;
+    color: #0072ba; /* KLOE Blue */
+}
+
+QLabel {
+    font-family: "Arial";
+}
+
+QFrame#navBtnIconCircle {
+    background-color: rgb(0, 114, 186);
+}

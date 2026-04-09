@@ -43,7 +43,7 @@ cmake --build --preset kub3-8-debug
 ## 4. Versioning Workflow
 We do **not** manually edit the version file. Use the automation script located in the root directory:
 ```bash
-./version-bump.sh
+./scripts/version_bump.sh
 ```
 This script will prompt you to choose between Major, Minor, Patch, or Build updates and automatically reset lower-significance numbers. **Always run this before a release cycle.**
 
@@ -71,6 +71,40 @@ We use **Catch2** for logic testing.
 *   **"Undefined reference to vtable":** You likely added a class with `Q_OBJECT` but forgot to add the header file to the `qt_add_library` or `qt_add_executable` list in `CMakeLists.txt`. Ensure all files are registered.
 *   **"MVS Lib not found":** Ensure the Hikrobot MVS SDK is installed in `/opt/MVS`. If you are developing on a machine without a camera, the build will issue a warning but will still compile with vision features disabled.
 *   **Linker Error `cannot find -lKub3Core`:** You likely renamed the library. Ensure the target name in `CMakeLists.txt` matches exactly what you are linking in `target_link_libraries`.
+
+## 9. Production Deployment (Portable Bundling)
+To create a standalone package that can be moved to a production machine (even one without Qt or the MVS SDK installed), use the deployment pipeline:
+
+1.  **Bump Version:** Ensure your `.version` file is up to date. Use the following command to update it:
+    ```bash
+    ./scripts/version_bump.sh
+    ```
+2.  **Generate Bundle:** Run the deployment script with the target model (4, 6, or 8).
+    ```bash
+    ./scripts/deploy.sh 8
+    ```
+3.  **Collect Output:** The script creates a `dist/` folder containing:
+    *   `kubX-vX.X.X.X-production.tar.gz`: The full application, including all Qt and MVS libraries.
+    *   `setup.sh`: A helper script for the target machine.
+
+**Installing on the Target Machine:**
+Transfer both the `.tar.gz` and the `setup.sh` to the target machine, then run:
+```bash
+chmod +x setup.sh
+./setup.sh
+```
+*This installer handles the extraction to ~/Desktop/.kub3wip, verifies system-level graphics dependencies (like libxcb-cursor0), and configures execution permissions.*
+
+### 9.1. Deployment Constraints & Compatibility
+While the production bundle includes most libraries, Linux deployment is subject to the following technical constraints:
+
+*   **The "Glibc" Rule:** Linux binaries are generally **forward-compatible** but not **backward-compatible**. 
+    *   *Safe:* Build on Debian 11 → Deploy on Debian 12 (or Ubuntu 22.04).
+    *   *Unsafe:* Build on Ubuntu 24.04 → Deploy on Debian 11 (This will probably fail with `GLIBC_X.XX not found`).
+    *   **Recommendation:** Always build your production release on the oldest OS version you intend to support.
+*   **Architecture:** The build machine and target machine must share the same CPU architecture (e.g., `x86_64`). You cannot deploy an Intel/AMD build to an ARM-based device (like a Raspberry Pi).
+*   **Distribution Family:** Staying within the same family (e.g., Debian/Ubuntu/Mint) is recommended to ensure that low-level system libraries (like X11 and OpenGL) match the expected naming conventions.
+
 
 ***
 *For further architectural questions, consult the `include/` directory structure which maps to the logical layers of the KUB3 state machine.*
@@ -123,7 +157,7 @@ cmake --build --preset kub3-8-debug
 ## 4. Flux de travail de versionnage
 Nous ne modifions **jamais** le fichier de version manuellement. Utilisez le script d'automatisation situé à la racine :
 ```bash
-./version-bump.sh
+./version_bump.sh
 ```
 Ce script vous demandera de choisir entre une mise à jour Majeure, Mineure, Patch ou Build et réinitialisera automatiquement les chiffres de moindre importance. **Exécutez toujours ce script avant un cycle de release.**
 
@@ -151,6 +185,39 @@ Nous utilisons **Catch2** pour les tests de logique.
 *   **"Undefined reference to vtable" :** Vous avez probablement ajouté une classe avec `Q_OBJECT` mais oublié d'ajouter le fichier d'en-tête (header) à la liste de `qt_add_library` ou `qt_add_executable` dans `CMakeLists.txt`. Vérifiez que tous les fichiers sont bien enregistrés.
 *   **"MVS Lib not found" :** Assurez-vous que le SDK Hikrobot MVS est installé dans `/opt/MVS`. Si vous développez sur une machine sans caméra, le build émettra un avertissement mais compilera tout de même, avec les fonctionnalités de vision désactivées.
 *   **Erreur d'édition de liens `cannot find -lKub3Core` :** Vous avez probablement renommé la bibliothèque. Assurez-vous que le nom de la cible dans `CMakeLists.txt` correspond exactement à ce que vous liez dans `target_link_libraries`.
+
+## 9. Déploiement en Production (Paquet Portable)
+Pour créer un paquet autonome pouvant être transféré sur une machine de production (même si Qt ou le SDK MVS n'y sont pas installés), utilisez la chaîne de déploiement :
+
+1.  **Mise à jour de la version :** Assurez-vous que le fichier `.version` est à jour. Pour l'incrémenter, utilisez la commande suivante:
+    ```bash
+    ./scripts/version_bump.sh
+    ```
+2.  **Générer le paquet :** Lancez le script de déploiement pour le modèle cible (4, 6, ou 8).
+    ```bash
+    ./scripts/deploy.sh 8
+    ```
+3.  **Récupérer les fichiers :** Le script crée un dossier `dist/` contenant :
+    *   `kubX-vX.X.X-production.tar.gz` : L'application complète avec toutes les bibliothèques Qt et MVS.
+    *   `setup.sh` : Un script d'installation pour la machine cible.
+
+**Installation sur la machine cible :**
+Transférez le fichier `.tar.gz` et le script `setup.sh` sur la machine de destination, puis exécutez :
+```bash
+chmod +x setup.sh
+./setup.sh
+```
+*Cet installateur gère l'extraction dans ~/Desktop/.kub3wip, vérifie les dépendances graphiques système (comme libxcb-cursor0) et configure les permissions d'exécution.*
+
+### 9.1. Contraintes de Déploiement et Compatibilité
+Bien que le paquet de production inclue la majorité des bibliothèques, le déploiement sur Linux est soumis aux contraintes techniques suivantes :
+
+*   **La règle de la "Glibc" :** Les binaires Linux sont généralement **compatibles vers l'avant**, mais pas **vers l'arrière**.
+    *   *Sûr :* Compiler sur Debian 11 → Déployer sur Debian 12 (ou Ubuntu 22.04).
+    *   *Incertain :* Compiler sur Ubuntu 24.04 → Déployer sur Debian 11 (Échec probable avec l'erreur `GLIBC_X.XX not found`).
+    *   **Recommandation :** Compilez toujours votre version de production sur la version d'OS la plus ancienne que vous devez supporter.
+*   **Architecture :** La machine de compilation et la machine cible doivent partager la même architecture CPU (ex: `x86_64`). Vous ne pouvez pas déployer un build Intel/AMD sur un processeur ARM (type Raspberry Pi).
+*   **Famille de Distribution :** Il est recommandé de rester au sein de la même famille (ex: Debian/Ubuntu/Mint) pour s'assurer que les bibliothèques système de bas niveau (comme X11 et OpenGL) correspondent aux conventions attendues.
 
 ***
 *Pour toute question architecturale complémentaire, consultez la structure du répertoire `include/` qui correspond aux couches logiques de la machine à états KUB3.*
