@@ -33,6 +33,18 @@
         "CMAKE_BUILD_TYPE": "Release",
         "KUB_MODEL": "8"
       }
+    },
+    {
+      "name": "kub3-8-production",
+      "displayName": "KUB3-8 (Production Deploy)",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/kub8-production",
+      "installDir": "${sourceDir}/dist/kub8-production",
+      "cacheVariables": {
+        "CMAKE_PREFIX_PATH": "/home/kloe/Qt/6.8.3/gcc_64",
+        "CMAKE_BUILD_TYPE": "Release",
+        "KUB_MODEL": "8"
+      }
     }
   ],
   "buildPresets": [
@@ -47,6 +59,10 @@
     {
       "name": "kub3-8-release",
       "configurePreset": "kub3-8-release"
+    },
+    {
+      "name": "kub3-8-production",
+      "configurePreset": "kub3-8-production"
     }
   ]
 }
