@@ -20,7 +20,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-set(CMAKE_AUTOUIC_SEARCH_PATHS "gui")
+set(CMAKE_AUTOUIC_SEARCH_PATHS "gui;gui/Views;gui/Components")
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -112,6 +112,7 @@ qt_add_library(Kub3Core STATIC
 # PUBLIC: Everything that links to Kub3Core automatically gets these headers and macros
 target_include_directories(Kub3Core PUBLIC
     include
+    include/Views/Components/
     "${CMAKE_CURRENT_BINARY_DIR}/generated"
 )
 
@@ -146,16 +147,26 @@ qt_add_executable(Kub3Software
     src/ApplicationBuilder.cpp
     src/Views/MainWindow.cpp
     src/Views/DebugView.cpp
+    src/Views/HomeView.cpp
     src/Views/MachineStatusView.cpp
+    src/Views/Components/NavButton.cpp
+    src/Views/Components/ActionBox.cpp
+    src/Views/Components/BottomCroppedCircle.cpp
     # Headers
     include/ApplicationBuilder.h
     include/Views/MainWindow.h
     include/Views/DebugView.h
+    include/Views/HomeView.h
     include/Views/MachineStatusView.h
+    include/Views/Components/NavButton.h
+    include/Views/Components/ActionBox.h
+    include/Views/Components/BottomCroppedCircle.h
     # UI
+    gui/resources.qrc
     gui/MainWindow.ui
-    gui/DebugView.ui
-    gui/MachineStatusView.ui
+    gui/Views/DebugView.ui
+    gui/Views/HomeView.ui
+    gui/Views/MachineStatusView.ui
 )
 
 qt_finalize_target(Kub3Software)
@@ -172,3 +183,39 @@ target_link_libraries(Kub3Software PRIVATE
 # ==============================================================================
 enable_testing()
 add_subdirectory(tests)
+
+
+# ==============================================================================
+# 7. DEPLOYMENT & INSTALLATION (Portable Production Bundle)
+# ==============================================================================
+
+# ($ORIGIN is the Linux variable for "the directory the executable is in").
+set_target_properties(Kub3Software PROPERTIES
+    INSTALL_RPATH "$ORIGIN;$ORIGIN/../lib;$ORIGIN/lib"
+    BUILD_WITH_INSTALL_RPATH FALSE
+)
+
+# Install the main executable into the "bin" directory of our output folder
+install(TARGETS Kub3Software
+    RUNTIME DESTINATION bin
+)
+
+# Explicitly deploy the MVS Camera libraries
+if(MVS_LIBRARY)
+    get_filename_component(MVS_LIB_DIR "${MVS_LIBRARY}" DIRECTORY)
+    # Copies all Hikrobot .so files into the "lib" folder of our distribution
+    install(DIRECTORY "${MVS_LIB_DIR}/"
+        DESTINATION lib
+        FILES_MATCHING PATTERN "*.so*"
+    )
+endif()
+
+# Automatically deploy all necessary Qt libraries, plugins, and system dependencies
+if(TARGET Qt6::Core)
+    qt_generate_deploy_app_script(
+        TARGET Kub3Software
+        OUTPUT_SCRIPT deploy_script
+        NO_UNSUPPORTED_PLATFORM_ERROR
+    )
+    install(SCRIPT ${deploy_script})
+endif()

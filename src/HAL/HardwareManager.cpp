@@ -160,10 +160,8 @@ namespace Kub3::HAL
         // DOWNWARD PIPELINE (Software --> Hardware)
         // ===========================================
 
-        auto generateEncoderGetter = [repo = m_repo](const std::string encoderId)
-        {
-            return [repo, encoderId = std::move(encoderId)]()
-            { return HAL::MS::readInt(repo, encoderId); };
+        auto generateEncoderGetter = [repo = m_repo](const std::string encoderId) {
+            return [repo, encoderId = std::move(encoderId)]() { return HAL::MS::readInt(repo, encoderId); };
         };
 
         // Create Actuators

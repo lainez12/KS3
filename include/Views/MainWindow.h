@@ -2,8 +2,10 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QPixmap>
 
 #include "Views/DebugView.h"
+#include "Views/HomeView.h"
 #include "Views/MachineStatusView.h"
 
 namespace Ui
@@ -29,11 +31,18 @@ private slots:
     void goBackHome(void);
     void openMachineStatusView(void);
 
+protected:
+    void paintEvent(QPaintEvent *event) override;
+
 private:
     Ui::MainWindow *ui;
+    QPixmap m_backgroundPixmap;
 
     DebugView *m_debugView;
     int m_debugViewIndex;
+
+    HomeView *m_homeView;
+    int m_homeViewIndex;
 
     MachineStatusView *m_machineStatusView;
     int m_machineStatusViewIndex;

@@ -108,7 +108,11 @@ namespace Kub3
         m_logicThread->start();
 
         qInfo() << "[ApplicationBuilder::run]: Showing UI.";
+#if defined(BUILD_DEBUG)
         m_mainWindow->show();
+#else
+        m_mainWindow->showFullScreen();
+#endif
 
         // Blocking call to main Qt Event Loop
         const int ret = app.exec();
