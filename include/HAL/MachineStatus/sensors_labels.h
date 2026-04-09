@@ -1,5 +1,7 @@
 #pragma once
 
+#if defined(KUB_MODEL_8)
+
 #define EMERGENCY_STOP "emergencyStop"
 
 #define WAFER_ENCODER   "waferDrawerEncoderPosition"
@@ -39,3 +41,5 @@
 #define MASK_VACUUM_ACTIVE          "maskVacuumActive"
 #define WAFER_VACUUM_ACTIVE         "waferVacuumActive"
 #define WAFER_COMPRESSED_AIR_ACTIVE "waferCompressedAirActive"
+
+#endif // defined(KUB_MODEL_8)

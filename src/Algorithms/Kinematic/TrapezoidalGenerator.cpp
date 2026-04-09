@@ -1,8 +1,8 @@
 #include <algorithm>
 
-#include "HAL/Actuators/Motors/TrapezoidalGenerator.h"
+#include "Algorithms/Kinematic/TrapezoidalGenerator.h"
 
-namespace Kub3::HAL::Act
+namespace Kub3::Algorithms::Kinematic
 {
 
     void TrapezoidalGenerator::startPositionMove(double currentPosition, double targetPosition, double maxVelocity, double acceleration)

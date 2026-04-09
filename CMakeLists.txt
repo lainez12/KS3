@@ -63,8 +63,9 @@ qt_add_library(Kub3Core STATIC
     src/HAL/Com/MockCommunicator.cpp
     src/HAL/Com/LengthBasedParser.cpp
     src/HAL/Com/PacketRouter.cpp
-    src/HAL/Actuators/Motors/TrapezoidalGenerator.cpp
     src/HAL/Actuators/Motors/StepperMotor.cpp
+    ## Algorithms
+    src/Algorithms/Kinematic/TrapezoidalGenerator.cpp
 
     # Headers
     ## Utils & miscellaneous
@@ -103,10 +104,13 @@ qt_add_library(Kub3Core STATIC
     include/HAL/Actuators/ActuatorRegistry.h
     include/HAL/Actuators/IActuator.h
     include/HAL/Actuators/Motors/IMotor.h
-    include/HAL/Actuators/Motors/TrapezoidalGenerator.h
     include/HAL/Actuators/Motors/StepperMotor.h
     include/HAL/Sensors/ISensor.h
     include/HAL/Sensors/Sensor.h
+    ## Algorithms
+    include/Algorithms/Kinematic/utils.h
+    include/Algorithms/Kinematic/IKinematicGenerator.h
+    include/Algorithms/Kinematic/TrapezoidalGenerator.h
 )
 
 # PUBLIC: Everything that links to Kub3Core automatically gets these headers and macros

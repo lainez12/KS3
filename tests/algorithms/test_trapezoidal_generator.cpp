@@ -2,9 +2,9 @@
 #include <catch2/matchers/catch_matchers_floating_point.hpp>
 #include <iostream>
 
-#include "HAL/Actuators/Motors/TrapezoidalGenerator.h"
+#include "Algorithms/Kinematic/TrapezoidalGenerator.h"
 
-using namespace Kub3::HAL::Act;
+using namespace Kub3::Algorithms::Kinematic;
 using Catch::Matchers::WithinAbs;
 
 // Helper to log kinematic state

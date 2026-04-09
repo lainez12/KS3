@@ -7,10 +7,12 @@
 
 #include "HAL/Actuators/Motors/StepperMotor.h"
 #include "HAL/MCUDriver.h"
+#include <Algorithms/Kinematic/utils.h>
 
 using namespace Kub3::HAL;
 using namespace Kub3::HAL::Act;
 using namespace Kub3::Config;
+using namespace Kub3::Algorithms::Kinematic;
 
 class MockCommunicator final : public Com::ICommunicator
 {
@@ -103,11 +105,11 @@ TEST_CASE("StepperMotor Thread-Safe Dispatch & Queued Connections", "[actuators]
         .maxAccelerationMmS2 = 500.0,
     };
 
-    auto dummyPosGetter = []()
-    { return 0.0; };
+    auto dummyPosGetter  = []() { return 0.0; };
+    auto kinematicEngine = kinematicsGenBuilders[KinematicGeneratorKind::TRAPEZOIDAL]();
 
     // Instantiate the motor
-    StepperMotor motor("TEST_M1", 0x01, mcuDriver, hwConfig, dummyPosGetter);
+    StepperMotor motor("TEST_M1", 0x01, mcuDriver, hwConfig, dummyPosGetter, std::move(kinematicEngine));
 
     SECTION("Generates Move Commands and resolves with a Stop Command over the Event Loop")
     {
@@ -130,8 +132,7 @@ TEST_CASE("StepperMotor Thread-Safe Dispatch & Queued Connections", "[actuators]
             &timeoutTimer,
             &QTimer::timeout,
             &loop,
-            [&]()
-            {
+            [&]() {
                 FAIL("Qt Event Loop timed out. The Motor never finished the move.");
                 loop.quit();
             });
@@ -172,8 +173,7 @@ TEST_CASE("StepperMotor Thread-Safe Dispatch & Queued Connections", "[actuators]
         // Let it run for just 200ms (It won't reach 200mm in 200ms)
         QTimer interruptTimer;
         interruptTimer.setSingleShot(true);
-        QObject::connect(&interruptTimer, &QTimer::timeout, &loop, [&]()
-                         { loop.quit(); });
+        QObject::connect(&interruptTimer, &QTimer::timeout, &loop, [&]() { loop.quit(); });
         interruptTimer.start(200);
         loop.exec(); // Blocks until interruptTimer fires
 
@@ -191,8 +191,7 @@ TEST_CASE("StepperMotor Thread-Safe Dispatch & Queued Connections", "[actuators]
         QTimer timeoutTimer;
         timeoutTimer.setSingleShot(true);
 
-        QObject::connect(&timeoutTimer, &QTimer::timeout, &loop, [&]()
-                         {
+        QObject::connect(&timeoutTimer, &QTimer::timeout, &loop, [&]() {
             FAIL("Motor failed to finish the blended move.");
             loop.quit(); });
 
