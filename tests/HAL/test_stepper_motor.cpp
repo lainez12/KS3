@@ -106,7 +106,7 @@ TEST_CASE("StepperMotor Thread-Safe Dispatch & Queued Connections", "[actuators]
     };
 
     auto dummyPosGetter  = []() { return 0.0; };
-    auto kinematicEngine = kinematicsGenBuilders[KinematicGeneratorKind::TRAPEZOIDAL]();
+    auto kinematicEngine = buildKinematicGenerator(KinematicGeneratorKind::TRAPEZOIDAL);
 
     // Instantiate the motor
     StepperMotor motor("TEST_M1", 0x01, mcuDriver, hwConfig, dummyPosGetter, std::move(kinematicEngine));
