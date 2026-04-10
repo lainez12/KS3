@@ -42,7 +42,6 @@ namespace Kub3::HAL::Act
         void moveRelative(double distance_mm, Config::kinematic_profile_t profile) override;
         void moveDirection(MotorDirection dir, Config::kinematic_profile_t profile) override;
         void emergencyStop(void) override;
-        void enable(bool state) override;
         void home(void) override;
 
         // Getters

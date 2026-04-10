@@ -8,7 +8,8 @@
 // and maybe what is bothering is just the fact that these values are registered using the class `Sensor`
 
 // Hardware Buttons
-#define EMERGENCY_STOP "emergencyStop"
+#define EMERGENCY_STOP_BUTTON "emergencyStop"
+#define SHUTDOWN_BUTTON       "shutdown"
 
 // Subsystem Routing IDs
 #define MCU_ARDUINO2_ID "SYS_MCU_ARDUINO2"
@@ -42,6 +43,8 @@
 #define Z1                 "z1Limit"
 #define WAFER_ON           "waferOnLimit"
 #define Z2                 "z2Limit"
+#define DECK_FRONT_LIMIT   "deckFrontLimit"
+#define DECK_BACK_LIMIT    "deckBackLimit"
 
 // Force sensors
 #define FORCE_LEFT     "leftForceSensor"
@@ -52,13 +55,17 @@
 #define FORCE_BACK_EN  "backForceSensorEnabled"
 
 // Solenoid valves
-#define MASK_VACUUM_VALVE          "maskVacuumValveStatus"
-#define WAFER_VACUUM_VALVE         "waferVacuumValveStatus"
-#define WAFER_COMPRESSED_AIR_VALVE "waferCompressedAirValveStatus"
+#define MASK_VACUUM_VALVE_STATUS          "maskVacuumValveStatus"
+#define WAFER_VACUUM_VALVE_STATUS         "waferVacuumValveStatus"
+#define WAFER_COMPRESSED_AIR_VALVE_STATUS "waferCompressedAirValveStatus"
 
-// Barometers
+// Pressure sensors
 #define MASK_VACUUM_ACTIVE          "maskVacuumActive"
 #define WAFER_VACUUM_ACTIVE         "waferVacuumActive"
 #define WAFER_COMPRESSED_AIR_ACTIVE "waferCompressedAirActive"
+
+// Temperature sensors
+#define INTERNAL_TEMPERATURE "internalTemperature"
+#define EXTERNAL_TEMPERATURE "externalTemperature"
 
 #endif // defined(KUB_MODEL_8)

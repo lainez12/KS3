@@ -14,8 +14,7 @@ namespace Kub3::HAL::Act
         [[nodiscard]] virtual std::string_view getId() const noexcept = 0;
 
         // Universal safety constraints
-        virtual void emergencyStop()    = 0;
-        virtual void enable(bool state) = 0;
+        virtual void emergencyStop() = 0;
     };
 
 } // namespace KUB3::HAL
