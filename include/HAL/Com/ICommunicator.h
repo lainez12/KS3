@@ -20,8 +20,9 @@ namespace Kub3::HAL::Com
         virtual bool send(QByteArray &&data) = 0;
 
     signals:
-        void dataReceived(const QByteArray &data);
-        void connectionLost(void);
+        void s_dataReceived(const QByteArray &data);
+        void s_connected(void);
+        void s_connectionLost(void);
     };
 
 } // namespace Kub3::HAL

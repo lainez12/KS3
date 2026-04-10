@@ -14,19 +14,19 @@ namespace Kub3::HAL
             m_comm->setParent(this);
 
         // Link the raw byte reception to our processing slot
-        connect(m_comm.get(), &Com::ICommunicator::dataReceived, this, &MCUDriver::onRawDataReceived);
+        connect(m_comm.get(), &Com::ICommunicator::s_dataReceived, this, &MCUDriver::onRawDataReceived);
+        connect(m_comm.get(), &Com::ICommunicator::s_connected, this, &MCUDriver::s_connected); // Proxy connected signal
         connect(
-            m_comm.get(),
-            &Com::ICommunicator::connectionLost,
-            this,
-            [this]()
-            { emit s_hardwareError("Connection Lost"); });
+            m_comm.get(), &Com::ICommunicator::s_connectionLost, this,
+            [this]() {
+                emit s_hardwareError("Connection Lost");
+                emit s_connectionLost(); // Proxy connection lost signal
+            });
     }
 
     MCUDriver::~MCUDriver()
     {
         this->ps_stop();
-        // TODO: notify disconnection to MCU ?
     }
 
     void MCUDriver::ps_start()

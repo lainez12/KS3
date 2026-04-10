@@ -15,6 +15,10 @@ namespace Kub3::MFSM
     // Emitted when software has successfully connected to the hardware
     struct EvHardwareReady {};
 
+    struct EvHardwareError {
+        std::string reason;
+    };
+
     // Emitted when software has successfully performed the initialization routine
     struct EvInitializationComplete {};
 
@@ -50,6 +54,7 @@ namespace Kub3::MFSM
     using SystemEvent = std::variant<
         // Boot & Initialization events
         EvHardwareReady,
+        EvHardwareError,
         EvInitializationComplete,
         // UI commands
         CmdStartInitialization,

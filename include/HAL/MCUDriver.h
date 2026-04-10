@@ -19,9 +19,12 @@ namespace Kub3::HAL
         ~MCUDriver();
 
     signals:
-        // This is the clean, validated packet sent to your Services/FSM!
         void s_packetReady(const Com::packet_t &packet);
         void s_hardwareError(const QString &reason);
+
+        // Communicator proxy signals
+        void s_connected(void);
+        void s_connectionLost(void);
 
     public slots:
         void ps_start(void);                     // Called to open the port
@@ -29,7 +32,7 @@ namespace Kub3::HAL
         void ps_sendCommand(QByteArray payload); // No reference
 
     private slots:
-        // Triggered automatically when the Communicator emits dataReceived
+        // Triggered automatically when the Communicator emits s_dataReceived
         void onRawDataReceived(const QByteArray &rawBytes);
 
     protected:

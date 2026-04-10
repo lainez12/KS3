@@ -2,14 +2,30 @@
 
 #if defined(KUB_MODEL_8)
 
+// TODO: We could move the value keys like `MCU_ARDUINO2_ID` to another file `mcu_conn_labels.h`
+// We should also explore the fact that holding the values corresponding to those keys is not intuitive
+// and that they could be stored in a different repository. But the current repository is a `MachineStatusRepo`
+// and maybe what is bothering is just the fact that these values are registered using the class `Sensor`
+
+// Hardware Buttons
 #define EMERGENCY_STOP "emergencyStop"
 
+// Subsystem Routing IDs
+#define MCU_ARDUINO2_ID "SYS_MCU_ARDUINO2"
+#define MCU_ARDUINO3_ID "SYS_MCU_ARDUINO3"
+
+// Data Bus Keys
+#define MCU_ARDUINO2_READY "SYS_MCU_ARDUINO2_READY"
+#define MCU_ARDUINO3_READY "SYS_MCU_ARDUINO3_READY"
+
+// Encoders
 #define WAFER_ENCODER   "waferDrawerEncoderPosition"
 #define MASK_ENCODER    "maskDrawerEncoderPosition"
 #define Z_LEFT_ENCODER  "zLeftEncoderPosition"
 #define Z_RIGHT_ENCODER "zRightEncoderPosition"
 #define Z_BACK_ENCODER  "zBackEncoderPosition"
 
+// Limit switches
 #define Z_LEFT_HIGH_LIMIT  "zLeftHighLimit"
 #define Z_LEFT_LOW_LIMIT   "zLeftLowLimit"
 #define Z_RIGHT_HIGH_LIMIT "zRightHighLimit"
@@ -27,6 +43,7 @@
 #define WAFER_ON           "waferOnLimit"
 #define Z2                 "z2Limit"
 
+// Force sensors
 #define FORCE_LEFT     "leftForceSensor"
 #define FORCE_RIGHT    "rightForceSensor"
 #define FORCE_BACK     "backForceSensor"
@@ -34,10 +51,12 @@
 #define FORCE_RIGHT_EN "rightForceSensorEnabled"
 #define FORCE_BACK_EN  "backForceSensorEnabled"
 
+// Solenoid valves
 #define MASK_VACUUM_VALVE          "maskVacuumValveStatus"
 #define WAFER_VACUUM_VALVE         "waferVacuumValveStatus"
 #define WAFER_COMPRESSED_AIR_VALVE "waferCompressedAirValveStatus"
 
+// Barometers
 #define MASK_VACUUM_ACTIVE          "maskVacuumActive"
 #define WAFER_VACUUM_ACTIVE         "waferVacuumActive"
 #define WAFER_COMPRESSED_AIR_ACTIVE "waferCompressedAirActive"

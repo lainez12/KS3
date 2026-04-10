@@ -42,6 +42,7 @@ namespace Kub3::HAL::Com
 
         m_serialPort.clear();
         m_pingTimer.start(1000);
+        emit s_connected();
         qInfo() << "[Serial] Successfully opened port" << m_portName << "at" << m_baudRate << "baud.";
         return true;
     }
@@ -116,7 +117,7 @@ namespace Kub3::HAL::Com
         {
             qCritical() << "[Serial] Connection to port" << m_serialPort.portName() << "lost.";
             m_serialPort.close();
-            emit connectionLost();
+            emit s_connectionLost();
         }
     }
 
@@ -129,7 +130,7 @@ namespace Kub3::HAL::Com
 
         if (!rawData.isEmpty())
         {
-            emit dataReceived(rawData);
+            emit s_dataReceived(rawData);
         }
     }
 
@@ -139,8 +140,8 @@ namespace Kub3::HAL::Com
         if (error == QSerialPort::ResourceError)
         {
             qCritical() << "[Serial] Critical Hardware Loss on" << m_portName << "Error:" << m_serialPort.errorString();
-            this->close();         // Safely reset state
-            emit connectionLost(); // Alert the subscribers
+            this->close();           // Safely reset state
+            emit s_connectionLost(); // Alert the subscribers
         }
         else if (error != QSerialPort::NoError)
         {
