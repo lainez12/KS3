@@ -28,6 +28,8 @@ namespace Kub3::MFSM
         // Tier 2 (Logic) -> Tier 1 (UI) Outputs
         void s_stateChanged(const QString &stateName);
         void s_errorOccurred(const QString &errorMessage);
+        // Tier 2 (Logic) -> Tier 3 (I/O threads)
+        void s_requestHardwareRetry(const QString &hardwareId);
 
     public slots:
         // Tier 1 (UI) -> Tier 2 (Logic) Thread-Safe Commands
@@ -39,6 +41,9 @@ namespace Kub3::MFSM
     private slots:
         // The Heartbeat (50Hz)
         void onLogicTick(void);
+
+        void onStateBootingTick(StateBooting &bootState);
+        void onStateOperatingTick(StateOperating &operatingState);
 
     private:
         // Core FSM Methods

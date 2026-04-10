@@ -44,27 +44,56 @@ namespace Kub3::HAL
 
     void HardwareManager::startAll()
     {
-        for (size_t i = 0; i < m_threads.size(); ++i)
+        for (auto &[key, subsys] : m_subsystems)
         {
-            m_threads[i]->start();
-            QMetaObject::invokeMethod(m_drivers[i].get(), &MCUDriver::ps_start);
+            subsys.thread->start();
+            QMetaObject::invokeMethod(subsys.driver.get(), &MCUDriver::ps_start);
         }
     }
 
     void HardwareManager::stopAll()
     {
-        for (size_t i = 0; i < m_threads.size(); ++i)
+        for (auto &[key, subsys] : m_subsystems)
         {
-            if (!m_threads[i] || !m_threads[i]->isRunning())
+            if (!subsys.thread || !subsys.thread->isRunning())
                 continue;
 
-            QMetaObject::invokeMethod(m_drivers[i].get(), &MCUDriver::ps_stop, Qt::QueuedConnection);
-            m_threads[i]->exit(0);
-            if (!m_threads[i]->wait(2000))
+            QMetaObject::invokeMethod(subsys.driver.get(), &MCUDriver::ps_stop, Qt::QueuedConnection);
+            subsys.thread->exit(0);
+            if (!subsys.thread->wait(2000))
             {
-                m_threads[i]->terminate(); // Force kill
-                m_threads[i]->wait();
+                subsys.thread->terminate(); // Force kill
+                subsys.thread->wait();
             }
+        }
+    }
+
+    void HardwareManager::ps_reconnectSubsystem(const QString &subsystemId)
+    {
+        const std::string id = subsystemId.toStdString();
+
+        if (auto it = m_subsystems.find(id); it != m_subsystems.end())
+        {
+            auto &subsys = it->second;
+
+            qInfo() << "HardwareManager: Reconnecting targeted subsystem:" << id;
+            if (!subsys.thread)
+            {
+                qCritical() << "HardwareManager: Attempt to reconnect using invalid thread pointer:" << id;
+                return;
+            }
+
+            if (subsys.thread->isRunning()) // If thread running
+            {
+                // Gracefully stop the driver
+                QMetaObject::invokeMethod(subsys.driver.get(), &MCUDriver::ps_stop, Qt::QueuedConnection);
+                // Restart the driver
+                QMetaObject::invokeMethod(subsys.driver.get(), &MCUDriver::ps_start, Qt::QueuedConnection);
+            }
+        }
+        else
+        {
+            qWarning() << "HardwareManager: Requested restart for unknown subsystem:" << id;
         }
     }
 
@@ -85,6 +114,9 @@ namespace Kub3::HAL
         auto arduino2Driver = std::make_shared<MCUDriver>(std::move(comms), std::move(parser));
         auto router         = std::make_unique<Com::PacketRouter>(&arduino2KeyExtractor);
 
+        // Initialize MCU driver connection "sensor". Doesn't need a parser.
+        m_sensors.push_back(std::make_shared<HAL::Sensors::Sensor<bool>>(m_repo, MCU_ARDUINO2_READY, false, nullptr));
+
         // ===========================================
         // UPWARD PIPELINE (Hardware --> Software)
         // ===========================================
@@ -100,13 +132,18 @@ namespace Kub3::HAL
         // Move MCUDriver to its own thread
         arduino2Driver->moveToThread(thread.get());
 
+        // Wire MCUDriver connection status signals -> Machine Status Repo value update
+        QObject::connect(arduino2Driver.get(), &MCUDriver::s_connected, [&]() { m_repo->setSensorRaw(MCU_ARDUINO2_READY, true); });
+        QObject::connect(arduino2Driver.get(), &MCUDriver::s_connectionLost, [&]() { m_repo->setSensorRaw(MCU_ARDUINO2_READY, false); });
         // Wire MCUDriver -> Router
         QObject::connect(arduino2Driver.get(), &MCUDriver::s_packetReady, router.get(), &Com::PacketRouter::ps_routePacket);
 
         // Store in lifecycle manager
-        m_drivers.push_back(std::move(arduino2Driver));
-        m_routers.push_back(std::move(router));
-        m_threads.push_back(std::move(thread));
+        m_subsystems[MCU_ARDUINO2_ID] = MCUSubsystemNode{
+            .thread = std::move(thread),
+            .driver = std::move(arduino2Driver),
+            .router = std::move(router),
+        };
     }
 
     void HardwareManager::setupArduino3Subsystem(const Config::hardware_config_t &config)
@@ -118,19 +155,28 @@ namespace Kub3::HAL
         auto arduino3Driver = std::make_shared<MCUDriver>(std::move(comms), std::move(parser));
         auto router         = std::make_unique<Com::PacketRouter>(&arduino3KeyExtractor);
 
+        // Initialize MCU driver connection "sensor". Doesn't need a parser.
+        m_sensors.push_back(std::make_shared<HAL::Sensors::Sensor<bool>>(m_repo, MCU_ARDUINO3_READY, false, nullptr));
+
+        // Instanciate sensors and actuators software representations
         this->createArduino3Sensors(router.get());
         this->createArduino3Actuators(config, arduino3Driver);
 
         // Move MCUDriver to its own thread
         arduino3Driver->moveToThread(thread.get());
 
+        // Wire MCUDriver connection status signals -> Machine Status Repo value update
+        QObject::connect(arduino3Driver.get(), &MCUDriver::s_connected, [&]() { m_repo->setSensorRaw(MCU_ARDUINO3_READY, true); });
+        QObject::connect(arduino3Driver.get(), &MCUDriver::s_connectionLost, [&]() { m_repo->setSensorRaw(MCU_ARDUINO3_READY, false); });
         // Wire MCUDriver -> Router
         QObject::connect(arduino3Driver.get(), &MCUDriver::s_packetReady, router.get(), &Com::PacketRouter::ps_routePacket);
 
         // Store in lifecycle manager
-        m_drivers.push_back(std::move(arduino3Driver));
-        m_routers.push_back(std::move(router));
-        m_threads.push_back(std::move(thread));
+        m_subsystems[MCU_ARDUINO3_ID] = MCUSubsystemNode{
+            .thread = std::move(thread),
+            .driver = std::move(arduino3Driver),
+            .router = std::move(router),
+        };
     }
 
     // ========================================

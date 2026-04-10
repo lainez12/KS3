@@ -40,7 +40,11 @@ namespace Kub3::MFSM
         DRAWER
     };
 
-    struct StateBooting {};
+    struct StateBooting {
+        uint32_t ticksElapsed = 0;
+        // Keeps track of how many times each specific subsystem has been retried
+        std::unordered_map<std::string, int8_t> retryCounts;
+    };
 
     struct StateWaitingInitialization {};
 

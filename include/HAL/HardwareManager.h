@@ -16,6 +16,12 @@
 namespace Kub3::HAL
 {
 
+    struct MCUSubsystemNode {
+        Unique<QThread> thread;
+        Shared<MCUDriver> driver;
+        Unique<Com::PacketRouter> router;
+    };
+
     class HardwareManager : public QObject
     {
         Q_OBJECT
@@ -31,10 +37,17 @@ namespace Kub3::HAL
             return m_actuatorRegistry;
         }
 
+    public slots:
+        void ps_reconnectSubsystem(const QString &subsystemId);
+
     private:
 #if defined(KUB_MODEL_8)
+        // Arduino1 subsystem
+
+        // Arduino2 subsystem
         void setupArduino2Subsystem(const Config::hardware_config_t &config);
 
+        // Arduino3 subsystem
         void setupArduino3Subsystem(const Config::hardware_config_t &config);
         void createArduino3Sensors(Com::PacketRouter *router);
         void createArduino3Actuators(const Config::hardware_config_t &config, const std::shared_ptr<MCUDriver> &driver);
@@ -53,10 +66,8 @@ namespace Kub3::HAL
         Shared<MS::IMachineStatusRepo> m_repo;
         Shared<Act::ActuatorRegistry> m_actuatorRegistry;
 
-        std::vector<Unique<QThread>> m_threads;
-        std::vector<Shared<MCUDriver>> m_drivers;
-        std::vector<Unique<Com::PacketRouter>> m_routers;
-        std::vector<Shared<Sensors::ISensor>> m_sensors;
+        std::unordered_map<std::string, MCUSubsystemNode> m_subsystems;
+        std::vector<Shared<Sensors::ISensor>> m_sensors; // TODO: What for ?
     };
 
 }

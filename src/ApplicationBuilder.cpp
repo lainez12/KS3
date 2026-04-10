@@ -75,8 +75,11 @@ namespace Kub3
     {
         qInfo() << "Wiring Inter-Tier Connections...";
 
-        // 1. Thread Lifecycle Wiring
+        // Thread Lifecycle Wiring
         QObject::connect(m_logicThread, &QThread::started, m_masterFSM, &MFSM::MasterFSM::start);
+
+        // Logic -> HAL Wiring
+        QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_requestHardwareRetry, m_hwManager.get(), &HAL::HardwareManager::ps_reconnectSubsystem);
 
         // Graceful Shutdown
         QObject::connect(qApp, &QCoreApplication::aboutToQuit, m_logicThread, &QThread::quit);
@@ -91,7 +94,6 @@ namespace Kub3
             &MFSM::MasterFSM::ps_requestInitialization);
 
         // 3. Logic -> UI Wiring
-        // Example wiring: You will need to add a slot `onMachineStateChanged(QString)` to MainWindow
         /*
         QObject::connect(m_masterFSM, &MSFM::MasterFSM::stateChanged, m_mainWindow.get(), &MainWindow::onMachineStateChanged);
         */

@@ -27,7 +27,7 @@ namespace Kub3::HAL::Com
 
     void MockCommunicator::fakeReceive(QByteArray &&data)
     {
-        emit dataReceived(data);
+        emit s_dataReceived(data);
     }
 
 }
