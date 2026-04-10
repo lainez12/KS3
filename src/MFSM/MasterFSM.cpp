@@ -99,7 +99,7 @@ namespace Kub3::MFSM
             }
         }
 
-        if (!missingDependencies.empty())
+        if (fatalFailure)
         {
             // Joining error strings with ", " separator
             std::string errorMsg = "Hardware timeout on: " + missingDependencies.front();
@@ -146,7 +146,7 @@ namespace Kub3::MFSM
 
     void MasterFSM::checkHardwareSafety(void)
     {
-        const bool emergencyStopTriggered = HAL::MS::readBool(m_repo, EMERGENCY_STOP);
+        const bool emergencyStopTriggered = HAL::MS::readBool(m_repo, EMERGENCY_STOP_BUTTON);
 
         // Dispatch emergency stop event when:
         //  - Emergency stop press is detected

@@ -19,7 +19,7 @@ namespace Kub3::HAL::Act
         Negative  // Towards the motor
     };
 
-    class IMotor : public virtual IActuator
+    class IMotor : public IActuator
     {
     public:
         virtual void moveAbsolute(double position_mm, Config::kinematic_profile_t profile)  = 0;

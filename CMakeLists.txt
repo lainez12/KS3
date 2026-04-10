@@ -64,6 +64,7 @@ qt_add_library(Kub3Core STATIC
     src/HAL/Com/LengthBasedParser.cpp
     src/HAL/Com/PacketRouter.cpp
     src/HAL/Actuators/Motors/StepperMotor.cpp
+    src/HAL/Actuators/Valves/SolenoidValve.cpp
     ## Algorithms
     src/Algorithms/Kinematic/utils.cpp
     src/Algorithms/Kinematic/TrapezoidalGenerator.cpp
@@ -102,12 +103,14 @@ qt_add_library(Kub3Core STATIC
     include/HAL/Com/IProtocolParser.h
     include/HAL/Com/LengthBasedParser.h
     include/HAL/Com/PacketRouter.h
+    include/HAL/Sensors/ISensor.h
+    include/HAL/Sensors/Sensor.h
     include/HAL/Actuators/ActuatorRegistry.h
     include/HAL/Actuators/IActuator.h
     include/HAL/Actuators/Motors/IMotor.h
     include/HAL/Actuators/Motors/StepperMotor.h
-    include/HAL/Sensors/ISensor.h
-    include/HAL/Sensors/Sensor.h
+    include/HAL/Actuators/Valves/IValve.h
+    include/HAL/Actuators/Valves/SolenoidValve.h
     ## Algorithms
     include/Algorithms/Kinematic/utils.h
     include/Algorithms/Kinematic/IKinematicGenerator.h

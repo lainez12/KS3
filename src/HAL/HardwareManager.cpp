@@ -1,13 +1,14 @@
 #include <QDebug>
 
-#include "Algorithms/Kinematic/IKinematicGenerator.h"
-#include "HAL/Com/LengthBasedParser.h"
-#include "HAL/Com/SerialCommunicator.h"
-#include "HAL/HardwareManager.h"
-#include "HAL/MachineStatus/actuators_labels.h"
-#include "HAL/MachineStatus/sensors_labels.h"
-#include "HAL/MachineStatus/utils.h"
-#include "HAL/Sensors/Sensor.h"
+#include <Algorithms/Kinematic/IKinematicGenerator.h>
+#include <HAL/Actuators/Valves/SolenoidValve.h>
+#include <HAL/Com/LengthBasedParser.h>
+#include <HAL/Com/SerialCommunicator.h>
+#include <HAL/HardwareManager.h>
+#include <HAL/MachineStatus/actuators_labels.h>
+#include <HAL/MachineStatus/sensors_labels.h>
+#include <HAL/MachineStatus/utils.h>
+#include <HAL/Sensors/Sensor.h>
 
 using namespace std::string_literals;
 
@@ -16,6 +17,9 @@ static std::string_view arduino2KeyExtractor(const Kub3::HAL::Com::packet_t &pac
 static std::string_view arduino3KeyExtractor(const Kub3::HAL::Com::packet_t &packet);
 // Payload parsers
 static bool limitSwitchParser(const QByteArray &d);
+static bool valveStatusParser(const QByteArray &d);
+static bool pressureSensorParser(const QByteArray &d);
+static int32_t temperatureParser(const QByteArray &d);
 static uint16_t forceSensorParser(const QByteArray &d);
 static bool forceSensorEnabledParser(const QByteArray &d);
 static int32_t encoderValueParser(const QByteArray &d);
@@ -103,6 +107,10 @@ namespace Kub3::HAL
     // KUB3-8i HAL instanciation functions (split by MCU)
     // ======================================================
 
+    // ========================================
+    // Arduino 2 HAL instanciation helpers
+    // ========================================
+
     void HardwareManager::setupArduino2Subsystem(const Config::hardware_config_t &config)
     {
         using namespace Kub3::HAL::Sensors;
@@ -117,17 +125,9 @@ namespace Kub3::HAL
         // Initialize MCU driver connection "sensor". Doesn't need a parser.
         m_sensors.push_back(std::make_shared<HAL::Sensors::Sensor<bool>>(m_repo, MCU_ARDUINO2_READY, false, nullptr));
 
-        // ===========================================
-        // UPWARD PIPELINE (Hardware --> Software)
-        // ===========================================
-
-        // Create Sensors
-        // --- Physical buttons
-        auto emergencyStopBtn = std::make_shared<Sensor<bool>>(m_repo, EMERGENCY_STOP, false, &physicalButtonParser);
-
-        // Register sensors
-        // --- Physical buttons
-        this->registerSensor(router.get(), "E\x7F\x7F"s, std::move(emergencyStopBtn));
+        // Instanciate sensors and actuators software representations
+        this->createArduino2Sensors(router.get());
+        this->createArduino2Actuators(config, arduino2Driver);
 
         // Move MCUDriver to its own thread
         arduino2Driver->moveToThread(thread.get());
@@ -145,6 +145,86 @@ namespace Kub3::HAL
             .router = std::move(router),
         };
     }
+
+    void HardwareManager::createArduino2Sensors(Com::PacketRouter *router)
+    {
+        using namespace Kub3::HAL::Sensors;
+
+        // ===========================================
+        // UPWARD PIPELINE (Hardware --> Software)
+        // ===========================================
+
+        // Create Sensors
+        // --- Physical buttons
+        auto emergencyStopBtn = std::make_shared<Sensor<bool>>(m_repo, EMERGENCY_STOP_BUTTON, false, &physicalButtonParser);
+        auto shutdownBtn      = std::make_shared<Sensor<bool>>(m_repo, SHUTDOWN_BUTTON, false, &physicalButtonParser);
+        // --- Limit switches
+        auto camerasDeckFrontLimit = std::make_shared<Sensor<bool>>(m_repo, DECK_FRONT_LIMIT, false, &limitSwitchParser);
+        auto camerasDeckBackLimit  = std::make_shared<Sensor<bool>>(m_repo, DECK_BACK_LIMIT, false, &limitSwitchParser);
+        auto ardkoFrontLeftLimit   = std::make_shared<Sensor<bool>>(m_repo, DECK_BACK_LIMIT, false, &limitSwitchParser);
+        auto ardkoFrontRightLimit  = std::make_shared<Sensor<bool>>(m_repo, DECK_BACK_LIMIT, false, &limitSwitchParser);
+        auto ardkoBackLeftLimit    = std::make_shared<Sensor<bool>>(m_repo, DECK_BACK_LIMIT, false, &limitSwitchParser);
+        auto ardkoBackRightLimit   = std::make_shared<Sensor<bool>>(m_repo, DECK_BACK_LIMIT, false, &limitSwitchParser);
+        // --- Solenoid valves statii
+        auto maskVacuumValveStatus         = std::make_shared<Sensor<bool>>(m_repo, MASK_VACUUM_VALVE_STATUS, false, &valveStatusParser);
+        auto waferVacuumValveStatus        = std::make_shared<Sensor<bool>>(m_repo, WAFER_VACUUM_VALVE_STATUS, false, &valveStatusParser);
+        auto waferCompressedAirValveStatus = std::make_shared<Sensor<bool>>(m_repo, WAFER_COMPRESSED_AIR_VALVE_STATUS, false, &valveStatusParser);
+        // --- Pressure sensors
+        auto maskVacuumActive         = std::make_shared<Sensor<bool>>(m_repo, MASK_VACUUM_ACTIVE, false, &pressureSensorParser);
+        auto waferVacuumActive        = std::make_shared<Sensor<bool>>(m_repo, WAFER_VACUUM_ACTIVE, false, &pressureSensorParser);
+        auto waferCompressedAirActive = std::make_shared<Sensor<bool>>(m_repo, WAFER_COMPRESSED_AIR_ACTIVE, false, &pressureSensorParser);
+        // --- Temperatures
+        auto internalTemperature = std::make_shared<Sensor<int32_t>>(m_repo, INTERNAL_TEMPERATURE, INT32_MIN, &temperatureParser);
+        auto externalTemperature = std::make_shared<Sensor<int32_t>>(m_repo, EXTERNAL_TEMPERATURE, INT32_MIN, &temperatureParser);
+
+        // TODO: add "Fans voltage" & "LEDs voltages"
+
+        // Register sensors
+        // --- Physical buttons
+        this->registerSensor(router, "E\x7F\x7F"s, std::move(emergencyStopBtn));
+        // --- Limit switches
+        this->registerSensor(router, "C1F"s, std::move(camerasDeckFrontLimit));
+        this->registerSensor(router, "C1B"s, std::move(camerasDeckBackLimit));
+        this->registerSensor(router, "K1", std::move(ardkoFrontLeftLimit));
+        this->registerSensor(router, "K2", std::move(ardkoFrontRightLimit));
+        this->registerSensor(router, "K3", std::move(ardkoBackLeftLimit));
+        this->registerSensor(router, "K4", std::move(ardkoBackRightLimit));
+        // --- Solenoid valves statii
+        this->registerSensor(router, "VEM"s, std::move(maskVacuumValveStatus));
+        this->registerSensor(router, "VEW"s, std::move(waferVacuumValveStatus));
+        this->registerSensor(router, "VVAC"s, std::move(waferCompressedAirValveStatus));
+        // --- Pressure sensors
+        this->registerSensor(router, "VCM"s, std::move(maskVacuumActive));
+        this->registerSensor(router, "VCW"s, std::move(waferVacuumActive));
+        this->registerSensor(router, "VAC"s, std::move(waferCompressedAirActive));
+        // --- Temperatures
+        this->registerSensor(router, "IT0"s, std::move(internalTemperature));
+        this->registerSensor(router, "IT1"s, std::move(externalTemperature));
+    }
+
+    void HardwareManager::createArduino2Actuators(const Config::hardware_config_t &config, const std::shared_ptr<MCUDriver> &driver)
+    {
+        using namespace Algorithms::Kinematic;
+
+        // ===========================================
+        // DOWNWARD PIPELINE (Software --> Hardware)
+        // ===========================================
+
+        /// --- Motors
+        // TODO: Create `CCMotor` implementation of `IMotor`
+        /// --- Valves
+        auto maskVacuumValve         = std::make_shared<Act::SolenoidValve>(MASK_VACUUM_VALVE, "VEM14095", "VEM00", driver);
+        auto waferVacuumValve        = std::make_shared<Act::SolenoidValve>(WAFER_VACUUM_VALVE, "VEW14095", "VEW00", driver);
+        auto waferCompressedAirValve = std::make_shared<Act::SolenoidValve>(WAFER_COMPRESSED_AIR_VALVE, "AC1", "AC0", driver);
+
+        m_actuatorRegistry->registerActuator(std::move(maskVacuumValve));
+        m_actuatorRegistry->registerActuator(std::move(waferVacuumValve));
+        m_actuatorRegistry->registerActuator(std::move(waferCompressedAirValve));
+    }
+
+    // ========================================
+    // Arduino 3 HAL instanciation helpers
+    // ========================================
 
     void HardwareManager::setupArduino3Subsystem(const Config::hardware_config_t &config)
     {
@@ -178,10 +258,6 @@ namespace Kub3::HAL
             .router = std::move(router),
         };
     }
-
-    // ========================================
-    // Arduino 3 HAL instanciation helpers
-    // ========================================
 
     void HardwareManager::createArduino3Sensors(Com::PacketRouter *router)
     {
@@ -374,6 +450,25 @@ static std::string_view arduino3KeyExtractor(const Kub3::HAL::Com::packet_t &pac
 static bool limitSwitchParser(const QByteArray &d)
 {
     return !d.isEmpty() && d[0] != 0x0;
+}
+
+static bool valveStatusParser(const QByteArray &d)
+{
+    return !d.isEmpty() && d[0] != '0';
+}
+
+static bool pressureSensorParser(const QByteArray &d)
+{
+    return !d.isEmpty() && d[0] != '0';
+}
+
+static int32_t temperatureParser(const QByteArray &d)
+{
+    if (d.size() < 2) // Not enough data to read
+        return INT32_MIN;
+    // Big-endian reconstruction
+    return (static_cast<int32_t>(static_cast<uint8_t>(d[0])) << 8) |
+           (static_cast<int32_t>(static_cast<uint8_t>(d[1])));
 }
 
 static uint16_t forceSensorParser(const QByteArray &d)

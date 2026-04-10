@@ -161,11 +161,6 @@ namespace Kub3::HAL::Act
         sendPayload(payload, sizeof(payload));
     }
 
-    void StepperMotor::enable(bool state)
-    {
-        throw std::runtime_error("Not implemented");
-    }
-
     void StepperMotor::home(void)
     {
         throw std::runtime_error("Not implemented");

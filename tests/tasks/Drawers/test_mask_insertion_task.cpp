@@ -43,10 +43,6 @@ public:
         emergencyStopCalls++;
     }
 
-    void enable(bool) override
-    {
-    }
-
     void home() override
     {
     }

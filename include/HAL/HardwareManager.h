@@ -46,6 +46,8 @@ namespace Kub3::HAL
 
         // Arduino2 subsystem
         void setupArduino2Subsystem(const Config::hardware_config_t &config);
+        void createArduino2Sensors(Com::PacketRouter *router);
+        void createArduino2Actuators(const Config::hardware_config_t &config, const std::shared_ptr<MCUDriver> &driver);
 
         // Arduino3 subsystem
         void setupArduino3Subsystem(const Config::hardware_config_t &config);
