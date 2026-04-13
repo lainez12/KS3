@@ -37,6 +37,9 @@ namespace Kub3
         // Runs the application
         int run(QApplication &app);
 
+    private slots:
+        void powerOff(void);
+
     private:
         // Configurations
         Config::hardware_config_t m_hwConfig;

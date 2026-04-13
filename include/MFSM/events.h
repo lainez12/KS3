@@ -51,6 +51,8 @@ namespace Kub3::MFSM
         std::string reason;
     };
 
+    struct EvPowerOff {};
+
     using SystemEvent = std::variant<
         // Boot & Initialization events
         EvHardwareReady,
@@ -63,6 +65,8 @@ namespace Kub3::MFSM
         // Internal Service Event
         EvServiceSuccess,
         EvServiceError,
-        EvEmergencyStopTriggered>;
+        EvEmergencyStopTriggered,
+        // Shutdown / power off
+        EvPowerOff>;
 
 } // namespace Kub3::MFSM

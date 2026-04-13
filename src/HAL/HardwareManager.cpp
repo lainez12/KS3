@@ -102,6 +102,22 @@ namespace Kub3::HAL
         }
     }
 
+    void HardwareManager::ps_powerOff(void)
+    {
+        if (auto it = m_subsystems.find(MCU_ARDUINO2_ID); it != m_subsystems.end())
+        {
+            MCUSubsystemNode &node = it->second;
+            QByteArray payload(1, 'E');
+
+            QMetaObject::invokeMethod(node.driver.get(), &MCUDriver::ps_sendCommand, Qt::BlockingQueuedConnection, payload);
+            emit s_hardwarePowerOffSent(); // Triggers device power off
+        }
+        else
+        {
+            qCritical() << "HardwareManager: Fatal Error. Power Control MCU not found.";
+        }
+    }
+
 #if defined(KUB_MODEL_8)
 
     // ======================================================
@@ -156,7 +172,7 @@ namespace Kub3::HAL
         // Create Sensors
         // --- Physical buttons
         auto emergencyStopBtn = std::make_shared<Sensor<bool>>(m_repo, EMERGENCY_STOP_BUTTON, false, &physicalButtonParser);
-        auto shutdownBtn      = std::make_shared<Sensor<bool>>(m_repo, SHUTDOWN_BUTTON, false, &physicalButtonParser);
+        auto powerOffBtn      = std::make_shared<Sensor<bool>>(m_repo, POWER_OFF_BUTTON, false, &physicalButtonParser);
         // --- Limit switches
         auto camerasDeckFrontLimit = std::make_shared<Sensor<bool>>(m_repo, DECK_FRONT_LIMIT, false, &limitSwitchParser);
         auto camerasDeckBackLimit  = std::make_shared<Sensor<bool>>(m_repo, DECK_BACK_LIMIT, false, &limitSwitchParser);
@@ -183,6 +199,7 @@ namespace Kub3::HAL
         // Register sensors
         // --- Physical buttons
         this->registerSensor(router, "E\x7F\x7F"s, std::move(emergencyStopBtn));
+        this->registerSensor(router, "EE"s, std::move(powerOffBtn));
         // --- Limit switches
         this->registerSensor(router, "C1F"s, std::move(camerasDeckFrontLimit));
         this->registerSensor(router, "C1B"s, std::move(camerasDeckBackLimit));
@@ -201,6 +218,8 @@ namespace Kub3::HAL
         // --- Temperatures
         this->registerSensor(router, "IT0"s, std::move(internalTemperature));
         this->registerSensor(router, "IT1"s, std::move(externalTemperature));
+        // --- Encoders
+        // TODO: register deck's encoder when communication pattern is defined
     }
 
     void HardwareManager::createArduino2Actuators(const Config::hardware_config_t &config, const std::shared_ptr<MCUDriver> &driver)
@@ -404,7 +423,7 @@ static std::string_view arduino2KeyExtractor(const Kub3::HAL::Com::packet_t &pac
     {
     case 'E':
     {
-        if (packet.payload[1] == 'E') // Shutdown request
+        if (packet.payload[1] == 'E') // Power off request
             return std::string_view(packet.payload.data(), 2);
         else if (packet.length >= 3 && packet.payload[1] == 0x7F && packet.payload[2] == 0x7F) // Emergency stop
             return std::string_view(packet.payload.data(), 3);

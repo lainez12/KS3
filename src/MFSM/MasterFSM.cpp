@@ -48,7 +48,8 @@ namespace Kub3::MFSM
             [&](StateIdle &) { /* Monitor temperatures, hold position */ },
             [&](StateOperating &operatingState) { onStateOperatingTick(operatingState); },
             [&](StateError &) { /* Blink red lights */ },
-            [&](StateEmergencyStop &) { /* Ensure motors are disabled */ });
+            [&](StateEmergencyStop &) { /* Ensure actuators are disabled */ },
+            [&](StatePowerOff &powerOffState) { onStatePowerOffTick(powerOffState); });
 
         std::visit(visitor, m_state); // Execute State-Specific Continuous Logic
     }
@@ -144,9 +145,17 @@ namespace Kub3::MFSM
             dispatch(EvServiceError{.reason = activeService->getErrorReason()});
     }
 
+    void MasterFSM::onStatePowerOffTick(StatePowerOff &powerOffState)
+    {
+        // TODO: Check homing state before powering off
+
+        emit s_requestPowerOff();
+    }
+
     void MasterFSM::checkHardwareSafety(void)
     {
-        const bool emergencyStopTriggered = HAL::MS::readBool(m_repo, EMERGENCY_STOP_BUTTON);
+        const bool emergencyStopTriggered  = HAL::MS::readBool(m_repo, EMERGENCY_STOP_BUTTON);
+        const bool systemPowerOffTriggered = HAL::MS::readBool(m_repo, POWER_OFF_BUTTON);
 
         // Dispatch emergency stop event when:
         //  - Emergency stop press is detected
@@ -154,6 +163,10 @@ namespace Kub3::MFSM
         if (emergencyStopTriggered && !std::holds_alternative<StateEmergencyStop>(m_state))
         {
             dispatch(EvEmergencyStopTriggered{"Hardware Emergency Stop Button Pressed"});
+        }
+        if (systemPowerOffTriggered && !std::holds_alternative<StatePowerOff>(m_state))
+        {
+            dispatch(EvPowerOff{});
         }
     }
 
@@ -184,6 +197,11 @@ namespace Kub3::MFSM
         dispatch(EvEmergencyStopTriggered{"Software E-Stop Triggered by Operator"});
     }
 
+    void MasterFSM::ps_systemPowerOff(void)
+    {
+        dispatch(EvPowerOff{});
+    }
+
     // ==========================================
     // FSM TRANSITION DISPATCHER
     // ==========================================
@@ -207,6 +225,7 @@ namespace Kub3::MFSM
         const auto visitor = overloadedCallable(
             // Global Event Overrides (Can happen in almost any state)
             [&](const auto &, const EvEmergencyStopTriggered &e) -> SystemState { return StateEmergencyStop{e.reason}; },
+            [&](const auto &, const EvPowerOff &e) -> SystemState { return StatePowerOff{}; },
 
             // Booting -> Waiting for initialization
             [&](const StateBooting &, const EvHardwareReady &) -> SystemState { return StateWaitingInitialization{}; },
@@ -250,7 +269,7 @@ namespace Kub3::MFSM
     // Actions executed exactly ONCE upon entering a state
     void MasterFSM::onStateEntered(const SystemState &newState)
     {
-        // 1. We ALWAYS send a string to the UI so it can update its visual state machine
+        // We ALWAYS send the updated state to the UI so it can update its visual state machine
         const auto nameExtractor = overloadedCallable{
             [](const StateBooting &) { return QString("BOOTING"); },
             [](const StateWaitingInitialization &) { return QString("WAITING_INITIALIZATION"); },
@@ -258,7 +277,9 @@ namespace Kub3::MFSM
             [](const StateIdle &) { return QString("IDLE"); },
             [](const StateOperating &) { return QString("OPERATING"); },
             [](const StateError &) { return QString("ERROR"); },
-            [](const StateEmergencyStop &) { return QString("EMERGENCY_STOP"); }};
+            [](const StateEmergencyStop &) { return QString("EMERGENCY_STOP"); },
+            [](const StatePowerOff &) { return QString("POWER_OFF"); },
+        };
 
         emit s_stateChanged(std::visit(nameExtractor, newState));
 
@@ -298,6 +319,11 @@ namespace Kub3::MFSM
             [&](const StateEmergencyStop &s) {
                 emit s_errorOccurred(QString::fromStdString(s.reason));
                 m_drawerService->stop(); // Force all motors to emergency stop
+            },
+
+            [&](const StatePowerOff &s) {
+                m_drawerService->stop(); // Emulate emergency stop
+                // TODO: initiate homing if possible and wait for it to end before poweroff
             }};
 
         std::visit(entryActions, newState);

@@ -30,13 +30,15 @@ namespace Kub3::MFSM
         void s_errorOccurred(const QString &errorMessage);
         // Tier 2 (Logic) -> Tier 3 (I/O threads)
         void s_requestHardwareRetry(const QString &hardwareId);
+        void s_requestPowerOff(void);
 
     public slots:
         // Tier 1 (UI) -> Tier 2 (Logic) Thread-Safe Commands
         void ps_requestInitialization(void);
         void ps_requestOperateDrawer(int targetInt, int operationInt); // TODO: replace `int` type with enum or better for communication
         void ps_requestResetError(void);
-        void ps_requestEmergencyStop(void);
+        void ps_requestEmergencyStop(void); // unused for now
+        void ps_systemPowerOff(void);       // unused for now
 
     private slots:
         // The Heartbeat (50Hz)
@@ -44,6 +46,7 @@ namespace Kub3::MFSM
 
         void onStateBootingTick(StateBooting &bootState);
         void onStateOperatingTick(StateOperating &operatingState);
+        void onStatePowerOffTick(StatePowerOff &powerOffState);
 
     private:
         // Core FSM Methods
