@@ -418,16 +418,41 @@ static std::string_view arduino2KeyExtractor(const Kub3::HAL::Com::packet_t &pac
     if (packet.length < 2)
         return std::string_view(); // Not enough bytes to have key + data
 
-    // TODO: implement more keys
-    switch (packet.payload[0])
+    const QByteArray &payload = packet.payload;
+
+    switch (payload[0])
     {
+    case 'C':
+    {
+        if (packet.length >= 3) // 'C1F' | 'C1B'
+            return std::string_view(payload.data(), 3);
+        break;
+    }
     case 'E':
     {
-        if (packet.payload[1] == 'E') // Power off request
-            return std::string_view(packet.payload.data(), 2);
-        else if (packet.length >= 3 && packet.payload[1] == 0x7F && packet.payload[2] == 0x7F) // Emergency stop
-            return std::string_view(packet.payload.data(), 3);
+        if (payload[1] == 'E') // Power off request
+            return std::string_view(payload.data(), 2);
+        else if (packet.length >= 3 && payload[1] == 0x7F && payload[2] == 0x7F) // Emergency stop
+            return std::string_view(payload.data(), 3);
         break;
+    }
+    case 'I':
+    {
+        if (packet.length >= 3) // 'IT0' | 'IT1'
+            return std::string_view(payload.data(), 3);
+        break;
+    }
+    case 'K':
+    {
+        return std::string_view(payload.data(), 2); // 'K1' | 'K2' | 'K3' | 'K4'
+    }
+    case 'V':
+    {
+        if (packet.length < 3)
+            break;
+        if (packet.length >= 4 && payload[1] == 'V' && payload[2] == 'A' && payload[3] == 'C')
+            return std::string_view(payload.data(), 4);
+        return std::string_view(payload.data(), 3);
     }
     default:
         break;
@@ -440,26 +465,28 @@ static std::string_view arduino3KeyExtractor(const Kub3::HAL::Com::packet_t &pac
     if (packet.length < 2)
         return std::string_view(); // Not enough bytes to have key + data
 
-    switch (packet.payload[0])
+    const QByteArray &payload = packet.payload;
+
+    switch (payload[0])
     {
     case 'S':
     {
-        if (packet.payload[1] == 'S' && packet.length >= 3)
-            return std::string_view(packet.payload.data(), 3);
-        return std::string_view(packet.payload.data(), 2);
+        if (payload[1] == 'S' && packet.length >= 3)
+            return std::string_view(payload.data(), 3);
+        return std::string_view(payload.data(), 2);
     }
     case 'Z':
-        return std::string_view(packet.payload.data(), 2);
+        return std::string_view(payload.data(), 2);
     case 'F':
     {
-        if (packet.payload[1] == '?' && packet.length >= 3)
-            return std::string_view(packet.payload.data(), 3);
-        return std::string_view(packet.payload.data(), 2);
+        if (payload[1] == '?' && packet.length >= 3)
+            return std::string_view(payload.data(), 3);
+        return std::string_view(payload.data(), 2);
     }
     default:
     {
-        if ('1' <= packet.payload[0] && packet.payload[0] <= '5')
-            return std::string_view(packet.payload.data(), 1);
+        if ('1' <= payload[0] && payload[0] <= '5')
+            return std::string_view(payload.data(), 1);
         break;
     }
     }
