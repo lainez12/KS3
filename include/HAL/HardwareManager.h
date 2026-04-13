@@ -37,8 +37,12 @@ namespace Kub3::HAL
             return m_actuatorRegistry;
         }
 
+    signals:
+        void s_hardwarePowerOffSent(void);
+
     public slots:
         void ps_reconnectSubsystem(const QString &subsystemId);
+        void ps_powerOff(void);
 
     private:
 #if defined(KUB_MODEL_8)

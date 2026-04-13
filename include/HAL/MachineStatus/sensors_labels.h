@@ -9,7 +9,7 @@
 
 // Hardware Buttons
 #define EMERGENCY_STOP_BUTTON "emergencyStop"
-#define SHUTDOWN_BUTTON       "shutdown"
+#define POWER_OFF_BUTTON      "powerOff"
 
 // Subsystem Routing IDs
 #define MCU_ARDUINO2_ID "SYS_MCU_ARDUINO2"

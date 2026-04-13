@@ -80,23 +80,20 @@ namespace Kub3
 
         // Logic -> HAL Wiring
         QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_requestHardwareRetry, m_hwManager.get(), &HAL::HardwareManager::ps_reconnectSubsystem);
+        QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_requestPowerOff, m_hwManager.get(), &HAL::HardwareManager::ps_powerOff);
 
+        // System power-off
+        QObject::connect(m_hwManager.get(), &HAL::HardwareManager::s_hardwarePowerOffSent, [this]() { this->powerOff(); });
         // Graceful Shutdown
         QObject::connect(qApp, &QCoreApplication::aboutToQuit, m_logicThread, &QThread::quit);
         QObject::connect(m_logicThread, &QThread::finished, m_masterFSM, &QObject::deleteLater);
         QObject::connect(m_logicThread, &QThread::finished, m_logicThread, &QObject::deleteLater);
 
         // 2. UI -> Logic Wiring (Queued Connections implicitly used across threads)
-        QObject::connect(
-            m_mainWindow.get(),
-            &MainWindow::s_initializationRequest,
-            m_masterFSM,
-            &MFSM::MasterFSM::ps_requestInitialization);
+        QObject::connect(m_mainWindow.get(), &MainWindow::s_initializationRequest, m_masterFSM, &MFSM::MasterFSM::ps_requestInitialization);
 
         // 3. Logic -> UI Wiring
-        /*
-        QObject::connect(m_masterFSM, &MSFM::MasterFSM::stateChanged, m_mainWindow.get(), &MainWindow::onMachineStateChanged);
-        */
+        // QObject::connect(m_masterFSM, &MSFM::MasterFSM::stateChanged, m_mainWindow.get(), &MainWindow::onMachineStateChanged);
 
         return *this;
     }
@@ -123,6 +120,16 @@ namespace Kub3
         m_hwManager->stopAll();
 
         return ret;
+    }
+
+    void ApplicationBuilder::powerOff(void)
+    {
+#ifdef BUILD_DEBUG
+        qDebug() << "[ApplicationBuilder::powerOff] triggered (debug mode: closing app).";
+        qApp->quit();
+#else
+        std::system("sudo poweroff");
+#endif
     }
 
 } // namespace Kub3

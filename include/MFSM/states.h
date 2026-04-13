@@ -64,6 +64,8 @@ namespace Kub3::MFSM
         std::string reason;
     };
 
+    struct StatePowerOff {};
+
     // The Single Source of Truth for the Machine's High-Level State
     using SystemState = std::variant<
         StateBooting,
@@ -72,7 +74,8 @@ namespace Kub3::MFSM
         StateIdle,
         StateOperating,
         StateError,
-        StateEmergencyStop>;
+        StateEmergencyStop,
+        StatePowerOff>;
 
     // ---------------------------------------
     // --- C++20 OVERLOADED VISITOR HELPER
