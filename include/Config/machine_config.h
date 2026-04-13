@@ -13,27 +13,30 @@ namespace Kub3::Config
     // HARDWARE CONFIGURATION
     ///////////////////////////
 
-    typedef struct stepper_hw_properties_s
-    {
+    typedef struct stepper_hw_properties_s {
         uint16_t stepsPerRev;
         double screwPitchMm;
         double maxVelocityMmS;
         double maxAccelerationMmS2;
     } stepper_hw_properties_t;
 
+    typedef struct dc_motor_hw_properties_s {
+        double maxVelocityMmS;
+        double maxAccelerationMmS2;
+    } dc_motor_hw_properties_t;
+
     using motor_hw_properties_t = std::variant<
         std::monostate,
-        stepper_hw_properties_t>;
+        stepper_hw_properties_t,
+        dc_motor_hw_properties_t>;
 
-    typedef struct motor_config_s
-    {
+    typedef struct motor_config_s {
         std::string id;
         motor_hw_properties_t hwProperties;
     } motor_config_t;
 
     // Top level struct for hardware config
-    typedef struct hardware_config_s
-    {
+    typedef struct hardware_config_s {
         std::unordered_map<std::string, motor_config_t> motors;
     } hardware_config_t;
 
@@ -44,8 +47,7 @@ namespace Kub3::Config
     using KinematicProfiles = std::unordered_map<std::string, kinematic_profile_t>;
 
     // Top level struct for software/process config
-    typedef struct process_config_s
-    {
+    typedef struct process_config_s {
         // Map [id] -> [map of kinematic profiles for motor]
         std::unordered_map<std::string, KinematicProfiles> kinematic_profiles;
 

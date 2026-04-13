@@ -22,6 +22,8 @@ namespace Kub3::HAL::Act
     class IMotor : public IActuator
     {
     public:
+        virtual ~IMotor() = default;
+
         virtual void moveAbsolute(double position_mm, Config::kinematic_profile_t profile)  = 0;
         virtual void moveRelative(double distance_mm, Config::kinematic_profile_t profile)  = 0;
         virtual void moveDirection(MotorDirection dir, Config::kinematic_profile_t profile) = 0;

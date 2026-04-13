@@ -20,11 +20,12 @@
 #define MCU_ARDUINO3_READY "SYS_MCU_ARDUINO3_READY"
 
 // Encoders
-#define WAFER_ENCODER   "waferDrawerEncoderPosition"
-#define MASK_ENCODER    "maskDrawerEncoderPosition"
-#define Z_LEFT_ENCODER  "zLeftEncoderPosition"
-#define Z_RIGHT_ENCODER "zRightEncoderPosition"
-#define Z_BACK_ENCODER  "zBackEncoderPosition"
+#define WAFER_ENCODER      "waferDrawerEncoderPosition"
+#define MASK_ENCODER       "maskDrawerEncoderPosition"
+#define DECK_MOTOR_ENCODER "camerasDeckEncoderPosition"
+#define Z_LEFT_ENCODER     "zLeftEncoderPosition"
+#define Z_RIGHT_ENCODER    "zRightEncoderPosition"
+#define Z_BACK_ENCODER     "zBackEncoderPosition"
 
 // Limit switches
 #define Z_LEFT_HIGH_LIMIT  "zLeftHighLimit"
