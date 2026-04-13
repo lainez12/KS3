@@ -63,7 +63,9 @@ qt_add_library(Kub3Core STATIC
     src/HAL/Com/MockCommunicator.cpp
     src/HAL/Com/LengthBasedParser.cpp
     src/HAL/Com/PacketRouter.cpp
+    src/HAL/Actuators/Lights/UVExposureHead.cpp
     src/HAL/Actuators/Motors/StepperMotor.cpp
+    src/HAL/Actuators/Motors/DirectCurrentMotor.cpp
     src/HAL/Actuators/Valves/SolenoidValve.cpp
     ## Algorithms
     src/Algorithms/Kinematic/utils.cpp
@@ -107,8 +109,11 @@ qt_add_library(Kub3Core STATIC
     include/HAL/Sensors/Sensor.h
     include/HAL/Actuators/ActuatorRegistry.h
     include/HAL/Actuators/IActuator.h
+    include/HAL/Actuators/Lights/IExposureSystem.h
+    include/HAL/Actuators/Lights/UVExposureHead.h
     include/HAL/Actuators/Motors/IMotor.h
     include/HAL/Actuators/Motors/StepperMotor.h
+    include/HAL/Actuators/Motors/DirectCurrentMotor.h
     include/HAL/Actuators/Valves/IValve.h
     include/HAL/Actuators/Valves/SolenoidValve.h
     ## Algorithms

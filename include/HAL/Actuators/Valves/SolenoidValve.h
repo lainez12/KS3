@@ -24,7 +24,7 @@ namespace Kub3::HAL::Act
         [[nodiscard]] std::string_view getId(void) const noexcept override;
 
     private:
-        const std::string_view m_id;
+        const std::string m_id;
         const QByteArray m_openCmd;
         const QByteArray m_closeCmd;
 

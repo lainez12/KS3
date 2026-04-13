@@ -1,6 +1,7 @@
 #include <QDebug>
 
 #include <Algorithms/Kinematic/IKinematicGenerator.h>
+#include <HAL/Actuators/Lights/UVExposureHead.h>
 #include <HAL/Actuators/Valves/SolenoidValve.h>
 #include <HAL/Com/LengthBasedParser.h>
 #include <HAL/Com/SerialCommunicator.h>
@@ -107,9 +108,7 @@ namespace Kub3::HAL
     // KUB3-8i HAL instanciation functions (split by MCU)
     // ======================================================
 
-    // ========================================
-    // Arduino 2 HAL instanciation helpers
-    // ========================================
+    // --- Arduino 2 HAL instanciation helpers
 
     void HardwareManager::setupArduino2Subsystem(const Config::hardware_config_t &config)
     {
@@ -176,6 +175,8 @@ namespace Kub3::HAL
         // --- Temperatures
         auto internalTemperature = std::make_shared<Sensor<int32_t>>(m_repo, INTERNAL_TEMPERATURE, INT32_MIN, &temperatureParser);
         auto externalTemperature = std::make_shared<Sensor<int32_t>>(m_repo, EXTERNAL_TEMPERATURE, INT32_MIN, &temperatureParser);
+        // --- Encoders
+        auto camerasDeckEncoder = std::make_shared<Sensor<int32_t>>(m_repo, DECK_MOTOR_ENCODER, INT32_MIN, &encoderValueParser);
 
         // TODO: add "Fans voltage" & "LEDs voltages"
 
@@ -211,20 +212,25 @@ namespace Kub3::HAL
         // ===========================================
 
         /// --- Motors
-        // TODO: Create `CCMotor` implementation of `IMotor`
+        auto camerasDeckMotor = createStepperMotor(config, DECK_MOTOR, 'F', KinematicGeneratorKind::TRAPEZOIDAL, driver, DECK_MOTOR_ENCODER);
         /// --- Valves
         auto maskVacuumValve         = std::make_shared<Act::SolenoidValve>(MASK_VACUUM_VALVE, "VEM14095", "VEM00", driver);
         auto waferVacuumValve        = std::make_shared<Act::SolenoidValve>(WAFER_VACUUM_VALVE, "VEW14095", "VEW00", driver);
         auto waferCompressedAirValve = std::make_shared<Act::SolenoidValve>(WAFER_COMPRESSED_AIR_VALVE, "AC1", "AC0", driver);
+        /// --- Exposure head
+        auto exposureHead = std::make_shared<Act::UVExposureHead>(UV_EXPOSURE_HEAD, driver);
 
+        /// --- Motors
+        m_actuatorRegistry->registerActuator(std::move(camerasDeckMotor));
+        /// --- Valves
         m_actuatorRegistry->registerActuator(std::move(maskVacuumValve));
         m_actuatorRegistry->registerActuator(std::move(waferVacuumValve));
         m_actuatorRegistry->registerActuator(std::move(waferCompressedAirValve));
+        /// --- Exposure head
+        m_actuatorRegistry->registerActuator(std::move(exposureHead));
     }
 
-    // ========================================
-    // Arduino 3 HAL instanciation helpers
-    // ========================================
+    // --- Arduino 3 HAL instanciation helpers
 
     void HardwareManager::setupArduino3Subsystem(const Config::hardware_config_t &config)
     {
@@ -350,9 +356,7 @@ namespace Kub3::HAL
 
 #endif // defined(KUB_MODEL_8)
 
-    // =====================================
-    // Sensors HAL instanciation helpers
-    // =====================================
+    // --- Sensors HAL instanciation helpers
 
     void HardwareManager::registerSensor(Com::PacketRouter *router, std::string &&route, Shared<Kub3::HAL::Sensors::ISensor> sensor)
     {
@@ -362,9 +366,7 @@ namespace Kub3::HAL
         m_sensors.push_back(std::move(sensor));
     }
 
-    // =====================================
-    // Motors HAL instanciation helpers
-    // =====================================
+    // --- Motors HAL instanciation helpers
 
     Shared<Act::StepperMotor> HardwareManager::createStepperMotor(
         const Config::hardware_config_t &config,
