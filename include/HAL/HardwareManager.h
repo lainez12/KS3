@@ -47,6 +47,9 @@ namespace Kub3::HAL
     private:
 #if defined(KUB_MODEL_8)
         // Arduino1 subsystem
+        void setupArduino1Subsystem(const Config::hardware_config_t &config);
+        void createArduino1Sensors(Com::PacketRouter *router);
+        void createArduino1Actuators(const Config::hardware_config_t &config, const std::shared_ptr<MCUDriver> &driver);
 
         // Arduino2 subsystem
         void setupArduino2Subsystem(const Config::hardware_config_t &config);

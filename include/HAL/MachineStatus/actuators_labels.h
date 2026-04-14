@@ -1,9 +1,19 @@
 #pragma once
 
 // Motors
-#define WAFER_DRAWER_MOTOR "waferDrawerMotor"
-#define MASK_DRAWER_MOTOR  "maskDrawerMotor"
-#define DECK_MOTOR         "deckMotor"
+#define LEFT_CAMERA_X_MOTOR  "leftCameraXMotor"
+#define LEFT_CAMERA_Y_MOTOR  "leftCameraYMotor"
+#define RIGHT_CAMERA_X_MOTOR "rightCameraXMotor"
+#define RIGHT_CAMERA_Y_MOTOR "rightCameraYMotor"
+#define X_STAGE_MOTOR        "xStageMotor"
+#define Y_STAGE_MOTOR        "yStageMotor"
+#define THETA_STAGE_MOTOR    "thetaStageMotor"
+#define Z_LEFT_MOTOR         "zLeftMotor"
+#define Z_RIGHT_MOTOR        "zRightMotor"
+#define Z_BACK_MOTOR         "zBackMotor"
+#define WAFER_DRAWER_MOTOR   "waferDrawerMotor"
+#define MASK_DRAWER_MOTOR    "maskDrawerMotor"
+#define DECK_MOTOR           "deckMotor"
 
 // Valves
 #define MASK_VACUUM_VALVE          "maskVacuumValveStatus"

@@ -14,6 +14,7 @@
 using namespace std::string_literals;
 
 // Packet key extractors
+static std::string_view arduino1KeyExtractor(const Kub3::HAL::Com::packet_t &packet);
 static std::string_view arduino2KeyExtractor(const Kub3::HAL::Com::packet_t &packet);
 static std::string_view arduino3KeyExtractor(const Kub3::HAL::Com::packet_t &packet);
 // Payload parsers
@@ -36,7 +37,7 @@ namespace Kub3::HAL
     {
 // TODO: Build the machine based on the CMake configuration
 #if defined(KUB_MODEL_8)
-        // setupArduino1Subsystem(config);
+        setupArduino1Subsystem(config);
         setupArduino2Subsystem(config);
         setupArduino3Subsystem(config);
 #endif
@@ -124,6 +125,129 @@ namespace Kub3::HAL
     // KUB3-8i HAL instanciation functions (split by MCU)
     // ======================================================
 
+    // --- Arduino 1 HAL instanciation helpers
+
+    void HardwareManager::setupArduino1Subsystem(const Config::hardware_config_t &config)
+    {
+        using namespace Kub3::HAL::Sensors;
+
+        // Create thread & Driver for Arduino3
+        auto thread         = std::make_unique<QThread>();                                       // Driver thread
+        auto comms          = std::make_unique<Com::SerialCommunicator>("/dev/ttyACM2", 115200); // TODO: get port from settings file
+        auto parser         = std::make_unique<Com::LengthBasedParser>();
+        auto arduino1Driver = std::make_shared<MCUDriver>(std::move(comms), std::move(parser));
+        auto router         = std::make_unique<Com::PacketRouter>(&arduino1KeyExtractor);
+
+        // Initialize MCU driver connection "sensor". Doesn't need a parser.
+        m_sensors.push_back(std::make_shared<HAL::Sensors::Sensor<bool>>(m_repo, MCU_ARDUINO1_READY, false, nullptr));
+
+        // Instanciate sensors and actuators software representations
+        this->createArduino1Sensors(router.get());
+        this->createArduino1Actuators(config, arduino1Driver);
+
+        // Move MCUDriver to its own thread
+        arduino1Driver->moveToThread(thread.get());
+
+        // Wire MCUDriver connection status signals -> Machine Status Repo value update
+        QObject::connect(arduino1Driver.get(), &MCUDriver::s_connected, [&]() { m_repo->setSensorRaw(MCU_ARDUINO1_READY, true); });
+        QObject::connect(arduino1Driver.get(), &MCUDriver::s_connectionLost, [&]() { m_repo->setSensorRaw(MCU_ARDUINO1_READY, false); });
+        // Wire MCUDriver -> Router
+        QObject::connect(arduino1Driver.get(), &MCUDriver::s_packetReady, router.get(), &Com::PacketRouter::ps_routePacket);
+
+        // Store in lifecycle manager
+        m_subsystems[MCU_ARDUINO1_ID] = MCUSubsystemNode{
+            .thread = std::move(thread),
+            .driver = std::move(arduino1Driver),
+            .router = std::move(router),
+        };
+    }
+
+    void HardwareManager::createArduino1Sensors(Com::PacketRouter *router)
+    {
+        using namespace Kub3::HAL::Sensors;
+
+        // ===========================================
+        // UPWARD PIPELINE (Hardware --> Software)
+        // ===========================================
+
+        // Create Sensors
+        // --- Limit switches
+        auto leftCameraXLeftLimit         = std::make_shared<Sensor<bool>>(m_repo, LEFT_CAMERA_X_LEFT_LIMIT, false, &limitSwitchParser);
+        auto leftCameraXRightLimit        = std::make_shared<Sensor<bool>>(m_repo, LEFT_CAMERA_X_RIGHT_LIMIT, false, &limitSwitchParser);
+        auto leftCameraYFrontLimit        = std::make_shared<Sensor<bool>>(m_repo, LEFT_CAMERA_Y_FRONT_LIMIT, false, &limitSwitchParser);
+        auto leftCameraYBackLimit         = std::make_shared<Sensor<bool>>(m_repo, LEFT_CAMERA_Y_BACK_LIMIT, false, &limitSwitchParser);
+        auto rightCameraXLeftLimit        = std::make_shared<Sensor<bool>>(m_repo, RIGHT_CAMERA_X_LEFT_LIMIT, false, &limitSwitchParser);
+        auto rightCameraXRightLimit       = std::make_shared<Sensor<bool>>(m_repo, RIGHT_CAMERA_X_RIGHT_LIMIT, false, &limitSwitchParser);
+        auto rightCameraYFrontLimit       = std::make_shared<Sensor<bool>>(m_repo, RIGHT_CAMERA_Y_FRONT_LIMIT, false, &limitSwitchParser);
+        auto rightCameraYBackLimit        = std::make_shared<Sensor<bool>>(m_repo, RIGHT_CAMERA_Y_BACK_LIMIT, false, &limitSwitchParser);
+        auto xStageLeftLimit              = std::make_shared<Sensor<bool>>(m_repo, X_STAGE_LEFT_LIMIT, false, &limitSwitchParser);
+        auto xStageRightLimit             = std::make_shared<Sensor<bool>>(m_repo, X_STAGE_RIGHT_LIMIT, false, &limitSwitchParser);
+        auto yStageFrontLimit             = std::make_shared<Sensor<bool>>(m_repo, Y_STAGE_FRONT_LIMIT, false, &limitSwitchParser);
+        auto yStageBackLimit              = std::make_shared<Sensor<bool>>(m_repo, Y_STAGE_BACK_LIMIT, false, &limitSwitchParser);
+        auto thetaStageClockwiseLimit     = std::make_shared<Sensor<bool>>(m_repo, THETA_STAGE_CLOCKWISE_LIMIT, false, &limitSwitchParser);
+        auto thetaStageAntiClockwiseLimit = std::make_shared<Sensor<bool>>(m_repo, THETA_STAGE_ANTI_CLOCKWISE_LIMIT, false, &limitSwitchParser);
+        // --- Encoders
+        auto leftCameraXEncoder  = std::make_shared<Sensor<int32_t>>(m_repo, LEFT_CAMERA_X_ENCODER, INT32_MIN, &encoderValueParser);
+        auto leftCameraYEncoder  = std::make_shared<Sensor<int32_t>>(m_repo, LEFT_CAMERA_Y_ENCODER, INT32_MIN, &encoderValueParser);
+        auto rightCameraXEncoder = std::make_shared<Sensor<int32_t>>(m_repo, RIGHT_CAMERA_X_ENCODER, INT32_MIN, &encoderValueParser);
+        auto rightCameraYEncoder = std::make_shared<Sensor<int32_t>>(m_repo, RIGHT_CAMERA_Y_ENCODER, INT32_MIN, &encoderValueParser);
+        auto xStageEncoder       = std::make_shared<Sensor<int32_t>>(m_repo, X_STAGE_ENCODER, INT32_MIN, &encoderValueParser);
+        auto yStageEncoder       = std::make_shared<Sensor<int32_t>>(m_repo, Y_STAGE_ENCODER, INT32_MIN, &encoderValueParser);
+        auto thetaStageEncoder   = std::make_shared<Sensor<int32_t>>(m_repo, THETA_STAGE_ENCODER, INT32_MIN, &encoderValueParser);
+
+        // Register sensors
+        // --- Limit switches
+        this->registerSensor(router, "\x00"s, std::move(leftCameraXLeftLimit));
+        this->registerSensor(router, "\x01"s, std::move(leftCameraXRightLimit));
+        this->registerSensor(router, "\x02"s, std::move(leftCameraYFrontLimit));
+        this->registerSensor(router, "\x03"s, std::move(leftCameraYBackLimit));
+        this->registerSensor(router, "\x04"s, std::move(rightCameraXLeftLimit));
+        this->registerSensor(router, "\x05"s, std::move(rightCameraXRightLimit));
+        this->registerSensor(router, "\x06"s, std::move(rightCameraYFrontLimit));
+        this->registerSensor(router, "\x07"s, std::move(rightCameraYBackLimit));
+        this->registerSensor(router, "\x08"s, std::move(xStageLeftLimit));
+        this->registerSensor(router, "\x09"s, std::move(xStageRightLimit));
+        this->registerSensor(router, "\x0A"s, std::move(yStageFrontLimit));
+        this->registerSensor(router, "\x0B"s, std::move(yStageBackLimit));
+        this->registerSensor(router, "\x0C"s, std::move(thetaStageClockwiseLimit));
+        this->registerSensor(router, "\x0D"s, std::move(thetaStageAntiClockwiseLimit));
+        // --- Encoders
+        this->registerSensor(router, "1"s, std::move(leftCameraXEncoder));
+        this->registerSensor(router, "2"s, std::move(leftCameraYEncoder));
+        this->registerSensor(router, "3"s, std::move(rightCameraXEncoder));
+        this->registerSensor(router, "4"s, std::move(rightCameraYEncoder));
+        this->registerSensor(router, "5"s, std::move(xStageEncoder));
+        this->registerSensor(router, "6"s, std::move(yStageEncoder));
+        this->registerSensor(router, "7"s, std::move(thetaStageEncoder));
+    }
+
+    void HardwareManager::createArduino1Actuators(const Config::hardware_config_t &config, const std::shared_ptr<MCUDriver> &driver)
+    {
+        using Kinematics = Algorithms::Kinematic::KinematicGeneratorKind;
+
+        // ===========================================
+        // DOWNWARD PIPELINE (Software --> Hardware)
+        // ===========================================
+
+        /// --- Motors
+        auto leftCameraXMotor  = createStepperMotor(config, LEFT_CAMERA_X_MOTOR, '1', Kinematics::TRAPEZOIDAL, driver, LEFT_CAMERA_X_ENCODER);
+        auto leftCameraYMotor  = createStepperMotor(config, LEFT_CAMERA_Y_MOTOR, '2', Kinematics::TRAPEZOIDAL, driver, LEFT_CAMERA_Y_ENCODER);
+        auto rightCameraXMotor = createStepperMotor(config, RIGHT_CAMERA_X_MOTOR, '3', Kinematics::TRAPEZOIDAL, driver, RIGHT_CAMERA_X_ENCODER);
+        auto rightCameraYMotor = createStepperMotor(config, RIGHT_CAMERA_Y_MOTOR, '4', Kinematics::TRAPEZOIDAL, driver, RIGHT_CAMERA_Y_ENCODER);
+        auto xStageMotor       = createStepperMotor(config, X_STAGE_MOTOR, '5', Kinematics::TRAPEZOIDAL, driver, X_STAGE_ENCODER);
+        auto yStageMotor       = createStepperMotor(config, Y_STAGE_MOTOR, '6', Kinematics::TRAPEZOIDAL, driver, Y_STAGE_ENCODER);
+        auto thetaStageMotor   = createStepperMotor(config, THETA_STAGE_MOTOR, '7', Kinematics::TRAPEZOIDAL, driver, THETA_STAGE_ENCODER);
+
+        /// --- Motors
+        m_actuatorRegistry->registerActuator(std::move(leftCameraXMotor));
+        m_actuatorRegistry->registerActuator(std::move(leftCameraYMotor));
+        m_actuatorRegistry->registerActuator(std::move(rightCameraXMotor));
+        m_actuatorRegistry->registerActuator(std::move(rightCameraYMotor));
+        m_actuatorRegistry->registerActuator(std::move(xStageMotor));
+        m_actuatorRegistry->registerActuator(std::move(yStageMotor));
+        m_actuatorRegistry->registerActuator(std::move(thetaStageMotor));
+    }
+
     // --- Arduino 2 HAL instanciation helpers
 
     void HardwareManager::setupArduino2Subsystem(const Config::hardware_config_t &config)
@@ -176,10 +300,10 @@ namespace Kub3::HAL
         // --- Limit switches
         auto camerasDeckFrontLimit = std::make_shared<Sensor<bool>>(m_repo, DECK_FRONT_LIMIT, false, &limitSwitchParser);
         auto camerasDeckBackLimit  = std::make_shared<Sensor<bool>>(m_repo, DECK_BACK_LIMIT, false, &limitSwitchParser);
-        auto ardkoFrontLeftLimit   = std::make_shared<Sensor<bool>>(m_repo, DECK_BACK_LIMIT, false, &limitSwitchParser);
-        auto ardkoFrontRightLimit  = std::make_shared<Sensor<bool>>(m_repo, DECK_BACK_LIMIT, false, &limitSwitchParser);
-        auto ardkoBackLeftLimit    = std::make_shared<Sensor<bool>>(m_repo, DECK_BACK_LIMIT, false, &limitSwitchParser);
-        auto ardkoBackRightLimit   = std::make_shared<Sensor<bool>>(m_repo, DECK_BACK_LIMIT, false, &limitSwitchParser);
+        auto ardkoFrontLeftLimit   = std::make_shared<Sensor<bool>>(m_repo, ARDKO_FRONT_LEFT_LIMIT, false, &limitSwitchParser);
+        auto ardkoFrontRightLimit  = std::make_shared<Sensor<bool>>(m_repo, ARDKO_FRONT_RIGHT_LIMIT, false, &limitSwitchParser);
+        auto ardkoBackLeftLimit    = std::make_shared<Sensor<bool>>(m_repo, ARDKO_BACK_LEFT_LIMIT, false, &limitSwitchParser);
+        auto ardkoBackRightLimit   = std::make_shared<Sensor<bool>>(m_repo, ARDKO_BACK_RIGHT_LIMIT, false, &limitSwitchParser);
         // --- Solenoid valves statii
         auto maskVacuumValveStatus         = std::make_shared<Sensor<bool>>(m_repo, MASK_VACUUM_VALVE_STATUS, false, &valveStatusParser);
         auto waferVacuumValveStatus        = std::make_shared<Sensor<bool>>(m_repo, WAFER_VACUUM_VALVE_STATUS, false, &valveStatusParser);
@@ -224,14 +348,14 @@ namespace Kub3::HAL
 
     void HardwareManager::createArduino2Actuators(const Config::hardware_config_t &config, const std::shared_ptr<MCUDriver> &driver)
     {
-        using namespace Algorithms::Kinematic;
+        using Kinematics = Algorithms::Kinematic::KinematicGeneratorKind;
 
         // ===========================================
         // DOWNWARD PIPELINE (Software --> Hardware)
         // ===========================================
 
         /// --- Motors
-        auto camerasDeckMotor = createStepperMotor(config, DECK_MOTOR, 'F', KinematicGeneratorKind::TRAPEZOIDAL, driver, DECK_MOTOR_ENCODER);
+        auto camerasDeckMotor = createStepperMotor(config, DECK_MOTOR, 'F', Kinematics::TRAPEZOIDAL, driver, DECK_MOTOR_ENCODER);
         /// --- Valves
         auto maskVacuumValve         = std::make_shared<Act::SolenoidValve>(MASK_VACUUM_VALVE, "VEM14095", "VEM00", driver);
         auto waferVacuumValve        = std::make_shared<Act::SolenoidValve>(WAFER_VACUUM_VALVE, "VEW14095", "VEW00", driver);
@@ -359,16 +483,22 @@ namespace Kub3::HAL
 
     void HardwareManager::createArduino3Actuators(const Config::hardware_config_t &config, const std::shared_ptr<MCUDriver> &driver)
     {
-        using namespace Algorithms::Kinematic;
+        using Kinematics = Algorithms::Kinematic::KinematicGeneratorKind;
 
         // ===========================================
         // DOWNWARD PIPELINE (Software --> Hardware)
         // ===========================================
 
         /// --- Motors
-        auto maskMotor  = createStepperMotor(config, MASK_DRAWER_MOTOR, '4', KinematicGeneratorKind::TRAPEZOIDAL, driver, MASK_ENCODER);
-        auto waferMotor = createStepperMotor(config, WAFER_DRAWER_MOTOR, '5', KinematicGeneratorKind::TRAPEZOIDAL, driver, WAFER_ENCODER);
+        auto zLeftMotor  = createStepperMotor(config, Z_LEFT_MOTOR, '1', Kinematics::TRAPEZOIDAL, driver, Z_LEFT_ENCODER);
+        auto zRightMotor = createStepperMotor(config, Z_RIGHT_MOTOR, '2', Kinematics::TRAPEZOIDAL, driver, Z_RIGHT_ENCODER);
+        auto zBackMotor  = createStepperMotor(config, Z_BACK_MOTOR, '3', Kinematics::TRAPEZOIDAL, driver, Z_BACK_ENCODER);
+        auto maskMotor   = createStepperMotor(config, MASK_DRAWER_MOTOR, '4', Kinematics::TRAPEZOIDAL, driver, MASK_ENCODER);
+        auto waferMotor  = createStepperMotor(config, WAFER_DRAWER_MOTOR, '5', Kinematics::TRAPEZOIDAL, driver, WAFER_ENCODER);
 
+        m_actuatorRegistry->registerActuator(std::move(zLeftMotor));
+        m_actuatorRegistry->registerActuator(std::move(zRightMotor));
+        m_actuatorRegistry->registerActuator(std::move(zBackMotor));
         m_actuatorRegistry->registerActuator(std::move(maskMotor));
         m_actuatorRegistry->registerActuator(std::move(waferMotor));
     }
@@ -412,6 +542,32 @@ namespace Kub3::HAL
 } // namespace Kub3::HAL
 
 // Key extractors
+
+static std::string_view arduino1KeyExtractor(const Kub3::HAL::Com::packet_t &packet)
+{
+    if (packet.length < 2)
+        return std::string_view(); // Not enough bytes to have key + data
+
+    const QByteArray &payload = packet.payload;
+
+    // TODO: code key parsing logic
+    switch (payload[0])
+    {
+    case 'S':
+    {
+        if (payload[1] == 'S' && packet.length >= 3)
+            return std::string_view(payload.data(), 3);
+        return std::string_view(payload.data(), 2);
+    }
+    default:
+    {
+        if ('1' <= payload[0] && payload[0] <= '7')
+            return std::string_view(payload.data(), 1);
+        break;
+    }
+    }
+    return std::string_view(); // 404
+}
 
 static std::string_view arduino2KeyExtractor(const Kub3::HAL::Com::packet_t &packet)
 {
