@@ -15,22 +15,16 @@ public:
     int emergencyStopCalls = 0;
     Act::MotorDirection lastDir;
 
-    DummyMotor(const std::string id) : m_id(id)
-    {
-    }
+    DummyMotor(const std::string id) : m_id(id) {}
 
     std::string_view getId(void) const noexcept override
     {
         return m_id;
     }
 
-    void moveAbsolute(double, kinematic_profile_t) override
-    {
-    }
+    void moveAbsolute(double, kinematic_profile_t) override {}
 
-    void moveRelative(double, kinematic_profile_t) override
-    {
-    }
+    void moveRelative(double, kinematic_profile_t) override {}
 
     void moveDirection(Act::MotorDirection dir, kinematic_profile_t) override
     {
@@ -43,9 +37,7 @@ public:
         emergencyStopCalls++;
     }
 
-    void home() override
-    {
-    }
+    void home() override {}
 
     bool isMoving() const override
     {
@@ -56,14 +48,14 @@ public:
     {
         return 0.0;
     }
+
+    void resetEncoder(const double offsetMm = 0.0) override {}
 };
 
 class MockMachineStatusRepo final : public MS::IMachineStatusRepo
 {
 public:
-    explicit MockMachineStatusRepo(QObject *parent = nullptr) : MS::IMachineStatusRepo(parent)
-    {
-    }
+    explicit MockMachineStatusRepo(QObject *parent = nullptr) : MS::IMachineStatusRepo(parent) {}
     ~MockMachineStatusRepo() override = default;
 
     void setSensorRaw(const std::string &key, const MS::SensorValue &value) override
@@ -93,7 +85,7 @@ TEST_CASE("MaskInsertionTask Logic FSM", "[fsm][tasks]")
     auto repo      = std::make_shared<MockMachineStatusRepo>();
 
     kinematic_profile_t fastProf, fineProf, contactProf;
-    MaskInsertionTask task(mockMotor, repo, fastProf, fineProf, contactProf);
+    MaskInsertionTask task(repo, mockMotor, fastProf, fineProf, contactProf);
 
     repo->setSensorRaw(CM0, false);
     repo->setSensorRaw(CM1, false);

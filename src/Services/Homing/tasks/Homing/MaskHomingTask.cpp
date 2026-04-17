@@ -1,23 +1,21 @@
-#include "Services/Drawers/tasks/MaskInsertionTask.h"
-#include "HAL/MachineStatus/utils.h"
+#include <HAL/MachineStatus/utils.h>
+#include <Services/Homing/tasks/Homing/MaskHomingTask.h>
 
 namespace Kub3::Services
 {
 
-    MaskInsertionTask::MaskInsertionTask(Shared<HAL::Act::IMotor> motor,
-                                         Shared<HAL::MS::IMachineStatusRepo> repo,
-                                         Config::kinematic_profile_t fastProfile,
-                                         Config::kinematic_profile_t fineProfile,
-                                         Config::kinematic_profile_t contactProfile) :
-        m_motor(std::move(motor)),
+    MaskHomingTask::MaskHomingTask(Shared<HAL::MS::IMachineStatusRepo> repo,
+                                   Shared<HAL::Act::IMotor> motor,
+                                   Config::kinematic_profile_t fastProfile,
+                                   Config::kinematic_profile_t fineProfile,
+                                   Config::kinematic_profile_t contactProfile) :
         m_repo(std::move(repo)),
+        m_motor(std::move(motor)),
         m_fastProfile(std::move(fastProfile)),
         m_fineProfile(std::move(fineProfile)),
-        m_contactProfile(std::move(contactProfile))
-    {
-    }
+        m_contactProfile(std::move(contactProfile)) {}
 
-    void MaskInsertionTask::start(void)
+    void MaskHomingTask::start(void)
     {
         const bool cm3 = HAL::MS::readBool(m_repo, CM3);
 
@@ -50,7 +48,7 @@ namespace Kub3::Services
         }
     }
 
-    bool MaskInsertionTask::tick(void)
+    bool MaskHomingTask::tick(void)
     {
         switch (m_step)
         {
@@ -83,7 +81,7 @@ namespace Kub3::Services
 
     // Sub-tick logic functions
 
-    void MaskInsertionTask::fastApproachLogic(void)
+    void MaskHomingTask::fastApproachLogic(void)
     {
         const bool cm1 = HAL::MS::readBool(m_repo, CM1);
         const bool cm2 = HAL::MS::readBool(m_repo, CM2);
@@ -106,7 +104,7 @@ namespace Kub3::Services
         }
     }
 
-    void MaskInsertionTask::slowApproachLogic(void)
+    void MaskHomingTask::slowApproachLogic(void)
     {
         const bool cm2 = HAL::MS::readBool(m_repo, CM2);
         const bool cm3 = HAL::MS::readBool(m_repo, CM3);
@@ -123,7 +121,7 @@ namespace Kub3::Services
         }
     }
 
-    void MaskInsertionTask::reverseClearanceLogic(void)
+    void MaskHomingTask::reverseClearanceLogic(void)
     {
         const bool cm2 = HAL::MS::readBool(m_repo, CM2);
 
@@ -134,7 +132,7 @@ namespace Kub3::Services
         }
     }
 
-    void MaskInsertionTask::contactModeLogic(void)
+    void MaskHomingTask::contactModeLogic(void)
     {
         const bool cm2 = HAL::MS::readBool(m_repo, CM2);
 

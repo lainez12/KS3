@@ -2,7 +2,6 @@
 
 #include <QObject>
 
-#include <Config/kinematics.h>
 #include <HAL/Actuators/Motors/IMotor.h>
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
 #include <HAL/MachineStatus/actuators_labels.h>
@@ -13,18 +12,20 @@
 namespace Kub3::Services
 {
 
-    class MaskEjectionTask final : public ITask
+    class WaferHomingTask : public ITask
     {
     public:
-        MaskEjectionTask(
+        WaferHomingTask(
             Shared<HAL::MS::IMachineStatusRepo> repo,
             Shared<HAL::Act::IMotor> motor,
             Config::kinematic_profile_t fastProfile,
-            Config::kinematic_profile_t fineProfile,
-            int32_t finePositionThreshold);
+            Config::kinematic_profile_t fineProfile);
 
         void start(void) override;
         bool tick(void) override;
+
+    protected:
+        Shared<HAL::Act::IMotor> m_motor;
 
     private:
         enum class Step
@@ -36,11 +37,9 @@ namespace Kub3::Services
 
         Step m_step = Step::FastApproach;
 
-        Shared<HAL::Act::IMotor> m_motor;
         Shared<HAL::MS::IMachineStatusRepo> m_repo;
         Config::kinematic_profile_t m_fastProfile;
         Config::kinematic_profile_t m_fineProfile;
-        const int32_t m_finePositionThreshold;
     };
 
 }

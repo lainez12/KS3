@@ -58,7 +58,7 @@ namespace Kub3::HAL::Act
         const uint8_t m_motorByteId;
         const Config::dc_motor_hw_properties_t m_hwConfig;
         Weak<MCUDriver> m_driver;
-        std::function<double()> m_positionGetter;
+        std::function<double()> m_encoderValueGetter;
 
         Unique<IKinematicGenerator> m_kinematicEngine;
 

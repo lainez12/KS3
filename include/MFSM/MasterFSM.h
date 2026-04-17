@@ -4,10 +4,11 @@
 #include <QString>
 #include <QTimer>
 
-#include "HAL/MachineStatus/IMachineStatusRepo.h"
-#include "MFSM/events.h"
-#include "MFSM/states.h"
-#include "Services/Drawers/DualConveyorDrawerService.h"
+#include <HAL/MachineStatus/IMachineStatusRepo.h>
+#include <MFSM/events.h>
+#include <MFSM/states.h>
+#include <Services/Drawers/IDrawerService.h>
+#include <Services/Homing/IHomingService.h>
 
 namespace Kub3::MFSM
 {
@@ -45,6 +46,7 @@ namespace Kub3::MFSM
         void onLogicTick(void);
 
         void onStateBootingTick(StateBooting &bootState);
+        void onStateInitializationTick(StateInitialization &state);
         void onStateOperatingTick(StateOperating &operatingState);
         void onStatePowerOffTick(StatePowerOff &powerOffState);
 
@@ -55,6 +57,7 @@ namespace Kub3::MFSM
         void onStateEntered(const SystemState &newState);
         // Safety Monitors
         void checkHardwareSafety();
+        void stopAllServices();
 
     private:
         SystemState m_state;                        // Current Master FMS state
@@ -62,6 +65,7 @@ namespace Kub3::MFSM
         QTimer m_logicTimer;                        // Tick timer
 
         // Services
+        Shared<Services::IHomingService> m_homingService; // Homing / Initialization Service
         Shared<Services::IDrawerService> m_drawerService; // Drawer Service
     };
 

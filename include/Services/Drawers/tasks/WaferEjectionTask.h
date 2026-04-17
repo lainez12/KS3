@@ -2,12 +2,12 @@
 
 #include <QObject>
 
-#include "HAL/Actuators/Motors/IMotor.h"
-#include "HAL/MachineStatus/IMachineStatusRepo.h"
-#include "HAL/MachineStatus/actuators_labels.h"
-#include "HAL/MachineStatus/sensors_labels.h"
-#include "Services/ITask.h"
-#include "utils.h"
+#include <HAL/Actuators/Motors/IMotor.h>
+#include <HAL/MachineStatus/IMachineStatusRepo.h>
+#include <HAL/MachineStatus/actuators_labels.h>
+#include <HAL/MachineStatus/sensors_labels.h>
+#include <Services/ITask.h>
+#include <utils.h>
 
 namespace Kub3::Services
 {
@@ -16,8 +16,8 @@ namespace Kub3::Services
     {
     public:
         WaferEjectionTask(
-            Shared<HAL::Act::IMotor> motor,
             Shared<HAL::MS::IMachineStatusRepo> repo,
+            Shared<HAL::Act::IMotor> motor,
             Config::kinematic_profile_t fastProfile,
             Config::kinematic_profile_t fineProfile,
             int32_t finePositionThreshold);

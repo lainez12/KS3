@@ -49,7 +49,11 @@ namespace Kub3::Config
                 hw.screwPitchMm        = getRequiredValue(settings, "screw_pitch_mm", motor.id).toDouble();
                 hw.maxVelocityMmS      = getRequiredValue(settings, "max_velocity_mm_s", motor.id).toDouble();
                 hw.maxAccelerationMmS2 = getRequiredValue(settings, "max_acceleration_mm_s2", motor.id).toDouble();
-                motor.hwProperties     = hw;
+                hw.encoderTopsPerRev   = getRequiredValue(settings, "encoder_tops_per_rev", motor.id).toUInt();
+                // TODO: more checks
+                if (hw.screwPitchMm == 0.0)
+                    throw std::runtime_error(std::format("CRITICAL: Invalid screw pitch value ({})", hw.screwPitchMm));
+                motor.hwProperties = hw;
             }
             else
             {

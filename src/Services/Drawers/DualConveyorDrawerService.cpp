@@ -1,16 +1,16 @@
 #if defined(KUB_MODEL_8)
 
 // HAL
-#include "HAL/Actuators/Motors/IMotor.h"
-#include "HAL/MachineStatus/actuators_labels.h"
-#include "HAL/MachineStatus/sensors_labels.h"
-#include "HAL/MachineStatus/utils.h"
+#include <HAL/Actuators/Motors/IMotor.h>
+#include <HAL/MachineStatus/actuators_labels.h>
+#include <HAL/MachineStatus/sensors_labels.h>
+#include <HAL/MachineStatus/utils.h>
 // Service & Tasks
-#include "Services/Drawers/DualConveyorDrawerService.h"
-#include "Services/Drawers/tasks/MaskEjectionTask.h"
-#include "Services/Drawers/tasks/MaskInsertionTask.h"
-#include "Services/Drawers/tasks/WaferEjectionTask.h"
-#include "Services/Drawers/tasks/WaferInsertionTask.h"
+#include <Services/Drawers/DualConveyorDrawerService.h>
+#include <Services/Drawers/tasks/MaskEjectionTask.h>
+#include <Services/Drawers/tasks/MaskInsertionTask.h>
+#include <Services/Drawers/tasks/WaferEjectionTask.h>
+#include <Services/Drawers/tasks/WaferInsertionTask.h>
 
 namespace Kub3::Services
 {
@@ -39,21 +39,12 @@ namespace Kub3::Services
 
         if (target == DrawerTarget::Mask || target == DrawerTarget::Both)
         {
-            this->enqueueTask(std::make_unique<MaskInsertionTask>(
-                maskMotor,
-                m_repo,
-                m_maskFastProfile,
-                m_maskFineProfile,
-                m_maskContactProfile));
+            enqueueTask<MaskInsertionTask>(m_repo, maskMotor, m_maskFastProfile, m_maskFineProfile, m_maskContactProfile);
         }
 
         if (target == DrawerTarget::Wafer || target == DrawerTarget::Both)
         {
-            this->enqueueTask(std::make_unique<WaferInsertionTask>(
-                waferMotor,
-                m_repo,
-                m_waferFastProfile,
-                m_waferFineProfile));
+            enqueueTask<WaferInsertionTask>(m_repo, waferMotor, m_waferFastProfile, m_waferFineProfile);
         }
 
         this->startSequence();
@@ -72,22 +63,14 @@ namespace Kub3::Services
 
         if (target == DrawerTarget::Wafer || target == DrawerTarget::Both)
         {
-            this->enqueueTask(std::make_unique<WaferEjectionTask>(
-                waferMotor,
-                m_repo,
-                m_waferFastProfile,
-                m_waferFineProfile,
-                m_waferEjectionFinePosThreshold));
+            enqueueTask<WaferEjectionTask>(
+                m_repo, waferMotor, m_waferFastProfile, m_waferFineProfile, m_waferEjectionFinePosThreshold);
         }
 
         if (target == DrawerTarget::Mask || target == DrawerTarget::Both)
         {
-            this->enqueueTask(std::make_unique<MaskEjectionTask>(
-                maskMotor,
-                m_repo,
-                m_maskFastProfile,
-                m_maskFineProfile,
-                m_maskEjectionFinePosThreshold));
+            enqueueTask<MaskEjectionTask>(
+                m_repo, maskMotor, m_maskFastProfile, m_maskFineProfile, m_maskEjectionFinePosThreshold);
         }
 
         this->startSequence();

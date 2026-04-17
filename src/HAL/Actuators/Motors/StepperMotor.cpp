@@ -21,7 +21,7 @@ namespace Kub3::HAL::Act
         m_byteId(byteId),
         m_hwConfig(std::move(hwConfig)),
         m_driver(std::move(driver)),
-        m_positionGetter(std::move(posGetter)),
+        m_encoderValueGetter(std::move(posGetter)),
         m_kinematicEngine(std::move(kinematicEngine)),
         m_controlTimer(this)
     {
@@ -30,6 +30,7 @@ namespace Kub3::HAL::Act
         qDebug() << std::format("--- screwPitchMm={}", m_hwConfig.screwPitchMm);
         qDebug() << std::format("--- maxVelocityMmS={}", m_hwConfig.maxVelocityMmS);
         qDebug() << std::format("--- maxAccelerationMmS2={}", m_hwConfig.maxAccelerationMmS2);
+        qDebug() << std::format("--- encoderTopsPerRev={}", m_hwConfig.encoderTopsPerRev);
 
         if (!m_kinematicEngine)
         {
@@ -166,15 +167,31 @@ namespace Kub3::HAL::Act
         throw std::runtime_error("Not implemented");
     }
 
+    void StepperMotor::resetEncoder(const double offsetMm)
+    {
+        const double topsPerMm    = m_hwConfig.encoderTopsPerRev / m_hwConfig.screwPitchMm;
+        const int32_t encoderTops = std::round(offsetMm * topsPerMm);
+        const uint8_t payload[]   = {
+            'R',
+            m_byteId,
+            static_cast<uint8_t>((encoderTops >> 24) & 0xFF),
+            static_cast<uint8_t>((encoderTops >> 16) & 0xFF),
+            static_cast<uint8_t>((encoderTops >> 8) & 0xFF),
+            static_cast<uint8_t>(encoderTops & 0xFF)};
+
+        sendPayload(payload, sizeof(payload));
+    }
+
     bool StepperMotor::isMoving(void) const
     {
-        throw std::runtime_error("Not implemented");
+        return m_controlTimer.isActive();
     }
 
     double StepperMotor::getEncoderPositionMm(void) const
     {
-        // TODO: probably make the conversion from encoder to mm
-        return m_positionGetter ? m_positionGetter() : 0.0;
+        const double encoderValue = m_encoderValueGetter ? m_encoderValueGetter() : 0;
+
+        return static_cast<double>(encoderValue) * (static_cast<double>(m_hwConfig.encoderTopsPerRev) / m_hwConfig.screwPitchMm);
     }
 
     void StepperMotor::onControlTick(void)

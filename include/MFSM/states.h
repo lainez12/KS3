@@ -3,7 +3,9 @@
 #include <string>
 #include <variant>
 
-#include "Services/Drawers/IDrawerService.h"
+#include <Services/Drawers/IDrawerService.h>
+#include <Services/Homing/IHomingService.h>
+
 #include "events.h"
 
 // ===============================================
@@ -24,8 +26,13 @@ namespace Kub3::MFSM
             Services::DrawerTarget target; // Wafer/Mask/Both
         };
 
+        struct HomingOpPayload {
+            Services::HomingTarget::Type target;
+        };
+
         using OperatingPayload = std::variant<
-            DrawerOpPayload
+            DrawerOpPayload,
+            HomingOpPayload
             // TODO: add more kinds of payload
             >;
 

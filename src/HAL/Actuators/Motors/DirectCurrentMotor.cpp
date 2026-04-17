@@ -23,7 +23,7 @@ namespace Kub3::HAL::Act
         m_motorByteId(motorByteId),
         m_hwConfig(std::move(hwConfig)),
         m_driver(std::move(driver)),
-        m_positionGetter(std::move(posGetter)),
+        m_encoderValueGetter(std::move(posGetter)),
         m_kinematicEngine(std::move(kinematicEngine)),
         m_controlTimer(this)
     {
@@ -101,6 +101,7 @@ namespace Kub3::HAL::Act
         }
     }
 
+    // TODO: profile could be a const reference ?
     void DirectCurrentMotor::moveDirection(MotorDirection dir, Config::kinematic_profile_t profile)
     {
         const double safeVel = std::min(profile.targetVelocityMmS, m_hwConfig.maxVelocityMmS);
@@ -148,7 +149,9 @@ namespace Kub3::HAL::Act
 
     double DirectCurrentMotor::getEncoderPositionMm(void) const
     {
-        return m_positionGetter ? m_positionGetter() : 0.0;
+        const double encoderValue = m_encoderValueGetter ? m_encoderValueGetter() : 0.0;
+
+        return static_cast<double>(encoderValue) * (static_cast<double>(m_hwConfig.encoderTopsPerRev) / m_hwConfig.screwPitchMm);
     }
 
     void DirectCurrentMotor::onControlTick(void)
