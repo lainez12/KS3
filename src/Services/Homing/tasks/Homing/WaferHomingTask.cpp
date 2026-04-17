@@ -1,21 +1,21 @@
-#include "Services/Drawers/tasks/WaferInsertionTask.h"
-#include "HAL/MachineStatus/utils.h"
+#include <HAL/MachineStatus/utils.h>
+#include <Services/Homing/tasks/Homing/WaferHomingTask.h>
 
 namespace Kub3::Services
 {
 
-    WaferInsertionTask::WaferInsertionTask(Shared<HAL::Act::IMotor> motor,
-                                           Shared<HAL::MS::IMachineStatusRepo> repo,
-                                           Config::kinematic_profile_t fastProfile,
-                                           Config::kinematic_profile_t fineProfile) :
-        m_motor(std::move(motor)),
+    WaferHomingTask::WaferHomingTask(Shared<HAL::MS::IMachineStatusRepo> repo,
+                                     Shared<HAL::Act::IMotor> motor,
+                                     Config::kinematic_profile_t fastProfile,
+                                     Config::kinematic_profile_t fineProfile) :
         m_repo(std::move(repo)),
+        m_motor(std::move(motor)),
         m_fastProfile(std::move(fastProfile)),
         m_fineProfile(std::move(fineProfile))
     {
     }
 
-    void WaferInsertionTask::start(void)
+    void WaferHomingTask::start(void)
     {
         const bool cw1 = HAL::MS::readBool(m_repo, CW1);
         const bool cw2 = HAL::MS::readBool(m_repo, CW2);
@@ -39,7 +39,7 @@ namespace Kub3::Services
         }
     }
 
-    bool WaferInsertionTask::tick()
+    bool WaferHomingTask::tick(void)
     {
         const bool cw2 = HAL::MS::readBool(m_repo, CW2);
 

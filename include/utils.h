@@ -9,8 +9,7 @@ namespace Kub3::Utils
     // Multiplies the input by 2
     int mul2(int value);
 
-    struct StringViewHash
-    {
+    struct StringViewHash {
         using is_transparent = void;
 
         [[nodiscard]] size_t operator()(std::string_view sv) const
@@ -18,6 +17,41 @@ namespace Kub3::Utils
             return std::hash<std::string_view>{}(sv);
         }
     };
+
+    template <typename A, typename B>
+    auto zip(A &a, B &b)
+    {
+        struct It {
+            decltype(a.begin()) it1;
+            decltype(b.begin()) it2;
+            bool operator!=(It const &o) const
+            {
+                return it1 != o.it1;
+            }
+            void operator++()
+            {
+                ++it1;
+                ++it2;
+            }
+            auto operator*() const
+            {
+                return std::pair{*it1, *it2};
+            }
+        };
+        struct Z {
+            A &a;
+            B &b;
+            auto begin()
+            {
+                return It{a.begin(), b.begin()};
+            }
+            auto end()
+            {
+                return It{a.end(), b.end()};
+            }
+        };
+        return Z{a, b};
+    }
 }
 
 template <typename T>

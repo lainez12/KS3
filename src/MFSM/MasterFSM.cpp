@@ -39,12 +39,12 @@ namespace Kub3::MFSM
 
     void MasterFSM::onLogicTick(void)
     {
-        checkHardwareSafety(); // Unconditional Safety Check (e.g. Physical E-Stop Button)
+        checkHardwareSafety(); // Unconditional Safety Check (e.g. Physical Emergency-Stop Button)
 
         const auto visitor = overloadedCallable(
             [&](StateBooting &bootState) { onStateBootingTick(bootState); },
             [&](StateWaitingInitialization &) { /* Wait for trigger */ },
-            [&](StateInitialization &) { /* Tick homing service */ },
+            [&](StateInitialization &initState) { onStateInitializationTick(initState); },
             [&](StateIdle &) { /* Monitor temperatures, hold position */ },
             [&](StateOperating &operatingState) { onStateOperatingTick(operatingState); },
             [&](StateError &) { /* Blink red lights */ },
@@ -76,7 +76,6 @@ namespace Kub3::MFSM
         bool fatalFailure         = false;
         std::vector<std::string> missingDependencies;
 
-        // TODO: improve to have all missing dependencies messages when only 1 reaches its max retries
         for (const auto &dep : requiredDependencies)
         {
             if (!HAL::MS::readBool(m_repo, dep.readyKey))
@@ -123,14 +122,26 @@ namespace Kub3::MFSM
             bootState.ticksElapsed = 0; // Reset timer for the next retry window
     }
 
+    void MasterFSM::onStateInitializationTick(StateInitialization &state)
+    {
+        m_homingService->tick();
+
+        const Services::ServiceStatus status = m_homingService->getStatus();
+
+        if (status == Services::ServiceStatus::Success)
+            dispatch(EvInitializationComplete{});
+        else if (status == Services::ServiceStatus::Error)
+            dispatch(EvServiceError{.reason = m_homingService->getErrorReason()});
+    }
+
     void MasterFSM::onStateOperatingTick(StateOperating &op)
     {
         Services::IService *activeService = nullptr;
 
         std::visit(
             overloadedCallable{
-                [&](const Payloads::DrawerOpPayload &) { activeService = m_drawerService.get(); }
-                // TODO: Add more
+                [&](const Payloads::DrawerOpPayload &) { activeService = m_drawerService.get(); },
+                [&](const Payloads::HomingOpPayload &) { activeService = m_homingService.get(); },
             },
             op.payload);
 
@@ -290,15 +301,9 @@ namespace Kub3::MFSM
 
             [&](const StateWaitingInitialization &) { /* no-op */ },
 
-            [&](const StateInitialization &) {
-                // Fake initialization for now
-                QTimer::singleShot(1500, this, [this]() { dispatch(EvInitializationComplete{}); });
-            },
+            [&](const StateInitialization &) { m_homingService->initialize(); },
 
-            [&](const StateIdle &) {
-                // Halt all services when entering idle
-                m_drawerService->stop();
-            },
+            [&](const StateIdle &) { stopAllServices(); },
 
             [&](const StateOperating &s) {
                 std::visit(
@@ -308,26 +313,35 @@ namespace Kub3::MFSM
                                 m_drawerService->eject(payload.target);
                             else if (payload.kind == DrawerOperation::INSERT)
                                 m_drawerService->insert(payload.target);
+                        },
+                        [&](const Payloads::HomingOpPayload &payload) {
+                            m_homingService->home(payload.target);
                         }},
                     s.payload);
             },
 
             [&](const StateError &s) {
+                stopAllServices();
                 emit s_errorOccurred(QString::fromStdString(s.message));
-                m_drawerService->stop();
             },
 
             [&](const StateEmergencyStop &s) {
+                stopAllServices();
                 emit s_errorOccurred(QString::fromStdString(s.reason));
-                m_drawerService->stop(); // Force all motors to emergency stop
             },
 
             [&](const StatePowerOff &s) {
-                m_drawerService->stop(); // Emulate emergency stop
+                stopAllServices();
                 // TODO: initiate homing if possible and wait for it to end before poweroff
             }};
 
         std::visit(entryActions, newState);
+    }
+
+    void MasterFSM::stopAllServices(void)
+    {
+        m_homingService->stop();
+        m_drawerService->stop();
     }
 
 } // namespace Kub3::MFSM

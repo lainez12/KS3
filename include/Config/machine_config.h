@@ -18,11 +18,14 @@ namespace Kub3::Config
         double screwPitchMm;
         double maxVelocityMmS;
         double maxAccelerationMmS2;
+        uint16_t encoderTopsPerRev;
     } stepper_hw_properties_t;
 
     typedef struct dc_motor_hw_properties_s {
+        double screwPitchMm;
         double maxVelocityMmS;
         double maxAccelerationMmS2;
+        uint16_t encoderTopsPerRev;
     } dc_motor_hw_properties_t;
 
     using motor_hw_properties_t = std::variant<

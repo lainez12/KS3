@@ -43,6 +43,7 @@ namespace Kub3::HAL::Act
         void moveDirection(MotorDirection dir, Config::kinematic_profile_t profile) override;
         void emergencyStop(void) override;
         void home(void) override;
+        void resetEncoder(const double offsetMm = 0.0) override;
 
         // Getters
         bool isMoving(void) const;
@@ -60,7 +61,7 @@ namespace Kub3::HAL::Act
         const uint8_t m_byteId;
         const Config::stepper_hw_properties_t m_hwConfig;
         Weak<MCUDriver> m_driver;
-        std::function<double()> m_positionGetter;
+        std::function<int32_t()> m_encoderValueGetter;
 
         // Velocity curve and trajectory member variables
         uint8_t m_currentStepFraction = 1;

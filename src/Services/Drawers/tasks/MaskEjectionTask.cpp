@@ -4,13 +4,13 @@
 namespace Kub3::Services
 {
 
-    MaskEjectionTask::MaskEjectionTask(Shared<HAL::Act::IMotor> motor,
-                                       Shared<HAL::MS::IMachineStatusRepo> repo,
+    MaskEjectionTask::MaskEjectionTask(Shared<HAL::MS::IMachineStatusRepo> repo,
+                                       Shared<HAL::Act::IMotor> motor,
                                        Config::kinematic_profile_t fastProfile,
                                        Config::kinematic_profile_t fineProfile,
                                        int32_t finePositionThreshold) :
-        m_motor(std::move(motor)),
         m_repo(std::move(repo)),
+        m_motor(std::move(motor)),
         m_fastProfile(std::move(fastProfile)),
         m_fineProfile(std::move(fineProfile)),
         m_finePositionThreshold(finePositionThreshold)

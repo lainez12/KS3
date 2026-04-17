@@ -48,12 +48,25 @@ qt_add_library(Kub3Core STATIC
     ## Master FSM
     src/MFSM/MasterFSM.cpp
     ## Services
+    src/Services/tasks/ReachLimitTask.cpp
     src/Services/Drawers/DualConveyorDrawerService.cpp
     src/Services/Drawers/SingleConveyorDrawerService.cpp
-    src/Services/Drawers/tasks/MaskInsertionTask.cpp
     src/Services/Drawers/tasks/MaskEjectionTask.cpp
-    src/Services/Drawers/tasks/WaferInsertionTask.cpp
     src/Services/Drawers/tasks/WaferEjectionTask.cpp
+    src/Services/Homing/HomingService.cpp
+    src/Services/Homing/tasks/ZMotorsReachLimitTask.cpp
+    src/Services/Homing/tasks/Homing/AlignmentStagesHomingTask.cpp
+    src/Services/Homing/tasks/Homing/CamerasHomingTask.cpp
+    src/Services/Homing/tasks/Homing/DeckHomingTask.cpp
+    src/Services/Homing/tasks/Homing/MaskHomingTask.cpp
+    src/Services/Homing/tasks/Homing/WaferHomingTask.cpp
+    src/Services/Homing/tasks/Homing/ZMotorsHomingTask.cpp
+    src/Services/Homing/tasks/Initialization/AlignmentStagesInitTask.cpp
+    src/Services/Homing/tasks/Initialization/CamerasInitTask.cpp
+    src/Services/Homing/tasks/Initialization/DeckInitTask.cpp
+    src/Services/Homing/tasks/Initialization/MaskConveyorInitTask.cpp
+    src/Services/Homing/tasks/Initialization/WaferConveyorInitTask.cpp
+    src/Services/Homing/tasks/Initialization/ZMotorsInitTask.cpp
     ## HAL
     src/HAL/HardwareManager.cpp
     src/HAL/MachineStatus/MachineStatusRepo.cpp
@@ -85,6 +98,7 @@ qt_add_library(Kub3Core STATIC
     include/Services/ITask.h
     include/Services/IService.h
     include/Services/BaseTaskService.h
+    include/Services/tasks/ReachLimitTask.h
     include/Services/Drawers/IDrawerService.h
     include/Services/Drawers/DualConveyorDrawerService.h
     include/Services/Drawers/SingleConveyorDrawerService.h
@@ -92,6 +106,21 @@ qt_add_library(Kub3Core STATIC
     include/Services/Drawers/tasks/MaskEjectionTask.h
     include/Services/Drawers/tasks/WaferInsertionTask.h
     include/Services/Drawers/tasks/WaferEjectionTask.h
+    include/Services/Homing/IHomingService.h
+    include/Services/Homing/HomingService.h
+    include/Services/Homing/tasks/ZMotorsReachLimitTask.h
+    include/Services/Homing/tasks/Homing/AlignmentStagesHomingTask.h
+    include/Services/Homing/tasks/Homing/CamerasHomingTask.h
+    include/Services/Homing/tasks/Homing/DeckHomingTask.h
+    include/Services/Homing/tasks/Homing/MaskHomingTask.h
+    include/Services/Homing/tasks/Homing/WaferHomingTask.h
+    include/Services/Homing/tasks/Homing/ZMotorsHomingTask.h
+    include/Services/Homing/tasks/Initialization/AlignmentStagesInitTask.h
+    include/Services/Homing/tasks/Initialization/CamerasInitTask.h
+    include/Services/Homing/tasks/Initialization/DeckInitTask.h
+    include/Services/Homing/tasks/Initialization/MaskConveyorInitTask.h
+    include/Services/Homing/tasks/Initialization/WaferConveyorInitTask.h
+    include/Services/Homing/tasks/Initialization/ZMotorsInitTask.h
     ## HAL
     include/HAL/HardwareManager.h
     include/HAL/MachineStatus/IMachineStatusRepo.h
