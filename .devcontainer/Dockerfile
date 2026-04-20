@@ -10,6 +10,7 @@ RUN apt-get install -y --no-install-recommends \
     libxcb-cursor0 \
     cmake \
     qtchooser \
+    qt6-tools-dev-tools \
     libgl1-mesa-dev \
     libx11-xcb-dev \
     libxcb-keysyms1 \
@@ -37,5 +38,22 @@ RUN mkdir -p /opt/Qt
 
 RUN pip3 install --upgrade pip && pip3 install aqtinstall
 RUN mkdir -p /opt/Qt && python3 -m aqt install-qt linux desktop 6.8.2 linux_gcc_64 --outputdir /opt/Qt --modules qtserialport
+
+ENV QT_PATH=/opt/Qt/6.8.2/gcc_64
+ENV PATH=$QT_PATH/bin:$PATH
+ENV LD_LIBRARY_PATH=$QT_PATH/lib
+ENV QT_QPA_PLATFORM_PLUGIN_PATH=$QT_PATH/plugins
+
+RUN apt-get install -y software-properties-common
+RUN add-apt-repository ppa:ubuntu-toolchain-r/test
+RUN apt-get update -y
+RUN apt-get install -y --no-install-recommends \
+    gcc-13 \
+    g++-13
+
+RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 100
+RUN update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-13 100
+RUN update-alternatives --config gcc
+RUN update-alternatives --config g++
 
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
