@@ -7,16 +7,17 @@
 #include <string>
 
 // Configuration & version
-#include "Config/ConfigLoader.h"
-#include "version.h"
+#include <Config/ConfigLoader.h>
+#include <version.h>
 // --- Hardware manager
-#include "HAL/HardwareManager.h"
+#include <HAL/HardwareManager.h>
 // --- Machine status repository
-#include "HAL/MachineStatus/MachineStatusRepo.h"
+#include <HAL/MachineStatus/MachineStatusRepo.h>
 // --- Master Finite state Machine
-#include "MFSM/MasterFSM.h"
+#include <MFSM/MasterFSM.h>
 // --- UI
-#include "Views/MainWindow.h"
+#include <ViewModels/MachineStatusViewModel.h>
+#include <Views/MainWindow.h>
 
 namespace Kub3
 {
@@ -55,6 +56,7 @@ namespace Kub3
         MFSM::MasterFSM *m_masterFSM = nullptr; // Heap-allocated for QThread ownership
         // --- Services
         Shared<Services::IDrawerService> m_drawerService;
+        Shared<Services::IHomingService> m_homingService;
 
         // Tier 1: UI
         Unique<MainWindow> m_mainWindow;

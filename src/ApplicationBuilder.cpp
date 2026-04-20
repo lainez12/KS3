@@ -1,12 +1,13 @@
 #include <QDebug>
 
-#include "ApplicationBuilder.h"
+#include <ApplicationBuilder.h>
 
 // Services
+#include <Services/Homing/HomingService.h>
 #if defined(KUB_MODEL_4) || defined(KUB_MODEL_6)
-#include "Services/Drawers/SingleConveyorDrawerService.h"
+#include <Services/Drawers/SingleConveyorDrawerService.h>
 #elif defined(KUB_MODEL_8)
-#include "Services/Drawers/DualConveyorDrawerService.h"
+#include <Services/Drawers/DualConveyorDrawerService.h>
 #endif
 
 namespace Kub3
@@ -47,10 +48,15 @@ namespace Kub3
             m_repo,
             m_processConfig);
 
+        m_homingService = std::make_shared<Services::HomingService>(
+            m_hwManager->getActuatorRegistry(),
+            m_repo,
+            m_processConfig);
+
         // Standard Qt Worker Object instantiation
         // Parented to qApp to ensure no memory leaks if run() is bypassed
         m_logicThread = new QThread(qApp);
-        m_masterFSM   = new MFSM::MasterFSM(m_repo, m_drawerService);
+        m_masterFSM   = new MFSM::MasterFSM(m_repo, m_homingService, m_drawerService);
 
         // Move the FSM to the logic thread
         m_masterFSM->moveToThread(m_logicThread);
@@ -61,12 +67,21 @@ namespace Kub3
     ApplicationBuilder &ApplicationBuilder::buildUserInterfaceTier(void)
     {
         qInfo() << "Building Tier 1 (UI)...";
+
         m_mainWindow = std::make_unique<MainWindow>();
+
+        {
+            auto machineStatusViewModel = std::make_unique<UI::ViewModels::MachineStatusViewModel>(m_repo);
+            auto *machineStatusView     = new MachineStatusView(std::move(machineStatusViewModel), m_mainWindow.get());
+            m_mainWindow->addView(Kub3::UI::ViewId::MACHINE_STATUS_VIEW, machineStatusView);
+        }
 
         if (m_masterFSM)
         {
             QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_stateChanged, m_mainWindow.get(), &MainWindow::ps_stateChanged);
         }
+
+        m_mainWindow->ps_openView(Kub3::UI::ViewId::MACHINE_STATUS_VIEW);
 
         return *this;
     }

@@ -52,7 +52,7 @@ namespace Kub3::HAL::MS
         }
 
     signals:
-        void sensorValueChanged(const QString &key);
+        void s_sensorValueChanged(const QString &key);
     };
 
 } // namespace Kub3::HAL::MS

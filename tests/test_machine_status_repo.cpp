@@ -68,7 +68,7 @@ TEST_CASE("MachineStatusRepo: Signal Anti-Spam Logic", "[HAL][MachineStatus]")
     MachineStatusRepo repo;
 
     // QSignalSpy listens to the signals emitted by our repo
-    QSignalSpy spy(&repo, &IMachineStatusRepo::sensorValueChanged);
+    QSignalSpy spy(&repo, &IMachineStatusRepo::s_sensorValueChanged);
     REQUIRE(spy.isValid());
 
     SECTION("Emits exactly once on new insertion")
@@ -107,8 +107,7 @@ TEST_CASE("MachineStatusRepo: High-Concurrency Thread Safety", "[HAL][MachineSta
     std::atomic<bool> startFlag{false};
 
     // A writer lambda that updates the counter 10,000 times
-    auto writerTask = [&]()
-    {
+    auto writerTask = [&]() {
         while (!startFlag)
         {
             std::this_thread::yield();
@@ -120,8 +119,7 @@ TEST_CASE("MachineStatusRepo: High-Concurrency Thread Safety", "[HAL][MachineSta
     };
 
     // A reader lambda that hammers the getter 10,000 times
-    auto readerTask = [&]()
-    {
+    auto readerTask = [&]() {
         while (!startFlag)
         {
             std::this_thread::yield();

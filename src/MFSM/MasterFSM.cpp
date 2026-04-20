@@ -16,11 +16,13 @@ namespace Kub3::MFSM
 {
 
     MasterFSM::MasterFSM(Shared<HAL::MS::IMachineStatusRepo> repo,
+                         Shared<Services::IHomingService> homingService,
                          Shared<Services::IDrawerService> drawerService,
                          QObject *parent) :
         QObject(parent),
         m_state(StateBooting{}),
         m_repo(std::move(repo)),
+        m_homingService(std::move(homingService)),
         m_drawerService(std::move(drawerService)),
         m_logicTimer(this)
     {
@@ -196,7 +198,7 @@ namespace Kub3::MFSM
         auto target = static_cast<Services::DrawerTarget>(targetInt);
         auto op     = static_cast<DrawerOperation>(operationInt);
 
-        dispatch(CmdOperateDrawer{target});
+        dispatch(CmdOperateDrawer{.target = target, .operation = op});
     }
 
     void MasterFSM::ps_requestResetError(void)

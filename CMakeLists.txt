@@ -20,7 +20,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-set(CMAKE_AUTOUIC_SEARCH_PATHS "gui;gui/Views;gui/Components")
+set(CMAKE_AUTOUIC_SEARCH_PATHS "gui;gui/Views;gui/Components;tools/configurator/gui")
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -187,7 +187,9 @@ qt_add_executable(Kub3Software
     src/main.cpp
     src/Logger.h
     src/ApplicationBuilder.cpp
+    src/ViewModels/MachineStatusViewModel.cpp
     src/Views/MainWindow.cpp
+    src/Views/ViewBase.cpp
     src/Views/DebugView.cpp
     src/Views/HomeView.cpp
     src/Views/MachineStatusView.cpp
@@ -196,7 +198,9 @@ qt_add_executable(Kub3Software
     src/Views/Components/BottomCroppedCircle.cpp
     # Headers
     include/ApplicationBuilder.h
+    include/ViewModels/MachineStatusViewModel.h
     include/Views/MainWindow.h
+    include/Views/ViewBase.h
     include/Views/DebugView.h
     include/Views/HomeView.h
     include/Views/MachineStatusView.h
@@ -221,14 +225,36 @@ target_link_libraries(Kub3Software PRIVATE
 )
 
 # ==============================================================================
-# 6. TESTS
+# 6. CONFIGURATOR EXECUTABLE: Kub3Configurator
+# ==============================================================================
+qt_add_executable(Kub3Configurator
+    MANUAL_FINALIZATION
+    # Sources
+    tools/configurator/src/main.cpp
+    tools/configurator/src/ConfigWindow.cpp
+    # Headers
+    tools/configurator/include/ConfigWindow.h
+    # UI
+    tools/configurator/gui/ConfigWindow.ui
+)
+
+qt_finalize_target(Kub3Configurator)
+
+target_link_libraries(Kub3Configurator PRIVATE
+    Kub3Core
+    Qt6::Gui
+    Qt6::Widgets
+)
+
+# ==============================================================================
+# 7. TESTS
 # ==============================================================================
 enable_testing()
 add_subdirectory(tests)
 
 
 # ==============================================================================
-# 7. DEPLOYMENT & INSTALLATION (Portable Production Bundle)
+# 8. DEPLOYMENT & INSTALLATION (Portable Production Bundle)
 # ==============================================================================
 
 # ($ORIGIN is the Linux variable for "the directory the executable is in").
@@ -238,9 +264,9 @@ set_target_properties(Kub3Software PROPERTIES
 )
 
 # Install the main executable into the "bin" directory of our output folder
-install(TARGETS Kub3Software
-    RUNTIME DESTINATION bin
-)
+install(TARGETS Kub3Software    RUNTIME DESTINATION bin)
+# Install the configurator executable into the "bin" directory of our output folder
+install(TARGETS Kub3Configurator RUNTIME DESTINATION bin)
 
 # Explicitly deploy the MVS Camera libraries
 if(MVS_LIBRARY)
