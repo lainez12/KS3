@@ -1,6 +1,6 @@
 #include <QDebug>
 
-#include "ApplicationBuilder.h"
+#include <ApplicationBuilder.h>
 
 // Services
 #include <Services/Homing/HomingService.h>
@@ -67,12 +67,21 @@ namespace Kub3
     ApplicationBuilder &ApplicationBuilder::buildUserInterfaceTier(void)
     {
         qInfo() << "Building Tier 1 (UI)...";
+
         m_mainWindow = std::make_unique<MainWindow>();
+
+        {
+            auto machineStatusViewModel = std::make_unique<UI::ViewModels::MachineStatusViewModel>(m_repo);
+            auto *machineStatusView     = new MachineStatusView(std::move(machineStatusViewModel), m_mainWindow.get());
+            m_mainWindow->addView(Kub3::UI::ViewId::MACHINE_STATUS_VIEW, machineStatusView);
+        }
 
         if (m_masterFSM)
         {
             QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_stateChanged, m_mainWindow.get(), &MainWindow::ps_stateChanged);
         }
+
+        m_mainWindow->ps_openView(Kub3::UI::ViewId::MACHINE_STATUS_VIEW);
 
         return *this;
     }

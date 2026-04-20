@@ -5,6 +5,7 @@
 
 #include <Services/Drawers/IDrawerService.h>
 #include <Services/Homing/IHomingService.h>
+#include <utils.h>
 
 #include "events.h"
 
@@ -83,16 +84,5 @@ namespace Kub3::MFSM
         StateError,
         StateEmergencyStop,
         StatePowerOff>;
-
-    // ---------------------------------------
-    // --- C++20 OVERLOADED VISITOR HELPER
-    // ---------------------------------------
-    template <class... Ts>
-    struct overloadedCallable : Ts... {
-        using Ts::operator()...;
-    };
-    // Deduction guide for compiler (Not strictly required in C++20 as type inference is smart, but good practice)
-    template <class... Ts>
-    overloadedCallable(Ts...) -> overloadedCallable<Ts...>;
 
 } // namespace Kub3::MFSM

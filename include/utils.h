@@ -66,4 +66,15 @@ using Weak = std::weak_ptr<T>;
 template <typename T>
 using Optional = std::optional<T>;
 
+// ---------------------------------------
+// --- C++20 OVERLOADED VISITOR HELPER
+// ---------------------------------------
+template <class... Ts>
+struct overloadedCallable : Ts... {
+    using Ts::operator()...;
+};
+// Deduction guide for compiler (Not strictly required in C++20 as type inference is smart, but good practice)
+template <class... Ts>
+overloadedCallable(Ts...) -> overloadedCallable<Ts...>;
+
 #endif // KLOE_UTILS_H
