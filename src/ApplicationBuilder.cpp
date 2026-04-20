@@ -3,10 +3,11 @@
 #include "ApplicationBuilder.h"
 
 // Services
+#include <Services/Homing/HomingService.h>
 #if defined(KUB_MODEL_4) || defined(KUB_MODEL_6)
-#include "Services/Drawers/SingleConveyorDrawerService.h"
+#include <Services/Drawers/SingleConveyorDrawerService.h>
 #elif defined(KUB_MODEL_8)
-#include "Services/Drawers/DualConveyorDrawerService.h"
+#include <Services/Drawers/DualConveyorDrawerService.h>
 #endif
 
 namespace Kub3
@@ -47,10 +48,15 @@ namespace Kub3
             m_repo,
             m_processConfig);
 
+        m_homingService = std::make_shared<Services::HomingService>(
+            m_hwManager->getActuatorRegistry(),
+            m_repo,
+            m_processConfig);
+
         // Standard Qt Worker Object instantiation
         // Parented to qApp to ensure no memory leaks if run() is bypassed
         m_logicThread = new QThread(qApp);
-        m_masterFSM   = new MFSM::MasterFSM(m_repo, m_drawerService);
+        m_masterFSM   = new MFSM::MasterFSM(m_repo, m_homingService, m_drawerService);
 
         // Move the FSM to the logic thread
         m_masterFSM->moveToThread(m_logicThread);

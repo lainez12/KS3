@@ -18,6 +18,7 @@ namespace Kub3::MFSM
         Q_OBJECT
     public:
         explicit MasterFSM(Shared<HAL::MS::IMachineStatusRepo> repo,
+                           Shared<Services::IHomingService> homingService,
                            Shared<Services::IDrawerService> drawerService,
                            QObject *parent = nullptr);
         ~MasterFSM(void) override = default;

@@ -55,6 +55,7 @@ namespace Kub3
         MFSM::MasterFSM *m_masterFSM = nullptr; // Heap-allocated for QThread ownership
         // --- Services
         Shared<Services::IDrawerService> m_drawerService;
+        Shared<Services::IHomingService> m_homingService;
 
         // Tier 1: UI
         Unique<MainWindow> m_mainWindow;
