@@ -25,24 +25,34 @@ namespace Kub3::UI::Views
         Q_OBJECT
 
     public:
-        explicit MachineStatusView(Unique<MachineStatusViewModel> viewModel, QWidget *parent = nullptr);
+        explicit MachineStatusView(Shared<MachineStatusViewModel> viewModel, QWidget *parent = nullptr);
         ~MachineStatusView();
 
     signals:
         void s_home(void);
 
     public slots:
-        void ps_booleanSensorUpdate(const char *sensorId, bool value);
+        void ps_booleanSensorUpdate(const QString &sensorId, bool value);
+        void ps_integerSensorUpdate(const QString &sensorId, int32_t value);
+        void ps_unsignedIntegerSensorUpdate(const QString &sensorId, uint32_t value);
 
     private slots:
         void on_goBackBtn_clicked(void);
 
     private:
+        void populateBoolSensorsMap(void);
+        void populateIntegerSensorsMap(void);
+        void populateUnsignedIntegerSensorsMap(void);
+
         void updateBoolSensorsText(QLabel *label, const bool state);
+        void updateIntSensorsText(QLabel *label, const int32_t state);
+        void updateUIntSensorsText(QLabel *label, const uint32_t state);
 
     private:
         Ui::MachineStatusView *ui;
-        std::unordered_map<const char *, QLabel *> m_boolSensorsMap;
+        std::unordered_map<QString, QLabel *> m_boolSensorsMap;
+        std::unordered_map<QString, QLabel *> m_intSensorsMap;
+        std::unordered_map<QString, QLabel *> m_uintSensorsMap;
     };
 
 }

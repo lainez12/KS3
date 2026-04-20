@@ -12,7 +12,7 @@ namespace Kub3::HAL::MS
 {
 
     // Define all allowed types for our sensors.
-    using SensorValue = std::variant<bool, int32_t, uint32_t>;
+    using SensorValue = std::variant<bool, int32_t, uint16_t, uint32_t>;
 
     class IMachineStatusRepo : public QObject
     {

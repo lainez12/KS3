@@ -52,7 +52,9 @@ namespace Kub3::UI::ViewModels
         auto visitor = overloadedCallable(
             [&](bool v) { emit s_booleanSensorUpdate(key, v); },
             [&](int32_t v) { emit s_integerSensorUpdate(key, v); },
-            [&](uint32_t v) { emit s_unsignedIntegerSensorUpdate(key, v); });
+            [&](uint16_t v) { emit s_unsignedIntegerSensorUpdate(key, v); },
+            [&](uint32_t v) { emit s_unsignedIntegerSensorUpdate(key, v); },
+            [&](auto) { qWarning() << "[MachineStatusViewModel] unknown sensor changed notification received."; });
 
         std::visit(visitor, value);
     }

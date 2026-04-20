@@ -41,10 +41,6 @@ public slots:
     void ps_openView(Kub3::UI::ViewId viewId);
     void ps_stateChanged(const QString &stateName);
 
-private slots:
-    void goBackHome(void);
-    void openMachineStatusView(void);
-
 protected:
     void paintEvent(QPaintEvent *event) override;
 

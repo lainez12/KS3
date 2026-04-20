@@ -14,7 +14,7 @@ namespace Kub3::UI::Views
         Q_OBJECT
 
     public:
-        explicit ViewBase(Unique<ViewModels::IViewModel> viewModel, QWidget *parent = nullptr);
+        explicit ViewBase(Shared<ViewModels::IViewModel> viewModel, QWidget *parent = nullptr);
         ~ViewBase() = default;
 
     protected:
@@ -22,7 +22,7 @@ namespace Kub3::UI::Views
         void hideEvent(QHideEvent *event) override;
 
     private:
-        Unique<ViewModels::IViewModel> m_viewModel;
+        Shared<ViewModels::IViewModel> m_viewModel;
     };
 
 }

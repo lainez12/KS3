@@ -6,22 +6,79 @@
 #define SUCCESS_QLABEL_STYLESHEET "QLabel{ background: green; color : white; }"
 #define FAILURE_QLABEL_STYLESHEET "QLabel{ background: red; color : white; }"
 
-MachineStatusView::MachineStatusView(Unique<MachineStatusViewModel> viewModel, QWidget *parent) :
-    ViewBase(std::move(viewModel), parent),
+MachineStatusView::MachineStatusView(Shared<MachineStatusViewModel> viewModel, QWidget *parent) :
+    ViewBase(viewModel, parent),
     ui(new Ui::MachineStatusView)
 {
     ui->setupUi(this);
 
+    this->populateBoolSensorsMap();
+    this->populateIntegerSensorsMap();
+    this->populateUnsignedIntegerSensorsMap();
+
+    connect(viewModel.get(), &MachineStatusViewModel::s_booleanSensorUpdate, this, &MachineStatusView::ps_booleanSensorUpdate);
+    connect(viewModel.get(), &MachineStatusViewModel::s_integerSensorUpdate, this, &MachineStatusView::ps_integerSensorUpdate);
+    connect(viewModel.get(), &MachineStatusViewModel::s_unsignedIntegerSensorUpdate, this, &MachineStatusView::ps_unsignedIntegerSensorUpdate);
+}
+
+MachineStatusView::~MachineStatusView()
+{
+    delete ui;
+}
+
+void MachineStatusView::ps_booleanSensorUpdate(const QString &sensorId, bool value)
+{
+    if (auto it = m_boolSensorsMap.find(sensorId.toUtf8().constData()); it != m_boolSensorsMap.end())
+        this->updateBoolSensorsText(it->second, value);
+}
+
+void MachineStatusView::ps_integerSensorUpdate(const QString &sensorId, int32_t value)
+{
+    if (auto it = m_intSensorsMap.find(sensorId.toUtf8().constData()); it != m_intSensorsMap.end())
+        this->updateIntSensorsText(it->second, value);
+}
+
+void MachineStatusView::ps_unsignedIntegerSensorUpdate(const QString &sensorId, uint32_t value)
+{
+    if (auto it = m_uintSensorsMap.find(sensorId); it != m_uintSensorsMap.end())
+        this->updateUIntSensorsText(it->second, value);
+}
+
+void MachineStatusView::on_goBackBtn_clicked(void)
+{
+    emit s_home();
+}
+
+void MachineStatusView::updateBoolSensorsText(QLabel *label, const bool state)
+{
+    const QString text = state ? "ON" : "OFF";
+
+    label->setText(text);
+    label->setStyleSheet(state ? SUCCESS_QLABEL_STYLESHEET : FAILURE_QLABEL_STYLESHEET);
+}
+
+void MachineStatusView::updateIntSensorsText(QLabel *label, const int32_t value)
+{
+    label->setText(QString::number(value));
+}
+
+void MachineStatusView::updateUIntSensorsText(QLabel *label, const uint32_t value)
+{
+    label->setText(QString::number(value));
+}
+
+void MachineStatusView::populateBoolSensorsMap(void)
+{
     // Wafer conveyor limits
-    m_boolSensorsMap.insert({CW0, ui->cw0Label});
-    m_boolSensorsMap.insert({CW1, ui->cw1Label});
-    m_boolSensorsMap.insert({CW2, ui->cw2Label});
+    m_boolSensorsMap.insert({CW0, ui->cw0Value});
+    m_boolSensorsMap.insert({CW1, ui->cw1Value});
+    m_boolSensorsMap.insert({CW2, ui->cw2Value});
 
     // Mask conveyor limits
-    m_boolSensorsMap.insert({CM0, ui->cm0Label});
-    m_boolSensorsMap.insert({CM1, ui->cm1Label});
-    m_boolSensorsMap.insert({CM2, ui->cm2Label});
-    m_boolSensorsMap.insert({CM3, ui->cm3Label});
+    m_boolSensorsMap.insert({CM0, ui->cm0Value});
+    m_boolSensorsMap.insert({CM1, ui->cm1Value});
+    m_boolSensorsMap.insert({CM2, ui->cm2Value});
+    m_boolSensorsMap.insert({CM3, ui->cm3Value});
 
     // Z-motors limits
     m_boolSensorsMap.insert({Z_LEFT_LOW_LIMIT, ui->t2mkLeftLowValue});
@@ -76,26 +133,12 @@ MachineStatusView::MachineStatusView(Unique<MachineStatusViewModel> viewModel, Q
     m_boolSensorsMap.insert({DECK_FRONT_LIMIT, ui->deckFrontLimitValue});
 }
 
-MachineStatusView::~MachineStatusView()
-{
-    delete ui;
-}
+void MachineStatusView::populateIntegerSensorsMap(void)
+{}
 
-void MachineStatusView::ps_booleanSensorUpdate(const char *sensorId, bool value)
+void MachineStatusView::populateUnsignedIntegerSensorsMap(void)
 {
-    if (auto it = m_boolSensorsMap.find(sensorId); it != m_boolSensorsMap.end())
-        this->updateBoolSensorsText(it->second, value);
-}
-
-void MachineStatusView::on_goBackBtn_clicked(void)
-{
-    emit s_home();
-}
-
-void MachineStatusView::updateBoolSensorsText(QLabel *label, const bool state)
-{
-    const QString text = state ? "ON" : "OFF";
-
-    label->setText(text);
-    label->setStyleSheet(state ? SUCCESS_QLABEL_STYLESHEET : FAILURE_QLABEL_STYLESHEET);
+    m_uintSensorsMap.insert({FORCE_LEFT, ui->forceLeftValue});
+    m_uintSensorsMap.insert({FORCE_RIGHT, ui->forceRightValue});
+    m_uintSensorsMap.insert({FORCE_BACK, ui->forceBackValue});
 }

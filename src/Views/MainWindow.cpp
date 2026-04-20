@@ -68,16 +68,6 @@ void MainWindow::ps_stateChanged(const QString &stateName)
     // m_debugView->updateMachineState(stateName);
 }
 
-void MainWindow::goBackHome(void)
-{
-    // ui->stackedWidget->setCurrentIndex(m_debugViewIndex);
-}
-
-void MainWindow::openMachineStatusView(void)
-{
-    // ui->stackedWidget->setCurrentIndex(m_machineStatusViewIndex);
-}
-
 void MainWindow::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
