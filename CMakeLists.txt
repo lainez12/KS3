@@ -187,6 +187,8 @@ qt_add_executable(Kub3Software
     src/main.cpp
     src/Logger.h
     src/ApplicationBuilder.cpp
+    src/ViewModels/HomeViewModel.cpp
+    src/ViewModels/DebugViewModel.cpp
     src/ViewModels/MachineStatusViewModel.cpp
     src/Views/MainWindow.cpp
     src/Views/ViewBase.cpp
@@ -198,6 +200,8 @@ qt_add_executable(Kub3Software
     src/Views/Components/BottomCroppedCircle.cpp
     # Headers
     include/ApplicationBuilder.h
+    include/ViewModels/HomeViewModel.h
+    include/ViewModels/DebugViewModel.h
     include/ViewModels/MachineStatusViewModel.h
     include/Views/MainWindow.h
     include/Views/ViewBase.h

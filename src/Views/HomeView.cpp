@@ -1,8 +1,8 @@
 #include "Views/HomeView.h"
 #include "ui_HomeView.h"
 
-HomeView::HomeView(QWidget *parent) :
-    QWidget(parent),
+HomeView::HomeView(Unique<HomeViewModel> viewModel, QWidget *parent) :
+    ViewBase(std::move(viewModel), parent),
     ui(new Ui::HomeView)
 {
     ui->setupUi(this);

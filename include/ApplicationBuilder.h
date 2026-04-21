@@ -16,14 +16,13 @@
 // --- Master Finite state Machine
 #include <MFSM/MasterFSM.h>
 // --- UI
+#include <ViewModels/HomeViewModel.h>
 #include <ViewModels/MachineStatusViewModel.h>
 #include <Views/MainWindow.h>
 
-namespace Kub3
-{
+namespace Kub3 {
 
-    class ApplicationBuilder final
-    {
+    class ApplicationBuilder final {
     public:
         ApplicationBuilder()  = default;
         ~ApplicationBuilder() = default;

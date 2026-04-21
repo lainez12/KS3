@@ -3,10 +3,8 @@
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
 #include <ViewModels/IViewModel.h>
 
-namespace Kub3::UI::ViewModels
-{
-    class MachineStatusViewModel final : public QObject, public IViewModel
-    {
+namespace Kub3::UI::ViewModels {
+    class MachineStatusViewModel final : public QObject, public IViewModel {
         Q_OBJECT
     public:
         explicit MachineStatusViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent = nullptr);

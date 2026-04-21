@@ -1,10 +1,8 @@
 #pragma once
 
-namespace Kub3::UI::ViewModels
-{
+namespace Kub3::UI::ViewModels {
 
-    class IViewModel
-    {
+    class IViewModel {
     public:
         virtual ~IViewModel() = default;
 

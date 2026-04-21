@@ -8,23 +8,19 @@
 #include "Views/HomeView.h"
 #include "Views/MachineStatusView.h"
 
-namespace Ui
-{
+namespace Ui {
     class MainWindow;
 }
 
-namespace Kub3::UI
-{
-    enum class ViewId
-    {
+namespace Kub3::UI {
+    enum class ViewId {
         HOME_VIEW,
         ALIGNMENT_VIEW,
         MACHINE_STATUS_VIEW
     };
 }
 
-class MainWindow : public QMainWindow
-{
+class MainWindow : public QMainWindow {
     Q_OBJECT
 
 public:

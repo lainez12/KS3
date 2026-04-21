@@ -3,21 +3,17 @@
 #include <HAL/MachineStatus/utils.h>
 #include <ViewModels/MachineStatusViewModel.h>
 
-namespace Kub3::UI::ViewModels
-{
+namespace Kub3::UI::ViewModels {
 
     MachineStatusViewModel::MachineStatusViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent) :
         QObject(parent),
-        m_repo(repo)
-    {
+        m_repo(repo) {
     }
 
-    MachineStatusViewModel::~MachineStatusViewModel()
-    {
+    MachineStatusViewModel::~MachineStatusViewModel() {
     }
 
-    void MachineStatusViewModel::loadConnections(void)
-    {
+    void MachineStatusViewModel::loadConnections(void) {
         HAL::MS::IMachineStatusRepo *repo = m_repo.get();
 
         if (!repo)
@@ -27,8 +23,7 @@ namespace Kub3::UI::ViewModels
         connect(repo, &HAL::MS::IMachineStatusRepo::s_sensorValueChanged, this, &MachineStatusViewModel::handleSensorValueChanged);
     }
 
-    void MachineStatusViewModel::unloadConnections(void)
-    {
+    void MachineStatusViewModel::unloadConnections(void) {
         HAL::MS::IMachineStatusRepo *repo = m_repo.get();
 
         if (!repo)
@@ -38,8 +33,7 @@ namespace Kub3::UI::ViewModels
         disconnect(repo, &HAL::MS::IMachineStatusRepo::s_sensorValueChanged, this, &MachineStatusViewModel::handleSensorValueChanged);
     }
 
-    void MachineStatusViewModel::handleSensorValueChanged(const QString &key)
-    {
+    void MachineStatusViewModel::handleSensorValueChanged(const QString &key) {
         using SensorValue = HAL::MS::SensorValue;
 
         Optional<SensorValue> valueOpt = m_repo->getSensorRaw(key.toStdString());

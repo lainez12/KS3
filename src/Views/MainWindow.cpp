@@ -6,8 +6,7 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
-{
+    ui(new Ui::MainWindow) {
     ui->setupUi(this);
 
     // Main window
@@ -26,60 +25,39 @@ MainWindow::MainWindow(QWidget *parent) :
 
         this->setAttribute(Qt::WA_OpaquePaintEvent, false);
     }
-
-    // Debug View
-    // {
-    //     m_debugView      = new DebugView(this);
-    //     m_debugViewIndex = ui->stackedWidget->addWidget(m_debugView);
-
-    //     connect(m_debugView, &DebugView::s_openMachineStatus, this, &MainWindow::openMachineStatusView);
-    //     connect(m_debugView, &DebugView::s_initializationRequest, this, &MainWindow::s_initializationRequest);
-    // }
-
-    // {
-    //     m_homeView      = new HomeView(this);
-    //     m_homeViewIndex = ui->stackedWidget->addWidget(m_homeView);
-    // }
 }
 
-MainWindow::~MainWindow()
-{
+MainWindow::~MainWindow() {
     delete ui;
 }
 
-void MainWindow::addView(Kub3::UI::ViewId viewId, QWidget *view)
-{
+void MainWindow::addView(Kub3::UI::ViewId viewId, QWidget *view) {
     if (!view)
         return;
     ui->stackedWidget->addWidget(view);
     m_views.insert({viewId, view});
 }
 
-void MainWindow::ps_openView(Kub3::UI::ViewId viewId)
-{
+void MainWindow::ps_openView(Kub3::UI::ViewId viewId) {
     if (auto it = m_views.find(viewId); it != m_views.end() && it->second)
         ui->stackedWidget->setCurrentWidget(it->second);
     else
         qWarning() << "[MainWindow::ps_openView] Failed to find view.";
 }
 
-void MainWindow::ps_stateChanged(const QString &stateName)
-{
+void MainWindow::ps_stateChanged(const QString &stateName) {
     // m_debugView->updateMachineState(stateName);
 }
 
-void MainWindow::goBackHome(void)
-{
+void MainWindow::goBackHome(void) {
     // ui->stackedWidget->setCurrentIndex(m_debugViewIndex);
 }
 
-void MainWindow::openMachineStatusView(void)
-{
+void MainWindow::openMachineStatusView(void) {
     // ui->stackedWidget->setCurrentIndex(m_machineStatusViewIndex);
 }
 
-void MainWindow::paintEvent(QPaintEvent *event)
-{
+void MainWindow::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
     int scaledWidth = this->width() * 0.9;                                                     // Calculate the scaled width for bg image
     QPixmap scaled  = m_backgroundPixmap.scaledToWidth(scaledWidth, Qt::SmoothTransformation); // Scale while keeping the aspect ratio

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   id="svg2"
+   width="85.634796"
+   height="82.221313"
+   viewBox="0 0 85.634796 82.221312"
+   sodipodi:docname="home-enabled.ai"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs6">
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath24">
+      <path
+         d="M 0,841.89 H 595.276 V 0 H 0 Z"
+         id="path22" />
+    </clipPath>
+  </defs>
+  <sodipodi:namedview
+     id="namedview4"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false" />
+  <g
+     id="g10"
+     inkscape:groupmode="layer"
+     inkscape:label="Page 1"
+     transform="matrix(1.3333333,0,0,-1.3333333,-363.4668,520.05704)">
+    <g
+       id="g18">
+      <g
+         id="g20"
+         clip-path="url(#clipPath24)">
+        <g
+           id="g26"
+           transform="translate(283.0493,305.9455)" />
+        <g
+           id="g30"
+           transform="translate(336.8262,369.9758)">
+          <path
+             d="m 0,0 h -64.226 l 32.194,20.067 z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path32" />
+        </g>
+        <g
+           id="g34"
+           transform="translate(272.6001,366.0988)">
+          <path
+             d="m 0,0 v -16.411 -9.398 -8.082 c 0,-2.107 1.724,-3.831 3.831,-3.831 h 17.143 v 18.179 c 0,2.571 2.103,4.675 4.674,4.675 h 12.93 c 2.571,0 4.674,-2.104 4.674,-4.675 v -18.179 h 17.143 c 2.106,0 3.831,1.724 3.831,3.831 v 8.082 9.398 V 0 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path36" />
+        </g>
+        <g
+           id="g46"
+           transform="translate(304.502,278.7658)" />
+      </g>
+    </g>
+  </g>
+</svg>

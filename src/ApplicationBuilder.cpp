@@ -10,8 +10,7 @@
 #include <Services/Drawers/DualConveyorDrawerService.h>
 #endif
 
-namespace Kub3
-{
+namespace Kub3 {
 
 #if defined(KUB_MODEL_4) || defined(KUB_MODEL_6)
     using ConveyorDrawerService = Services::SingleConveyorDrawerService;
@@ -19,8 +18,7 @@ namespace Kub3
     using ConveyorDrawerService = Services::DualConveyorDrawerService;
 #endif
 
-    ApplicationBuilder &ApplicationBuilder::loadConfigurations(const std::string &hwPath, const std::string &processPath)
-    {
+    ApplicationBuilder &ApplicationBuilder::loadConfigurations(const std::string &hwPath, const std::string &processPath) {
         qInfo() << "Loading Configurations...";
         m_hwConfig      = Config::ConfigLoader::loadHardwareConfig(hwPath);
         m_processConfig = Config::ConfigLoader::loadProcessConfig(processPath);
@@ -28,8 +26,7 @@ namespace Kub3
         return *this;
     }
 
-    ApplicationBuilder &ApplicationBuilder::buildHardwareTier(void)
-    {
+    ApplicationBuilder &ApplicationBuilder::buildHardwareTier(void) {
         qInfo() << "Building Tier 3 (Hardware)...";
         m_repo = std::make_shared<HAL::MS::MachineStatusRepo>();
 
@@ -39,8 +36,7 @@ namespace Kub3
         return *this;
     }
 
-    ApplicationBuilder &ApplicationBuilder::buildLogicTier(void)
-    {
+    ApplicationBuilder &ApplicationBuilder::buildLogicTier(void) {
         qInfo() << "Building Tier 2 (Logic)...";
 
         m_drawerService = std::make_shared<ConveyorDrawerService>(
@@ -64,30 +60,30 @@ namespace Kub3
         return *this;
     }
 
-    ApplicationBuilder &ApplicationBuilder::buildUserInterfaceTier(void)
-    {
+    ApplicationBuilder &ApplicationBuilder::buildUserInterfaceTier(void) {
         qInfo() << "Building Tier 1 (UI)...";
 
         m_mainWindow = std::make_unique<MainWindow>();
 
         {
             auto machineStatusViewModel = std::make_unique<UI::ViewModels::MachineStatusViewModel>(m_repo);
+            auto homeViewModel          = std::make_unique<UI::ViewModels::HomeViewModel>(m_repo);
             auto *machineStatusView     = new MachineStatusView(std::move(machineStatusViewModel), m_mainWindow.get());
+            auto *homeView              = new HomeView(std::move(homeViewModel), m_mainWindow.get());
+            m_mainWindow->addView(Kub3::UI::ViewId::HOME_VIEW, homeView);
             m_mainWindow->addView(Kub3::UI::ViewId::MACHINE_STATUS_VIEW, machineStatusView);
         }
 
-        if (m_masterFSM)
-        {
+        if (m_masterFSM) {
             QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_stateChanged, m_mainWindow.get(), &MainWindow::ps_stateChanged);
         }
 
-        m_mainWindow->ps_openView(Kub3::UI::ViewId::MACHINE_STATUS_VIEW);
+        m_mainWindow->ps_openView(Kub3::UI::ViewId::HOME_VIEW);
 
         return *this;
     }
 
-    ApplicationBuilder &ApplicationBuilder::wireArchitecture(void)
-    {
+    ApplicationBuilder &ApplicationBuilder::wireArchitecture(void) {
         qInfo() << "Wiring Inter-Tier Connections...";
 
         // Thread Lifecycle Wiring
@@ -113,8 +109,7 @@ namespace Kub3
         return *this;
     }
 
-    int ApplicationBuilder::run(QApplication &app)
-    {
+    int ApplicationBuilder::run(QApplication &app) {
         qInfo() << "[ApplicationBuilder::run]: Starting Hardware Manager.";
         m_hwManager->startAll();
 
@@ -137,8 +132,7 @@ namespace Kub3
         return ret;
     }
 
-    void ApplicationBuilder::powerOff(void)
-    {
+    void ApplicationBuilder::powerOff(void) {
 #ifdef BUILD_DEBUG
         qDebug() << "[ApplicationBuilder::powerOff] triggered (debug mode: closing app).";
         qApp->quit();

@@ -2,28 +2,44 @@
 #define HOMEVIEW_H
 
 #include <QWidget>
+#include <ViewModels/HomeViewModel.h>
 
-namespace Ui
-{
+#include "ViewBase.h"
+
+namespace Ui {
     class HomeView;
 }
 
-class HomeView : public QWidget
-{
-    Q_OBJECT
+namespace Kub3::UI::Views {
 
-public:
-    explicit HomeView(QWidget *parent = nullptr);
-    ~HomeView();
+    class HomeView final : public ViewBase 
+    {
+        using HomeViewModel = Kub3::UI::ViewModels::HomeViewModel;
+        
+        Q_OBJECT
 
-protected:
-    void resizeEvent(QResizeEvent *event) override;
+    public:
+        explicit HomeView(Unique<HomeViewModel> viewModel, QWidget *parent = nullptr);
+        ~HomeView();
 
-private:
-    void updateMachineLogo(int h);
+    signals:
 
-private:
-    Ui::HomeView *ui;
-};
+    public slots:
+
+    private slots:
+    
+
+    protected:
+        void resizeEvent(QResizeEvent *event) override;
+
+    private:
+        void updateMachineLogo(int h);
+
+    private:
+        Ui::HomeView *ui;
+    };
+}
+
+using HomeView = Kub3::UI::Views::HomeView;
 
 #endif // HOMEVIEW_H
