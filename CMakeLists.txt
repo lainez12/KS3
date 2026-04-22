@@ -20,7 +20,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-set(CMAKE_AUTOUIC_SEARCH_PATHS "gui;gui/Views;gui/Components;tools/configurator/gui")
+set(CMAKE_AUTOUIC_SEARCH_PATHS "gui;gui/Views;gui/Modules;gui/Components;tools/configurator/gui")
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -76,6 +76,7 @@ qt_add_library(Kub3Core STATIC
     src/HAL/Com/MockCommunicator.cpp
     src/HAL/Com/LengthBasedParser.cpp
     src/HAL/Com/PacketRouter.cpp
+    src/HAL/Vision/HikrobotCamera/HikrobotCamera.cpp
     src/HAL/Actuators/Lights/UVExposureHead.cpp
     src/HAL/Actuators/Motors/StepperMotor.cpp
     src/HAL/Actuators/Motors/DirectCurrentMotor.cpp
@@ -136,6 +137,9 @@ qt_add_library(Kub3Core STATIC
     include/HAL/Com/PacketRouter.h
     include/HAL/Sensors/ISensor.h
     include/HAL/Sensors/Sensor.h
+    include/HAL/Vision/ICamera.h
+    include/HAL/Vision/identifiers.h
+    include/HAL/Vision/Hikrobot/HikrobotCamera.h
     include/HAL/Actuators/ActuatorRegistry.h
     include/HAL/Actuators/IActuator.h
     include/HAL/Actuators/Lights/IExposureSystem.h
@@ -161,6 +165,7 @@ target_include_directories(Kub3Core PUBLIC
 target_link_libraries(Kub3Core PUBLIC
     Qt6::Core
     Qt6::SerialPort
+    Qt6::Gui
 )
 
 if(MVS_LIBRARY)
@@ -187,23 +192,31 @@ qt_add_executable(Kub3Software
     src/main.cpp
     src/Logger.h
     src/ApplicationBuilder.cpp
+    src/ViewModels/BaseViewModel.cpp
+    src/ViewModels/BaseVisionViewModel.cpp
     src/ViewModels/MachineStatusViewModel.cpp
     src/Views/MainWindow.cpp
     src/Views/ViewBase.cpp
     src/Views/DebugView.cpp
     src/Views/HomeView.cpp
     src/Views/MachineStatusView.cpp
+    src/Views/Modules/CamerasTestView.cpp
+    src/Views/Components/CameraStreamWidget.cpp
     src/Views/Components/NavButton.cpp
     src/Views/Components/ActionBox.cpp
     src/Views/Components/BottomCroppedCircle.cpp
     # Headers
     include/ApplicationBuilder.h
+    include/ViewModels/BaseViewModel.h
+    include/ViewModels/BaseVisionViewModel.h
     include/ViewModels/MachineStatusViewModel.h
     include/Views/MainWindow.h
     include/Views/ViewBase.h
     include/Views/DebugView.h
     include/Views/HomeView.h
     include/Views/MachineStatusView.h
+    include/Views/Modules/CamerasTestView.h
+    include/Views/Components/CameraStreamWidget.h
     include/Views/Components/NavButton.h
     include/Views/Components/ActionBox.h
     include/Views/Components/BottomCroppedCircle.h

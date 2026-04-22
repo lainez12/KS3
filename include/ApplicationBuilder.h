@@ -59,7 +59,10 @@ namespace Kub3
         Shared<Services::IHomingService> m_homingService;
 
         // Tier 1: UI
+        // --- Windows
         Unique<MainWindow> m_mainWindow;
+        // --- View models
+        Shared<UI::ViewModels::MachineStatusViewModel> m_machineStatusVM;
     };
 
 } // namespace Kub3

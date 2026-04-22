@@ -26,7 +26,7 @@ namespace Kub3::UI::Views
 
     public:
         explicit MachineStatusView(Shared<MachineStatusViewModel> viewModel, QWidget *parent = nullptr);
-        ~MachineStatusView();
+        ~MachineStatusView() override;
 
     signals:
         void s_home(void);
@@ -38,6 +38,7 @@ namespace Kub3::UI::Views
 
     private slots:
         void on_goBackBtn_clicked(void);
+        void on_openCamerasBtn_clicked(void);
 
     private:
         void populateBoolSensorsMap(void);

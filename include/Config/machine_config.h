@@ -38,9 +38,17 @@ namespace Kub3::Config
         motor_hw_properties_t hwProperties;
     } motor_config_t;
 
+    typedef struct camera_config_s {
+        std::string id;
+        std::string serialNumber;
+        double defaultExposureUs;
+        double defaultGainDb;
+    } camera_config_t;
+
     // Top level struct for hardware config
     typedef struct hardware_config_s {
         std::unordered_map<std::string, motor_config_t> motors;
+        std::unordered_map<std::string, camera_config_t> cameras;
     } hardware_config_t;
 
     ///////////////////////////

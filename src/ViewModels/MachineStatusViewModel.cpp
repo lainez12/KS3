@@ -7,55 +7,36 @@ namespace Kub3::UI::ViewModels
 {
 
     MachineStatusViewModel::MachineStatusViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent) :
-        QObject(parent),
-        m_repo(repo)
-    {
-    }
-
-    MachineStatusViewModel::~MachineStatusViewModel()
+        BaseVisionViewModel(parent),
+        m_repo(std::move(repo))
     {
     }
 
     void MachineStatusViewModel::loadConnections(void)
     {
-        HAL::MS::IMachineStatusRepo *repo = m_repo.get();
+        BaseViewModel::loadConnections();
 
-        if (!repo)
-            return;
-
-        // Connect machine status repository to view model
-        connect(repo, &HAL::MS::IMachineStatusRepo::s_sensorValueChanged, this, &MachineStatusViewModel::handleSensorValueChanged);
+        for (const std::string &key : m_repo->getRegisteredKeys())
+        {
+            ps_handleSensorValueChanged(key);
+        }
     }
 
-    void MachineStatusViewModel::unloadConnections(void)
+    void MachineStatusViewModel::ps_handleSensorValueChanged(const std::string &key)
     {
-        HAL::MS::IMachineStatusRepo *repo = m_repo.get();
-
-        if (!repo)
-            return;
-
-        // Disonnect machine status repository to view model
-        disconnect(repo, &HAL::MS::IMachineStatusRepo::s_sensorValueChanged, this, &MachineStatusViewModel::handleSensorValueChanged);
-    }
-
-    void MachineStatusViewModel::handleSensorValueChanged(const QString &key)
-    {
-        using SensorValue = HAL::MS::SensorValue;
-
-        Optional<SensorValue> valueOpt = m_repo->getSensorRaw(key.toStdString());
+        Optional<HAL::MS::SensorValue> valueOpt = m_repo->getSensorRaw(key);
 
         if (!valueOpt.has_value())
             return;
 
-        SensorValue value = valueOpt.value();
-
+        auto qKey    = QString::fromStdString(key);
         auto visitor = overloadedCallable(
-            [&](bool v) { emit s_booleanSensorUpdate(key, v); },
-            [&](int32_t v) { emit s_integerSensorUpdate(key, v); },
-            [&](uint16_t v) { emit s_unsignedIntegerSensorUpdate(key, v); },
-            [&](uint32_t v) { emit s_unsignedIntegerSensorUpdate(key, v); },
+            [&](bool v) { emit s_booleanSensorUpdate(qKey, v); },
+            [&](int32_t v) { emit s_integerSensorUpdate(qKey, v); },
+            [&](uint16_t v) { emit s_unsignedIntegerSensorUpdate(qKey, v); },
+            [&](uint32_t v) { emit s_unsignedIntegerSensorUpdate(qKey, v); },
             [&](auto) { qWarning() << "[MachineStatusViewModel] unknown sensor changed notification received."; });
 
-        std::visit(visitor, value);
+        std::visit(visitor, valueOpt.value());
     }
 }

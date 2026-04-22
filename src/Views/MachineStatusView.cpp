@@ -1,13 +1,16 @@
+#include <memory>
+
 #include "ui_MachineStatusView.h"
 
 #include <HAL/MachineStatus/sensors_labels.h>
 #include <Views/MachineStatusView.h>
+#include <Views/Modules/CamerasTestView.h>
 
 #define SUCCESS_QLABEL_STYLESHEET "QLabel{ background: green; color : white; }"
 #define FAILURE_QLABEL_STYLESHEET "QLabel{ background: red; color : white; }"
 
 MachineStatusView::MachineStatusView(Shared<MachineStatusViewModel> viewModel, QWidget *parent) :
-    ViewBase(viewModel, parent),
+    ViewBase(std::move(viewModel), parent),
     ui(new Ui::MachineStatusView)
 {
     ui->setupUi(this);
@@ -16,9 +19,10 @@ MachineStatusView::MachineStatusView(Shared<MachineStatusViewModel> viewModel, Q
     this->populateIntegerSensorsMap();
     this->populateUnsignedIntegerSensorsMap();
 
-    connect(viewModel.get(), &MachineStatusViewModel::s_booleanSensorUpdate, this, &MachineStatusView::ps_booleanSensorUpdate);
-    connect(viewModel.get(), &MachineStatusViewModel::s_integerSensorUpdate, this, &MachineStatusView::ps_integerSensorUpdate);
-    connect(viewModel.get(), &MachineStatusViewModel::s_unsignedIntegerSensorUpdate, this, &MachineStatusView::ps_unsignedIntegerSensorUpdate);
+    Shared<MachineStatusViewModel> model = std::static_pointer_cast<MachineStatusViewModel>(m_viewModel);
+    connect(model.get(), &MachineStatusViewModel::s_booleanSensorUpdate, this, &MachineStatusView::ps_booleanSensorUpdate);
+    connect(model.get(), &MachineStatusViewModel::s_integerSensorUpdate, this, &MachineStatusView::ps_integerSensorUpdate);
+    connect(model.get(), &MachineStatusViewModel::s_unsignedIntegerSensorUpdate, this, &MachineStatusView::ps_unsignedIntegerSensorUpdate);
 }
 
 MachineStatusView::~MachineStatusView()
@@ -47,6 +51,16 @@ void MachineStatusView::ps_unsignedIntegerSensorUpdate(const QString &sensorId, 
 void MachineStatusView::on_goBackBtn_clicked(void)
 {
     emit s_home();
+}
+
+void MachineStatusView::on_openCamerasBtn_clicked(void)
+{
+    if (!m_viewModel)
+        return;
+
+    Modules::CamerasTestView modal(std::static_pointer_cast<MachineStatusViewModel>(m_viewModel), this);
+
+    modal.exec();
 }
 
 void MachineStatusView::updateBoolSensorsText(QLabel *label, const bool state)

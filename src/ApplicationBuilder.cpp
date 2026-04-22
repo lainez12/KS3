@@ -70,18 +70,13 @@ namespace Kub3
 
         m_mainWindow = std::make_unique<MainWindow>();
 
+        // Building MachineStatusView
         {
-            auto machineStatusViewModel = std::make_unique<UI::ViewModels::MachineStatusViewModel>(m_repo);
-            auto *machineStatusView     = new MachineStatusView(std::move(machineStatusViewModel), m_mainWindow.get());
+            m_machineStatusVM       = std::make_shared<UI::ViewModels::MachineStatusViewModel>(m_repo);
+            auto *machineStatusView = new MachineStatusView(m_machineStatusVM, m_mainWindow.get());
+
             m_mainWindow->addView(Kub3::UI::ViewId::MACHINE_STATUS_VIEW, machineStatusView);
         }
-
-        if (m_masterFSM)
-        {
-            QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_stateChanged, m_mainWindow.get(), &MainWindow::ps_stateChanged);
-        }
-
-        m_mainWindow->ps_openView(Kub3::UI::ViewId::MACHINE_STATUS_VIEW);
 
         return *this;
     }
@@ -94,7 +89,7 @@ namespace Kub3
         QObject::connect(m_logicThread, &QThread::started, m_masterFSM, &MFSM::MasterFSM::start);
 
         // Logic -> HAL Wiring
-        QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_requestHardwareRetry, m_hwManager.get(), &HAL::HardwareManager::ps_reconnectSubsystem);
+        QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_requestHardwareRetry, m_hwManager.get(), &HAL::HardwareManager::ps_reconnectMCUSubsystem);
         QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_requestPowerOff, m_hwManager.get(), &HAL::HardwareManager::ps_powerOff);
 
         // System power-off
@@ -108,7 +103,11 @@ namespace Kub3
         QObject::connect(m_mainWindow.get(), &MainWindow::s_initializationRequest, m_masterFSM, &MFSM::MasterFSM::ps_requestInitialization);
 
         // 3. Logic -> UI Wiring
-        // QObject::connect(m_masterFSM, &MSFM::MasterFSM::stateChanged, m_mainWindow.get(), &MainWindow::onMachineStateChanged);
+        QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_stateChanged, m_mainWindow.get(), &MainWindow::ps_stateChanged);
+        m_machineStatusVM->bindConnection(m_hwManager.get(), &HAL::HardwareManager::s_cameraFrameReady,
+                                          m_machineStatusVM.get(), &UI::ViewModels::BaseVisionViewModel::ps_onCameraFrameReceived);
+        m_machineStatusVM->bindConnection(m_repo.get(), &HAL::MS::IMachineStatusRepo::s_sensorValueChanged,
+                                          m_machineStatusVM.get(), &UI::ViewModels::MachineStatusViewModel::ps_handleSensorValueChanged);
 
         return *this;
     }
@@ -122,6 +121,7 @@ namespace Kub3
         m_logicThread->start();
 
         qInfo() << "[ApplicationBuilder::run]: Showing UI.";
+        m_mainWindow->ps_openView(Kub3::UI::ViewId::MACHINE_STATUS_VIEW); // Open initial view
 #if defined(BUILD_DEBUG)
         m_mainWindow->show();
 #else
@@ -143,7 +143,8 @@ namespace Kub3
         qDebug() << "[ApplicationBuilder::powerOff] triggered (debug mode: closing app).";
         qApp->quit();
 #else
-        std::system("sudo poweroff");
+        if (std::system("sudo poweroff") != 0)
+            qCritical() << "Failed to run power off command.";
 #endif
     }
 

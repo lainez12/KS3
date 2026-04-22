@@ -40,7 +40,7 @@ namespace Kub3::HAL::MS
         // it would deadlock if we still held the exclusive write lock.
         if (valueChanged)
         {
-            emit s_sensorValueChanged(QString::fromStdString(key));
+            emit s_sensorValueChanged(key);
         }
     }
 

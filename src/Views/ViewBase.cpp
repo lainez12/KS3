@@ -3,7 +3,7 @@
 namespace Kub3::UI::Views
 {
 
-    ViewBase::ViewBase(Shared<ViewModels::IViewModel> viewModel, QWidget *parent) :
+    ViewBase::ViewBase(Shared<ViewModels::BaseViewModel> viewModel, QWidget *parent) :
         QWidget(parent),
         m_viewModel(std::move(viewModel))
     {}
