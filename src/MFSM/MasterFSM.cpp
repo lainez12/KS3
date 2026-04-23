@@ -198,7 +198,7 @@ namespace Kub3::MFSM
         auto target = static_cast<Services::DrawerTarget>(targetInt);
         auto op     = static_cast<DrawerOperation>(operationInt);
 
-        dispatch(CmdOperateDrawer{target});
+        dispatch(CmdOperateDrawer{.target = target, .operation = op});
     }
 
     void MasterFSM::ps_requestResetError(void)

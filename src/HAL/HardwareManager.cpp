@@ -10,6 +10,7 @@
 #include <HAL/MachineStatus/sensors_labels.h>
 #include <HAL/MachineStatus/utils.h>
 #include <HAL/Sensors/Sensor.h>
+#include <HAL/Vision/Hikrobot/HikrobotCamera.h>
 
 using namespace std::string_literals;
 
@@ -40,6 +41,7 @@ namespace Kub3::HAL
         setupArduino1Subsystem(config);
         setupArduino2Subsystem(config);
         setupArduino3Subsystem(config);
+        setupCamerasSubsystem(config);
 #endif
     }
 
@@ -53,28 +55,53 @@ namespace Kub3::HAL
         for (auto &[key, subsys] : m_subsystems)
         {
             subsys.thread->start();
-            QMetaObject::invokeMethod(subsys.driver.get(), &MCUDriver::ps_start);
+            QMetaObject::invokeMethod(subsys.driver.get(), &MCUDriver::ps_start, Qt::QueuedConnection);
+        }
+
+        for (auto &[key, subsys] : m_cameras)
+        {
+            subsys.thread->start();
+            QMetaObject::invokeMethod(subsys.camera.get(), &Vision::ICamera::connectDevice, Qt::QueuedConnection);
+            QMetaObject::invokeMethod(subsys.camera.get(), &Vision::ICamera::startAcquisition, Qt::QueuedConnection);
         }
     }
 
     void HardwareManager::stopAll()
     {
+        auto stopThreadHelper = [this](QThread *thread, std::function<void(void)> stopMethod) {
+            if (!thread || !thread->isRunning())
+                return;
+
+            if (stopMethod)
+                stopMethod();
+            thread->exit(0);
+            if (!thread->wait(2000))
+            {
+                thread->terminate(); // Force kill
+                thread->wait();
+            }
+        };
+
         for (auto &[key, subsys] : m_subsystems)
         {
-            if (!subsys.thread || !subsys.thread->isRunning())
-                continue;
+            stopThreadHelper(
+                subsys.thread.get(),
+                [&subsys]() {
+                    QMetaObject::invokeMethod(subsys.driver.get(), &MCUDriver::ps_stop, Qt::BlockingQueuedConnection);
+                });
+        }
 
-            QMetaObject::invokeMethod(subsys.driver.get(), &MCUDriver::ps_stop, Qt::QueuedConnection);
-            subsys.thread->exit(0);
-            if (!subsys.thread->wait(2000))
-            {
-                subsys.thread->terminate(); // Force kill
-                subsys.thread->wait();
-            }
+        for (auto &[key, subsys] : m_cameras)
+        {
+            stopThreadHelper(
+                subsys.thread.get(),
+                [&subsys]() {
+                    QMetaObject::invokeMethod(subsys.camera.get(), &Vision::ICamera::disconnectDevice, Qt::BlockingQueuedConnection);
+                });
         }
     }
 
-    void HardwareManager::ps_reconnectSubsystem(const QString &subsystemId)
+    void HardwareManager::ps_reconnectMCUSubsystem(const QString &subsystemId)
     {
         const std::string id = subsystemId.toStdString();
 
@@ -100,6 +127,21 @@ namespace Kub3::HAL
         else
         {
             qWarning() << "HardwareManager: Requested restart for unknown subsystem:" << id;
+        }
+    }
+
+    void HardwareManager::ps_reconnectCameraSubsystem(const std::string &cameraId)
+    {
+        if (auto it = m_cameras.find(cameraId); it != m_cameras.end())
+        {
+            auto &node = it->second;
+
+            qInfo() << "HardwareManager: Bouncing camera subsystem:" << cameraId;
+            // Push stop/start commands to the camera thread queue
+            QMetaObject::invokeMethod(node.camera.get(), &Vision::ICamera::stopAcquisition, Qt::QueuedConnection);
+            QMetaObject::invokeMethod(node.camera.get(), &Vision::ICamera::disconnectDevice, Qt::QueuedConnection);
+            QMetaObject::invokeMethod(node.camera.get(), &Vision::ICamera::connectDevice, Qt::QueuedConnection);
+            QMetaObject::invokeMethod(node.camera.get(), &Vision::ICamera::startAcquisition, Qt::QueuedConnection);
         }
     }
 
@@ -501,6 +543,29 @@ namespace Kub3::HAL
         m_actuatorRegistry->registerActuator(std::move(zBackMotor));
         m_actuatorRegistry->registerActuator(std::move(maskMotor));
         m_actuatorRegistry->registerActuator(std::move(waferMotor));
+    }
+
+    // --- Cameras HAL instanciation helpers
+
+    void HardwareManager::setupCamerasSubsystem(const Config::hardware_config_t &config)
+    {
+        for (auto [_, config] : config.cameras)
+        {
+            auto thread = std::make_unique<QThread>();
+            // TODO: configuration-dependent camera class `C` in `std::make_shared<C>`
+            auto camera = std::make_shared<Vision::HikrobotCamera>(config.id, config.serialNumber);
+
+            camera->setExposure(config.defaultExposureUs);
+            camera->setGain(config.defaultGainDb);
+            camera->moveToThread(thread.get());
+            connect(camera.get(), &Vision::ICamera::s_frameReady, this,
+                    [this, id = QString::fromStdString(config.id)](const QImage &frame) { emit s_cameraFrameReady(id, frame); });
+
+            m_cameras[config.id] = CameraSubsystemNode{
+                .thread = std::move(thread),
+                .camera = std::move(camera),
+            };
+        }
     }
 
 #endif // defined(KUB_MODEL_8)

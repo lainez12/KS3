@@ -7,16 +7,17 @@
 #include <string>
 
 // Configuration & version
-#include "Config/ConfigLoader.h"
-#include "version.h"
+#include <Config/ConfigLoader.h>
+#include <version.h>
 // --- Hardware manager
-#include "HAL/HardwareManager.h"
+#include <HAL/HardwareManager.h>
 // --- Machine status repository
-#include "HAL/MachineStatus/MachineStatusRepo.h"
+#include <HAL/MachineStatus/MachineStatusRepo.h>
 // --- Master Finite state Machine
-#include "MFSM/MasterFSM.h"
+#include <MFSM/MasterFSM.h>
 // --- UI
-#include "Views/MainWindow.h"
+#include <ViewModels/MachineStatusViewModel.h>
+#include <Views/MainWindow.h>
 
 namespace Kub3
 {
@@ -58,7 +59,10 @@ namespace Kub3
         Shared<Services::IHomingService> m_homingService;
 
         // Tier 1: UI
+        // --- Windows
         Unique<MainWindow> m_mainWindow;
+        // --- View models
+        Shared<UI::ViewModels::MachineStatusViewModel> m_machineStatusVM;
     };
 
 } // namespace Kub3

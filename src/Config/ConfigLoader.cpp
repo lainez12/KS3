@@ -18,6 +18,11 @@ namespace Kub3::Config
         return settings.value(key);
     }
 
+    static QVariant getRequiredValue(const QSettings &settings, const QString &key, const QString &group)
+    {
+        return getRequiredValue(settings, key, group.toStdString());
+    }
+
     hardware_config_t ConfigLoader::loadHardwareConfig(const std::string &filePath)
     {
         qInfo() << "[LOADING HARDWARE CONFIGURATION]";
@@ -60,7 +65,25 @@ namespace Kub3::Config
                 throw std::runtime_error(std::format("CRITICAL: Unknown motor type '{}' for '{}'", type.toStdString(), motor.id));
             }
 
-            config.motors[motor.id] = std::move(motor);
+            config.motors.insert({motor.id, motor});
+            settings.endGroup();
+        }
+        settings.endGroup();
+
+        // LOAD CAMERAS PARAMETERS
+        settings.beginGroup("cameras");
+        for (const QString &group : settings.childGroups())
+        {
+            settings.beginGroup(group);
+
+            camera_config_t camera = {
+                .id                = group.toStdString(),
+                .serialNumber      = getRequiredValue(settings, "serialNumber", group).toString().toStdString(),
+                .defaultExposureUs = getRequiredValue(settings, "defaultExposureUs", group).toString().toDouble(),
+                .defaultGainDb     = getRequiredValue(settings, "defaultGainDb", group).toString().toDouble(),
+            };
+
+            config.cameras.insert({camera.id, camera});
             settings.endGroup();
         }
         settings.endGroup();

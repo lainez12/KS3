@@ -28,28 +28,18 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
     // Debug View
-    {
-        m_debugView      = new DebugView(this);
-        m_debugViewIndex = ui->stackedWidget->addWidget(m_debugView);
+    // {
+    //     m_debugView      = new DebugView(this);
+    //     m_debugViewIndex = ui->stackedWidget->addWidget(m_debugView);
 
-        connect(m_debugView, &DebugView::s_openMachineStatus, this, &MainWindow::openMachineStatusView);
-        connect(m_debugView, &DebugView::s_initializationRequest, this, &MainWindow::s_initializationRequest);
-    }
+    //     connect(m_debugView, &DebugView::s_openMachineStatus, this, &MainWindow::openMachineStatusView);
+    //     connect(m_debugView, &DebugView::s_initializationRequest, this, &MainWindow::s_initializationRequest);
+    // }
 
-    {
-        m_homeView      = new HomeView(this);
-        m_homeViewIndex = ui->stackedWidget->addWidget(m_homeView);
-    }
-
-    // Machine Status View
-    {
-        m_machineStatusView      = new MachineStatusView(this);
-        m_machineStatusViewIndex = ui->stackedWidget->addWidget(m_machineStatusView);
-
-        connect(m_machineStatusView, &MachineStatusView::s_home, this, &MainWindow::goBackHome);
-    }
-
-    ui->stackedWidget->setCurrentWidget(m_debugView);
+    // {
+    //     m_homeView      = new HomeView(this);
+    //     m_homeViewIndex = ui->stackedWidget->addWidget(m_homeView);
+    // }
 }
 
 MainWindow::~MainWindow()
@@ -57,19 +47,25 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::addView(Kub3::UI::ViewId viewId, QWidget *view)
+{
+    if (!view)
+        return;
+    ui->stackedWidget->addWidget(view);
+    m_views.insert({viewId, view});
+}
+
+void MainWindow::ps_openView(Kub3::UI::ViewId viewId)
+{
+    if (auto it = m_views.find(viewId); it != m_views.end() && it->second)
+        ui->stackedWidget->setCurrentWidget(it->second);
+    else
+        qWarning() << "[MainWindow::ps_openView] Failed to find view.";
+}
+
 void MainWindow::ps_stateChanged(const QString &stateName)
 {
-    m_debugView->updateMachineState(stateName);
-}
-
-void MainWindow::goBackHome(void)
-{
-    ui->stackedWidget->setCurrentIndex(m_debugViewIndex);
-}
-
-void MainWindow::openMachineStatusView(void)
-{
-    ui->stackedWidget->setCurrentIndex(m_machineStatusViewIndex);
+    // m_debugView->updateMachineState(stateName);
 }
 
 void MainWindow::paintEvent(QPaintEvent *event)
