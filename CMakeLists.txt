@@ -205,6 +205,7 @@ qt_add_executable(Kub3Software
     src/Views/Components/NavButton.cpp
     src/Views/Components/ActionBox.cpp
     src/Views/Components/BottomCroppedCircle.cpp
+    src/Views/Components/DoubleRatioSlider.cpp
     # Headers
     include/ApplicationBuilder.h
     include/ViewModels/BaseViewModel.h
@@ -220,6 +221,7 @@ qt_add_executable(Kub3Software
     include/Views/Components/NavButton.h
     include/Views/Components/ActionBox.h
     include/Views/Components/BottomCroppedCircle.h
+    include/Views/Components/DoubleRatioSlider.h
     # UI
     gui/resources.qrc
     gui/MainWindow.ui

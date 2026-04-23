@@ -3,7 +3,8 @@
 #include <string>
 #include <variant>
 
-#include "Services/Drawers/IDrawerService.h"
+#include <HAL/Vision/identifiers.h>
+#include <Services/Drawers/IDrawerService.h>
 
 // ===============================================
 // Master Finite State Machine EVENTS Definitions
@@ -39,6 +40,12 @@ namespace Kub3::MFSM
 
     struct CmdResetError {};
 
+    struct CmdCameraParamUpdate {
+        QString cameraId;
+        HAL::Vision::CameraParamKind kind;
+        HAL::Vision::CameraParam value;
+    };
+
     // Internal Service Events
 
     struct EvServiceSuccess {};
@@ -62,6 +69,7 @@ namespace Kub3::MFSM
         CmdStartInitialization,
         CmdOperateDrawer,
         CmdResetError,
+        CmdCameraParamUpdate,
         // Internal Service Event
         EvServiceSuccess,
         EvServiceError,

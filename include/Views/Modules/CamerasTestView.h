@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QDialog>
+#include <QSpinBox>
 #include <memory>
 
 #include <utils.h>
@@ -24,6 +25,19 @@ namespace Kub3::UI::Modules
     public:
         explicit CamerasTestView(Shared<ViewModels::MachineStatusViewModel> viewModel, QWidget *parent = nullptr);
         ~CamerasTestView() override;
+
+    public slots:
+        void onUpperLeftROIFieldChanged(void);
+        void onUpperRightROIFieldChanged(void);
+
+    private:
+        void sendROIUpdate(const char *camId, QSpinBox *xBox, QSpinBox *yBox, QSpinBox *wBox, QSpinBox *hBox);
+        // View setup functions
+        void setupExposureComponents(void);
+        void setupGainComponents(void);
+        void setupFramerateComponents(void);
+        void setupCenteredZoomComponents(void);
+        void setupRegionOfInterestComponents(void);
 
     private:
         Ui::CamerasTestView *ui;

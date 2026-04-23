@@ -6,6 +6,7 @@ CameraStreamWidget::CameraStreamWidget(QWidget *parent) : QWidget(parent)
 {
     // Optimization: Prevent background clearing before paintEvent
     setAttribute(Qt::WA_OpaquePaintEvent);
+
     // Ensure widget can expand in layouts
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 }
@@ -23,30 +24,28 @@ void CameraStreamWidget::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
 
+    // This creates the "letterbox" borders if the layout stretches the widget to a rectangle.
+    painter.fillRect(event->rect(), Qt::black);
+
     if (!m_hasFrame || m_currentFrame.isNull())
     {
         // Draw placeholder/black screen
-        painter.fillRect(event->rect(), Qt::black);
         painter.setPen(Qt::white);
         painter.drawText(rect(), Qt::AlignCenter, "NO SIGNAL");
         return;
     }
 
-    // Calculate scaled rect while keeping aspect ratio
-    QRect drawingRect = m_currentFrame.rect();
-    drawingRect.moveCenter(rect().center());
+    // Calculate the largest perfect square that fits in the widget's current size
+    int side    = std::min(width(), height());
+    int xOffset = (width() - side) / 2;
+    int yOffset = (height() - side) / 2;
 
-    // Scale to fit widget size
-    QImage scaledFrame = m_currentFrame.scaled(
-        rect().size(),
-        Qt::KeepAspectRatio,
-        Qt::SmoothTransformation // Either Fast or Smooth
-    );
+    QImage scaledImage = m_currentFrame.scaled(
+        side, side,
+        Qt::IgnoreAspectRatio,
+        Qt::SmoothTransformation);
 
-    // Center the scaled image
-    int x = (width() - scaledFrame.width()) / 2;
-    int y = (height() - scaledFrame.height()) / 2;
-
-    painter.fillRect(event->rect(), Qt::black); // Letterboxing borders
-    painter.drawImage(x, y, scaledFrame);
+    // painter.setRenderHint(QPainter::LosslessImageRendering);
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.drawImage(xOffset, yOffset, scaledImage);
 }

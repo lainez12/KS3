@@ -85,12 +85,15 @@ namespace Kub3
     {
         qInfo() << "Wiring Inter-Tier Connections...";
 
+        namespace VM = UI::ViewModels;
+
         // Thread Lifecycle Wiring
         QObject::connect(m_logicThread, &QThread::started, m_masterFSM, &MFSM::MasterFSM::start);
 
         // Logic -> HAL Wiring
         QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_requestHardwareRetry, m_hwManager.get(), &HAL::HardwareManager::ps_reconnectMCUSubsystem);
         QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_requestPowerOff, m_hwManager.get(), &HAL::HardwareManager::ps_powerOff);
+        QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_requestCameraParamUpdate, m_hwManager.get(), &HAL::HardwareManager::ps_updateCameraParameter);
 
         // System power-off
         QObject::connect(m_hwManager.get(), &HAL::HardwareManager::s_hardwarePowerOffSent, [this]() { this->powerOff(); });
@@ -100,14 +103,21 @@ namespace Kub3
         QObject::connect(m_logicThread, &QThread::finished, m_logicThread, &QObject::deleteLater);
 
         // 2. UI -> Logic Wiring (Queued Connections implicitly used across threads)
+        auto *msvm = m_machineStatusVM.get();
+
         QObject::connect(m_mainWindow.get(), &MainWindow::s_initializationRequest, m_masterFSM, &MFSM::MasterFSM::ps_requestInitialization);
+        QObject::connect(msvm, &VM::MachineStatusViewModel::s_exposureSliderValueChanged, m_masterFSM, &MFSM::MasterFSM::ps_requestExposureUpdate);
+        QObject::connect(msvm, &VM::MachineStatusViewModel::s_gainSliderValueChanged, m_masterFSM, &MFSM::MasterFSM::ps_requestGainUpdate);
+        QObject::connect(msvm, &VM::MachineStatusViewModel::s_framerateValueChanged, m_masterFSM, &MFSM::MasterFSM::ps_requestFrameRateUpdate);
+        QObject::connect(msvm, &VM::MachineStatusViewModel::s_centeredZoomValueChanged, m_masterFSM, &MFSM::MasterFSM::ps_requestCenteredZoomUpdate);
+        QObject::connect(msvm, &VM::MachineStatusViewModel::s_roiChanged, m_masterFSM, &MFSM::MasterFSM::ps_requestROIUpdate);
 
         // 3. Logic -> UI Wiring
         QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_stateChanged, m_mainWindow.get(), &MainWindow::ps_stateChanged);
         m_machineStatusVM->bindConnection(m_hwManager.get(), &HAL::HardwareManager::s_cameraFrameReady,
-                                          m_machineStatusVM.get(), &UI::ViewModels::BaseVisionViewModel::ps_onCameraFrameReceived);
+                                          msvm, &VM::BaseVisionViewModel::ps_onCameraFrameReceived);
         m_machineStatusVM->bindConnection(m_repo.get(), &HAL::MS::IMachineStatusRepo::s_sensorValueChanged,
-                                          m_machineStatusVM.get(), &UI::ViewModels::MachineStatusViewModel::ps_handleSensorValueChanged);
+                                          msvm, &VM::MachineStatusViewModel::ps_handleSensorValueChanged);
 
         return *this;
     }

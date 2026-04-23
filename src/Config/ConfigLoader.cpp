@@ -65,7 +65,7 @@ namespace Kub3::Config
                 throw std::runtime_error(std::format("CRITICAL: Unknown motor type '{}' for '{}'", type.toStdString(), motor.id));
             }
 
-            config.motors.insert({motor.id, motor});
+            config.motors.insert({group, motor});
             settings.endGroup();
         }
         settings.endGroup();
@@ -78,12 +78,14 @@ namespace Kub3::Config
 
             camera_config_t camera = {
                 .id                = group.toStdString(),
-                .serialNumber      = getRequiredValue(settings, "serialNumber", group).toString().toStdString(),
-                .defaultExposureUs = getRequiredValue(settings, "defaultExposureUs", group).toString().toDouble(),
-                .defaultGainDb     = getRequiredValue(settings, "defaultGainDb", group).toString().toDouble(),
+                .serialNumber      = getRequiredValue(settings, "serial_number", group).toString().toStdString(),
+                .maxExposureUs     = getRequiredValue(settings, "max_exposure_us", group).toString().toDouble(),
+                .defaultExposureUs = getRequiredValue(settings, "default_exposure_us", group).toString().toDouble(),
+                .maxGainDb         = getRequiredValue(settings, "max_gain_db", group).toString().toDouble(),
+                .defaultGainDb     = getRequiredValue(settings, "default_gain_db", group).toString().toDouble(),
             };
 
-            config.cameras.insert({camera.id, camera});
+            config.cameras.insert({group, camera});
             settings.endGroup();
         }
         settings.endGroup();

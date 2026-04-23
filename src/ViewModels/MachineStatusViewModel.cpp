@@ -39,4 +39,5 @@ namespace Kub3::UI::ViewModels
 
         std::visit(visitor, valueOpt.value());
     }
+
 }
