@@ -7,8 +7,10 @@
 #include <optional>
 #include <string>
 
-#include "../ICamera.h"
 #include <MvCameraControl.h>
+
+#include "../ICamera.h"
+#include <Config/machine_config.h>
 
 namespace Kub3::HAL::Vision
 {
@@ -24,12 +26,12 @@ namespace Kub3::HAL::Vision
     {
         Q_OBJECT
     public:
-        HikrobotCamera(std::string id, std::string serialNumber);
+        HikrobotCamera(Config::camera_config_t config);
         ~HikrobotCamera() override;
 
         [[nodiscard]] std::string getId() const override
         {
-            return m_id;
+            return m_config.id;
         }
 
         bool connectDevice(void) override;
@@ -39,10 +41,11 @@ namespace Kub3::HAL::Vision
         void stopAcquisition(void) override;
 
         // --- Consolidated Configuration API ---
-        bool setExposure(double exposureUs);
-        bool setGain(double gainDB);
-        bool setFrameRate(double fps);
-        bool setROI(int x, int y, int width, int height);
+        bool setExposure(double exposureUs) override;
+        bool setGain(double gainDB) override;
+        bool setFrameRate(double fps) override;
+        bool setCenteredZoom(double zoom) override;
+        bool setROI(int x, int y, int width, int height) override;
 
         // Smart Reduction: Attempts Binning first, falls back to Decimation
         bool setSmartReduction(int horizontal, int vertical);
@@ -71,11 +74,15 @@ namespace Kub3::HAL::Vision
         [[nodiscard]] std::optional<int64_t> getIntNode(const char *key) const;
 
     private:
-        const std::string m_id;
-        const std::string m_serialNumber;
+        const Config::camera_config_t m_config;
 
         void *m_cameraHandle            = nullptr;
         std::atomic<bool> m_isAcquiring = false;
+
+        MVCC_INTVALUE m_offsetXLimits;
+        MVCC_INTVALUE m_offsetYLimits;
+        MVCC_INTVALUE m_widthLimits;
+        MVCC_INTVALUE m_heightLimits;
 
         // Watchdog state
         static constexpr int MAX_FRAME_DROPS = 5;

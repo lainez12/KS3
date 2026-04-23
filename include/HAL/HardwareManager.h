@@ -50,7 +50,8 @@ namespace Kub3::HAL
 
     public slots:
         void ps_reconnectMCUSubsystem(const QString &subsystemId);
-        void ps_reconnectCameraSubsystem(const std::string &cameraId);
+        void ps_reconnectCameraSubsystem(const QString &cameraId);
+        void ps_updateCameraParameter(const QString &cameraId, Vision::CameraParamKind kind, Vision::CameraParam value);
         void ps_powerOff(void);
 
     private:
@@ -77,7 +78,7 @@ namespace Kub3::HAL
         void registerSensor(Com::PacketRouter *router, std::string &&route, Shared<Kub3::HAL::Sensors::ISensor> sensor);
         Shared<Act::StepperMotor> createStepperMotor(
             const Config::hardware_config_t &config,
-            const std::string &motorId,
+            const QString &motorId,
             uint8_t byteId,
             Algorithms::Kinematic::KinematicGeneratorKind kineGenKind,
             const std::shared_ptr<MCUDriver> &driver,
@@ -87,8 +88,8 @@ namespace Kub3::HAL
         Shared<MS::IMachineStatusRepo> m_repo;
         Shared<Act::ActuatorRegistry> m_actuatorRegistry;
 
-        std::unordered_map<std::string, MCUSubsystemNode> m_subsystems;
-        std::unordered_map<std::string, CameraSubsystemNode> m_cameras;
+        std::unordered_map<QString, MCUSubsystemNode> m_subsystems;
+        std::unordered_map<QString, CameraSubsystemNode> m_cameras;
         std::vector<Shared<Sensors::ISensor>> m_sensors; // TODO: What for ?
     };
 

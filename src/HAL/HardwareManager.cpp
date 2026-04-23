@@ -1,4 +1,5 @@
 #include <QDebug>
+#include <QRect>
 
 #include <Algorithms/Kinematic/IKinematicGenerator.h>
 #include <HAL/Actuators/Lights/UVExposureHead.h>
@@ -103,16 +104,14 @@ namespace Kub3::HAL
 
     void HardwareManager::ps_reconnectMCUSubsystem(const QString &subsystemId)
     {
-        const std::string id = subsystemId.toStdString();
-
-        if (auto it = m_subsystems.find(id); it != m_subsystems.end())
+        if (auto it = m_subsystems.find(subsystemId); it != m_subsystems.end())
         {
             auto &subsys = it->second;
 
-            qInfo() << "HardwareManager: Reconnecting targeted subsystem:" << id;
+            qInfo() << "HardwareManager: Reconnecting targeted subsystem:" << subsystemId;
             if (!subsys.thread)
             {
-                qCritical() << "HardwareManager: Attempt to reconnect using invalid thread pointer:" << id;
+                qCritical() << "HardwareManager: Attempt to reconnect using invalid thread pointer:" << subsystemId;
                 return;
             }
 
@@ -126,11 +125,11 @@ namespace Kub3::HAL
         }
         else
         {
-            qWarning() << "HardwareManager: Requested restart for unknown subsystem:" << id;
+            qWarning() << "HardwareManager: Requested restart for unknown subsystem:" << subsystemId;
         }
     }
 
-    void HardwareManager::ps_reconnectCameraSubsystem(const std::string &cameraId)
+    void HardwareManager::ps_reconnectCameraSubsystem(const QString &cameraId)
     {
         if (auto it = m_cameras.find(cameraId); it != m_cameras.end())
         {
@@ -142,6 +141,48 @@ namespace Kub3::HAL
             QMetaObject::invokeMethod(node.camera.get(), &Vision::ICamera::disconnectDevice, Qt::QueuedConnection);
             QMetaObject::invokeMethod(node.camera.get(), &Vision::ICamera::connectDevice, Qt::QueuedConnection);
             QMetaObject::invokeMethod(node.camera.get(), &Vision::ICamera::startAcquisition, Qt::QueuedConnection);
+        }
+    }
+
+    void HardwareManager::ps_updateCameraParameter(const QString &cameraId, Vision::CameraParamKind kind, Vision::CameraParam value)
+    {
+        if (auto it = m_cameras.find(cameraId); it != m_cameras.end())
+        {
+            switch (kind)
+            {
+            case Vision::CameraParamKind::EXPOSURE:
+            {
+                if (const double *val = std::get_if<double>(&value))
+                    it->second.camera->setExposure(*val);
+                break;
+            }
+            case Vision::CameraParamKind::GAIN:
+            {
+                if (const double *val = std::get_if<double>(&value))
+                    it->second.camera->setGain(*val);
+                break;
+            }
+            case Vision::CameraParamKind::FRAMERATE:
+            {
+                if (const double *val = std::get_if<double>(&value))
+                    it->second.camera->setFrameRate(*val);
+                break;
+            }
+            case Vision::CameraParamKind::CENTERED_ZOOM:
+            {
+                if (const double *val = std::get_if<double>(&value))
+                    it->second.camera->setCenteredZoom(*val);
+                break;
+            }
+            case Vision::CameraParamKind::REGION_OF_INTEREST:
+            {
+                if (const QRect *val = std::get_if<QRect>(&value))
+                    it->second.camera->setROI(val->x(), val->y(), val->width(), val->height());
+                break;
+            }
+            default:
+                break;
+            }
         }
     }
 
@@ -549,19 +590,27 @@ namespace Kub3::HAL
 
     void HardwareManager::setupCamerasSubsystem(const Config::hardware_config_t &config)
     {
-        for (auto [_, config] : config.cameras)
+        for (auto [qId, config] : config.cameras)
         {
             auto thread = std::make_unique<QThread>();
-            // TODO: configuration-dependent camera class `C` in `std::make_shared<C>`
-            auto camera = std::make_shared<Vision::HikrobotCamera>(config.id, config.serialNumber);
+            // TODO: make a configuration-dependent camera class `C` in `std::make_shared<C>`
+            auto camera = std::make_shared<Vision::HikrobotCamera>(config);
 
-            camera->setExposure(config.defaultExposureUs);
-            camera->setGain(config.defaultGainDb);
             camera->moveToThread(thread.get());
-            connect(camera.get(), &Vision::ICamera::s_frameReady, this,
-                    [this, id = QString::fromStdString(config.id)](const QImage &frame) { emit s_cameraFrameReady(id, frame); });
+            // On connection, set default parameters to camera
+            connect(
+                camera.get(), &Vision::ICamera::s_cameraConnected, this,
+                [cam = camera.get(), config]() {
+                    QMetaObject::invokeMethod(cam, &Vision::ICamera::setCenteredZoom, Qt::QueuedConnection, 1.0);
+                    QMetaObject::invokeMethod(cam, &Vision::ICamera::setExposure, Qt::QueuedConnection, config.defaultExposureUs);
+                    QMetaObject::invokeMethod(cam, &Vision::ICamera::setGain, Qt::QueuedConnection, config.defaultGainDb);
+                });
+            // Connect frame forwarding
+            connect(
+                camera.get(), &Vision::ICamera::s_frameReady, this,
+                [&, id = QString::fromStdString(config.id)](const QImage &frame) { emit s_cameraFrameReady(id, frame); });
 
-            m_cameras[config.id] = CameraSubsystemNode{
+            m_cameras[qId] = CameraSubsystemNode{
                 .thread = std::move(thread),
                 .camera = std::move(camera),
             };
@@ -584,7 +633,7 @@ namespace Kub3::HAL
 
     Shared<Act::StepperMotor> HardwareManager::createStepperMotor(
         const Config::hardware_config_t &config,
-        const std::string &motorId,
+        const QString &motorId,
         uint8_t byteId,
         Algorithms::Kinematic::KinematicGeneratorKind kineGenKind,
         const Shared<MCUDriver> &driver,
@@ -592,16 +641,19 @@ namespace Kub3::HAL
     {
         auto it = config.motors.find(motorId);
         if (it == config.motors.end())
-            throw std::runtime_error(std::format("Hardware configuration not found for key: '{}'", motorId));
+            throw std::runtime_error(std::format("Hardware configuration not found for key: '{}'", motorId.toStdString()));
 
         auto *hwProps = std::get_if<Config::stepper_hw_properties_t>(&it->second.hwProperties);
         if (!hwProps)
-            throw std::runtime_error(std::format("'{}' configuration doesn't match expected type (stepper)", motorId));
+            throw std::runtime_error(std::format("'{}' configuration doesn't match expected type (stepper)", motorId.toStdString()));
 
         auto kinematicEngine = Algorithms::Kinematic::buildKinematicGenerator(kineGenKind);
         auto encoderGetter   = [repo = m_repo, encoderId]() { return HAL::MS::readInt(repo, encoderId); };
 
-        return std::make_shared<Act::StepperMotor>(motorId, byteId, driver, *hwProps, std::move(encoderGetter), std::move(kinematicEngine));
+        return std::make_shared<Act::StepperMotor>(
+            it->second.id, byteId, driver, *hwProps,
+            std::move(encoderGetter),
+            std::move(kinematicEngine));
     }
 
 } // namespace Kub3::HAL

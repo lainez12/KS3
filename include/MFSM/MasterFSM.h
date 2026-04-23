@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QObject>
+#include <QRect>
 #include <QString>
 #include <QTimer>
 
@@ -33,6 +34,7 @@ namespace Kub3::MFSM
         // Tier 2 (Logic) -> Tier 3 (I/O threads)
         void s_requestHardwareRetry(const QString &hardwareId);
         void s_requestPowerOff(void);
+        void s_requestCameraParamUpdate(const QString &camId, HAL::Vision::CameraParamKind kind, HAL::Vision::CameraParam value);
 
     public slots:
         // Tier 1 (UI) -> Tier 2 (Logic) Thread-Safe Commands
@@ -41,6 +43,11 @@ namespace Kub3::MFSM
         void ps_requestResetError(void);
         void ps_requestEmergencyStop(void); // unused for now
         void ps_systemPowerOff(void);       // unused for now
+        void ps_requestExposureUpdate(const QString &camId, double val);
+        void ps_requestGainUpdate(const QString &camId, double val);
+        void ps_requestFrameRateUpdate(const QString &camId, double val);
+        void ps_requestCenteredZoomUpdate(const QString &camId, double val);
+        void ps_requestROIUpdate(const QString &camId, const QRect &roi);
 
     private slots:
         // The Heartbeat (50Hz)
@@ -54,6 +61,7 @@ namespace Kub3::MFSM
     private:
         // Core FSM Methods
         void dispatch(const SystemEvent &event);
+        [[nodiscard]] bool processStaticEvent(const SystemState &currentState, const SystemEvent &event);
         [[nodiscard]] SystemState processTransition(const SystemState &currentState, const SystemEvent &event);
         void onStateEntered(const SystemState &newState);
         // Safety Monitors

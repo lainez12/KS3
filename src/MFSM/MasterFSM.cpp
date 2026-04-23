@@ -185,6 +185,143 @@ namespace Kub3::MFSM
     }
 
     // ==========================================
+    // FSM TRANSITION DISPATCHER
+    // ==========================================
+
+    void MasterFSM::dispatch(const SystemEvent &event)
+    {
+        if (processStaticEvent(m_state, event))
+        {
+            return;
+        }
+
+        // 1. Calculate the next state based on current state + event
+        SystemState nextState = processTransition(m_state, event);
+
+        // 2. If the state changed, apply it and trigger entry actions
+        if (nextState.index() != m_state.index())
+        {
+            m_state = nextState;
+            onStateEntered(m_state);
+        }
+    }
+
+    // A static event is an event not changing the FSM state
+    bool MasterFSM::processStaticEvent(const SystemState &currentState, const SystemEvent &event)
+    {
+        bool processed     = true; // Whether the event has been processed by the function
+        const auto visitor = overloadedCallable(
+            // Camera parameter command
+            [&](const StateIdle &, const CmdCameraParamUpdate &cmd) { emit s_requestCameraParamUpdate(cmd.cameraId, cmd.kind, cmd.value); },
+            [&](const StateOperating &, const CmdCameraParamUpdate &cmd) { emit s_requestCameraParamUpdate(cmd.cameraId, cmd.kind, cmd.value); },
+#if defined(BUILD_DEBUG)
+            [&](const auto &, const CmdCameraParamUpdate &cmd) { emit s_requestCameraParamUpdate(cmd.cameraId, cmd.kind, cmd.value); },
+#endif
+            // Fallback: event not handled
+            [&](const auto &, const auto &) { processed = false; });
+
+        std::visit(visitor, currentState, event);
+        return processed;
+    }
+
+    // Mathematically pure function mapping: (State x Event) -> State
+    SystemState MasterFSM::processTransition(const SystemState &currentState, const SystemEvent &event)
+    {
+        const auto visitor = overloadedCallable(
+            // Global Event Overrides (Can happen in almost any state)
+            [&](const auto &, const EvEmergencyStopTriggered &e) -> SystemState { return StateEmergencyStop{e.reason}; },
+            [&](const auto &, const EvPowerOff &e) -> SystemState { return StatePowerOff{}; },
+            // Booting -> Waiting for initialization
+            [&](const StateBooting &, const EvHardwareReady &) -> SystemState { return StateWaitingInitialization{}; },
+            // Booting -> Error
+            [&](const StateBooting &, const EvHardwareError &e) -> SystemState { return StateError{e.reason}; },
+            // Waiting for initialization -> Initialization
+            [&](const StateWaitingInitialization &, const CmdStartInitialization &) -> SystemState { return StateInitialization{}; },
+            // Initialization -> Idle
+            [&](const StateInitialization &, const EvInitializationComplete &) -> SystemState { return StateIdle{}; },
+            // Idle -> Operating Drawer (Insert/Eject)
+            [&](const StateIdle &, const CmdOperateDrawer &cmd) -> SystemState {
+                const Payloads::DrawerOpPayload payload{
+                    .kind   = cmd.operation,
+                    .target = cmd.target,
+                };
+                return StateOperating{payload};
+            },
+            // Operating -> Idle
+            [&](const StateOperating &, const EvServiceSuccess &c) -> SystemState { return StateIdle{}; },
+            // Operating -> Error
+            [&](const StateOperating &, const EvServiceError &e) -> SystemState { return StateError{e.reason}; },
+            // Error -> Idle (Reset)
+            [&](const StateError &, const CmdResetError &) -> SystemState { return StateIdle{}; },
+            // Fallback: If an event is not handled for the current state, remain in current state.
+            [&](const auto &, const auto &) -> SystemState {
+                qWarning() << "MFSM: Ignored Event in current state.";
+                return currentState;
+            });
+
+        return std::visit(visitor, currentState, event);
+    }
+
+    // Actions executed exactly ONCE upon entering a state
+    void MasterFSM::onStateEntered(const SystemState &newState)
+    {
+        // We ALWAYS send the updated state to the UI so it can update its visual state machine
+        const auto nameExtractor = overloadedCallable{
+            [](const StateBooting &) { return QString("BOOTING"); },
+            [](const StateWaitingInitialization &) { return QString("WAITING_INITIALIZATION"); },
+            [](const StateInitialization &) { return QString("INITIALIZING"); },
+            [](const StateIdle &) { return QString("IDLE"); },
+            [](const StateOperating &) { return QString("OPERATING"); },
+            [](const StateError &) { return QString("ERROR"); },
+            [](const StateEmergencyStop &) { return QString("EMERGENCY_STOP"); },
+            [](const StatePowerOff &) { return QString("POWER_OFF"); },
+        };
+
+        emit s_stateChanged(std::visit(nameExtractor, newState));
+
+        // 2. Perform Physical State Entry Actions
+        const auto entryActions = overloadedCallable{
+            [&](const StateBooting &) { /* no-op */ },
+            [&](const StateWaitingInitialization &) { /* no-op */ },
+            [&](const StateInitialization &) { m_homingService->initialize(); },
+            [&](const StateIdle &) { stopAllServices(); },
+            [&](const StateOperating &s) {
+                std::visit(
+                    overloadedCallable{
+                        [&](const Payloads::DrawerOpPayload &payload) {
+                            if (payload.kind == DrawerOperation::EJECT)
+                                m_drawerService->eject(payload.target);
+                            else if (payload.kind == DrawerOperation::INSERT)
+                                m_drawerService->insert(payload.target);
+                        },
+                        [&](const Payloads::HomingOpPayload &payload) {
+                            m_homingService->home(payload.target);
+                        }},
+                    s.payload);
+            },
+            [&](const StateError &s) {
+                stopAllServices();
+                emit s_errorOccurred(QString::fromStdString(s.message));
+            },
+            [&](const StateEmergencyStop &s) {
+                stopAllServices();
+                emit s_errorOccurred(QString::fromStdString(s.reason));
+            },
+            [&](const StatePowerOff &s) {
+                stopAllServices();
+                // TODO: initiate homing if possible and wait for it to end before poweroff
+            }};
+
+        std::visit(entryActions, newState);
+    }
+
+    void MasterFSM::stopAllServices(void)
+    {
+        m_homingService->stop();
+        m_drawerService->stop();
+    }
+
+    // ==========================================
     // UI SLOTS (User Inputs)
     // ==========================================
 
@@ -216,134 +353,49 @@ namespace Kub3::MFSM
         dispatch(EvPowerOff{});
     }
 
-    // ==========================================
-    // FSM TRANSITION DISPATCHER
-    // ==========================================
-
-    void MasterFSM::dispatch(const SystemEvent &event)
+    void MasterFSM::ps_requestExposureUpdate(const QString &camId, double exposureRatio)
     {
-        // 1. Calculate the next state based on current state + event
-        SystemState nextState = processTransition(m_state, event);
-
-        // 2. If the state changed, apply it and trigger entry actions
-        if (nextState.index() != m_state.index())
-        {
-            m_state = nextState;
-            onStateEntered(m_state);
-        }
+        dispatch(CmdCameraParamUpdate{
+            .cameraId = camId,
+            .kind     = HAL::Vision::CameraParamKind::EXPOSURE,
+            .value    = exposureRatio,
+        });
     }
 
-    // Mathematically pure function mapping: (State x Event) -> State
-    SystemState MasterFSM::processTransition(const SystemState &currentState, const SystemEvent &event)
+    void MasterFSM::ps_requestGainUpdate(const QString &camId, double gainRatio)
     {
-        const auto visitor = overloadedCallable(
-            // Global Event Overrides (Can happen in almost any state)
-            [&](const auto &, const EvEmergencyStopTriggered &e) -> SystemState { return StateEmergencyStop{e.reason}; },
-            [&](const auto &, const EvPowerOff &e) -> SystemState { return StatePowerOff{}; },
-
-            // Booting -> Waiting for initialization
-            [&](const StateBooting &, const EvHardwareReady &) -> SystemState { return StateWaitingInitialization{}; },
-
-            // Booting -> Error
-            [&](const StateBooting &, const EvHardwareError &e) -> SystemState { return StateError{e.reason}; },
-
-            // Waiting for initialization -> Initialization
-            [&](const StateWaitingInitialization &, const CmdStartInitialization &) -> SystemState { return StateInitialization{}; },
-
-            // Initialization -> Idle
-            [&](const StateInitialization &, const EvInitializationComplete &) -> SystemState { return StateIdle{}; },
-
-            // Idle -> Operating Drawer (Insert/Eject)
-            [&](const StateIdle &, const CmdOperateDrawer &cmd) -> SystemState {
-                const Payloads::DrawerOpPayload payload{
-                    .kind   = cmd.operation,
-                    .target = cmd.target,
-                };
-                return StateOperating{payload};
-            },
-
-            // Operating -> Idle
-            [&](const StateOperating &, const EvServiceSuccess &c) -> SystemState { return StateIdle{}; },
-
-            // Operating -> Error
-            [&](const StateOperating &, const EvServiceError &e) -> SystemState { return StateError{e.reason}; },
-
-            // Error -> Idle (Reset)
-            [&](const StateError &, const CmdResetError &) -> SystemState { return StateIdle{}; },
-
-            // Fallback: If an event is not handled for the current state, remain in current state.
-            [&](const auto &, const auto &) -> SystemState {
-                qWarning() << "MFSM: Ignored Event in current state.";
-                return currentState;
-            });
-
-        return std::visit(visitor, currentState, event);
+        dispatch(CmdCameraParamUpdate{
+            .cameraId = camId,
+            .kind     = HAL::Vision::CameraParamKind::GAIN,
+            .value    = gainRatio,
+        });
     }
 
-    // Actions executed exactly ONCE upon entering a state
-    void MasterFSM::onStateEntered(const SystemState &newState)
+    void MasterFSM::ps_requestFrameRateUpdate(const QString &camId, double framerate)
     {
-        // We ALWAYS send the updated state to the UI so it can update its visual state machine
-        const auto nameExtractor = overloadedCallable{
-            [](const StateBooting &) { return QString("BOOTING"); },
-            [](const StateWaitingInitialization &) { return QString("WAITING_INITIALIZATION"); },
-            [](const StateInitialization &) { return QString("INITIALIZING"); },
-            [](const StateIdle &) { return QString("IDLE"); },
-            [](const StateOperating &) { return QString("OPERATING"); },
-            [](const StateError &) { return QString("ERROR"); },
-            [](const StateEmergencyStop &) { return QString("EMERGENCY_STOP"); },
-            [](const StatePowerOff &) { return QString("POWER_OFF"); },
-        };
-
-        emit s_stateChanged(std::visit(nameExtractor, newState));
-
-        // 2. Perform Physical State Entry Actions
-        const auto entryActions = overloadedCallable{
-            [&](const StateBooting &) { /* no-op */ },
-
-            [&](const StateWaitingInitialization &) { /* no-op */ },
-
-            [&](const StateInitialization &) { m_homingService->initialize(); },
-
-            [&](const StateIdle &) { stopAllServices(); },
-
-            [&](const StateOperating &s) {
-                std::visit(
-                    overloadedCallable{
-                        [&](const Payloads::DrawerOpPayload &payload) {
-                            if (payload.kind == DrawerOperation::EJECT)
-                                m_drawerService->eject(payload.target);
-                            else if (payload.kind == DrawerOperation::INSERT)
-                                m_drawerService->insert(payload.target);
-                        },
-                        [&](const Payloads::HomingOpPayload &payload) {
-                            m_homingService->home(payload.target);
-                        }},
-                    s.payload);
-            },
-
-            [&](const StateError &s) {
-                stopAllServices();
-                emit s_errorOccurred(QString::fromStdString(s.message));
-            },
-
-            [&](const StateEmergencyStop &s) {
-                stopAllServices();
-                emit s_errorOccurred(QString::fromStdString(s.reason));
-            },
-
-            [&](const StatePowerOff &s) {
-                stopAllServices();
-                // TODO: initiate homing if possible and wait for it to end before poweroff
-            }};
-
-        std::visit(entryActions, newState);
+        dispatch(CmdCameraParamUpdate{
+            .cameraId = camId,
+            .kind     = HAL::Vision::CameraParamKind::FRAMERATE,
+            .value    = framerate,
+        });
     }
 
-    void MasterFSM::stopAllServices(void)
+    void MasterFSM::ps_requestCenteredZoomUpdate(const QString &camId, double zoomFactor)
     {
-        m_homingService->stop();
-        m_drawerService->stop();
+        dispatch(CmdCameraParamUpdate{
+            .cameraId = camId,
+            .kind     = HAL::Vision::CameraParamKind::CENTERED_ZOOM,
+            .value    = zoomFactor,
+        });
+    }
+
+    void MasterFSM::ps_requestROIUpdate(const QString &camId, const QRect &roi)
+    {
+        dispatch(CmdCameraParamUpdate{
+            .cameraId = camId,
+            .kind     = HAL::Vision::CameraParamKind::REGION_OF_INTEREST,
+            .value    = roi,
+        });
     }
 
 } // namespace Kub3::MFSM
