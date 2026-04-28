@@ -501,11 +501,11 @@ namespace Kub3::HAL
 
         // Create Sensors
         // --- Encoders
-        auto zLeftEncoder  = std::make_shared<Sensor<int32_t>>(m_repo, Z_LEFT_ENCODER, static_cast<int32_t>(0), &encoderValueParser);
-        auto zRightEncoder = std::make_shared<Sensor<int32_t>>(m_repo, Z_RIGHT_ENCODER, static_cast<int32_t>(0), &encoderValueParser);
-        auto zBackEncoder  = std::make_shared<Sensor<int32_t>>(m_repo, Z_BACK_ENCODER, static_cast<int32_t>(0), &encoderValueParser);
-        auto maskEncoder   = std::make_shared<Sensor<int32_t>>(m_repo, MASK_ENCODER, static_cast<int32_t>(0), &encoderValueParser);
-        auto waferEncoder  = std::make_shared<Sensor<int32_t>>(m_repo, WAFER_ENCODER, static_cast<int32_t>(0), &encoderValueParser);
+        auto zLeftEncoder  = std::make_shared<Sensor<int32_t>>(m_repo, Z_LEFT_ENCODER, INT32_MIN, &encoderValueParser);
+        auto zRightEncoder = std::make_shared<Sensor<int32_t>>(m_repo, Z_RIGHT_ENCODER, INT32_MIN, &encoderValueParser);
+        auto zBackEncoder  = std::make_shared<Sensor<int32_t>>(m_repo, Z_BACK_ENCODER, INT32_MIN, &encoderValueParser);
+        auto maskEncoder   = std::make_shared<Sensor<int32_t>>(m_repo, MASK_ENCODER, INT32_MIN, &encoderValueParser);
+        auto waferEncoder  = std::make_shared<Sensor<int32_t>>(m_repo, WAFER_ENCODER, INT32_MIN, &encoderValueParser);
         // --- Limit switches
         auto zLeftHighLimit  = std::make_shared<Sensor<bool>>(m_repo, Z_LEFT_HIGH_LIMIT, false, &limitSwitchParser);
         auto zLeftLowLimit   = std::make_shared<Sensor<bool>>(m_repo, Z_LEFT_LOW_LIMIT, false, &limitSwitchParser);
