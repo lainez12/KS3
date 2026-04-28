@@ -31,22 +31,30 @@ namespace Kub3::MFSM
             Services::HomingTarget::Type target;
         };
 
+        // Represents the mechanical phase of the alignment process
+        enum class AlignmentPhase
+        {
+            Free,            // X, Y, Theta OK | Cameras OK | Z Manual OK
+            ApplyingContact, // X, Y, Theta LOCKED | Cameras OK | Z Automated ONLY
+            InContact,       // X, Y, Theta LOCKED | Cameras OK | Z Manual OK
+            Separating       // X, Y, Theta LOCKED | Cameras OK | Z Automated ONLY
+        };
+
+        struct AlignmentOpPayload {
+            AlignmentPhase phase = AlignmentPhase::Free;
+            bool isAutoAlignment; // TODO: Implement when creating the automatic alignment algorithm
+        };
+
         using OperatingPayload = std::variant<
             DrawerOpPayload,
-            HomingOpPayload
-            // TODO: add more kinds of payload
-            >;
+            HomingOpPayload,
+            AlignmentOpPayload>;
 
     } // namespace Payloads
 
     // -------------
     // --- STATES
     // -------------
-
-    enum class ProcessServiceKind
-    {
-        DRAWER
-    };
 
     struct StateBooting {
         uint32_t ticksElapsed = 0;

@@ -29,15 +29,15 @@ namespace Kub3::UI::ViewModels
         if (!valueOpt.has_value())
             return;
 
-        auto qKey    = QString::fromStdString(key);
-        auto visitor = overloadedCallable(
+        auto qKey   = QString::fromStdString(key);
+        auto museum = overloadedCallable(
             [&](bool v) { emit s_booleanSensorUpdate(qKey, v); },
             [&](int32_t v) { emit s_integerSensorUpdate(qKey, v); },
             [&](uint16_t v) { emit s_unsignedIntegerSensorUpdate(qKey, v); },
             [&](uint32_t v) { emit s_unsignedIntegerSensorUpdate(qKey, v); },
             [&](auto) { qWarning() << "[MachineStatusViewModel] unknown sensor changed notification received."; });
 
-        std::visit(visitor, valueOpt.value());
+        std::visit(museum, valueOpt.value());
     }
 
 }

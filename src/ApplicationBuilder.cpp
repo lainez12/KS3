@@ -3,7 +3,10 @@
 #include <ApplicationBuilder.h>
 
 // Services
+#include <Services/Alignment/AlignmentService.h>
+#include <Services/Contact/ContactService.h>
 #include <Services/Homing/HomingService.h>
+#include <Services/Vision/VisionService.h>
 #if defined(KUB_MODEL_4) || defined(KUB_MODEL_6)
 #include <Services/Drawers/SingleConveyorDrawerService.h>
 #elif defined(KUB_MODEL_8)
@@ -43,20 +46,24 @@ namespace Kub3
     {
         qInfo() << "Building Tier 2 (Logic)...";
 
-        m_drawerService = std::make_shared<ConveyorDrawerService>(
-            m_hwManager->getActuatorRegistry(),
-            m_repo,
-            m_processConfig);
+        auto registry = m_hwManager->getActuatorRegistry();
 
-        m_homingService = std::make_shared<Services::HomingService>(
-            m_hwManager->getActuatorRegistry(),
-            m_repo,
-            m_processConfig);
+        m_drawerService    = std::make_shared<ConveyorDrawerService>(registry, m_repo, m_processConfig);
+        m_homingService    = std::make_shared<Services::HomingService>(registry, m_repo, m_processConfig);
+        m_visionService    = std::make_shared<Services::VisionService>(registry, m_repo, m_processConfig);
+        m_contactService   = std::make_shared<Services::ContactService>(registry, m_repo, m_processConfig, m_hwConfig);
+        m_alignmentService = std::make_shared<Services::AlignmentService>(registry, m_repo, m_processConfig);
 
         // Standard Qt Worker Object instantiation
         // Parented to qApp to ensure no memory leaks if run() is bypassed
         m_logicThread = new QThread(qApp);
-        m_masterFSM   = new MFSM::MasterFSM(m_repo, m_homingService, m_drawerService);
+        m_masterFSM   = new MFSM::MasterFSM(
+            m_repo,
+            m_homingService,
+            m_drawerService,
+            m_alignmentService,
+            m_visionService,
+            m_contactService);
 
         // Move the FSM to the logic thread
         m_masterFSM->moveToThread(m_logicThread);

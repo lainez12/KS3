@@ -57,6 +57,9 @@ namespace Kub3
         // --- Services
         Shared<Services::IDrawerService> m_drawerService;
         Shared<Services::IHomingService> m_homingService;
+        Shared<Services::IVisionService> m_visionService;
+        Shared<Services::IContactService> m_contactService;
+        Shared<Services::IAlignmentService> m_alignmentService;
 
         // Tier 1: UI
         // --- Windows

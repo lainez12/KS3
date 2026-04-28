@@ -51,6 +51,7 @@ namespace Kub3::Config
     typedef struct hardware_config_s {
         std::unordered_map<QString, motor_config_t> motors;
         std::unordered_map<QString, camera_config_t> cameras;
+        std::unordered_map<QString, double> adc_to_gf_factors;
     } hardware_config_t;
 
     ///////////////////////////
@@ -63,6 +64,13 @@ namespace Kub3::Config
     typedef struct process_config_s {
         // Map [id] -> [map of kinematic profiles for motor]
         std::unordered_map<std::string, KinematicProfiles> kinematic_profiles;
+
+        // Cameras distances
+        double min_camera_distance_mm = 0.0;
+        // Force thresholds
+        double hw_crash_force_limit_gf = 0.0;
+        double max_force_gf            = 0.0;
+        double contact_threshold_gf    = 0.0;
 
         [[nodiscard]] kinematic_profile_t getKinematicProfile(const std::string &motorId, const std::string &profileName) const
         {

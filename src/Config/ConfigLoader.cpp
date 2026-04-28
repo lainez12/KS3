@@ -13,7 +13,7 @@ namespace Kub3::Config
     {
         if (!settings.contains(key))
         {
-            throw std::runtime_error(std::format("CRITICAL: Missing hardware config key '{}' in group '{}'", key.toStdString(), group));
+            throw std::runtime_error(std::format("CRITICAL: Missing config key '{}' in group '{}'", key.toStdString(), group));
         }
         return settings.value(key);
     }
@@ -65,10 +65,10 @@ namespace Kub3::Config
                 throw std::runtime_error(std::format("CRITICAL: Unknown motor type '{}' for '{}'", type.toStdString(), motor.id));
             }
 
-            config.motors.insert({group, motor});
+            config.motors.emplace(group, motor);
             settings.endGroup();
         }
-        settings.endGroup();
+        settings.endGroup(); // "motors"
 
         // LOAD CAMERAS PARAMETERS
         settings.beginGroup("cameras");
@@ -79,16 +79,25 @@ namespace Kub3::Config
             camera_config_t camera = {
                 .id                = group.toStdString(),
                 .serialNumber      = getRequiredValue(settings, "serial_number", group).toString().toStdString(),
-                .maxExposureUs     = getRequiredValue(settings, "max_exposure_us", group).toString().toDouble(),
-                .defaultExposureUs = getRequiredValue(settings, "default_exposure_us", group).toString().toDouble(),
-                .maxGainDb         = getRequiredValue(settings, "max_gain_db", group).toString().toDouble(),
-                .defaultGainDb     = getRequiredValue(settings, "default_gain_db", group).toString().toDouble(),
+                .maxExposureUs     = getRequiredValue(settings, "max_exposure_us", group).toDouble(),
+                .defaultExposureUs = getRequiredValue(settings, "default_exposure_us", group).toDouble(),
+                .maxGainDb         = getRequiredValue(settings, "max_gain_db", group).toDouble(),
+                .defaultGainDb     = getRequiredValue(settings, "default_gain_db", group).toDouble(),
             };
 
-            config.cameras.insert({group, camera});
-            settings.endGroup();
+            config.cameras.emplace(group, camera);
+            settings.endGroup(); // group
         }
-        settings.endGroup();
+        settings.endGroup(); // "cameras"
+
+        settings.beginGroup("forceSensors");
+        for (const QString &group : settings.childGroups())
+        {
+            settings.beginGroup(group);
+            config.adc_to_gf_factors.emplace(group, getRequiredValue(settings, "adc_to_gram_force_factor", group).toDouble());
+            settings.endGroup(); // group
+        }
+        settings.endGroup(); // "forceSensors"
 
         return config;
     }
@@ -146,6 +155,18 @@ namespace Kub3::Config
             settings.endGroup(); // motorGroup
         }
         settings.endGroup(); // "kinematics"
+
+        // LOAD CAMERAS DATA
+        settings.beginGroup("cameras");
+        config.min_camera_distance_mm = getRequiredValue(settings, "min_camera_distance_mm", std::string("cameras")).toDouble();
+        settings.endGroup(); // "cameras"
+
+        const std::string forceLimitsGroup("forceLimits");
+        settings.beginGroup(forceLimitsGroup);
+        config.hw_crash_force_limit_gf = getRequiredValue(settings, "hw_crash_force_limit_gf", forceLimitsGroup).toDouble();
+        config.max_force_gf            = getRequiredValue(settings, "max_force_gf", forceLimitsGroup).toDouble();
+        config.contact_threshold_gf    = getRequiredValue(settings, "contact_threshold_gf", forceLimitsGroup).toDouble();
+        settings.endGroup(); // forceLimitsGroup
 
         return config;
     }

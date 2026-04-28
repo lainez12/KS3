@@ -27,7 +27,7 @@ namespace Kub3::Services
             return;
         }
 
-        const int32_t position = HAL::MS::readInt(m_repo, MASK_ENCODER);
+        const int32_t position = HAL::MS::readInt32(m_repo, MASK_ENCODER);
 
         // Checks if the current position is already beyond the deceleration threshold
         if (position >= m_finePositionThreshold)
@@ -59,7 +59,7 @@ namespace Kub3::Services
 
         if (m_step == Step::FastApproach)
         {
-            const int32_t position = HAL::MS::readInt(m_repo, MASK_ENCODER);
+            const int32_t position = HAL::MS::readInt32(m_repo, MASK_ENCODER);
 
             if (position >= m_finePositionThreshold)
             {

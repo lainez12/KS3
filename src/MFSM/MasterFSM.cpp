@@ -1,8 +1,9 @@
 #include <QDebug>
 
-#include "HAL/MachineStatus/sensors_labels.h"
-#include "HAL/MachineStatus/utils.h"
-#include "MFSM/MasterFSM.h"
+#include <HAL/MachineStatus/sensors_labels.h>
+#include <HAL/MachineStatus/utils.h>
+#include <MFSM/MasterFSM.h>
+#include <Services/Contact/ContactService.h>
 
 namespace
 {
@@ -18,12 +19,18 @@ namespace Kub3::MFSM
     MasterFSM::MasterFSM(Shared<HAL::MS::IMachineStatusRepo> repo,
                          Shared<Services::IHomingService> homingService,
                          Shared<Services::IDrawerService> drawerService,
+                         Shared<Services::IAlignmentService> alignmentService,
+                         Shared<Services::IVisionService> visionService,
+                         Shared<Services::IContactService> contactService,
                          QObject *parent) :
         QObject(parent),
         m_state(StateBooting{}),
         m_repo(std::move(repo)),
         m_homingService(std::move(homingService)),
         m_drawerService(std::move(drawerService)),
+        m_alignmentService(std::move(alignmentService)),
+        m_visionService(std::move(visionService)),
+        m_contactService(std::move(contactService)),
         m_logicTimer(this)
     {
         connect(&m_logicTimer, &QTimer::timeout, this, &MasterFSM::onLogicTick);
@@ -43,7 +50,7 @@ namespace Kub3::MFSM
     {
         checkHardwareSafety(); // Unconditional Safety Check (e.g. Physical Emergency-Stop Button)
 
-        const auto visitor = overloadedCallable(
+        const auto museum = overloadedCallable(
             [&](StateBooting &bootState) { onStateBootingTick(bootState); },
             [&](StateWaitingInitialization &) { /* Wait for trigger */ },
             [&](StateInitialization &initState) { onStateInitializationTick(initState); },
@@ -53,7 +60,7 @@ namespace Kub3::MFSM
             [&](StateEmergencyStop &) { /* Ensure actuators are disabled */ },
             [&](StatePowerOff &powerOffState) { onStatePowerOffTick(powerOffState); });
 
-        std::visit(visitor, m_state); // Execute State-Specific Continuous Logic
+        std::visit(museum, m_state); // Execute State-Specific Continuous Logic
     }
 
     void MasterFSM::onStateBootingTick(StateBooting &bootState)
@@ -138,25 +145,42 @@ namespace Kub3::MFSM
 
     void MasterFSM::onStateOperatingTick(StateOperating &op)
     {
-        Services::IService *activeService = nullptr;
+        const auto museum = overloadedCallable{
+            [&](const Payloads::DrawerOpPayload &) { basicOperatingServiceTick(m_drawerService.get()); },
+            [&](const Payloads::HomingOpPayload &) { basicOperatingServiceTick(m_homingService.get()); },
+            [&](const Payloads::AlignmentOpPayload &payload) {
+                m_alignmentService->tick();
+                m_visionService->tick();
+                m_contactService->tick();
 
-        std::visit(
-            overloadedCallable{
-                [&](const Payloads::DrawerOpPayload &) { activeService = m_drawerService.get(); },
-                [&](const Payloads::HomingOpPayload &) { activeService = m_homingService.get(); },
+                if (payload.phase == Payloads::AlignmentPhase::ApplyingContact ||
+                    payload.phase == Payloads::AlignmentPhase::Separating)
+                {
+                    const Services::ServiceStatus zStatus = m_contactService->getStatus();
+
+                    if (zStatus == Services::ServiceStatus::Success)
+                        dispatch(EvContactSequenceComplete{});
+                    else if (zStatus == Services::ServiceStatus::Error)
+                        dispatch(EvServiceError{.reason = m_contactService->getErrorReason()});
+                }
             },
-            op.payload);
+        };
 
-        if (!activeService)
+        std::visit(museum, op.payload);
+    }
+
+    void MasterFSM::basicOperatingServiceTick(Services::IService *service)
+    {
+        if (!service)
             return;
-        activeService->tick(); // Tick the active service
+        service->tick();
 
-        const Services::ServiceStatus status = activeService->getStatus();
+        const Services::ServiceStatus status = service->getStatus();
 
         if (status == Services::ServiceStatus::Success)
             dispatch(EvServiceSuccess{});
         else if (status == Services::ServiceStatus::Error)
-            dispatch(EvServiceError{.reason = activeService->getErrorReason()});
+            dispatch(EvServiceError{.reason = service->getErrorReason()});
     }
 
     void MasterFSM::onStatePowerOffTick(StatePowerOff &powerOffState)
@@ -191,14 +215,12 @@ namespace Kub3::MFSM
     void MasterFSM::dispatch(const SystemEvent &event)
     {
         if (processStaticEvent(m_state, event))
-        {
             return;
-        }
 
-        // 1. Calculate the next state based on current state + event
+        // Calculate the next state based on current state + event
         SystemState nextState = processTransition(m_state, event);
 
-        // 2. If the state changed, apply it and trigger entry actions
+        // If the state changed, apply it and trigger entry actions
         if (nextState.index() != m_state.index())
         {
             m_state = nextState;
@@ -209,25 +231,65 @@ namespace Kub3::MFSM
     // A static event is an event not changing the FSM state
     bool MasterFSM::processStaticEvent(const SystemState &currentState, const SystemEvent &event)
     {
-        bool processed     = true; // Whether the event has been processed by the function
-        const auto visitor = overloadedCallable(
+        bool processed    = true; // Whether the event has been processed by the function
+        const auto museum = overloadedCallable(
             // Camera parameter command
             [&](const StateIdle &, const CmdCameraParamUpdate &cmd) { emit s_requestCameraParamUpdate(cmd.cameraId, cmd.kind, cmd.value); },
             [&](const StateOperating &, const CmdCameraParamUpdate &cmd) { emit s_requestCameraParamUpdate(cmd.cameraId, cmd.kind, cmd.value); },
 #if defined(BUILD_DEBUG)
             [&](const auto &, const CmdCameraParamUpdate &cmd) { emit s_requestCameraParamUpdate(cmd.cameraId, cmd.kind, cmd.value); },
 #endif
+            // --- ALIGNMENT PAD ---
+            [&](const StateOperating &s, const CmdAlignmentPad &cmd) {
+                if (const auto *alignPayload = std::get_if<Payloads::AlignmentOpPayload>(&s.payload))
+                {
+                    if (alignPayload->phase != Payloads::AlignmentPhase::Free)
+                    {
+                        qWarning() << "MFSM: Alignment movement rejected. Incompatible alignment phase:" << static_cast<int>(alignPayload->phase);
+                        return;
+                    }
+                    if (!alignPayload->isAutoAlignment) // Only accept manual pad commands in manual mode
+                        this->processCmdAlignmentPad(cmd);
+                }
+                else
+                    qWarning() << "MFSM: Alignment movement rejected. Not in Alignment mode.";
+            },
+            // --- VISION PAD ---
+            [&](const StateOperating &s, const CmdVisionPad &cmd) {
+                if (const auto *alignPayload = std::get_if<Payloads::AlignmentOpPayload>(&s.payload))
+                {
+                    // Only block vision pad movements if Auto-Alignment algorithm is running.
+                    if (!alignPayload->isAutoAlignment)
+                        this->processCmdVisionPad(cmd);
+                }
+                else
+                    qWarning() << "MFSM: Vision movement rejected. Not in Alignment mode.";
+            },
+            // --- Z PAD ---
+            [&](const StateOperating &s, const CmdZAxisPad &cmd) {
+                if (const auto *p = std::get_if<Payloads::AlignmentOpPayload>(&s.payload))
+                {
+                    // Pad-controlled Z movements are only allowed in Free or InContact
+                    if (p->phase == Payloads::AlignmentPhase::ApplyingContact ||
+                        p->phase == Payloads::AlignmentPhase::Separating)
+                    {
+                        qWarning() << "MFSM: Z movement rejected. Z is currently automated.";
+                        return;
+                    }
+                    processCmdZPad(cmd); // Routes to ContactService
+                }
+            },
             // Fallback: event not handled
             [&](const auto &, const auto &) { processed = false; });
 
-        std::visit(visitor, currentState, event);
+        std::visit(museum, currentState, event);
         return processed;
     }
 
     // Mathematically pure function mapping: (State x Event) -> State
     SystemState MasterFSM::processTransition(const SystemState &currentState, const SystemEvent &event)
     {
-        const auto visitor = overloadedCallable(
+        const auto museum = overloadedCallable(
             // Global Event Overrides (Can happen in almost any state)
             [&](const auto &, const EvEmergencyStopTriggered &e) -> SystemState { return StateEmergencyStop{e.reason}; },
             [&](const auto &, const EvPowerOff &e) -> SystemState { return StatePowerOff{}; },
@@ -247,6 +309,40 @@ namespace Kub3::MFSM
                 };
                 return StateOperating{payload};
             },
+            // Idle -> Operating (Alignment)
+            [&](const StateIdle &, const CmdEnterAlignmentMode &cmd) -> SystemState {
+                return StateOperating{Payloads::AlignmentOpPayload{.isAutoAlignment = cmd.autoMode}};
+            },
+            // Operating (Alignment) -> Idle (Only if alignment is manually stopped/finished)
+            [&](const StateOperating &s, const CmdExitAlignmentMode &) -> SystemState {
+                if (std::holds_alternative<Payloads::AlignmentOpPayload>(s.payload))
+                    return StateIdle{};
+                return currentState; // Reject if we are homing or moving drawers
+            },
+            // Operating (Alignment) -> Start running contact routine
+            [&](StateOperating &s, const CmdApplyContact &cmd) -> SystemState {
+                if (auto *p = std::get_if<Payloads::AlignmentOpPayload>(&s.payload)) // Ignore if not in alignment mode
+                {
+                    m_alignmentService->setHardwareLock(true);                                                    // Force halt alignment and lock them
+                    m_contactService->startContactRoutine(Services::BasicContactPayload{.forceGF = cmd.forceGF}); // Start the ContactService sequence
+                    p->phase = Payloads::AlignmentPhase::ApplyingContact;                                         // Update alignment phase
+                }
+                return s; // Leave state unchanged (maybe I should handle all "static" events like this)
+            },
+            // Operating (Alignment) -> Handle contact routine finished
+            [&](StateOperating &s, const EvContactSequenceComplete &) -> SystemState {
+                if (auto *p = std::get_if<Payloads::AlignmentOpPayload>(&s.payload))
+                {
+                    if (p->phase == Payloads::AlignmentPhase::ApplyingContact)
+                        p->phase = Payloads::AlignmentPhase::InContact; // Safely locked in contact
+                    else if (p->phase == Payloads::AlignmentPhase::Separating)
+                    {
+                        p->phase = Payloads::AlignmentPhase::Free;
+                        m_alignmentService->setHardwareLock(false); // Unlock alignment
+                    }
+                }
+                return s; // Leave state unchanged
+            },
             // Operating -> Idle
             [&](const StateOperating &, const EvServiceSuccess &c) -> SystemState { return StateIdle{}; },
             // Operating -> Error
@@ -259,7 +355,7 @@ namespace Kub3::MFSM
                 return currentState;
             });
 
-        return std::visit(visitor, currentState, event);
+        return std::visit(museum, currentState, event);
     }
 
     // Actions executed exactly ONCE upon entering a state
@@ -294,8 +390,9 @@ namespace Kub3::MFSM
                             else if (payload.kind == DrawerOperation::INSERT)
                                 m_drawerService->insert(payload.target);
                         },
-                        [&](const Payloads::HomingOpPayload &payload) {
-                            m_homingService->home(payload.target);
+                        [&](const Payloads::HomingOpPayload &payload) { m_homingService->home(payload.target); },
+                        [&](const Payloads::AlignmentOpPayload &p) {
+                            m_alignmentService->setHardwareLock(p.phase != Payloads::AlignmentPhase::Free);
                         }},
                     s.payload);
             },
@@ -319,6 +416,52 @@ namespace Kub3::MFSM
     {
         m_homingService->stop();
         m_drawerService->stop();
+        m_alignmentService->stop();
+        m_contactService->stop();
+        m_visionService->stop();
+    }
+
+    void MasterFSM::processCmdAlignmentPad(const CmdAlignmentPad &cmd)
+    {
+        const auto museum = overloadedCallable{
+            [&](const Services::AlignmentMoveStagePayload &p) {
+                m_alignmentService->moveStage(cmd.targetStage, p.dir);
+            },
+            [&](const Services::AlignmentStopStagePayload &) {
+                m_alignmentService->stopStage(cmd.targetStage);
+            },
+            [&](const Services::AlignmentSetKinematicModePayload &p) {
+                m_alignmentService->setKinematicProfile(cmd.targetStage, p.fineMode);
+            }};
+
+        std::visit(museum, cmd.operation);
+    }
+
+    void MasterFSM::processCmdVisionPad(const CmdVisionPad &cmd)
+    {
+        const auto museum = overloadedCallable{
+            [&](const Services::VisionMovePayload &p) {
+                m_visionService->moveManual(cmd.targetMotor, p.dir);
+            },
+            [&](const Services::VisionStopPayload &) {
+                m_visionService->stopManual(cmd.targetMotor);
+            },
+            [&](const Services::VisionSetKinematicModePayload &p) {
+                m_visionService->setKinematicMode(cmd.targetMotor, p.fineMode);
+            },
+            [&](const Services::VisionSetPushingModePayload &p) {
+                m_visionService->setPushingMode(p.enable);
+            }};
+
+        std::visit(museum, cmd.operation);
+    }
+
+    void MasterFSM::processCmdZPad(const CmdZAxisPad &cmd)
+    {
+        if (auto *payload = std::get_if<Services::ZMovePayload>(&cmd.operation))
+            m_contactService->moveZManual(payload->direction);
+        else if (auto *p = std::get_if<Services::ZStopPayload>(&cmd.operation))
+            m_contactService->stopZManual();
     }
 
     // ==========================================

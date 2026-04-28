@@ -4,7 +4,10 @@
 #include <variant>
 
 #include <HAL/Vision/identifiers.h>
+#include <Services/Alignment/IAlignmentService.h>
+#include <Services/Contact/IContactService.h>
 #include <Services/Drawers/IDrawerService.h>
+#include <Services/Vision/IVisionService.h>
 
 // ===============================================
 // Master Finite State Machine EVENTS Definitions
@@ -46,6 +49,32 @@ namespace Kub3::MFSM
         HAL::Vision::CameraParam value;
     };
 
+    struct CmdEnterAlignmentMode {
+        bool autoMode = false;
+    };
+
+    struct CmdExitAlignmentMode {};
+
+    struct CmdAlignmentPad {
+        Services::AlignmentStage targetStage;
+        Services::AlignmentPayload operation;
+    };
+
+    struct CmdZAxisPad {
+        Services::ZAxisPayload operation;
+    };
+
+    struct CmdVisionPad {
+        Services::VisionMotor targetMotor;
+        Services::VisionPayload operation;
+    };
+
+    struct CmdStartAutolevel {};
+
+    struct CmdApplyContact {
+        double forceGF;
+    };
+
     // Internal Service Events
 
     struct EvServiceSuccess {};
@@ -58,6 +87,8 @@ namespace Kub3::MFSM
         std::string reason;
     };
 
+    struct EvContactSequenceComplete {};
+
     struct EvPowerOff {};
 
     using SystemEvent = std::variant<
@@ -65,15 +96,27 @@ namespace Kub3::MFSM
         EvHardwareReady,
         EvHardwareError,
         EvInitializationComplete,
-        // UI commands
-        CmdStartInitialization,
-        CmdOperateDrawer,
+        // User commands
         CmdResetError,
+        CmdStartInitialization,
+        // --- Drawers/Conveyors
+        CmdOperateDrawer,
+        // --- Vision settings
         CmdCameraParamUpdate,
-        // Internal Service Event
+        // --- Horizontality & Contact
+        CmdStartAutolevel,
+        CmdApplyContact,
+        // --- Alignment
+        CmdEnterAlignmentMode,
+        CmdExitAlignmentMode,
+        CmdAlignmentPad,
+        CmdZAxisPad,
+        CmdVisionPad,
+        // Internal & Services events
         EvServiceSuccess,
         EvServiceError,
         EvEmergencyStopTriggered,
+        EvContactSequenceComplete,
         // Shutdown / power off
         EvPowerOff>;
 

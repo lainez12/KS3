@@ -67,6 +67,9 @@ qt_add_library(Kub3Core STATIC
     src/Services/Homing/tasks/Initialization/MaskConveyorInitTask.cpp
     src/Services/Homing/tasks/Initialization/WaferConveyorInitTask.cpp
     src/Services/Homing/tasks/Initialization/ZMotorsInitTask.cpp
+    src/Services/Alignment/AlignmentService.cpp
+    src/Services/Contact/ContactService.cpp
+    src/Services/Vision/VisionService.cpp
     ## HAL
     src/HAL/HardwareManager.cpp
     src/HAL/MachineStatus/MachineStatusRepo.cpp
@@ -122,6 +125,12 @@ qt_add_library(Kub3Core STATIC
     include/Services/Homing/tasks/Initialization/MaskConveyorInitTask.h
     include/Services/Homing/tasks/Initialization/WaferConveyorInitTask.h
     include/Services/Homing/tasks/Initialization/ZMotorsInitTask.h
+    include/Services/Alignment/IAlignmentService.h
+    include/Services/Alignment/AlignmentService.h
+    include/Services/Contact/IContactService.h
+    include/Services/Contact/ContactService.h
+    include/Services/Vision/IVisionService.h
+    include/Services/Vision/VisionService.h
     ## HAL
     include/HAL/HardwareManager.h
     include/HAL/MachineStatus/IMachineStatusRepo.h

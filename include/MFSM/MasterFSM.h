@@ -8,8 +8,11 @@
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
 #include <MFSM/events.h>
 #include <MFSM/states.h>
+#include <Services/Alignment/IAlignmentService.h>
+#include <Services/Contact/IContactService.h>
 #include <Services/Drawers/IDrawerService.h>
 #include <Services/Homing/IHomingService.h>
+#include <Services/Vision/IVisionService.h>
 
 namespace Kub3::MFSM
 {
@@ -21,6 +24,9 @@ namespace Kub3::MFSM
         explicit MasterFSM(Shared<HAL::MS::IMachineStatusRepo> repo,
                            Shared<Services::IHomingService> homingService,
                            Shared<Services::IDrawerService> drawerService,
+                           Shared<Services::IAlignmentService> alignmentService,
+                           Shared<Services::IVisionService> visionService,
+                           Shared<Services::IContactService> contactService,
                            QObject *parent = nullptr);
         ~MasterFSM(void) override = default;
 
@@ -52,18 +58,26 @@ namespace Kub3::MFSM
     private slots:
         // The Heartbeat (50Hz)
         void onLogicTick(void);
-
         void onStateBootingTick(StateBooting &bootState);
         void onStateInitializationTick(StateInitialization &state);
         void onStateOperatingTick(StateOperating &operatingState);
         void onStatePowerOffTick(StatePowerOff &powerOffState);
 
     private:
+        // Helpers
+        void basicOperatingServiceTick(Services::IService *service);
+
         // Core FSM Methods
         void dispatch(const SystemEvent &event);
         [[nodiscard]] bool processStaticEvent(const SystemState &currentState, const SystemEvent &event);
         [[nodiscard]] SystemState processTransition(const SystemState &currentState, const SystemEvent &event);
         void onStateEntered(const SystemState &newState);
+
+        // Specific event processing methods
+        void processCmdAlignmentPad(const CmdAlignmentPad &cmd);
+        void processCmdZPad(const CmdZAxisPad &cmd);
+        void processCmdVisionPad(const CmdVisionPad &cmd);
+
         // Safety Monitors
         void checkHardwareSafety();
         void stopAllServices();
@@ -74,8 +88,11 @@ namespace Kub3::MFSM
         QTimer m_logicTimer;                        // Tick timer
 
         // Services
-        Shared<Services::IHomingService> m_homingService; // Homing / Initialization Service
-        Shared<Services::IDrawerService> m_drawerService; // Drawer Service
+        Shared<Services::IHomingService> m_homingService;       // Homing / Initialization Service
+        Shared<Services::IDrawerService> m_drawerService;       // Drawer Service
+        Shared<Services::IAlignmentService> m_alignmentService; // Alignment Service
+        Shared<Services::IVisionService> m_visionService;
+        Shared<Services::IContactService> m_contactService;
     };
 
 } // namespace Kub3::MFSM

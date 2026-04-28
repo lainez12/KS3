@@ -648,7 +648,7 @@ namespace Kub3::HAL
             throw std::runtime_error(std::format("'{}' configuration doesn't match expected type (stepper)", motorId.toStdString()));
 
         auto kinematicEngine = Algorithms::Kinematic::buildKinematicGenerator(kineGenKind);
-        auto encoderGetter   = [repo = m_repo, encoderId]() { return HAL::MS::readInt(repo, encoderId); };
+        auto encoderGetter   = [repo = m_repo, encoderId]() { return HAL::MS::readInt32(repo, encoderId); };
 
         return std::make_shared<Act::StepperMotor>(
             it->second.id, byteId, driver, *hwProps,
