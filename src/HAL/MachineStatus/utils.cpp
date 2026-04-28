@@ -51,7 +51,7 @@ namespace Kub3::HAL::MS
         if (!optVal.has_value())
         {
             qCritical().nospace() << "[CRITICAL] Unable to get sensor value of type 'uint16_t' for key: " << key;
-            return INT32_MAX;
+            return UINT16_MAX;
         }
 
         return optVal.value();
