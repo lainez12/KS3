@@ -3,7 +3,9 @@
 #include <format>
 #include <stdexcept>
 
-#include "Config/ConfigLoader.h"
+#include <Config/ConfigLoader.h>
+#include <Config/keys/hardware.h>
+#include <Config/keys/process.h>
 
 namespace Kub3::Config
 {
@@ -35,7 +37,7 @@ namespace Kub3::Config
         }
 
         // LOAD MOTORS PARAMETERS
-        settings.beginGroup("motors");
+        settings.beginGroup(CONF_MOTORS);
         for (const QString &group : settings.childGroups())
         {
             settings.beginGroup(group);
@@ -43,18 +45,18 @@ namespace Kub3::Config
             motor_config_t motor;
             motor.id = group.toStdString();
 
-            QString type = getRequiredValue(settings, "type", motor.id).toString();
+            QString type = getRequiredValue(settings, CONF_MOTOR_TYPE, motor.id).toString();
 
-            if (type == "stepper")
+            if (type == CONF_MOTOR_TYPE_STEPPER)
             {
                 stepper_hw_properties_t hw;
 
                 // Parse, Don't Validate: We immediately cast to correct type. If it's malformed, it throws.
-                hw.stepsPerRev         = getRequiredValue(settings, "steps_per_rev", motor.id).toUInt();
-                hw.screwPitchMm        = getRequiredValue(settings, "screw_pitch_mm", motor.id).toDouble();
-                hw.maxVelocityMmS      = getRequiredValue(settings, "max_velocity_mm_s", motor.id).toDouble();
-                hw.maxAccelerationMmS2 = getRequiredValue(settings, "max_acceleration_mm_s2", motor.id).toDouble();
-                hw.encoderTopsPerRev   = getRequiredValue(settings, "encoder_tops_per_rev", motor.id).toUInt();
+                hw.stepsPerRev         = getRequiredValue(settings, CONF_MOTOR_STEPS_PER_REV, motor.id).toUInt();
+                hw.screwPitchMm        = getRequiredValue(settings, CONF_SCREW_PITCH_MM, motor.id).toDouble();
+                hw.maxVelocityMmS      = getRequiredValue(settings, CONF_MAX_VELOCITY_MM_S, motor.id).toDouble();
+                hw.maxAccelerationMmS2 = getRequiredValue(settings, CONF_MAX_ACCELERATION_MM_S2, motor.id).toDouble();
+                hw.encoderTopsPerRev   = getRequiredValue(settings, CONF_ENCODER_TOPS_PER_REV, motor.id).toUInt();
                 // TODO: more checks
                 if (hw.screwPitchMm == 0.0)
                     throw std::runtime_error(std::format("CRITICAL: Invalid screw pitch value ({})", hw.screwPitchMm));
@@ -68,36 +70,36 @@ namespace Kub3::Config
             config.motors.emplace(group, motor);
             settings.endGroup();
         }
-        settings.endGroup(); // "motors"
+        settings.endGroup(); // CONF_MOTORS
 
         // LOAD CAMERAS PARAMETERS
-        settings.beginGroup("cameras");
+        settings.beginGroup(CONF_CAMERAS);
         for (const QString &group : settings.childGroups())
         {
             settings.beginGroup(group);
 
             camera_config_t camera = {
                 .id                = group.toStdString(),
-                .serialNumber      = getRequiredValue(settings, "serial_number", group).toString().toStdString(),
-                .maxExposureUs     = getRequiredValue(settings, "max_exposure_us", group).toDouble(),
-                .defaultExposureUs = getRequiredValue(settings, "default_exposure_us", group).toDouble(),
-                .maxGainDb         = getRequiredValue(settings, "max_gain_db", group).toDouble(),
-                .defaultGainDb     = getRequiredValue(settings, "default_gain_db", group).toDouble(),
+                .serialNumber      = getRequiredValue(settings, CONF_SERIAL_NUMBER, group).toString().toStdString(),
+                .maxExposureUs     = getRequiredValue(settings, CONF_MAX_EXPOSURE_US, group).toDouble(),
+                .defaultExposureUs = getRequiredValue(settings, CONF_DEFAULT_EXPOSURE_US, group).toDouble(),
+                .maxGainDb         = getRequiredValue(settings, CONF_MAX_GAIN_DB, group).toDouble(),
+                .defaultGainDb     = getRequiredValue(settings, CONF_DEFAULT_GAIN_DB, group).toDouble(),
             };
 
             config.cameras.emplace(group, camera);
             settings.endGroup(); // group
         }
-        settings.endGroup(); // "cameras"
+        settings.endGroup(); // CONF_CAMERAS
 
-        settings.beginGroup("forceSensors");
+        settings.beginGroup(CONF_FORCE_SENSORS);
         for (const QString &group : settings.childGroups())
         {
             settings.beginGroup(group);
-            config.adc_to_gf_factors.emplace(group, getRequiredValue(settings, "adc_to_gram_force_factor", group).toDouble());
+            config.adc_to_gf_factors.emplace(group, getRequiredValue(settings, ADC_TO_GRAM_FORCE_FACTOR, group).toDouble());
             settings.endGroup(); // group
         }
-        settings.endGroup(); // "forceSensors"
+        settings.endGroup(); // CONF_FORCE_SENSORS
 
         return config;
     }

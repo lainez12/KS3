@@ -49,7 +49,7 @@ qt_add_library(Kub3Core STATIC
     ## Utils & miscellaneous
     src/utils.cpp
     src/Config/ConfigLoader.cpp
-
+    src/Config/ConfigSaver.cpp
     ## Master FSM
     src/MFSM/MasterFSM.actions.cpp
     src/MFSM/MasterFSM.core.cpp
@@ -118,8 +118,11 @@ qt_add_library(Kub3Core STATIC
     ## Utils & miscellaneous
     include/utils.h
     include/Config/ConfigLoader.h
+    include/Config/ConfigSaver.h
     include/Config/kinematics.h
     include/Config/machine_config.h
+    include/Config/keys/hardware.h
+    include/Config/keys/process.h
     ## Master FSM
     include/MFSM/MasterFSM.h
     include/MFSM/events.h
@@ -232,8 +235,16 @@ target_compile_definitions(Kub3Core PUBLIC KUB_MODEL_${KUB_MODEL} KUB_MODEL_STR=
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     target_compile_definitions(Kub3Core PUBLIC BUILD_DEBUG)
+    target_compile_definitions(Kub3Core PUBLIC
+        KUB3_HARDWARE_CONFIG_PATH="${CMAKE_SOURCE_DIR}/tests/hardware.ini"
+        KUB3_PROCESS_CONFIG_PATH="${CMAKE_SOURCE_DIR}/tests/process.ini"
+    )
 else()
     target_compile_definitions(Kub3Core PUBLIC BUILD_RELEASE)
+    target_compile_definitions(Kub3Core PUBLIC
+        KUB3_HARDWARE_CONFIG_PATH="/etc/kub3/hardware.ini"
+        KUB3_PROCESS_CONFIG_PATH="/etc/kub3/process.ini"
+    )
 endif()
 
 # ==============================================================================
@@ -307,6 +318,10 @@ qt_add_executable(Kub3Configurator
 )
 
 qt_finalize_target(Kub3Configurator)
+
+target_include_directories(Kub3Configurator PRIVATE
+    tools/configurator/include
+)
 
 target_link_libraries(Kub3Configurator PRIVATE
     Kub3Core

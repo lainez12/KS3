@@ -12,7 +12,7 @@ int main(int argc, char **argv)
     app.setApplicationName("KUB3 Configurator");
     app.setApplicationVersion(KUB3_VERSION_STR);
 
-    ConfigWindow window(QString("/tmp/hardware.ini"), QString("/tmp/process.ini"));
+    ConfigWindow window(KUB3_HARDWARE_CONFIG_PATH, KUB3_PROCESS_CONFIG_PATH);
 
     window.show();
     return app.exec();
