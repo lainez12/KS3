@@ -30,6 +30,7 @@ namespace Kub3::Services
         void startContactRoutine(ContactPayload kind) override;
         void moveZManual(ZDirection dir) override;
         void stopZManual(void) override;
+        [[nodiscard]] bool isInContact(void) const override;
 
         // BaseTaskService overrides
         void tick(void) override;
@@ -41,7 +42,6 @@ namespace Kub3::Services
 
         // Internal helpers for contact status
         [[nodiscard]] double getMaxCurrentForceGF(void) const;
-        [[nodiscard]] bool isPhysicallyInContact(void) const;
         [[nodiscard]] bool isProcessForceExceeded(void) const;
         [[nodiscard]] bool isHardwareCrashLimitExceeded(void) const;
         [[nodiscard]] inline constexpr bool isMovingTowardsContact(ZDirection dir) const;

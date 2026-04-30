@@ -7,7 +7,12 @@
 #include <Services/Alignment/IAlignmentService.h>
 #include <Services/Contact/IContactService.h>
 #include <Services/Drawers/IDrawerService.h>
+#include <Services/Exposure/IExposureService.h>
+#include <Services/Stowage/IStowageService.h>
 #include <Services/Vision/IVisionService.h>
+#include <utils.h>
+
+#include "states.h"
 
 // ===============================================
 // Master Finite State Machine EVENTS Definitions
@@ -69,6 +74,14 @@ namespace Kub3::MFSM
         Services::VisionPayload operation;
     };
 
+    struct CmdOperateStowage {
+        Services::StowageTarget target;
+    };
+
+    struct CmdStartExposure {
+        Services::ExposurePayload payload;
+    };
+
     struct CmdStartAutolevel {};
 
     struct CmdApplyContact {
@@ -96,11 +109,14 @@ namespace Kub3::MFSM
         EvHardwareReady,
         EvHardwareError,
         EvInitializationComplete,
+
         // User commands
         CmdResetError,
         CmdStartInitialization,
         // --- Drawers/Conveyors
         CmdOperateDrawer,
+        // --- Stowage (Z axis)
+        CmdOperateStowage,
         // --- Vision settings
         CmdCameraParamUpdate,
         // --- Horizontality & Contact
@@ -112,6 +128,9 @@ namespace Kub3::MFSM
         CmdAlignmentPad,
         CmdZAxisPad,
         CmdVisionPad,
+        // --- Exposure
+        CmdStartExposure,
+
         // Internal & Services events
         EvServiceSuccess,
         EvServiceError,

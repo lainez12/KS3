@@ -11,7 +11,9 @@
 #include <Services/Alignment/IAlignmentService.h>
 #include <Services/Contact/IContactService.h>
 #include <Services/Drawers/IDrawerService.h>
+#include <Services/Exposure/IExposureService.h>
 #include <Services/Homing/IHomingService.h>
+#include <Services/Stowage/IStowageService.h>
 #include <Services/Vision/IVisionService.h>
 
 namespace Kub3::MFSM
@@ -24,9 +26,11 @@ namespace Kub3::MFSM
         explicit MasterFSM(Shared<HAL::MS::IMachineStatusRepo> repo,
                            Shared<Services::IHomingService> homingService,
                            Shared<Services::IDrawerService> drawerService,
+                           Shared<Services::IStowageService> stowageService,
                            Shared<Services::IAlignmentService> alignmentService,
                            Shared<Services::IVisionService> visionService,
                            Shared<Services::IContactService> contactService,
+                           Shared<Services::IExposureService> exposureService,
                            QObject *parent = nullptr);
         ~MasterFSM(void) override = default;
 
@@ -54,6 +58,8 @@ namespace Kub3::MFSM
         void ps_requestFrameRateUpdate(const QString &camId, double val);
         void ps_requestCenteredZoomUpdate(const QString &camId, double val);
         void ps_requestROIUpdate(const QString &camId, const QRect &roi);
+        void ps_requestStowage(void);
+        void ps_requestExposure(const Services::ExposurePayload &payload);
 
     private slots:
         // The Heartbeat (50Hz)
@@ -65,12 +71,12 @@ namespace Kub3::MFSM
 
     private:
         // Helpers
-        void basicOperatingServiceTick(Services::IService *service);
+        void onBasicOperatingServiceTick(StateOperating &op, Services::IService *service);
 
         // Core FSM Methods
         void dispatch(const SystemEvent &event);
-        [[nodiscard]] bool processStaticEvent(const SystemState &currentState, const SystemEvent &event);
-        [[nodiscard]] SystemState processTransition(const SystemState &currentState, const SystemEvent &event);
+        [[nodiscard]] bool processStaticEvent(SystemState &currentState, const SystemEvent &event);
+        [[nodiscard]] static SystemState processTransition(const SystemState &currentState, const SystemEvent &event);
         void onStateEntered(const SystemState &newState);
 
         // Specific event processing methods
@@ -90,9 +96,11 @@ namespace Kub3::MFSM
         // Services
         Shared<Services::IHomingService> m_homingService;       // Homing / Initialization Service
         Shared<Services::IDrawerService> m_drawerService;       // Drawer Service
-        Shared<Services::IAlignmentService> m_alignmentService; // Alignment Service
-        Shared<Services::IVisionService> m_visionService;
-        Shared<Services::IContactService> m_contactService;
+        Shared<Services::IStowageService> m_stowageService;     // Stowage service
+        Shared<Services::IAlignmentService> m_alignmentService; // Alignment (+ manual movements) Service
+        Shared<Services::IVisionService> m_visionService;       // Vision Movements Service
+        Shared<Services::IContactService> m_contactService;     // Autoleveling/Contact (+ manual movements) Service
+        Shared<Services::IExposureService> m_exposureService;   // Exposure service
     };
 
 } // namespace Kub3::MFSM

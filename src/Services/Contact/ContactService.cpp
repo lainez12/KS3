@@ -108,7 +108,7 @@ namespace Kub3::Services
 
         // Checking contact status to adapt kinematic profile
         m_currentManualDir  = dir;
-        const auto &profile = isPhysicallyInContact() ? m_contactProfile : m_freeProfile;
+        const auto &profile = isInContact() ? m_contactProfile : m_freeProfile;
         const auto halDir   = static_cast<HAL::Act::MotorDirection>(dir); // Ok to cast as values are the same
 
         if (m_manualWatchdogTicks == 0) // Start motors if they were stopped
@@ -183,7 +183,7 @@ namespace Kub3::Services
         return std::max({fL, fR, fB});
     }
 
-    bool ContactService::isPhysicallyInContact(void) const
+    bool ContactService::isInContact(void) const
     {
         return getMaxCurrentForceGF() > m_contactThresholdGF;
     }

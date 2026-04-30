@@ -55,11 +55,13 @@ namespace Kub3
         QThread *m_logicThread       = nullptr; // Heap-allocated for QThread ownership
         MFSM::MasterFSM *m_masterFSM = nullptr; // Heap-allocated for QThread ownership
         // --- Services
-        Shared<Services::IDrawerService> m_drawerService;
         Shared<Services::IHomingService> m_homingService;
+        Shared<Services::IDrawerService> m_drawerService;
+        Shared<Services::IStowageService> m_stowageService;
+        Shared<Services::IAlignmentService> m_alignmentService;
         Shared<Services::IVisionService> m_visionService;
         Shared<Services::IContactService> m_contactService;
-        Shared<Services::IAlignmentService> m_alignmentService;
+        Shared<Services::IExposureService> m_exposureService;
 
         // Tier 1: UI
         // --- Windows

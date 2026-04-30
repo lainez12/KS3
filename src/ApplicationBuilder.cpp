@@ -5,7 +5,9 @@
 // Services
 #include <Services/Alignment/AlignmentService.h>
 #include <Services/Contact/ContactService.h>
+#include <Services/Exposure/ExposureService.h>
 #include <Services/Homing/HomingService.h>
+#include <Services/Stowage/StowageService.h>
 #include <Services/Vision/VisionService.h>
 #if defined(KUB_MODEL_4) || defined(KUB_MODEL_6)
 #include <Services/Drawers/SingleConveyorDrawerService.h>
@@ -48,11 +50,13 @@ namespace Kub3
 
         auto registry = m_hwManager->getActuatorRegistry();
 
-        m_drawerService    = std::make_shared<ConveyorDrawerService>(registry, m_repo, m_processConfig);
         m_homingService    = std::make_shared<Services::HomingService>(registry, m_repo, m_processConfig);
+        m_drawerService    = std::make_shared<ConveyorDrawerService>(registry, m_repo, m_processConfig);
+        m_stowageService   = std::make_shared<Services::StowageService>(registry, m_repo, m_processConfig);
+        m_alignmentService = std::make_shared<Services::AlignmentService>(registry, m_repo, m_processConfig);
         m_visionService    = std::make_shared<Services::VisionService>(registry, m_repo, m_processConfig);
         m_contactService   = std::make_shared<Services::ContactService>(registry, m_repo, m_processConfig, m_hwConfig);
-        m_alignmentService = std::make_shared<Services::AlignmentService>(registry, m_repo, m_processConfig);
+        m_exposureService  = std::make_shared<Services::ExposureService>(registry);
 
         // Standard Qt Worker Object instantiation
         // Parented to qApp to ensure no memory leaks if run() is bypassed
@@ -61,9 +65,11 @@ namespace Kub3
             m_repo,
             m_homingService,
             m_drawerService,
+            m_stowageService,
             m_alignmentService,
             m_visionService,
-            m_contactService);
+            m_contactService,
+            m_exposureService);
 
         // Move the FSM to the logic thread
         m_masterFSM->moveToThread(m_logicThread);
@@ -110,8 +116,8 @@ namespace Kub3
         QObject::connect(m_logicThread, &QThread::finished, m_logicThread, &QObject::deleteLater);
 
         // 2. UI -> Logic Wiring (Queued Connections implicitly used across threads)
+        // --- MachineStatusViewModel
         auto *msvm = m_machineStatusVM.get();
-
         QObject::connect(m_mainWindow.get(), &MainWindow::s_initializationRequest, m_masterFSM, &MFSM::MasterFSM::ps_requestInitialization);
         QObject::connect(msvm, &VM::MachineStatusViewModel::s_exposureSliderValueChanged, m_masterFSM, &MFSM::MasterFSM::ps_requestExposureUpdate);
         QObject::connect(msvm, &VM::MachineStatusViewModel::s_gainSliderValueChanged, m_masterFSM, &MFSM::MasterFSM::ps_requestGainUpdate);

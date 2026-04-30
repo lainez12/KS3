@@ -118,9 +118,14 @@ namespace Kub3::Services
 
     void AlignmentService::setHardwareLock(bool locked)
     {
-        m_isLocked = locked;
-        if (m_isLocked)
-            stop();
+        const bool valueChanged = m_isLocked != locked;
+
+        if (valueChanged)
+        {
+            m_isLocked = locked;
+            if (m_isLocked)
+                stop();
+        }
     }
 
     void AlignmentService::loadConfigurations(Shared<HAL::Act::ActuatorRegistry> registry, const Config::process_config_t &processConfig)

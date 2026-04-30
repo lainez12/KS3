@@ -19,6 +19,7 @@ configure_file(
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_COMPILE_WARNING_AS_ERROR ON)
 
 set(CMAKE_AUTOUIC_SEARCH_PATHS "gui;gui/Views;gui/Modules;gui/Components;tools/configurator/gui")
 set(CMAKE_AUTOUIC ON)
@@ -41,18 +42,25 @@ endif()
 # 4. PROJECT'S CORE LIBRARY
 # ==============================================================================
 qt_add_library(Kub3Core STATIC
+    # ===============
     # Sources
+    # ===============
+
     ## Utils & miscellaneous
     src/utils.cpp
     src/Config/ConfigLoader.cpp
+
     ## Master FSM
-    src/MFSM/MasterFSM.cpp
+    src/MFSM/MasterFSM.actions.cpp
+    src/MFSM/MasterFSM.core.cpp
+    src/MFSM/MasterFSM.heartbeat.cpp
+    src/MFSM/MasterFSM.transitions.cpp
+
     ## Services
+    # --- Generic tasks
     src/Services/tasks/ReachLimitTask.cpp
-    src/Services/Drawers/DualConveyorDrawerService.cpp
-    src/Services/Drawers/SingleConveyorDrawerService.cpp
-    src/Services/Drawers/tasks/MaskEjectionTask.cpp
-    src/Services/Drawers/tasks/WaferEjectionTask.cpp
+    src/Services/tasks/ToggleValveTask.cpp
+    # --- Homing service and tasks
     src/Services/Homing/HomingService.cpp
     src/Services/Homing/tasks/ZMotorsReachLimitTask.cpp
     src/Services/Homing/tasks/Homing/AlignmentStagesHomingTask.cpp
@@ -67,9 +75,23 @@ qt_add_library(Kub3Core STATIC
     src/Services/Homing/tasks/Initialization/MaskConveyorInitTask.cpp
     src/Services/Homing/tasks/Initialization/WaferConveyorInitTask.cpp
     src/Services/Homing/tasks/Initialization/ZMotorsInitTask.cpp
+    # --- Drawers service and tasks
+    src/Services/Drawers/DualConveyorDrawerService.cpp
+    src/Services/Drawers/SingleConveyorDrawerService.cpp
+    src/Services/Drawers/tasks/MaskEjectionTask.cpp
+    src/Services/Drawers/tasks/WaferEjectionTask.cpp
+    # --- Stowage service & tasks
+    src/Services/Stowage/StowageService.cpp
+    src/Services/Stowage/tasks/StowageMoveZToLimitTask.cpp
+    # --- Alignment service & tasks
     src/Services/Alignment/AlignmentService.cpp
-    src/Services/Contact/ContactService.cpp
+    # --- Vision service & tasks
     src/Services/Vision/VisionService.cpp
+    # --- Contact service & tasks
+    src/Services/Contact/ContactService.cpp
+    # --- Exposure service & tasks
+    src/Services/Exposure/ExposureService.cpp
+
     ## HAL
     src/HAL/HardwareManager.cpp
     src/HAL/MachineStatus/MachineStatusRepo.cpp
@@ -88,7 +110,11 @@ qt_add_library(Kub3Core STATIC
     src/Algorithms/Kinematic/utils.cpp
     src/Algorithms/Kinematic/TrapezoidalGenerator.cpp
 
+
+    # ===============
     # Headers
+    # ===============
+
     ## Utils & miscellaneous
     include/utils.h
     include/Config/ConfigLoader.h
@@ -98,18 +124,15 @@ qt_add_library(Kub3Core STATIC
     include/MFSM/MasterFSM.h
     include/MFSM/events.h
     include/MFSM/states.h
+
     ## Services
     include/Services/ITask.h
     include/Services/IService.h
     include/Services/BaseTaskService.h
+    # --- Generic tasks
     include/Services/tasks/ReachLimitTask.h
-    include/Services/Drawers/IDrawerService.h
-    include/Services/Drawers/DualConveyorDrawerService.h
-    include/Services/Drawers/SingleConveyorDrawerService.h
-    include/Services/Drawers/tasks/MaskInsertionTask.h
-    include/Services/Drawers/tasks/MaskEjectionTask.h
-    include/Services/Drawers/tasks/WaferInsertionTask.h
-    include/Services/Drawers/tasks/WaferEjectionTask.h
+    include/Services/tasks/ToggleValveTask.h
+    # --- Homing service and tasks
     include/Services/Homing/IHomingService.h
     include/Services/Homing/HomingService.h
     include/Services/Homing/tasks/ZMotorsReachLimitTask.h
@@ -125,12 +148,32 @@ qt_add_library(Kub3Core STATIC
     include/Services/Homing/tasks/Initialization/MaskConveyorInitTask.h
     include/Services/Homing/tasks/Initialization/WaferConveyorInitTask.h
     include/Services/Homing/tasks/Initialization/ZMotorsInitTask.h
+    # --- Drawers service and tasks
+    include/Services/Drawers/IDrawerService.h
+    include/Services/Drawers/DualConveyorDrawerService.h
+    include/Services/Drawers/SingleConveyorDrawerService.h
+    include/Services/Drawers/tasks/MaskInsertionTask.h
+    include/Services/Drawers/tasks/MaskEjectionTask.h
+    include/Services/Drawers/tasks/WaferInsertionTask.h
+    include/Services/Drawers/tasks/WaferEjectionTask.h
+    # --- Stowage service & tasks
+    include/Services/Stowage/IStowageService.h
+    include/Services/Stowage/StowageService.h
+    include/Services/Stowage/tasks/StowageCenterStagesTask.h
+    include/Services/Stowage/tasks/StowageMoveZToLimitTask.h
+    # --- Alignment service & tasks
     include/Services/Alignment/IAlignmentService.h
     include/Services/Alignment/AlignmentService.h
-    include/Services/Contact/IContactService.h
-    include/Services/Contact/ContactService.h
+    # --- Vision service & tasks
     include/Services/Vision/IVisionService.h
     include/Services/Vision/VisionService.h
+    # --- Contact service & tasks
+    include/Services/Contact/IContactService.h
+    include/Services/Contact/ContactService.h
+    # --- Exposure service & tasks
+    include/Services/Exposure/ExposureService.h
+    include/Services/Exposure/IExposureService.h
+
     ## HAL
     include/HAL/HardwareManager.h
     include/HAL/MachineStatus/IMachineStatusRepo.h
@@ -158,6 +201,7 @@ qt_add_library(Kub3Core STATIC
     include/HAL/Actuators/Motors/DirectCurrentMotor.h
     include/HAL/Actuators/Valves/IValve.h
     include/HAL/Actuators/Valves/SolenoidValve.h
+
     ## Algorithms
     include/Algorithms/Kinematic/utils.h
     include/Algorithms/Kinematic/IKinematicGenerator.h
