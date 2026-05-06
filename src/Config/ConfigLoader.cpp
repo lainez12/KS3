@@ -181,9 +181,9 @@ namespace Kub3::Config
 
         // SAVE ALIGNMENT POSITIONS
         settings.beginGroup(CONF_PROCESS_ALIGNMENT_POSITIONS);
-        config.x_stage_reset_pos_mm     = getRequiredValue(settings, CONF_PROCESS_X_STAGE_RESET_POS_MM, std::string(CONF_PROCESS_ALIGNMENT_POSITIONS)).toDouble();
-        config.y_stage_reset_pos_mm     = getRequiredValue(settings, CONF_PROCESS_Y_STAGE_RESET_POS_MM, std::string(CONF_PROCESS_ALIGNMENT_POSITIONS)).toDouble();
-        config.theta_stage_reset_pos_mm = getRequiredValue(settings, CONF_PROCESS_THETA_STAGE_RESET_POS_MM, std::string(CONF_PROCESS_ALIGNMENT_POSITIONS)).toDouble();
+        config.x_stage_center_pos_mm     = getRequiredValue(settings, CONF_PROCESS_X_STAGE_CENTER_POS_MM, std::string(CONF_PROCESS_ALIGNMENT_POSITIONS)).toDouble();
+        config.y_stage_center_pos_mm     = getRequiredValue(settings, CONF_PROCESS_Y_STAGE_CENTER_POS_MM, std::string(CONF_PROCESS_ALIGNMENT_POSITIONS)).toDouble();
+        config.theta_stage_center_pos_mm = getRequiredValue(settings, CONF_PROCESS_THETA_STAGE_CENTER_POS_MM, std::string(CONF_PROCESS_ALIGNMENT_POSITIONS)).toDouble();
         settings.endGroup();
 
         // SAVE DRAWERS POSITIONS

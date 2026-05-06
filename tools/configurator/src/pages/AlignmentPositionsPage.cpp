@@ -42,16 +42,16 @@ namespace Kub3::Components
 
     void AlignmentPositionsPage::loadInitialData(const Kub3::Config::process_config_t &conf)
     {
-        m_resetX->setValue(conf.x_stage_reset_pos_mm);
-        m_resetY->setValue(conf.y_stage_reset_pos_mm);
-        m_resetTheta->setValue(conf.theta_stage_reset_pos_mm);
+        m_resetX->setValue(conf.x_stage_center_pos_mm);
+        m_resetY->setValue(conf.y_stage_center_pos_mm);
+        m_resetTheta->setValue(conf.theta_stage_center_pos_mm);
     }
 
     void AlignmentPositionsPage::pullDataToStruct(Kub3::Config::process_config_t &outConf) const
     {
-        outConf.x_stage_reset_pos_mm     = m_resetX->value();
-        outConf.y_stage_reset_pos_mm     = m_resetY->value();
-        outConf.theta_stage_reset_pos_mm = m_resetTheta->value();
+        outConf.x_stage_center_pos_mm     = m_resetX->value();
+        outConf.y_stage_center_pos_mm     = m_resetY->value();
+        outConf.theta_stage_center_pos_mm = m_resetTheta->value();
     }
 
 } // namespace Kub3::Components

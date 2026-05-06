@@ -33,17 +33,17 @@ namespace Kub3::Services
         m_xMotorBundle = stage_motor_bundle_t{
             .motor            = m_registry->get<HAL::Act::IMotor>(X_STAGE_MOTOR),
             .kinematic        = config.getKinematicProfile(X_STAGE_MOTOR, "normal"),
-            .centerPositionMm = 0.0, // TODO: load from config
+            .centerPositionMm = m_config.x_stage_center_pos_mm,
         };
         m_yMotorBundle = stage_motor_bundle_t{
             .motor            = m_registry->get<HAL::Act::IMotor>(Y_STAGE_MOTOR),
             .kinematic        = config.getKinematicProfile(Y_STAGE_MOTOR, "normal"),
-            .centerPositionMm = 0.0, // TODO: load from config
+            .centerPositionMm = m_config.y_stage_center_pos_mm,
         };
         m_thetaMotorBundle = stage_motor_bundle_t{
             .motor            = m_registry->get<HAL::Act::IMotor>(THETA_STAGE_MOTOR),
             .kinematic        = config.getKinematicProfile(THETA_STAGE_MOTOR, "normal"),
-            .centerPositionMm = 0.0, // TODO: load from config
+            .centerPositionMm = m_config.theta_stage_center_pos_mm,
         };
 
         m_waferVacuumValve = m_registry->get<HAL::Act::IValve>(WAFER_VACUUM_VALVE);

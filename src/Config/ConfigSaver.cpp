@@ -145,9 +145,9 @@ namespace Kub3::Config
 
             // SAVE ALIGNMENT POSITIONS
             settings.beginGroup(CONF_PROCESS_ALIGNMENT_POSITIONS);
-            settings.setValue(CONF_PROCESS_X_STAGE_RESET_POS_MM, config.x_stage_reset_pos_mm);
-            settings.setValue(CONF_PROCESS_Y_STAGE_RESET_POS_MM, config.y_stage_reset_pos_mm);
-            settings.setValue(CONF_PROCESS_THETA_STAGE_RESET_POS_MM, config.theta_stage_reset_pos_mm);
+            settings.setValue(CONF_PROCESS_X_STAGE_CENTER_POS_MM, config.x_stage_center_pos_mm);
+            settings.setValue(CONF_PROCESS_Y_STAGE_CENTER_POS_MM, config.y_stage_center_pos_mm);
+            settings.setValue(CONF_PROCESS_THETA_STAGE_CENTER_POS_MM, config.theta_stage_center_pos_mm);
             settings.endGroup();
 
             // SAVE DRAWERS POSITIONS

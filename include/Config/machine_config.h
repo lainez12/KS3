@@ -72,9 +72,9 @@ namespace Kub3::Config
         double right_cam_x_reset_pos_mm = 0.0;
         double right_cam_y_reset_pos_mm = 0.0;
         // --- Alignment stages
-        double x_stage_reset_pos_mm     = 0.0;
-        double y_stage_reset_pos_mm     = 0.0;
-        double theta_stage_reset_pos_mm = 0.0;
+        double x_stage_center_pos_mm     = 0.0;
+        double y_stage_center_pos_mm     = 0.0;
+        double theta_stage_center_pos_mm = 0.0;
         // --- CM3 mask-conveyor initilization
         double cm3_reset_pos_mm = 0.0;
 

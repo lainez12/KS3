@@ -25,9 +25,9 @@
 #define CONF_PROCESS_RIGHT_CAM_Y_RESET_POS_MM "right_cam_y_reset_pos_mm"
 
 // CONF_PROCESS_ALIGNMENT_POSITIONS inner keys
-#define CONF_PROCESS_X_STAGE_RESET_POS_MM     "x_stage_reset_pos_mm"
-#define CONF_PROCESS_Y_STAGE_RESET_POS_MM     "y_stage_reset_pos_mm"
-#define CONF_PROCESS_THETA_STAGE_RESET_POS_MM "theta_stage_reset_pos_mm"
+#define CONF_PROCESS_X_STAGE_CENTER_POS_MM     "x_stage_center_pos_mm"
+#define CONF_PROCESS_Y_STAGE_CENTER_POS_MM     "y_stage_center_pos_mm"
+#define CONF_PROCESS_THETA_STAGE_CENTER_POS_MM "theta_stage_center_pos_mm"
 
 // CONF_PROCESS_DRAWERS_POSITIONS inner keys
 #define CONF_PROCESS_CM3_RESET_POS_MM "cm3_reset_pos_mm"
