@@ -318,6 +318,7 @@ qt_add_executable(Kub3Configurator
     tools/configurator/src/pages/ForceConfigPage.cpp
     tools/configurator/src/pages/DrawersPositionsPage.cpp
     tools/configurator/src/pages/AlignmentPositionsPage.cpp
+    tools/configurator/src/pages/MCUConfigPage.cpp
     # Headers
     tools/configurator/include/utils.h
     tools/configurator/include/ConfigWindow.h
@@ -327,6 +328,7 @@ qt_add_executable(Kub3Configurator
     tools/configurator/include/pages/ForceConfigPage.h
     tools/configurator/include/pages/DrawersPositionsPage.h
     tools/configurator/include/pages/AlignmentPositionsPage.h
+    tools/configurator/include/pages/MCUConfigPage.h
     # UI
     tools/configurator/gui/resources.qrc
     tools/configurator/gui/ConfigWindow.ui

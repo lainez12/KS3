@@ -15,6 +15,11 @@
 
 using namespace std::string_literals;
 
+#define ARDUINO1_INDEX 0
+#define ARDUINO2_INDEX 1
+#define ARDUINO3_INDEX 2
+#define ARDUINO4_INDEX 3
+
 // Packet key extractors
 static std::string_view arduino1KeyExtractor(const Kub3::HAL::Com::packet_t &packet);
 static std::string_view arduino2KeyExtractor(const Kub3::HAL::Com::packet_t &packet);
@@ -215,8 +220,9 @@ namespace Kub3::HAL
         using namespace Kub3::HAL::Sensors;
 
         // Create thread & Driver for Arduino3
-        auto thread         = std::make_unique<QThread>();                                       // Driver thread
-        auto comms          = std::make_unique<Com::SerialCommunicator>("/dev/ttyACM2", 115200); // TODO: get port from settings file
+        auto mcuConf        = config.mcus[ARDUINO1_INDEX];
+        auto thread         = std::make_unique<QThread>(); // Driver thread
+        auto comms          = std::make_unique<Com::SerialCommunicator>(mcuConf.port, mcuConf.baudrate);
         auto parser         = std::make_unique<Com::LengthBasedParser>();
         auto arduino1Driver = std::make_shared<MCUDriver>(std::move(comms), std::move(parser));
         auto router         = std::make_unique<Com::PacketRouter>(&arduino1KeyExtractor);
@@ -338,8 +344,9 @@ namespace Kub3::HAL
         using namespace Kub3::HAL::Sensors;
 
         // Create thread & Driver for Arduino3
-        auto thread         = std::make_unique<QThread>();                                       // Driver thread
-        auto comms          = std::make_unique<Com::SerialCommunicator>("/dev/ttyACM1", 115200); // TODO: get port from settings file
+        auto mcuConf        = config.mcus[ARDUINO2_INDEX];
+        auto thread         = std::make_unique<QThread>(); // Driver thread
+        auto comms          = std::make_unique<Com::SerialCommunicator>(mcuConf.port, mcuConf.baudrate);
         auto parser         = std::make_unique<Com::LengthBasedParser>();
         auto arduino2Driver = std::make_shared<MCUDriver>(std::move(comms), std::move(parser));
         auto router         = std::make_unique<Com::PacketRouter>(&arduino2KeyExtractor);
@@ -461,8 +468,9 @@ namespace Kub3::HAL
     void HardwareManager::setupArduino3Subsystem(const Config::hardware_config_t &config)
     {
         // Create thread & Driver for Arduino3
-        auto thread         = std::make_unique<QThread>();                                       // Driver thread
-        auto comms          = std::make_unique<Com::SerialCommunicator>("/dev/ttyACM0", 115200); // TODO: get port from settings file
+        auto mcuConf        = config.mcus[ARDUINO3_INDEX];
+        auto thread         = std::make_unique<QThread>(); // Driver thread
+        auto comms          = std::make_unique<Com::SerialCommunicator>(mcuConf.port, mcuConf.baudrate);
         auto parser         = std::make_unique<Com::LengthBasedParser>();
         auto arduino3Driver = std::make_shared<MCUDriver>(std::move(comms), std::move(parser));
         auto router         = std::make_unique<Com::PacketRouter>(&arduino3KeyExtractor);

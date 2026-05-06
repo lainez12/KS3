@@ -1,10 +1,13 @@
 #pragma once
 
+#include <array>
 #include <string>
 #include <unordered_map>
 #include <variant>
 
 #include "kinematics.h"
+
+#define MCU_COUNT 4
 
 namespace Kub3::Config
 {
@@ -12,6 +15,11 @@ namespace Kub3::Config
     ///////////////////////////
     // HARDWARE CONFIGURATION
     ///////////////////////////
+
+    typedef struct mcu_hw_properties_s {
+        QString port;
+        uint32_t baudrate = 115200;
+    } mcu_hw_properties_t;
 
     typedef struct stepper_hw_properties_s {
         uint16_t stepsPerRev;
@@ -49,6 +57,7 @@ namespace Kub3::Config
 
     // Top level struct for hardware config
     typedef struct hardware_config_s {
+        mcu_hw_properties_t mcus[MCU_COUNT];
         std::unordered_map<QString, motor_config_t> motors;
         std::unordered_map<QString, camera_config_t> cameras;
         std::unordered_map<QString, double> adc_to_gf_factors;

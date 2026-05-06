@@ -36,7 +36,37 @@ namespace Kub3::Config
             throw std::runtime_error("CRITICAL: Failed to open or parse hardware config file: " + filePath);
         }
 
+        // =============================
+        // LOAD MCUs SETTINGS
+        // =============================
+        settings.beginGroup(CONF_HW_MCUS);
+        {
+            static_assert(MCU_COUNT == 4, "MCU_COUNT does not match the model expected value (4)");
+            const std::string group(CONF_HW_MCUS);
+
+            // Ports
+            config.mcus[0] = mcu_hw_properties_s{
+                .port     = getRequiredValue(settings, CONF_HW_MCU1_PORT, group).toString(),
+                .baudrate = getRequiredValue(settings, CONF_HW_MCU1_BAUDRATE, group).toUInt(),
+            };
+            config.mcus[1] = mcu_hw_properties_s{
+                .port     = getRequiredValue(settings, CONF_HW_MCU2_PORT, group).toString(),
+                .baudrate = getRequiredValue(settings, CONF_HW_MCU2_BAUDRATE, group).toUInt(),
+            };
+            config.mcus[2] = mcu_hw_properties_s{
+                .port     = getRequiredValue(settings, CONF_HW_MCU3_PORT, group).toString(),
+                .baudrate = getRequiredValue(settings, CONF_HW_MCU3_BAUDRATE, group).toUInt(),
+            };
+            config.mcus[3] = mcu_hw_properties_s{
+                .port     = getRequiredValue(settings, CONF_HW_MCU4_PORT, group).toString(),
+                .baudrate = getRequiredValue(settings, CONF_HW_MCU4_BAUDRATE, group).toUInt(),
+            };
+        }
+        settings.endGroup();
+
+        // =============================
         // LOAD MOTORS PARAMETERS
+        // =============================
         settings.beginGroup(CONF_HW_MOTORS);
         for (const QString &group : settings.childGroups())
         {
@@ -84,7 +114,9 @@ namespace Kub3::Config
         }
         settings.endGroup(); // CONF_HW_MOTORS
 
+        // =============================
         // LOAD CAMERAS PARAMETERS
+        // =============================
         settings.beginGroup(CONF_HW_CAMERAS);
         for (const QString &group : settings.childGroups())
         {
@@ -104,6 +136,9 @@ namespace Kub3::Config
         }
         settings.endGroup(); // CONF_HW_CAMERAS
 
+        // =============================
+        // FORCE LIMITS
+        // =============================
         settings.beginGroup(CONF_HW_FORCE_SENSORS);
         for (const QString &group : settings.childGroups())
         {
@@ -127,7 +162,9 @@ namespace Kub3::Config
             throw std::runtime_error("CRITICAL: Failed to open or parse process config file: " + filePath);
         }
 
+        // =============================
         // LOAD KINEMATIC PROFILES
+        // =============================
         settings.beginGroup(CONF_PROCESS_KINEMATICS);
         qInfo() << "--- Loading kinematics config";
         for (const QString &motorGroup : settings.childGroups())
@@ -170,7 +207,9 @@ namespace Kub3::Config
         }
         settings.endGroup(); // CONF_PROCESS_KINEMATICS
 
+        // =============================
         // LOAD CAMERAS DATA
+        // =============================
         settings.beginGroup(CONF_PROCESS_CAMERAS);
         config.min_camera_distance_mm   = getRequiredValue(settings, CONF_PROCESS_MIN_CAMERA_DISTANCE_MM, std::string(CONF_PROCESS_CAMERAS)).toDouble();
         config.left_cam_x_reset_pos_mm  = getRequiredValue(settings, CONF_PROCESS_LEFT_CAM_X_RESET_POS_MM, std::string(CONF_PROCESS_CAMERAS)).toDouble();
@@ -179,18 +218,25 @@ namespace Kub3::Config
         config.right_cam_y_reset_pos_mm = getRequiredValue(settings, CONF_PROCESS_RIGHT_CAM_Y_RESET_POS_MM, std::string(CONF_PROCESS_CAMERAS)).toDouble();
         settings.endGroup(); // CONF_PROCESS_CAMERAS
 
+        // =============================
         // SAVE ALIGNMENT POSITIONS
+        // =============================
         settings.beginGroup(CONF_PROCESS_ALIGNMENT_POSITIONS);
         config.x_stage_center_pos_mm     = getRequiredValue(settings, CONF_PROCESS_X_STAGE_CENTER_POS_MM, std::string(CONF_PROCESS_ALIGNMENT_POSITIONS)).toDouble();
         config.y_stage_center_pos_mm     = getRequiredValue(settings, CONF_PROCESS_Y_STAGE_CENTER_POS_MM, std::string(CONF_PROCESS_ALIGNMENT_POSITIONS)).toDouble();
         config.theta_stage_center_pos_mm = getRequiredValue(settings, CONF_PROCESS_THETA_STAGE_CENTER_POS_MM, std::string(CONF_PROCESS_ALIGNMENT_POSITIONS)).toDouble();
         settings.endGroup();
 
+        // =============================
         // SAVE DRAWERS POSITIONS
+        // =============================
         settings.beginGroup(CONF_PROCESS_DRAWERS_POSITIONS);
         config.cm3_reset_pos_mm = getRequiredValue(settings, CONF_PROCESS_CM3_RESET_POS_MM, std::string(CONF_PROCESS_DRAWERS_POSITIONS)).toDouble();
         settings.endGroup();
 
+        // =============================
+        // FORCE LIMITS
+        // =============================
         const std::string forceLimitsGroup(CONF_PROCESS_FORCE_LIMITS);
         settings.beginGroup(forceLimitsGroup);
         config.hw_crash_force_limit_gf = getRequiredValue(settings, CONF_PROCESS_HW_CRASH_FORCE_LIMIT_GF, forceLimitsGroup).toDouble();

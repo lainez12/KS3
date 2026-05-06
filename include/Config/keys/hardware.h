@@ -1,9 +1,20 @@
 #pragma once
 
 // Top level keys
+#define CONF_HW_MCUS          "mcus" // Micro-controller units
 #define CONF_HW_MOTORS        "motors"
 #define CONF_HW_CAMERAS       "cameras"
 #define CONF_HW_FORCE_SENSORS "forceSensors"
+
+// CONF_HW_MCUS inner keys
+#define CONF_HW_MCU1_PORT     "mcu1_port"
+#define CONF_HW_MCU2_PORT     "mcu2_port"
+#define CONF_HW_MCU3_PORT     "mcu3_port"
+#define CONF_HW_MCU4_PORT     "mcu4_port"
+#define CONF_HW_MCU1_BAUDRATE "mcu1_baudrate"
+#define CONF_HW_MCU2_BAUDRATE "mcu2_baudrate"
+#define CONF_HW_MCU3_BAUDRATE "mcu3_baudrate"
+#define CONF_HW_MCU4_BAUDRATE "mcu4_baudrate"
 
 // CONF_HW_MOTORS inner keys
 #define CONF_HW_MOTOR_TYPE         "type"

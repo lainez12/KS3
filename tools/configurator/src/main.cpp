@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
 #if defined(BUILD_DEBUG)
         window.showMaximized();
 #else
-        window.showFullscreen();
+        window.showFullScreen();
 #endif
 
         return app.exec();

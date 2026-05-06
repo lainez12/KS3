@@ -22,6 +22,28 @@ namespace Kub3::Config
             // BEGIN SCOPE: Ensure QSettings flushes to OS buffers and releases file handles
             QSettings settings(QString::fromStdString(tempPath), QSettings::IniFormat);
 
+            // =============================
+            // LOAD MCUs SETTINGS
+            // =============================
+            settings.beginGroup(CONF_HW_MCUS);
+            {
+#if defined(KUB_MODEL_8)
+                static_assert(MCU_COUNT == 4, "MCU_COUNT does not match the model expected value (expected: 4)");
+
+                // Ports
+                settings.setValue(CONF_HW_MCU1_PORT, config.mcus[0].port);
+                settings.setValue(CONF_HW_MCU2_PORT, config.mcus[1].port);
+                settings.setValue(CONF_HW_MCU3_PORT, config.mcus[2].port);
+                settings.setValue(CONF_HW_MCU4_PORT, config.mcus[3].port);
+                // Baudrates
+                settings.setValue(CONF_HW_MCU1_BAUDRATE, config.mcus[0].baudrate);
+                settings.setValue(CONF_HW_MCU2_BAUDRATE, config.mcus[1].baudrate);
+                settings.setValue(CONF_HW_MCU3_BAUDRATE, config.mcus[2].baudrate);
+                settings.setValue(CONF_HW_MCU4_BAUDRATE, config.mcus[3].baudrate);
+#endif
+            }
+            settings.endGroup();
+
             // SAVE MOTORS PARAMETERS
             settings.beginGroup(CONF_HW_MOTORS);
             for (const auto &[id, motor] : config.motors)

@@ -9,6 +9,7 @@
 #include <pages/CameraGeneralPage.h>
 #include <pages/DrawersPositionsPage.h>
 #include <pages/ForceConfigPage.h>
+#include <pages/MCUConfigPage.h>
 #include <pages/MotorConfigPage.h>
 #include <utils.h>
 
@@ -144,6 +145,15 @@ void ConfigWindow::populateUI()
     ui->categoryList->blockSignals(true); // Prevent UI thrashing while building
 
     // -------------------------------------------------------------
+    // STATIC PAGE: SYSTEM SETTINGS
+    // -------------------------------------------------------------
+    auto *mcuPage = new Kub3::Components::MCUConfigPage(m_hwConfig);
+    int mcuIdx    = addConfigPage(mcuPage, [this, mcuPage]() {
+        mcuPage->pullDataToStruct(m_hwConfig);
+    });
+    m_categoryMap[SYSTEM_CATEGORY].push_back({"Micro-controllers", mcuIdx});
+
+    // -------------------------------------------------------------
     // STATIC PAGE: FORCE SETTINGS
     // -------------------------------------------------------------
     auto *forcePage = new Kub3::Components::ForceConfigPage(m_processConfig);
@@ -230,6 +240,7 @@ void ConfigWindow::populateUI()
 
     // We add them in a specific order if we want, or just iterate the map.
     QStringList categoryOrder = {
+        SYSTEM_CATEGORY,
         FORCE_CATEGORY,
         CONVEYORS_CATEGORY,
         Z_CATEGORY,
