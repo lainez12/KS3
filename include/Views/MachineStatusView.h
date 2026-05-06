@@ -39,6 +39,8 @@ namespace Kub3::UI::Views
 
     private:
         void updateBoolSensorsText(QLabel *label, const bool state);
+        void createNavButtonsConfigs();
+        void configTitleBar();
 
     private:
         Ui::MachineStatusView *ui;

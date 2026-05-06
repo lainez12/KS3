@@ -8,9 +8,12 @@
 
 MachineStatusView::MachineStatusView(Unique<MachineStatusViewModel> viewModel, QWidget *parent) :
     ViewBase(std::move(viewModel), parent),
-    ui(new Ui::MachineStatusView)
-{
+    ui(new Ui::MachineStatusView) {
     ui->setupUi(this);
+
+    m_showCentralLogo = false;
+    configTitleBar();
+    createNavButtonsConfigs();
 
     // Wafer conveyor limits
     m_boolSensorsMap.insert({CW0, ui->cw0Label});
@@ -76,26 +79,55 @@ MachineStatusView::MachineStatusView(Unique<MachineStatusViewModel> viewModel, Q
     m_boolSensorsMap.insert({DECK_FRONT_LIMIT, ui->deckFrontLimitValue});
 }
 
-MachineStatusView::~MachineStatusView()
-{
+MachineStatusView::~MachineStatusView() {
     delete ui;
 }
 
-void MachineStatusView::ps_booleanSensorUpdate(const char *sensorId, bool value)
-{
+void MachineStatusView::ps_booleanSensorUpdate(const char *sensorId, bool value) {
     if (auto it = m_boolSensorsMap.find(sensorId); it != m_boolSensorsMap.end())
         this->updateBoolSensorsText(it->second, value);
 }
 
-void MachineStatusView::on_goBackBtn_clicked(void)
-{
+void MachineStatusView::on_goBackBtn_clicked(void) {
     emit s_home();
 }
 
-void MachineStatusView::updateBoolSensorsText(QLabel *label, const bool state)
-{
+void MachineStatusView::updateBoolSensorsText(QLabel *label, const bool state) {
     const QString text = state ? "ON" : "OFF";
 
     label->setText(text);
     label->setStyleSheet(state ? SUCCESS_QLABEL_STYLESHEET : FAILURE_QLABEL_STYLESHEET);
+}
+
+void MachineStatusView::createNavButtonsConfigs() {
+    NavButtonConfig homeBtn(
+        "Home",
+        QColor("#0072BA"),
+        ":/icons/home.svg",
+        "home",
+        [this](const QString &) {
+            // Retourner à HomeView
+            emit s_openView(Kub3::UI::ViewId::HOME_VIEW);
+        });
+    addNavButton("left", homeBtn);
+
+    NavButtonConfig openCloseBtn(
+        "Open/Close",
+        QColor("#0072BA"),
+        ":/icons/eject.svg",
+        "open/close",
+        [this](const QString &) {
+            qDebug() << "Open/Close button clicked in MachineStatusView";
+        });
+    addNavButton("right", openCloseBtn);
+}
+
+void MachineStatusView::configTitleBar() {
+    m_titleBar = TitleBarConfig(
+        "Machine Status",
+        QColor("#FFF"),
+        QColor("#0072BA"),
+        ":/icons/home.svg",
+        true,
+        true);
 }

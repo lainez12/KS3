@@ -1,11 +1,18 @@
 #include "Views/HomeView.h"
 #include "ui_HomeView.h"
 
+#define ID_BTN_SETTINGS "S"
+#define ID_BTN_OPEN     "O"
+#define ID_BTN_CLOSE    "C"
+
 HomeView::HomeView(Unique<HomeViewModel> viewModel, QWidget *parent) :
     ViewBase(std::move(viewModel), parent),
-    ui(new Ui::HomeView)
-{
+    ui(new Ui::HomeView) {
     ui->setupUi(this);
+
+    createNavButtonsConfigs();
+    m_showCentralLogo = true;
+    configTitleBar();
 
     ui->floodBtn->setup("Flood Exposure", "#8a2be2", ":/icons/settings.svg");     // Purple
     ui->maskExpBtn->setup("Mask Exposure", "#0000cd", ":/icons/settings.svg");    // Blue
@@ -14,21 +21,18 @@ HomeView::HomeView(Unique<HomeViewModel> viewModel, QWidget *parent) :
     this->updateMachineLogo(this->height());
 }
 
-HomeView::~HomeView()
-{
+HomeView::~HomeView() {
     delete ui;
 }
 
-void HomeView::resizeEvent(QResizeEvent *ev)
-{
+void HomeView::resizeEvent(QResizeEvent *ev) {
     QWidget::resizeEvent(ev);
 
     this->updateMachineLogo(this->height());
     ui->buttonsLayout->setSpacing(this->width() * 0.07); // 7% of window width
 }
 
-void HomeView::updateMachineLogo(int h)
-{
+void HomeView::updateMachineLogo(int h) {
     if (h <= 0)
         return;
 
@@ -42,4 +46,52 @@ void HomeView::updateMachineLogo(int h)
         "font-size:%2px; color:#e85420;'>&nbsp;%3-inch</span>";
 
     ui->machineName->setText(templateStr.arg(baseFontSize).arg(substrateSizeFontSize).arg(KUB_MODEL_STR));
+}
+
+void HomeView::createNavButtonsConfigs() {
+    NavButtonConfig settingsBtn(
+        "settings",
+        QColor("#0072BA"),
+        ":/icons/settings.svg",
+        ID_BTN_SETTINGS,
+        std::bind(&HomeView::onSettingsButtonClicked, this, std::placeholders::_1));
+    addNavButton("left", settingsBtn);
+
+    NavButtonConfig openBtn(
+        "open",
+        QColor("#0072BA"),
+        ":/icons/eject.svg",
+        ID_BTN_OPEN,
+        std::bind(&HomeView::onOpenButtonClicked, this, std::placeholders::_1));
+    addNavButton("right", openBtn);
+}
+void HomeView::configTitleBar() {
+    m_titleBar = TitleBarConfig();
+}
+
+void HomeView::onSettingsButtonClicked(const QString &buttonId) {
+    emit s_openView(Kub3::UI::ViewId::MACHINE_STATUS_VIEW);
+}
+void HomeView::onOpenButtonClicked(const QString &buttonId) {
+    setNavButtonEnabled(ID_BTN_SETTINGS, false);
+    removeNavButton(ID_BTN_OPEN);
+    NavButtonConfig closeBtn(
+        "close",
+        QColor("#0072BA"),
+        ":/icons/insert.svg",
+        ID_BTN_CLOSE,
+        std::bind(&HomeView::onCloseButtonCliked, this, std::placeholders::_1));
+    addNavButton("right", closeBtn);
+}
+
+void HomeView::onCloseButtonCliked(const QString &buttonId) {
+    setNavButtonEnabled(ID_BTN_SETTINGS, true);
+    m_buttonManager.removeButton(ID_BTN_CLOSE);
+    NavButtonConfig openBtn(
+        "open",
+        QColor("#0072BA"),
+        ":/icons/eject.svg",
+        ID_BTN_OPEN,
+        std::bind(&HomeView::onOpenButtonClicked, this, std::placeholders::_1));
+    addNavButton("right", openBtn);
 }

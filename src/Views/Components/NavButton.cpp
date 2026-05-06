@@ -2,8 +2,7 @@
 #include "ui_NavButton.h"
 
 NavButton::NavButton(QWidget *parent) :
-    QWidget(parent)
-{
+    QWidget(parent) {
     QVBoxLayout *layout = new QVBoxLayout(this);
 
     layout->setAlignment(Qt::AlignCenter);
@@ -35,8 +34,7 @@ NavButton::NavButton(QWidget *parent) :
     layout->addWidget(m_text, 0, Qt::AlignHCenter);
 }
 
-void NavButton::setup(const QString &text, const QColor &color, const QString &iconPath)
-{
+void NavButton::setup(const QString &text, const QColor &color, const QString &iconPath) {
     m_text->setText(text);
     m_circle->setColor(color);
 
@@ -44,15 +42,28 @@ void NavButton::setup(const QString &text, const QColor &color, const QString &i
         this->setIcon(iconPath);
 }
 
-void NavButton::setIcon(const QString &path)
-{
+void NavButton::setIcon(const QString &path) {
     QPixmap pix(path);
 
     if (!pix.isNull())
         m_iconLabel->setPixmap(pix);
 }
 
-void NavButton::mouseReleaseEvent(QMouseEvent *event)
-{
+void NavButton::setText(const QString &newText) {
+    m_text->setText(newText);
+}
+
+void NavButton::setEnabledNavButton(bool state) {
+    setEnabled(state);
+    if (state) {
+        m_text->setStyleSheet("color: #0072ba; font-size: 12px;");
+        m_circle->setColor(QColor("#0072ba"));
+    } else {
+        m_text->setStyleSheet("color: #505050; font-size: 12px;");
+        m_circle->setColor(QColor("#505050"));
+    }
+}
+
+void NavButton::mouseReleaseEvent(QMouseEvent *event) {
     emit clicked();
 }

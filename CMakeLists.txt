@@ -192,6 +192,9 @@ qt_add_executable(Kub3Software
     src/ViewModels/MachineStatusViewModel.cpp
     src/Views/MainWindow.cpp
     src/Views/ViewBase.cpp
+    src/Views/NavButtonManager.cpp
+    src/Views/TopBar.cpp
+    src/Views/BottomBar.cpp
     src/Views/DebugView.cpp
     src/Views/HomeView.cpp
     src/Views/MachineStatusView.cpp
@@ -205,6 +208,9 @@ qt_add_executable(Kub3Software
     include/ViewModels/MachineStatusViewModel.h
     include/Views/MainWindow.h
     include/Views/ViewBase.h
+    include/Views/NavButtonManager.h
+    include/Views/TopBar.h
+    include/Views/BottomBar.h
     include/Views/DebugView.h
     include/Views/HomeView.h
     include/Views/MachineStatusView.h

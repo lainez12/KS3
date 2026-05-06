@@ -1,9 +1,26 @@
+/* 
+Definitions colors 
+@blue: #0072ba; 
+@orange: #e85420;
+@lightGray: #f0f0f0;
+@darkGray: #333333;
+@white: #ffffff;
+@primary-color: #3498db;
+
+
+Font Families
+@artTtnorm: ;
+
+*/
+
+/*
 * {
     color: black;
 }
+*/
 
 QMainWindow {
-    background-color: #FFFFFF;
+    background-color: @white;
 }
 
 QWidget#HomeView, QWidget#DebugView, QWidget#MachineStatusView {
@@ -16,34 +33,35 @@ QMainWindow QWidget#kloeLogo QLabel {
 }
 
 QLabel#machineLogo {
-    font-family: "Art ttnorm";
+    font-family: @artTtnorm;
     font-size: 44px;
     font-weight: 700;
     font-style: italic;
-    color: #0072ba; 
+    color: @blue;
 }
 
 QLabel#machineLogoSubtrateSize {
-    font-family: "Art ttnorm";
+    font-family: @artTtnorm;
     font-size: 28px;
     font-weight: 700;
     font-style: italic;
-    color: #e85420;
+    color: @orange;
 }
 
 QFrame#bottomBar {
-    background-color: white;
+    background-color: @white;
     border: none;
-    min-height: 96px;
-    max-height: 96px;
+    min-height: 86px; /** for resolution 1366x768 */
+    max-height: 112px; /** for resolution 1920x1080 */
+    /*border-bottom: 3px solid rgba(0, 112, 219, 160);*/
 }
 
 QLabel#kloeLogo {
-    font-family: "Art ttnorm";
+    font-family: @artTtnorm;
     font-size: 56px;
     font-weight: 900;
     font-style: italic;
-    color: #0072ba; /* KLOE Blue */
+    color: @blue; 
 }
 
 QLabel {
@@ -52,4 +70,34 @@ QLabel {
 
 QFrame#navBtnIconCircle {
     background-color: rgb(0, 114, 186);
+}
+
+
+///* Main Window Styles */
+//* Upper Bar */
+
+#upBar
+{
+    background-color: @blue;
+    border: none;
+    min-height: 96px;
+    max-height: 96px;
+}
+
+QLabel#viewTitle
+{
+    font-family: @artTtnorm;
+    font-size: 32px;
+    font-weight: 700;
+    font-style: italic;
+    color: @blue; 
+}
+
+QLabel#sectionTitle
+{
+    font-family: @artTtnorm;
+    font-size: 24px;
+    font-weight: 700;
+    font-style: italic;
+    color: @blue; 
 }

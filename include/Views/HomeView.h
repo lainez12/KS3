@@ -12,10 +12,9 @@ namespace Ui {
 
 namespace Kub3::UI::Views {
 
-    class HomeView final : public ViewBase 
-    {
+    class HomeView final : public ViewBase {
         using HomeViewModel = Kub3::UI::ViewModels::HomeViewModel;
-        
+
         Q_OBJECT
 
     public:
@@ -27,13 +26,18 @@ namespace Kub3::UI::Views {
     public slots:
 
     private slots:
-    
 
     protected:
         void resizeEvent(QResizeEvent *event) override;
 
     private:
         void updateMachineLogo(int h);
+        void createNavButtonsConfigs();
+        void configTitleBar();
+
+        void onSettingsButtonClicked(const QString &buttonId);
+        void onOpenButtonClicked(const QString &buttonId);
+        void onCloseButtonCliked(const QString &buttonId);
 
     private:
         Ui::HomeView *ui;

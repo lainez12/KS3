@@ -3,8 +3,12 @@
         <file>fonts/ArtNormFont.ttf</file>
         <file>styles/app.qss</file>
         <file>icons/logoKloe.png</file>
+        <file>icons/logoKloeBlanc.svg</file>
+        <file>icons/home.svg</file>
         <file>icons/settings.svg</file>
         <file>icons/eject.svg</file>
+        <file>icons/insert.svg</file>
+        <file>icons/flood_icon.svg</file>
         <file>images/bg.png</file>
     </qresource>
 </RCC>
