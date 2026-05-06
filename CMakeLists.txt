@@ -310,10 +310,25 @@ qt_add_executable(Kub3Configurator
     MANUAL_FINALIZATION
     # Sources
     tools/configurator/src/main.cpp
+    tools/configurator/src/utils.cpp
     tools/configurator/src/ConfigWindow.cpp
+    tools/configurator/src/pages/MotorConfigPage.cpp
+    tools/configurator/src/pages/CameraConfigPage.cpp
+    tools/configurator/src/pages/CameraGeneralPage.cpp
+    tools/configurator/src/pages/ForceConfigPage.cpp
+    tools/configurator/src/pages/DrawersPositionsPage.cpp
+    tools/configurator/src/pages/AlignmentPositionsPage.cpp
     # Headers
+    tools/configurator/include/utils.h
     tools/configurator/include/ConfigWindow.h
+    tools/configurator/include/pages/MotorConfigPage.h
+    tools/configurator/include/pages/CameraConfigPage.h
+    tools/configurator/include/pages/CameraGeneralPage.h
+    tools/configurator/include/pages/ForceConfigPage.h
+    tools/configurator/include/pages/DrawersPositionsPage.h
+    tools/configurator/include/pages/AlignmentPositionsPage.h
     # UI
+    tools/configurator/gui/resources.qrc
     tools/configurator/gui/ConfigWindow.ui
 )
 

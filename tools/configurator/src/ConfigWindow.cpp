@@ -1,8 +1,16 @@
 #include "ui_ConfigWindow.h"
-#include <ConfigWindow.h>
 
 #include <Config/ConfigLoader.h>
 #include <Config/ConfigSaver.h>
+#include <ConfigWindow.h>
+#include <HAL/MachineStatus/actuators_labels.h>
+#include <pages/AlignmentPositionsPage.h>
+#include <pages/CameraConfigPage.h>
+#include <pages/CameraGeneralPage.h>
+#include <pages/DrawersPositionsPage.h>
+#include <pages/ForceConfigPage.h>
+#include <pages/MotorConfigPage.h>
+#include <utils.h>
 
 #include <QDoubleSpinBox>
 #include <QGroupBox>
@@ -10,6 +18,14 @@
 #include <QLineEdit>
 #include <QMessageBox>
 #include <QVBoxLayout>
+
+#define SYSTEM_CATEGORY        "System"
+#define FORCE_CATEGORY         "Force sensors"
+#define Z_CATEGORY             "Z-Axis"
+#define ALIGNMENT_CATEGORY     "X/Y/Theta (alignment)"
+#define CONVEYORS_CATEGORY     "Conveyors"
+#define CAMERAS_CATEGORY       "Cameras"
+#define MISCELLANEOUS_CATEGORY "Miscellaneous"
 
 ConfigWindow::ConfigWindow(QString hwConfigPath, QString processConfigPath, QWidget *parent) :
     QWidget(parent),
@@ -23,9 +39,9 @@ ConfigWindow::ConfigWindow(QString hwConfigPath, QString processConfigPath, QWid
     connect(ui->saveBtn, &QPushButton::clicked, this, &ConfigWindow::onSaveClicked);
     connect(ui->reloadBtn, &QPushButton::clicked, this, &ConfigWindow::onReloadClicked);
 
-    // MAGIC TRICK: This single line connects your list to your stacked widget automatically.
-    // When the user clicks a different menu item, the stacked widget switches to the corresponding page.
-    connect(ui->menuList, &QListWidget::currentRowChanged, ui->stackedWidget, &QStackedWidget::setCurrentIndex);
+    // Wire the two-tier navigation
+    connect(ui->categoryList, &QListWidget::currentItemChanged, this, &ConfigWindow::onCategorySelectionChanged);
+    connect(ui->itemList, &QListWidget::currentItemChanged, this, &ConfigWindow::onItemSelected);
 
     onReloadClicked(); // Load at startup
 }
@@ -78,9 +94,11 @@ void ConfigWindow::onSaveClicked()
 void ConfigWindow::clearUI()
 {
     m_saveHooks.clear();
-    ui->menuList->clear();
+    m_categoryMap.clear();
 
-    // Safely delete all widgets currently in the stacked widget
+    ui->categoryList->clear();
+    ui->itemList->clear();
+
     while (ui->stackedWidget->count() > 0)
     {
         QWidget *w = ui->stackedWidget->widget(0);
@@ -89,104 +107,184 @@ void ConfigWindow::clearUI()
     }
 }
 
-void ConfigWindow::addConfigPage(const QString &menuLabel, QWidget *pageWidget, std::function<void()> saveCallback)
+int ConfigWindow::addConfigPage(QWidget *pageWidget, std::function<void()> saveCallback)
 {
-    ui->menuList->addItem(menuLabel);
-    ui->stackedWidget->addWidget(pageWidget);
+    int index = ui->stackedWidget->addWidget(pageWidget);
+
     m_saveHooks.push_back(std::move(saveCallback));
+    return index; // Return where this page lives in the stack
 }
 
+// ---------------------------------------------------------
+// CATEGORIZATION LOGIC
+// ---------------------------------------------------------
+QString ConfigWindow::categorizeMotor(const QString &motorId) const
+{
+    if (motorId == Z_LEFT_MOTOR || motorId == Z_RIGHT_MOTOR || motorId == Z_BACK_MOTOR)
+        return Z_CATEGORY;
+    if (motorId == X_STAGE_MOTOR || motorId == Y_STAGE_MOTOR || motorId == THETA_STAGE_MOTOR)
+        return ALIGNMENT_CATEGORY;
+    if (motorId == MASK_DRAWER_MOTOR || motorId == WAFER_DRAWER_MOTOR)
+        return CONVEYORS_CATEGORY;
+    if (motorId == DECK_MOTOR ||
+        motorId == LEFT_CAMERA_X_MOTOR || motorId == LEFT_CAMERA_Y_MOTOR ||
+        motorId == RIGHT_CAMERA_X_MOTOR || motorId == RIGHT_CAMERA_Y_MOTOR)
+        return CAMERAS_CATEGORY;
+    // else
+    return MISCELLANEOUS_CATEGORY;
+}
+
+// ---------------------------------------------------------
+// UI POPULATION
+// ---------------------------------------------------------
 void ConfigWindow::populateUI()
 {
     // Clear out any old widgets
     clearUI();
+    ui->categoryList->blockSignals(true); // Prevent UI thrashing while building
 
     // -------------------------------------------------------------
-    // PAGE 1: GLOBAL PROCESS SETTINGS
+    // STATIC PAGE: FORCE SETTINGS
     // -------------------------------------------------------------
-    QWidget *globalPage = new QWidget();
-    auto *globalLayout  = new QVBoxLayout(globalPage);
-
-    auto *spinCrashForce = new QDoubleSpinBox();
-    spinCrashForce->setMaximum(10000.0);
-    spinCrashForce->setValue(m_processConfig.hw_crash_force_limit_gf);
-
-    globalLayout->addWidget(new QLabel("Hardware Crash Force Limit (gf):"));
-    globalLayout->addWidget(spinCrashForce);
-    globalLayout->addStretch();
-
-    // Add it to the UI and register how it saves itself
-    addConfigPage("Global Settings", globalPage, [this, spinCrashForce]() {
-        m_processConfig.hw_crash_force_limit_gf = spinCrashForce->value();
+    auto *forcePage = new Kub3::Components::ForceConfigPage(m_processConfig);
+    int forceIndex  = addConfigPage(forcePage, [this, forcePage]() {
+        forcePage->pullDataToStruct(m_processConfig);
     });
+    m_categoryMap[FORCE_CATEGORY].push_back({"Process & Crash Limits", forceIndex});
+
+    // -------------------------------------------------------------
+    // STATIC PAGE: ALIGNMENT CALIBRATION SETTINGS
+    // -------------------------------------------------------------
+    auto *alignPage = new Kub3::Components::AlignmentPositionsPage(m_processConfig);
+    int alignIdx    = addConfigPage(alignPage, [this, alignPage]() {
+        alignPage->pullDataToStruct(m_processConfig);
+    });
+    m_categoryMap[ALIGNMENT_CATEGORY].push_back({"Calibration Positions", alignIdx});
+
+    // -------------------------------------------------------------
+    // STATIC PAGE: CONVEYORS CALIBRATION SETTINGS
+    // -------------------------------------------------------------
+    auto *drawersPage = new Kub3::Components::DrawersPositionsPage(m_processConfig);
+    int drawersIdx    = addConfigPage(drawersPage, [this, drawersPage]() {
+        drawersPage->pullDataToStruct(m_processConfig);
+    });
+    m_categoryMap[CONVEYORS_CATEGORY].push_back({"Calibration Positions", drawersIdx});
+
+    QStringList allMotorIds;
+    for (const auto &[motorId, _] : m_hwConfig.motors)
+        allMotorIds << motorId;
+
+    // -------------------------------------------------------------
+    // STATIC PAGE: CAMERAS GENERAL SETTINGS
+    // -------------------------------------------------------------
+    auto *camGenPage = new Kub3::Components::CameraGeneralPage(m_processConfig);
+    int camGenIndex  = addConfigPage(camGenPage, [this, camGenPage]() {
+        camGenPage->pullDataToStruct(m_processConfig);
+    });
+    m_categoryMap[CAMERAS_CATEGORY].push_back({"General Settings", camGenIndex});
+
+    // -------------------------------------------------------------
+    // DYNAMIC PAGES: CAMERAS SETTINGS
+    // -------------------------------------------------------------
+    for (auto &[camId, camConfig] : m_hwConfig.cameras)
+    {
+        auto *camPage  = new Kub3::Components::CameraConfigPage(camConfig);
+        int stackIndex = addConfigPage(camPage, [&camConfig, camPage]() {
+            camPage->pullDataToStruct(camConfig);
+        });
+
+        m_categoryMap[CAMERAS_CATEGORY].push_back({Kub3::camelToNormal(camId), stackIndex});
+    }
 
     // -------------------------------------------------------------
     // DYNAMIC PAGES: MOTORS
     // -------------------------------------------------------------
     for (auto &[motorId, motorConfig] : m_hwConfig.motors)
     {
-        // Eventually, replace this raw QWidget with a custom 'MotorConfigWidget' class
-        // designed in Qt Designer to keep this file clean!
-        QWidget *motorPage = new QWidget();
-        auto *motorLayout  = new QVBoxLayout(motorPage);
+        auto kinIt                                   = m_processConfig.kinematic_profiles.find(motorId.toStdString());
+        Kub3::Config::KinematicProfiles myKinematics = (kinIt != m_processConfig.kinematic_profiles.end()) ? kinIt->second : Kub3::Config::KinematicProfiles{};
+        auto *motorPage                              = new Kub3::Components::MotorConfigPage(motorConfig, myKinematics, allMotorIds);
 
-        motorLayout->addWidget(new QLabel(QString("Configuration for Motor: %1").arg(motorId)));
+        connect(motorPage, &Kub3::Components::MotorConfigPage::profileExportRequested, this,
+                [this](const QString &targetMotor, const Kub3::Config::kinematic_profile_t &profile) {
+                    for (const auto &hook : m_saveHooks)
+                    {
+                        if (hook)
+                            hook();
+                    }
+                    m_processConfig.kinematic_profiles[targetMotor.toStdString()][profile.id] = profile;
+                    populateUI();
+                    QMessageBox::information(this, "Export", "Profile exported successfully.");
+                });
 
-        QDoubleSpinBox *spinPitch = nullptr;
-
-        if (std::holds_alternative<Kub3::Config::stepper_hw_properties_t>(motorConfig.hwProperties))
-        {
-            auto &stepper = std::get<Kub3::Config::stepper_hw_properties_t>(motorConfig.hwProperties);
-
-            spinPitch = new QDoubleSpinBox();
-            spinPitch->setDecimals(4);
-            spinPitch->setValue(stepper.screwPitchMm);
-            motorLayout->addWidget(new QLabel("Screw Pitch (mm):"));
-            motorLayout->addWidget(spinPitch);
-        }
-
-        motorLayout->addStretch();
-
-        // Add to stack, and define how this motor updates its specific struct
-        QString menuName = QString("Motor: %1").arg(motorId);
-
-        addConfigPage(menuName, motorPage, [&motorConfig, spinPitch]() {
-            if (spinPitch && std::holds_alternative<Kub3::Config::stepper_hw_properties_t>(motorConfig.hwProperties))
-            {
-                auto &stepper        = std::get<Kub3::Config::stepper_hw_properties_t>(motorConfig.hwProperties);
-                stepper.screwPitchMm = spinPitch->value();
-            }
+        int stackIndex = addConfigPage(motorPage, [this, &motorConfig, motorId = motorId.toStdString(), motorPage]() {
+            Kub3::Config::KinematicProfiles finalKinematics;
+            motorPage->pullDataToStruct(motorConfig, finalKinematics);
+            m_processConfig.kinematic_profiles[motorId] = finalKinematics;
         });
+
+        // Add to the appropriate category!
+        QString category = categorizeMotor(motorId);
+        m_categoryMap[category].push_back({Kub3::camelToNormal(motorId), stackIndex});
     }
 
-    // -------------------------------------------------------------
-    // DYNAMIC PAGES: CAMERAS
-    // -------------------------------------------------------------
-    for (auto &[camId, camConfig] : m_hwConfig.cameras)
+    // We add them in a specific order if we want, or just iterate the map.
+    QStringList categoryOrder = {
+        FORCE_CATEGORY,
+        CONVEYORS_CATEGORY,
+        Z_CATEGORY,
+        ALIGNMENT_CATEGORY,
+        CAMERAS_CATEGORY,
+        MISCELLANEOUS_CATEGORY};
+
+    for (const QString &cat : categoryOrder)
     {
-        QWidget *camPage = new QWidget();
-        auto *camLayout  = new QVBoxLayout(camPage);
-
-        camLayout->addWidget(new QLabel(QString("Camera: %1").arg(camId)));
-
-        auto *spinMaxExposure = new QDoubleSpinBox();
-        spinMaxExposure->setMaximum(1000000.0);
-        spinMaxExposure->setValue(camConfig.maxExposureUs);
-
-        camLayout->addWidget(new QLabel("Max Exposure (us):"));
-        camLayout->addWidget(spinMaxExposure);
-        camLayout->addStretch();
-
-        addConfigPage(QString("Camera: %1").arg(camId), camPage, [&camConfig, spinMaxExposure]() {
-            camConfig.maxExposureUs = spinMaxExposure->value();
-        });
+        if (m_categoryMap.contains(cat))
+            ui->categoryList->addItem(cat);
     }
 
-    // -------------------------------------------------------------
-    // SELECT FIRST ITEM BY DEFAULT
-    // -------------------------------------------------------------
-    if (ui->menuList->count() > 0)
+    ui->categoryList->blockSignals(false);
+
+    if (ui->categoryList->count() > 0)
     {
-        ui->menuList->setCurrentRow(0);
+        ui->categoryList->setCurrentRow(0); // This will trigger the cascade
     }
+}
+
+void ConfigWindow::onCategorySelectionChanged(QListWidgetItem *current, QListWidgetItem *previous)
+{
+    if (!current)
+        return;
+
+    ui->itemList->blockSignals(true);
+    ui->itemList->clear();
+
+    QString category  = current->text();
+    const auto &pages = m_categoryMap[category];
+
+    for (const auto &page : pages)
+    {
+        auto *item = new QListWidgetItem(page.displayName);
+
+        // Store the Stack Index directly inside the List Item
+        item->setData(Qt::UserRole, page.stackIndex);
+        ui->itemList->addItem(item);
+    }
+
+    ui->itemList->blockSignals(false);
+
+    if (ui->itemList->count() > 0)
+    {
+        ui->itemList->setCurrentRow(0); // Select first item, triggering stacked widget switch
+    }
+}
+
+void ConfigWindow::onItemSelected(QListWidgetItem *current, QListWidgetItem *previous)
+{
+    if (!current)
+        return;
+
+    // Retrieve the stored stack index and switch the view
+    int stackIndex = current->data(Qt::UserRole).toInt();
+    ui->stackedWidget->setCurrentIndex(stackIndex);
 }

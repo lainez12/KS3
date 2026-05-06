@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QListWidgetItem>
 #include <QWidget>
 #include <functional>
 #include <memory>
@@ -26,12 +27,18 @@ private slots:
     void onSaveClicked();
     void onReloadClicked();
 
+    void onCategorySelectionChanged(QListWidgetItem *current, QListWidgetItem *previous);
+    void onItemSelected(QListWidgetItem *current, QListWidgetItem *previous);
+
 private:
     void populateUI();
     void clearUI();
 
     // Helper to add a view to the list and stack cleanly
-    void addConfigPage(const QString &menuLabel, QWidget *pageWidget, std::function<void()> saveCallback);
+    int addConfigPage(QWidget *pageWidget, std::function<void()> saveCallback);
+
+    // Hardcoded Ergonomic Categorization
+    QString categorizeMotor(const QString &motorId) const;
 
 private:
     Ui::ConfigWindow *ui;
@@ -44,4 +51,13 @@ private:
 
     // A list of closures that pull data from the UI back into the structs
     std::vector<std::function<void()>> m_saveHooks;
+
+    // --- Category Routing Data ---
+    struct PageReference {
+        QString displayName;
+        int stackIndex;
+    };
+
+    // Maps a Category Name (e.g. "Z Motors") to a list of its UI Pages
+    std::map<QString, std::vector<PageReference>> m_categoryMap;
 };

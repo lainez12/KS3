@@ -65,8 +65,22 @@ namespace Kub3::Config
         // Map [id] -> [map of kinematic profiles for motor]
         std::unordered_map<std::string, KinematicProfiles> kinematic_profiles;
 
+        // Reset positions (initialization)
+        // --- Cameras
+        double left_cam_x_reset_pos_mm  = 0.0;
+        double left_cam_y_reset_pos_mm  = 0.0;
+        double right_cam_x_reset_pos_mm = 0.0;
+        double right_cam_y_reset_pos_mm = 0.0;
+        // --- Alignment stages
+        double x_stage_reset_pos_mm     = 0.0;
+        double y_stage_reset_pos_mm     = 0.0;
+        double theta_stage_reset_pos_mm = 0.0;
+        // --- CM3 mask-conveyor initilization
+        double cm3_reset_pos_mm = 0.0;
+
         // Cameras distances
         double min_camera_distance_mm = 0.0;
+
         // Force thresholds
         double hw_crash_force_limit_gf = 0.0;
         double max_force_gf            = 0.0;

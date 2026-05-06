@@ -95,7 +95,8 @@ namespace Kub3::Services
             const camera_motor_bundle_t rightCamYBundle = buildCameraMotorBundle(CameraMotorIdArg::RightY);
 
             enqueueTask<CamerasInitTask, CAMERAS_TASKS_QUEUE_LANE>(
-                m_repo, leftCamXBundle.motor, leftCamYBundle.motor, rightCamXBundle.motor, rightCamYBundle.motor,
+                m_repo, m_processConfig,
+                leftCamXBundle.motor, leftCamYBundle.motor, rightCamXBundle.motor, rightCamYBundle.motor,
                 m_leftCameraXKineProfile);
             enqueueTask<CamerasHomingTask, CAMERAS_TASKS_QUEUE_LANE>(
                 m_repo, leftCamXBundle, leftCamYBundle, rightCamXBundle, rightCamYBundle,

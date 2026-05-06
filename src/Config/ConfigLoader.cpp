@@ -37,7 +37,7 @@ namespace Kub3::Config
         }
 
         // LOAD MOTORS PARAMETERS
-        settings.beginGroup(CONF_MOTORS);
+        settings.beginGroup(CONF_HW_MOTORS);
         for (const QString &group : settings.childGroups())
         {
             settings.beginGroup(group);
@@ -45,19 +45,31 @@ namespace Kub3::Config
             motor_config_t motor;
             motor.id = group.toStdString();
 
-            QString type = getRequiredValue(settings, CONF_MOTOR_TYPE, motor.id).toString();
+            QString type = getRequiredValue(settings, CONF_HW_MOTOR_TYPE, motor.id).toString();
 
-            if (type == CONF_MOTOR_TYPE_STEPPER)
+            if (type == CONF_HW_MOTOR_TYPE_STEPPER)
             {
                 stepper_hw_properties_t hw;
 
                 // Parse, Don't Validate: We immediately cast to correct type. If it's malformed, it throws.
-                hw.stepsPerRev         = getRequiredValue(settings, CONF_MOTOR_STEPS_PER_REV, motor.id).toUInt();
-                hw.screwPitchMm        = getRequiredValue(settings, CONF_SCREW_PITCH_MM, motor.id).toDouble();
-                hw.maxVelocityMmS      = getRequiredValue(settings, CONF_MAX_VELOCITY_MM_S, motor.id).toDouble();
-                hw.maxAccelerationMmS2 = getRequiredValue(settings, CONF_MAX_ACCELERATION_MM_S2, motor.id).toDouble();
-                hw.encoderTopsPerRev   = getRequiredValue(settings, CONF_ENCODER_TOPS_PER_REV, motor.id).toUInt();
+                hw.stepsPerRev         = getRequiredValue(settings, CONF_HW_MOTOR_STEPS_PER_REV, motor.id).toUInt();
+                hw.screwPitchMm        = getRequiredValue(settings, CONF_HW_SCREW_PITCH_MM, motor.id).toDouble();
+                hw.maxVelocityMmS      = getRequiredValue(settings, CONF_HW_MAX_VELOCITY_MM_S, motor.id).toDouble();
+                hw.maxAccelerationMmS2 = getRequiredValue(settings, CONF_HW_MAX_ACCELERATION_MM_S2, motor.id).toDouble();
+                hw.encoderTopsPerRev   = getRequiredValue(settings, CONF_HW_ENCODER_TOPS_PER_REV, motor.id).toUInt();
                 // TODO: more checks
+                if (hw.screwPitchMm == 0.0)
+                    throw std::runtime_error(std::format("CRITICAL: Invalid screw pitch value ({})", hw.screwPitchMm));
+                motor.hwProperties = hw;
+            }
+            else if (type == CONF_HW_MOTOR_TYPE_DC)
+            {
+                dc_motor_hw_properties_t hw;
+
+                hw.screwPitchMm        = getRequiredValue(settings, CONF_HW_SCREW_PITCH_MM, motor.id).toDouble();
+                hw.maxVelocityMmS      = getRequiredValue(settings, CONF_HW_MAX_VELOCITY_MM_S, motor.id).toDouble();
+                hw.maxAccelerationMmS2 = getRequiredValue(settings, CONF_HW_MAX_ACCELERATION_MM_S2, motor.id).toDouble();
+                hw.encoderTopsPerRev   = getRequiredValue(settings, CONF_HW_ENCODER_TOPS_PER_REV, motor.id).toUInt();
                 if (hw.screwPitchMm == 0.0)
                     throw std::runtime_error(std::format("CRITICAL: Invalid screw pitch value ({})", hw.screwPitchMm));
                 motor.hwProperties = hw;
@@ -70,36 +82,36 @@ namespace Kub3::Config
             config.motors.emplace(group, motor);
             settings.endGroup();
         }
-        settings.endGroup(); // CONF_MOTORS
+        settings.endGroup(); // CONF_HW_MOTORS
 
         // LOAD CAMERAS PARAMETERS
-        settings.beginGroup(CONF_CAMERAS);
+        settings.beginGroup(CONF_HW_CAMERAS);
         for (const QString &group : settings.childGroups())
         {
             settings.beginGroup(group);
 
             camera_config_t camera = {
                 .id                = group.toStdString(),
-                .serialNumber      = getRequiredValue(settings, CONF_SERIAL_NUMBER, group).toString().toStdString(),
-                .maxExposureUs     = getRequiredValue(settings, CONF_MAX_EXPOSURE_US, group).toDouble(),
-                .defaultExposureUs = getRequiredValue(settings, CONF_DEFAULT_EXPOSURE_US, group).toDouble(),
-                .maxGainDb         = getRequiredValue(settings, CONF_MAX_GAIN_DB, group).toDouble(),
-                .defaultGainDb     = getRequiredValue(settings, CONF_DEFAULT_GAIN_DB, group).toDouble(),
+                .serialNumber      = getRequiredValue(settings, CONF_HW_SERIAL_NUMBER, group).toString().toStdString(),
+                .maxExposureUs     = getRequiredValue(settings, CONF_HW_MAX_EXPOSURE_US, group).toDouble(),
+                .defaultExposureUs = getRequiredValue(settings, CONF_HW_DEFAULT_EXPOSURE_US, group).toDouble(),
+                .maxGainDb         = getRequiredValue(settings, CONF_HW_MAX_GAIN_DB, group).toDouble(),
+                .defaultGainDb     = getRequiredValue(settings, CONF_HW_DEFAULT_GAIN_DB, group).toDouble(),
             };
 
             config.cameras.emplace(group, camera);
             settings.endGroup(); // group
         }
-        settings.endGroup(); // CONF_CAMERAS
+        settings.endGroup(); // CONF_HW_CAMERAS
 
-        settings.beginGroup(CONF_FORCE_SENSORS);
+        settings.beginGroup(CONF_HW_FORCE_SENSORS);
         for (const QString &group : settings.childGroups())
         {
             settings.beginGroup(group);
-            config.adc_to_gf_factors.emplace(group, getRequiredValue(settings, ADC_TO_GRAM_FORCE_FACTOR, group).toDouble());
+            config.adc_to_gf_factors.emplace(group, getRequiredValue(settings, CONF_HW_ADC_TO_GRAM_FORCE_FACTOR, group).toDouble());
             settings.endGroup(); // group
         }
-        settings.endGroup(); // CONF_FORCE_SENSORS
+        settings.endGroup(); // CONF_HW_FORCE_SENSORS
 
         return config;
     }
@@ -116,7 +128,7 @@ namespace Kub3::Config
         }
 
         // LOAD KINEMATIC PROFILES
-        settings.beginGroup("kinematics");
+        settings.beginGroup(CONF_PROCESS_KINEMATICS);
         qInfo() << "--- Loading kinematics config";
         for (const QString &motorGroup : settings.childGroups())
         {
@@ -129,26 +141,26 @@ namespace Kub3::Config
                 kinematic_profile_t profile;
 
                 profile.id                 = profileGroup.toStdString();
-                profile.initialVelocityMmS = getRequiredValue(settings, "initial_velocity_mm_s", profile.id).toDouble();
-                profile.targetVelocityMmS  = getRequiredValue(settings, "target_velocity_mm_s", profile.id).toDouble();
-                profile.accelerationMmS2   = getRequiredValue(settings, "acceleration_mm_s", profile.id).toDouble();
+                profile.initialVelocityMmS = getRequiredValue(settings, CONF_PROCESS_INITIAL_VELOCITY_MM_S, profile.id).toDouble();
+                profile.targetVelocityMmS  = getRequiredValue(settings, CONF_PROCESS_TARGET_VELOCITY_MM_S, profile.id).toDouble();
+                profile.accelerationMmS2   = getRequiredValue(settings, CONF_PROCESS_ACCELERATION_MM_S, profile.id).toDouble();
 
                 qInfo().nospace() << "------ Loading profile " << profile.id << " for motor " << motorId;
                 qInfo() << "\t> Initial velocity (mm/s):" << profile.initialVelocityMmS;
                 qInfo() << "\t> Target velocity (mm/s):" << profile.targetVelocityMmS;
                 qInfo() << "\t> Acceleration (mm/s2):" << profile.accelerationMmS2;
 
-                QString paramsType = getRequiredValue(settings, "params_type", profile.id).toString();
+                QString paramsType = getRequiredValue(settings, CONF_PROCESS_PARAMS_TYPE, profile.id).toString();
 
-                if (paramsType == "stepper")
+                if (paramsType == CONF_PROCESS_PARAMS_TYPE_STEPPER)
                 {
                     profile.params = stepper_kinematics_params_t{
-                        .stepFraction = (uint8_t)getRequiredValue(settings, "step_fraction", profile.id).toUInt()};
+                        .stepFraction = (uint8_t)getRequiredValue(settings, CONF_PROCESS_STEP_FRACTION, profile.id).toUInt()};
                     qInfo().nospace() << "\t> [Stepper] resolution: 1/" << std::get<stepper_kinematics_params_t>(profile.params).stepFraction;
                 }
-                else
+                else if (paramsType != CONF_PROCESS_PARAMS_TYPE_GENERIC)
                 {
-                    qWarning().nospace() << "WARNING: No parameters type specified for kinematic profile " << motorId << "/" << profile.id;
+                    qWarning().nospace() << "WARNING: Parameters type '" << paramsType << "' (profile: " << motorId << "/" << profile.id << ") not handled";
                 }
 
                 config.kinematic_profiles[motorId][profile.id] = profile;
@@ -156,18 +168,34 @@ namespace Kub3::Config
             }
             settings.endGroup(); // motorGroup
         }
-        settings.endGroup(); // "kinematics"
+        settings.endGroup(); // CONF_PROCESS_KINEMATICS
 
         // LOAD CAMERAS DATA
-        settings.beginGroup("cameras");
-        config.min_camera_distance_mm = getRequiredValue(settings, "min_camera_distance_mm", std::string("cameras")).toDouble();
-        settings.endGroup(); // "cameras"
+        settings.beginGroup(CONF_PROCESS_CAMERAS);
+        config.min_camera_distance_mm   = getRequiredValue(settings, CONF_PROCESS_MIN_CAMERA_DISTANCE_MM, std::string(CONF_PROCESS_CAMERAS)).toDouble();
+        config.left_cam_x_reset_pos_mm  = getRequiredValue(settings, CONF_PROCESS_LEFT_CAM_X_RESET_POS_MM, std::string(CONF_PROCESS_CAMERAS)).toDouble();
+        config.left_cam_y_reset_pos_mm  = getRequiredValue(settings, CONF_PROCESS_LEFT_CAM_Y_RESET_POS_MM, std::string(CONF_PROCESS_CAMERAS)).toDouble();
+        config.right_cam_x_reset_pos_mm = getRequiredValue(settings, CONF_PROCESS_RIGHT_CAM_X_RESET_POS_MM, std::string(CONF_PROCESS_CAMERAS)).toDouble();
+        config.right_cam_y_reset_pos_mm = getRequiredValue(settings, CONF_PROCESS_RIGHT_CAM_Y_RESET_POS_MM, std::string(CONF_PROCESS_CAMERAS)).toDouble();
+        settings.endGroup(); // CONF_PROCESS_CAMERAS
 
-        const std::string forceLimitsGroup("forceLimits");
+        // SAVE ALIGNMENT POSITIONS
+        settings.beginGroup(CONF_PROCESS_ALIGNMENT_POSITIONS);
+        config.x_stage_reset_pos_mm     = getRequiredValue(settings, CONF_PROCESS_X_STAGE_RESET_POS_MM, std::string(CONF_PROCESS_ALIGNMENT_POSITIONS)).toDouble();
+        config.y_stage_reset_pos_mm     = getRequiredValue(settings, CONF_PROCESS_Y_STAGE_RESET_POS_MM, std::string(CONF_PROCESS_ALIGNMENT_POSITIONS)).toDouble();
+        config.theta_stage_reset_pos_mm = getRequiredValue(settings, CONF_PROCESS_THETA_STAGE_RESET_POS_MM, std::string(CONF_PROCESS_ALIGNMENT_POSITIONS)).toDouble();
+        settings.endGroup();
+
+        // SAVE DRAWERS POSITIONS
+        settings.beginGroup(CONF_PROCESS_DRAWERS_POSITIONS);
+        config.cm3_reset_pos_mm = getRequiredValue(settings, CONF_PROCESS_CM3_RESET_POS_MM, std::string(CONF_PROCESS_DRAWERS_POSITIONS)).toDouble();
+        settings.endGroup();
+
+        const std::string forceLimitsGroup(CONF_PROCESS_FORCE_LIMITS);
         settings.beginGroup(forceLimitsGroup);
-        config.hw_crash_force_limit_gf = getRequiredValue(settings, "hw_crash_force_limit_gf", forceLimitsGroup).toDouble();
-        config.max_force_gf            = getRequiredValue(settings, "max_force_gf", forceLimitsGroup).toDouble();
-        config.contact_threshold_gf    = getRequiredValue(settings, "contact_threshold_gf", forceLimitsGroup).toDouble();
+        config.hw_crash_force_limit_gf = getRequiredValue(settings, CONF_PROCESS_HW_CRASH_FORCE_LIMIT_GF, forceLimitsGroup).toDouble();
+        config.max_force_gf            = getRequiredValue(settings, CONF_PROCESS_MAX_FORCE_GF, forceLimitsGroup).toDouble();
+        config.contact_threshold_gf    = getRequiredValue(settings, CONF_PROCESS_CONTACT_THRESHOLD_GF, forceLimitsGroup).toDouble();
         settings.endGroup(); // forceLimitsGroup
 
         return config;
