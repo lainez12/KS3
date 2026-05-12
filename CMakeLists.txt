@@ -54,7 +54,9 @@ qt_add_library(Kub3Core STATIC
     src/MFSM/MasterFSM.actions.cpp
     src/MFSM/MasterFSM.core.cpp
     src/MFSM/MasterFSM.heartbeat.cpp
-    src/MFSM/MasterFSM.transitions.cpp
+    src/MFSM/MasterFSM.transitions.macro.cpp
+    src/MFSM/MasterFSM.transitions.operational.cpp
+    src/MFSM/interlocks.cpp
 
     ## Services
     # --- Generic tasks
@@ -124,9 +126,12 @@ qt_add_library(Kub3Core STATIC
     include/Config/keys/hardware.h
     include/Config/keys/process.h
     ## Master FSM
-    include/MFSM/MasterFSM.h
     include/MFSM/events.h
-    include/MFSM/states.h
+    include/MFSM/interlocks.h
+    include/MFSM/MasterFSM.h
+    include/MFSM/posture.h
+    include/MFSM/states.macro.h
+    include/MFSM/states.operational.h
 
     ## Services
     include/Services/ITask.h

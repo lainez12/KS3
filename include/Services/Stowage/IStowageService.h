@@ -5,18 +5,13 @@
 namespace Kub3::Services
 {
 
-    enum class StowageTarget
-    {
-        WAFER,
-        MASK
-    };
+    enum StowageTarget : uint32_t;
 
     class IStowageService : public IService
     {
     public:
-        virtual ~IStowageService()              = default;
-        virtual void loadMaskToExposure(void)   = 0;
-        virtual void loadWaferToAlignment(void) = 0;
+        virtual ~IStowageService()                      = default;
+        virtual void startStowage(StowageTarget target) = 0;
     };
 
 }

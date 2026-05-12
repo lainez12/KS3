@@ -14,6 +14,13 @@
 namespace Kub3::Services
 {
 
+    enum StowageTarget : uint32_t
+    {
+        MASK  = 0x1 << 0,
+        WAFER = 0x1 << 1,
+        BOTH  = MASK & WAFER,
+    };
+
     class StowageService final : public BaseTaskService<IStowageService>
     {
     public:
@@ -21,9 +28,12 @@ namespace Kub3::Services
                        Shared<HAL::MS::IMachineStatusRepo> repo,
                        const Config::process_config_t &config);
 
+        void startStowage(StowageTarget target) override;
         void stop(void) override;
-        void loadMaskToExposure(void) override;
-        void loadWaferToAlignment(void) override;
+
+    private:
+        bool buildMaskStowageTaskQueue(void);
+        bool buildWaferStowageTaskQueue(void);
 
     private:
         [[nodiscard]] bool isAbsoluteBottomLimitReached() const;

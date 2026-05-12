@@ -29,7 +29,9 @@ namespace Kub3::Services
         UpperRightCamXLeft  = Positive,
         UpperRightCamXRight = Negative,
         UpperRightCamYBack  = Negative,
-        UpperRightCamYFront = Positive
+        UpperRightCamYFront = Positive,
+        DeckBack            = Negative,
+        DeckFront           = Positive
     };
 
     constexpr uint32_t VISION_WATCHDOG_TIMEOUT_TICKS = 15; // 300ms
@@ -53,16 +55,19 @@ namespace Kub3::Services
 
         void tick(void) override;
         void stop(void) override;
+
         [[nodiscard]] ServiceStatus getStatus(void) const noexcept override
         {
-            return ServiceStatus::Running;
+            return m_status;
         }
+
         [[nodiscard]] std::string getErrorReason(void) const override
         {
-            return "";
+            return m_errorReason;
         }
 
         // IVisionMotor overrides
+        void moveBlockToVisualisationPosition(void) override;
         void moveManual(VisionMotor motor, VisionDirection dir) override;
         void stopManual(VisionMotor motor) override;
         void setKinematicMode(VisionMotor motor, bool fineMode) override;
@@ -75,6 +80,7 @@ namespace Kub3::Services
         [[nodiscard]] bool inCollisionZone(VisionMotor motor, VisionDirection dir) const;
         void setupMotor(VisionMotor motorId, const char *motorConfId, const Config::process_config_t &conf);
         void applyPush(VisionMotor pushingMotor, bool fineMode);
+        bool deckVisualisationLimitReached(void) const;
 
     private:
         Shared<HAL::Act::ActuatorRegistry> m_registry;
@@ -82,6 +88,15 @@ namespace Kub3::Services
 
         bool m_pushingModeEnabled    = false;
         double m_minCameraDistanceMm = 0.0f; // Minimal safe distance to prevent collision
-        std::unordered_map<VisionMotor, vision_motor_config_t> m_motors;
+        std::unordered_map<VisionMotor, vision_motor_config_t> m_cameraMotors;
+
+        // --- Deck Movement State ---
+        Shared<HAL::Act::IMotor> m_deckMotor;
+        Config::kinematic_profile_t m_deckProfile;
+        const double m_deckVisuPosMm = 0.0;
+
+        bool m_isDeckMoving    = false;
+        ServiceStatus m_status = ServiceStatus::Idle;
+        std::string m_errorReason;
     };
 }

@@ -1,6 +1,9 @@
+#include <QDebug>
+
 #include <HAL/MachineStatus/sensors_labels.h>
 #include <HAL/MachineStatus/utils.h>
 #include <MFSM/MasterFSM.h>
+#include <utils.h>
 
 namespace
 {
@@ -19,44 +22,29 @@ namespace Kub3::MFSM
 
     void MasterFSM::onLogicTick(void)
     {
-        checkHardwareSafety(); // Unconditional Safety Check (e.g. Physical Emergency-Stop Button)
+        // Unconditional Safety Check (Physical Emergency-Stop and PowerOff Buttons)
+        this->checkHardwareSafety();
 
-        const auto museum = overloadedCallable(
-            [&](StateBooting &bootState) { onStateBootingTick(bootState); },
-            [&](StateWaitingInitialization &) { /* Wait for trigger */ },
-            [&](StateInitialization &initState) { onStateInitializationTick(initState); },
-            [&](StateIdle &) { /* Monitor temperatures, hold position */ },
-            [&](StateOperating &operatingState) { onStateOperatingTick(operatingState); },
-            [&](StateError &) { /* Blink red lights */ },
-            [&](StateEmergencyStop &) { /* Ensure actuators are disabled */ },
-            [&](StatePowerOff &powerOffState) { onStatePowerOffTick(powerOffState); });
+        // 2. Route the tick to the current active Macro-State
+        const auto museum = overloadedCallable{
+            [&](StateBooting &s) { this->onStateBootingTick(s); },
+            [&](StateInitializing &s) { this->onStateInitializationTick(s); },
+            [&](StateOperational &s) { this->onStateOperationalTick(s); },
+            [&](StatePreparePowerOff &s) { this->onStatePreparePowerOffTick(s); },
+            // Passive states that only respond to external events (No active ticking)
+            [&](auto &) { /* no-op */ }};
 
-        std::visit(museum, m_state); // Execute State-Specific Continuous Logic
+        std::visit(museum, m_state);
     }
 
-    void MasterFSM::checkHardwareSafety(void)
-    {
-        const bool emergencyStopTriggered  = HAL::MS::readBool(m_repo, EMERGENCY_STOP_BUTTON);
-        const bool systemPowerOffTriggered = HAL::MS::readBool(m_repo, POWER_OFF_BUTTON);
-
-        // Dispatch emergency stop event when:
-        //  - Emergency stop press is detected
-        //  - Not already in emergency stop state
-        if (emergencyStopTriggered && !std::holds_alternative<StateEmergencyStop>(m_state))
-        {
-            dispatch(EvEmergencyStopTriggered{"Hardware Emergency Stop Button Pressed"});
-        }
-        if (systemPowerOffTriggered && !std::holds_alternative<StatePowerOff>(m_state))
-        {
-            dispatch(EvPowerOff{});
-        }
-    }
+    // ==========================================================================
+    // MACRO-STATE TICKS
+    // ==========================================================================
 
     void MasterFSM::onStateBootingTick(StateBooting &bootState)
     {
         bootState.ticksElapsed++;
 
-        // (In the future, this list could be injected via ApplicationBuilder from config)
         static const std::vector<BootDependency> requiredDependencies = {
 #if defined(KUB_MODEL_8)
             {MCU_ARDUINO1_ID, MCU_ARDUINO1_READY},
@@ -120,10 +108,9 @@ namespace Kub3::MFSM
             bootState.ticksElapsed = 0; // Reset timer for the next retry window
     }
 
-    void MasterFSM::onStateInitializationTick(StateInitialization &state)
+    void MasterFSM::onStateInitializationTick(StateInitializing &)
     {
         m_homingService->tick();
-
         const Services::ServiceStatus status = m_homingService->getStatus();
 
         if (status == Services::ServiceStatus::Success)
@@ -132,37 +119,63 @@ namespace Kub3::MFSM
             dispatch(EvServiceError{.reason = m_homingService->getErrorReason()});
     }
 
-    void MasterFSM::onStateOperatingTick(StateOperating &op)
+    void MasterFSM::onStatePreparePowerOffTick(const StatePreparePowerOff &s)
+    {
+        m_homingService->tick();
+        const Services::ServiceStatus status = m_homingService->getStatus();
+
+        if (status == Services::ServiceStatus::Success)
+            dispatch(EvPowerOff{});
+        else if (status == Services::ServiceStatus::Error)
+        {
+            qCritical().nospace()
+                << "Failed to perform homing procedure before powering off: " << m_homingService->getErrorReason()
+                << "\nForcing shutdown.";
+            dispatch(EvPowerOff{}); // Force shutdown anyway
+        }
+    }
+
+    // ==========================================================================
+    // OPERATIONAL SUB-STATE TICKS (Level 2)
+    // ==========================================================================
+    void MasterFSM::onStateOperationalTick(StateOperational &opState)
     {
         const auto museum = overloadedCallable{
-            [&](const Payloads::DrawerOpPayload &) { onBasicOperatingServiceTick(op, m_drawerService.get()); },
-            [&](const Payloads::HomingOpPayload &) { onBasicOperatingServiceTick(op, m_homingService.get()); },
-            [&](const Payloads::StowageOpPayload &) { onBasicOperatingServiceTick(op, m_stowageService.get()); },
-            [&](const Payloads::ExposureOpPayload &) { onBasicOperatingServiceTick(op, m_exposureService.get()); },
-            [&](const Payloads::AlignmentOpPayload &payload) {
+            [&](StateIdle &) { /* no-op */ },
+            [&](StateDrawerOp &s) { onBasicOperatingServiceTick(s, m_drawerService.get()); },
+            [&](StateStowing &s) { onBasicOperatingServiceTick(s, m_stowageService.get()); },
+            [&](StateUnstowing &s) { onBasicOperatingServiceTick(s, m_homingService.get()); },
+            [&](StatePreparingAlignment &s) { onBasicOperatingServiceTick(s, m_visionService.get()); },
+            [&](StateAlignment &s) {
+                // Alignment mode is highly interactive: multiple services tick simultaneously.
                 m_alignmentService->tick();
                 m_visionService->tick();
                 m_contactService->tick();
-                // Watch contact to set hardware lock when contact is reached even when the contact phase is "free" (no contact)
-                m_alignmentService->setHardwareLock(payload.phase != Payloads::ContactPhase::Free || m_contactService->isInContact());
+                // Dynamic Hardware Lock: Alignment axes must be frozen if contact is applying/active
+                m_alignmentService->setHardwareLock((s.phase != ContactPhase::Free || m_contactService->isInContact()));
 
-                if (payload.phase == Payloads::ContactPhase::ApplyingContact ||
-                    payload.phase == Payloads::ContactPhase::Separating)
+                // Check for sequence completions if we are moving the Z stage
+                if (s.phase == ContactPhase::ApplyingContact || s.phase == ContactPhase::Separating)
                 {
-                    const Services::ServiceStatus zStatus = m_contactService->getStatus();
-
+                    const auto zStatus = m_contactService->getStatus();
                     if (zStatus == Services::ServiceStatus::Success)
                         dispatch(EvContactSequenceComplete{});
                     else if (zStatus == Services::ServiceStatus::Error)
                         dispatch(EvServiceError{.reason = m_contactService->getErrorReason()});
                 }
             },
-        };
+            [&](StatePreparingExposure &s) { onBasicOperatingServiceTick(s, m_homingService.get()); }, // `HomingService` is used here to move vision block to home
+            [&](StateExposureReady &s) { /* no-op */ },
+            [&](StateExposing &s) { onBasicOperatingServiceTick(s, m_exposureService.get()); }};
 
-        std::visit(museum, op.payload);
+        std::visit(museum, opState.subState);
     }
 
-    void MasterFSM::onBasicOperatingServiceTick(StateOperating &op, Services::IService *service)
+    // ==========================================================================
+    // GENERIC SERVICE TICKER & POSTURE MERGER
+    // ==========================================================================
+    template <typename StateT>
+    void MasterFSM::onBasicOperatingServiceTick(StateT &state, Services::IService *service)
     {
         if (!service)
             return;
@@ -171,16 +184,22 @@ namespace Kub3::MFSM
         const Services::ServiceStatus status = service->getStatus();
 
         if (status == Services::ServiceStatus::Success)
+        {
+            // C++20 SFINAE/Concepts-lite magic:
+            // If this particular sub-state struct has an 'expectedSuccess' posture payload,
+            // merge it into the global SystemPosture before signaling success!
+            if constexpr (requires { state.expectedSuccess; })
+            {
+                if (auto *opState = std::get_if<StateOperational>(&m_state))
+                    this->updateAndBroadcastPosture(state.expectedSuccess, opState->posture);
+            }
+
             dispatch(EvServiceSuccess{});
+        }
         else if (status == Services::ServiceStatus::Error)
+        {
             dispatch(EvServiceError{.reason = service->getErrorReason()});
+        }
     }
 
-    void MasterFSM::onStatePowerOffTick(StatePowerOff &powerOffState)
-    {
-        // TODO: Check homing state before powering off
-
-        emit s_requestPowerOff();
-    }
-
-}
+} // namespace Kub3::MFSM

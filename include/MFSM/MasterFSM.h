@@ -7,7 +7,10 @@
 
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
 #include <MFSM/events.h>
-#include <MFSM/states.h>
+#include <MFSM/posture.h>
+#include <MFSM/states.macro.h>
+#include <MFSM/states.operational.h>
+
 #include <Services/Alignment/IAlignmentService.h>
 #include <Services/Contact/IContactService.h>
 #include <Services/Drawers/IDrawerService.h>
@@ -38,69 +41,94 @@ namespace Kub3::MFSM
         void start(void);
 
     signals:
-        // Tier 2 (Logic) -> Tier 1 (UI) Outputs
+        // --- Tier 2 (Logic) -> Tier 1 (UI) Outputs ---
         void s_stateChanged(const QString &stateName);
-        void s_errorOccurred(const QString &errorMessage);
-        // Tier 2 (Logic) -> Tier 3 (I/O threads)
+        void s_postureChanged(const MFSM::SystemPosture &posture); // To drive UI indicators
+
+        // Error Management
+        void s_warningOccurred(const QString &warningMessage); // E.g., Interlock rejections
+        void s_errorOccurred(const QString &errorMessage);     // Hard faults / E-Stops
+
+        // --- Tier 2 (Logic) -> Tier 3 (I/O threads) ---
         void s_requestHardwareRetry(const QString &hardwareId);
         void s_requestPowerOff(void);
         void s_requestCameraParamUpdate(const QString &camId, HAL::Vision::CameraParamKind kind, HAL::Vision::CameraParam value);
 
     public slots:
-        // Tier 1 (UI) -> Tier 2 (Logic) Thread-Safe Commands
+        // --- Tier 1 (UI) -> Tier 2 (Logic) Thread-Safe Commands ---
+
+        // System lifecycle
         void ps_requestInitialization(void);
-        void ps_requestOperateDrawer(int targetInt, int operationInt); // TODO: replace `int` type with enum or better for communication
         void ps_requestResetError(void);
-        void ps_requestEmergencyStop(void); // unused for now
-        void ps_systemPowerOff(void);       // unused for now
+        void ps_requestEmergencyStop(void);
+        void ps_systemPowerOff(void);
+
+        // TODO: define correct parameter types
+        // Hardware sequences
+        void ps_requestOperateDrawer(int targetInt, int operationInt);
+        void ps_requestStowage(int targetInt);
+        void ps_requestUnstowage(int targetInt);
+        void ps_requestExposure(const Services::ExposurePayload &payload);
+
+        // Camera configuration
         void ps_requestExposureUpdate(const QString &camId, double val);
         void ps_requestGainUpdate(const QString &camId, double val);
         void ps_requestFrameRateUpdate(const QString &camId, double val);
         void ps_requestCenteredZoomUpdate(const QString &camId, double val);
         void ps_requestROIUpdate(const QString &camId, const QRect &roi);
-        void ps_requestStowage(void);
-        void ps_requestExposure(const Services::ExposurePayload &payload);
 
     private slots:
-        // The Heartbeat (50Hz)
+        // --- The Heartbeat (50Hz) ---
         void onLogicTick(void);
-        void onStateBootingTick(StateBooting &bootState);
-        void onStateInitializationTick(StateInitialization &state);
-        void onStateOperatingTick(StateOperating &operatingState);
-        void onStatePowerOffTick(StatePowerOff &powerOffState);
 
     private:
-        // Helpers
-        void onBasicOperatingServiceTick(StateOperating &op, Services::IService *service);
-
-        // Core FSM Methods
+        // --- HFSM Core Dispatchers ---
         void dispatch(const SystemEvent &event);
-        [[nodiscard]] bool processStaticEvent(SystemState &currentState, const SystemEvent &event);
-        [[nodiscard]] static SystemState processTransition(const SystemState &currentState, const SystemEvent &event);
-        void onStateEntered(const SystemState &newState);
 
-        // Specific event processing methods
+        // Static events (do not change state index, e.g., joystick movements)
+        [[nodiscard]] bool processStaticEvent(SystemState &currentState, const SystemEvent &event);
+
+        // Transition Math (Pure Functions)
+        [[nodiscard]] SystemState processMacroTransition(const SystemState &currentState, const SystemEvent &event);
+        [[nodiscard]] OperationalState processOperationalTransition(const StateOperational &opState, const SystemEvent &event);
+
+        // State Entry Triggers (Side effects, service routing)
+        void onStateEntered(const SystemState &newState);
+        void onOperationalStateEntered(const StateOperational &parentState, const OperationalState &newSubState);
+
+        // --- Continuous Tick Handlers ---
+        void onStateBootingTick(StateBooting &bootState);
+        void onStateInitializationTick(StateInitializing &state);
+        void onStateOperationalTick(StateOperational &opState);
+        void onStatePreparePowerOffTick(const StatePreparePowerOff &state);
+
+        // Template helper for executing basic services (Drawers, Stowage, Exposure)
+        template <typename StateT>
+        void onBasicOperatingServiceTick(StateT &state, Services::IService *service);
+
+        // --- Pad/Static Processors ---
         void processCmdAlignmentPad(const CmdAlignmentPad &cmd);
         void processCmdZPad(const CmdZAxisPad &cmd);
         void processCmdVisionPad(const CmdVisionPad &cmd);
 
-        // Safety Monitors
-        void checkHardwareSafety();
-        void stopAllServices();
+        // --- Safety Monitors ---
+        void checkHardwareSafety(void);
+        void stopAllServices(void);
+        void updateAndBroadcastPosture(const ExpectedSystemPosture &expected, SystemPosture &current);
 
     private:
-        SystemState m_state;                        // Current Master FMS state
-        Shared<HAL::MS::IMachineStatusRepo> m_repo; // TODO: define if necessary
-        QTimer m_logicTimer;                        // Tick timer
+        SystemState m_state;                        // HFSM Macro-State (Single Source of Truth)
+        Shared<HAL::MS::IMachineStatusRepo> m_repo; // The raw hardware values bus
+        QTimer m_logicTimer;                        // 50Hz tick timer
 
-        // Services
-        Shared<Services::IHomingService> m_homingService;       // Homing / Initialization Service
-        Shared<Services::IDrawerService> m_drawerService;       // Drawer Service
-        Shared<Services::IStowageService> m_stowageService;     // Stowage service
-        Shared<Services::IAlignmentService> m_alignmentService; // Alignment (+ manual movements) Service
-        Shared<Services::IVisionService> m_visionService;       // Vision Movements Service
-        Shared<Services::IContactService> m_contactService;     // Autoleveling/Contact (+ manual movements) Service
-        Shared<Services::IExposureService> m_exposureService;   // Exposure service
+        // Services (Pure Business Logic)
+        Shared<Services::IHomingService> m_homingService;
+        Shared<Services::IDrawerService> m_drawerService;
+        Shared<Services::IStowageService> m_stowageService;
+        Shared<Services::IAlignmentService> m_alignmentService;
+        Shared<Services::IVisionService> m_visionService;
+        Shared<Services::IContactService> m_contactService;
+        Shared<Services::IExposureService> m_exposureService;
     };
 
 } // namespace Kub3::MFSM

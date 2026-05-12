@@ -7,6 +7,15 @@
 #include <Config/keys/hardware.h>
 #include <Config/keys/process.h>
 
+#define CHECK_CONFIG_VALUE(cond, elemId, value, valName)                                                               \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        if (cond)                                                                                                      \
+        {                                                                                                              \
+            throw std::runtime_error(std::format("CRITICAL: Invalid '{}' value for {} ({})", valName, elemId, value)); \
+        }                                                                                                              \
+    } while (0);
+
 namespace Kub3::Config
 {
 
@@ -87,9 +96,11 @@ namespace Kub3::Config
                 hw.maxVelocityMmS      = getRequiredValue(settings, CONF_HW_MAX_VELOCITY_MM_S, motor.id).toDouble();
                 hw.maxAccelerationMmS2 = getRequiredValue(settings, CONF_HW_MAX_ACCELERATION_MM_S2, motor.id).toDouble();
                 hw.encoderTopsPerRev   = getRequiredValue(settings, CONF_HW_ENCODER_TOPS_PER_REV, motor.id).toUInt();
-                // TODO: more checks
-                if (hw.screwPitchMm == 0.0)
-                    throw std::runtime_error(std::format("CRITICAL: Invalid screw pitch value ({})", hw.screwPitchMm));
+
+                CHECK_CONFIG_VALUE(hw.stepsPerRev == 0.0, motor.id, hw.stepsPerRev, "steps per revolution");
+                CHECK_CONFIG_VALUE(hw.screwPitchMm == 0.0, motor.id, hw.screwPitchMm, "screw pitch");
+                CHECK_CONFIG_VALUE(hw.encoderTopsPerRev == 0.0, motor.id, hw.encoderTopsPerRev, "encoder tops per revolution");
+
                 motor.hwProperties = hw;
             }
             else if (type == CONF_HW_MOTOR_TYPE_DC)
@@ -100,8 +111,10 @@ namespace Kub3::Config
                 hw.maxVelocityMmS      = getRequiredValue(settings, CONF_HW_MAX_VELOCITY_MM_S, motor.id).toDouble();
                 hw.maxAccelerationMmS2 = getRequiredValue(settings, CONF_HW_MAX_ACCELERATION_MM_S2, motor.id).toDouble();
                 hw.encoderTopsPerRev   = getRequiredValue(settings, CONF_HW_ENCODER_TOPS_PER_REV, motor.id).toUInt();
-                if (hw.screwPitchMm == 0.0)
-                    throw std::runtime_error(std::format("CRITICAL: Invalid screw pitch value ({})", hw.screwPitchMm));
+
+                CHECK_CONFIG_VALUE(hw.screwPitchMm == 0.0, motor.id, hw.screwPitchMm, "screw pitch");
+                CHECK_CONFIG_VALUE(hw.encoderTopsPerRev == 0.0, motor.id, hw.encoderTopsPerRev, "encoder tops per revolution");
+
                 motor.hwProperties = hw;
             }
             else

@@ -49,6 +49,22 @@ namespace Kub3::Services
         m_waferVacuumValve = m_registry->get<HAL::Act::IValve>(WAFER_VACUUM_VALVE);
     }
 
+    void StowageService::startStowage(StowageTarget target)
+    {
+        this->clearTasks();
+        if (target && StowageTarget::MASK)
+        {
+            if (!buildMaskStowageTaskQueue())
+                return;
+        }
+        if (target && StowageTarget::WAFER)
+        {
+            if (!buildWaferStowageTaskQueue())
+                return;
+        }
+        this->startSequence();
+    }
+
     void StowageService::stop(void)
     {
         // Stop Z motors
@@ -69,26 +85,23 @@ namespace Kub3::Services
         BaseTaskService::stop();
     }
 
-    void StowageService::loadMaskToExposure(void)
-    {}
-
-    void StowageService::loadWaferToAlignment(void)
+    bool StowageService::buildMaskStowageTaskQueue(void)
     {
-        this->clearTasks();
+        // TODO: code
+        return true;
+    }
 
+    bool StowageService::buildWaferStowageTaskQueue(void)
+    {
         // Mandatory Pre-Condition: Wafer drawer MUST be inserted
         if (!HAL::MS::readBool(m_repo, CW2))
         {
             abortSequence("Stowage procedure rejected: Wafer drawer is not inserted.");
-            return;
+            return false;
         }
 
-        // Check if already loaded
-        if (HAL::MS::readBool(m_repo, Z2))
-        {
-            this->startSequence(); // Instant success (Already loaded)
-            return;
-        }
+        if (HAL::MS::readBool(m_repo, Z2)) // Check if already loaded
+            return true;                   // Nothing to do
 
         if (!HAL::MS::readBool(m_repo, WAFER_ON)) // Lower than Z2 and WAFER_ON
         {
@@ -102,7 +115,7 @@ namespace Kub3::Services
         }
         enqueueTask<StowageMoveZToLimitTask>(m_repo, m_zMotorsBundle, ZLimit::_Z2, true); // Move Z UP until Z2 is True (Entering alignment zone)
 
-        this->startSequence(45000);
+        return true;
     }
 
     bool StowageService::isAbsoluteBottomLimitReached() const

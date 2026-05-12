@@ -31,6 +31,7 @@ namespace Kub3::Services
     public:
         virtual ~IVisionService() = default;
 
+        virtual void moveBlockToVisualisationPosition(void)             = 0;
         virtual void moveManual(VisionMotor motor, VisionDirection dir) = 0;
         virtual void stopManual(VisionMotor motor)                      = 0;
         virtual void setKinematicMode(VisionMotor motor, bool fineMode) = 0;

@@ -1,6 +1,10 @@
 #pragma once
 
+#include <QHash>
+#include <QString>
 #include <array>
+#include <format>
+#include <stdexcept>
 #include <string>
 #include <unordered_map>
 #include <variant>

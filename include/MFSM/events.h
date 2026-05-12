@@ -12,8 +12,6 @@
 #include <Services/Vision/IVisionService.h>
 #include <utils.h>
 
-#include "states.h"
-
 // ===============================================
 // Master Finite State Machine EVENTS Definitions
 // ===============================================
@@ -21,89 +19,101 @@
 namespace Kub3::MFSM
 {
 
+    // =============================
+    // MACRO EVENTS
+    // =============================
+
+    // --- BOOT & INITIALIZATION EVENTS ---
+
     // Emitted when software has successfully connected to the hardware
     struct EvHardwareReady {};
-
     struct EvHardwareError {
         std::string reason;
     };
-
     // Emitted when software has successfully performed the initialization routine
     struct EvInitializationComplete {};
 
-    // UI commands
+    // --- MACRO SYSTEM COMMANDS ---
+
+    struct CmdStartInitialization {};
+    struct CmdResetError {};
+    struct EvEmergencyStopTriggered {
+        std::string reason;
+    };
+    struct EvPowerOff {};
+
+    // =============================
+    // OPERATIONAL COMMANDS
+    // =============================
+
+    // --- DRAWER & STOWAGE COMMANDS ---
 
     enum class DrawerOperation
     {
         INSERT,
         EJECT
     };
-
-    struct CmdStartInitialization {};
-
     struct CmdOperateDrawer {
         Services::DrawerTarget target;
         DrawerOperation operation;
     };
-
-    struct CmdResetError {};
-
-    struct CmdCameraParamUpdate {
-        QString cameraId;
-        HAL::Vision::CameraParamKind kind;
-        HAL::Vision::CameraParam value;
+    struct CmdOperateStowage {
+        Services::StowageTarget target;
     };
+    struct CmdOperateUnstowage {
+        Services::StowageTarget target;
+    };
+
+    // --- ALIGNMENT & CONTACT COMMANDS ---
 
     struct CmdEnterAlignmentMode {
         bool autoMode = false;
     };
-
     struct CmdExitAlignmentMode {};
+    struct CmdStartAutolevel {};
+    struct CmdApplyContact {
+        double forceGF;
+    };
+
+    // --- MANUAL PAD MOVEMENTS (Interactive) ---
 
     struct CmdAlignmentPad {
         Services::AlignmentStage targetStage;
         Services::AlignmentPayload operation;
     };
-
     struct CmdZAxisPad {
         Services::ZAxisPayload operation;
     };
-
     struct CmdVisionPad {
         Services::VisionMotor targetMotor;
         Services::VisionPayload operation;
     };
 
-    struct CmdOperateStowage {
-        Services::StowageTarget target;
-    };
+    // --- VISION & EXPOSURE COMMANDS ---
 
+    struct CmdEnterExposureMode {};
+    struct CmdCameraParamUpdate {
+        QString cameraId;
+        HAL::Vision::CameraParamKind kind;
+        HAL::Vision::CameraParam value;
+    };
     struct CmdStartExposure {
         Services::ExposurePayload payload;
     };
 
-    struct CmdStartAutolevel {};
-
-    struct CmdApplyContact {
-        double forceGF;
-    };
-
-    // Internal Service Events
+    // ===============================
+    // INTERNAL SERVICE FEEDBACK
+    // ===============================
 
     struct EvServiceSuccess {};
-
     struct EvServiceError {
         std::string reason;
     };
-
-    struct EvEmergencyStopTriggered {
-        std::string reason;
-    };
-
     struct EvContactSequenceComplete {};
 
-    struct EvPowerOff {};
-
+    // ===============================
+    // SYSTEM EVENT VARIANT
+    // ===============================
     using SystemEvent = std::variant<
         // Boot & Initialization events
         EvHardwareReady,
@@ -115,8 +125,9 @@ namespace Kub3::MFSM
         CmdStartInitialization,
         // --- Drawers/Conveyors
         CmdOperateDrawer,
-        // --- Stowage (Z axis)
+        // --- Stowage (Wafer holder securing / Mask to exposure)
         CmdOperateStowage,
+        CmdOperateUnstowage,
         // --- Vision settings
         CmdCameraParamUpdate,
         // --- Horizontality & Contact
