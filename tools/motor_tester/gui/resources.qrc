@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>styles/motor_tester.qss</file>
+    </qresource>
+</RCC>

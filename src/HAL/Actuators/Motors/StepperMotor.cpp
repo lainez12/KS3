@@ -13,7 +13,7 @@ namespace Kub3::HAL::Act
                                uint8_t byteId,
                                Weak<MCUDriver> driver,
                                Config::stepper_hw_properties_t hwConfig,
-                               std::function<double()> posGetter,
+                               std::function<int32_t()> posGetter,
                                Unique<IKinematicGenerator> kinematicEngine,
                                QObject *parent) :
         QObject(parent),
@@ -25,12 +25,12 @@ namespace Kub3::HAL::Act
         m_kinematicEngine(std::move(kinematicEngine)),
         m_controlTimer(this)
     {
-        qDebug() << std::format("Stepper[{}] Loaded config:", m_id);
-        qDebug() << std::format("--- stepsPerRev={}", m_hwConfig.stepsPerRev);
-        qDebug() << std::format("--- screwPitchMm={}", m_hwConfig.screwPitchMm);
-        qDebug() << std::format("--- maxVelocityMmS={}", m_hwConfig.maxVelocityMmS);
-        qDebug() << std::format("--- maxAccelerationMmS2={}", m_hwConfig.maxAccelerationMmS2);
-        qDebug() << std::format("--- encoderTopsPerRev={}", m_hwConfig.encoderTopsPerRev);
+        qInfo() << std::format("Stepper[{}] Loaded config:", m_id);
+        qInfo() << std::format("--- stepsPerRev={}", m_hwConfig.stepsPerRev);
+        qInfo() << std::format("--- screwPitchMm={}", m_hwConfig.screwPitchMm);
+        qInfo() << std::format("--- maxVelocityMmS={}", m_hwConfig.maxVelocityMmS);
+        qInfo() << std::format("--- maxAccelerationMmS2={}", m_hwConfig.maxAccelerationMmS2);
+        qInfo() << std::format("--- encoderTopsPerRev={}", m_hwConfig.encoderTopsPerRev);
 
         if (!m_kinematicEngine)
         {
@@ -42,13 +42,16 @@ namespace Kub3::HAL::Act
 
     void StepperMotor::sendPayload(const uint8_t *payload, uint32_t size) const
     {
+        auto sizedPayload = QByteArray(reinterpret_cast<const char *>(payload), size + 1);
+
+        sizedPayload.push_front(static_cast<uint8_t>(size));
         if (auto driver = m_driver.lock())
         {
             QMetaObject::invokeMethod(
                 driver.get(),
                 &MCUDriver::ps_sendCommand,
                 Qt::QueuedConnection,
-                QByteArray(reinterpret_cast<const char *>(payload), size));
+                sizedPayload);
         }
         else
         {
@@ -58,128 +61,148 @@ namespace Kub3::HAL::Act
 
     void StepperMotor::moveAbsolute(double position_mm, Config::kinematic_profile_t profile)
     {
-        // Clamp to safety limits
-        double safeVel = std::min(profile.targetVelocityMmS, m_hwConfig.maxVelocityMmS);
-        double safeAcc = std::min(profile.accelerationMmS2, m_hwConfig.maxAccelerationMmS2);
+        QMetaObject::invokeMethod(
+            this,
+            [&]() {
+                // Clamp to safety limits
+                double safeVel = std::min(profile.targetVelocityMmS, m_hwConfig.maxVelocityMmS);
+                double safeAcc = std::min(profile.accelerationMmS2, m_hwConfig.maxAccelerationMmS2);
 
-        // Extract step fraction safely
-        uint8_t stepFrac = 1;
-        if (auto *p = std::get_if<Config::stepper_kinematics_params_t>(&profile.params))
-            stepFrac = p->stepFraction;
+                // Extract step fraction safely
+                uint8_t stepFrac = 1;
+                if (auto *p = std::get_if<Config::stepper_kinematics_params_t>(&profile.params))
+                    stepFrac = p->stepFraction;
 
-        m_currentStepFraction = stepFrac; // Store for MCU translation
-        m_lastSentHz.reset();             // Reset cached "last sent frequency" value;
+                m_currentStepFraction = stepFrac; // Store for MCU translation
+                m_lastSentHz.reset();             // Reset cached "last sent frequency" value;
 
-        if (!m_controlTimer.isActive()) // Start the control timer
-        {
-            // Initialize the math engine
-            m_kinematicEngine->startPositionMove(getEncoderPositionMm(), position_mm, safeVel, safeAcc);
+                if (!m_controlTimer.isActive()) // Start the control timer
+                {
+                    // Initialize the math engine
+                    m_kinematicEngine->startPositionMove(getEncoderPositionMm(), position_mm, safeVel, safeAcc);
 
-            m_lastTickNsecs = 0; // Reset last tick timestamp
-            m_dtTimer.start();   // reset elapsed timer
-            m_controlTimer.start(CONTROL_TIMER_VALUE_MS);
-        }
-        else // Motor already moving
-        {
-            // Update the math engine
-            m_kinematicEngine->updatePositionMove(position_mm, safeVel, safeAcc);
-        }
+                    m_lastTickNsecs = 0; // Reset last tick timestamp
+                    m_dtTimer.start();   // reset elapsed timer
+                    m_controlTimer.start(CONTROL_TIMER_VALUE_MS);
+                }
+                else // Motor already moving
+                {
+                    // Update the math engine
+                    m_kinematicEngine->updatePositionMove(position_mm, safeVel, safeAcc);
+                }
+            },
+            Qt::QueuedConnection);
     }
 
     void StepperMotor::moveRelative(double distance_mm, Config::kinematic_profile_t profile)
     {
-        // Clamp to safety limits
-        double safeVel = std::min(profile.targetVelocityMmS, m_hwConfig.maxVelocityMmS);
-        double safeAcc = std::min(profile.accelerationMmS2, m_hwConfig.maxAccelerationMmS2);
+        QMetaObject::invokeMethod(
+            this,
+            [&]() {
+                // Clamp to safety limits
+                double safeVel = std::min(profile.targetVelocityMmS, m_hwConfig.maxVelocityMmS);
+                double safeAcc = std::min(profile.accelerationMmS2, m_hwConfig.maxAccelerationMmS2);
 
-        // Extract step fraction safely
-        uint8_t stepFrac = 1;
-        if (auto *p = std::get_if<Config::stepper_kinematics_params_t>(&profile.params))
-            stepFrac = p->stepFraction;
+                // Extract step fraction safely
+                uint8_t stepFrac = 1;
+                if (auto *p = std::get_if<Config::stepper_kinematics_params_t>(&profile.params))
+                    stepFrac = p->stepFraction;
 
-        m_currentStepFraction = stepFrac; // Store for MCU translation
-        m_lastSentHz.reset();             // Reset cached "last sent frequency" value;
+                m_currentStepFraction = stepFrac; // Store for MCU translation
+                m_lastSentHz.reset();             // Reset cached "last sent frequency" value;
 
-        if (!m_controlTimer.isActive()) // Start the control timer
-        {
-            const double encoderPos = getEncoderPositionMm();
+                if (!m_controlTimer.isActive()) // Start the control timer
+                {
+                    const double encoderPos = getEncoderPositionMm();
 
-            // Initialize the math engine
-            m_kinematicEngine->startPositionMove(encoderPos, encoderPos + distance_mm, safeVel, safeAcc);
+                    // Initialize the math engine
+                    m_kinematicEngine->startPositionMove(encoderPos, encoderPos + distance_mm, safeVel, safeAcc);
 
-            m_lastTickNsecs = 0; // Reset last tick timestamp
-            m_dtTimer.start();   // reset elapsed timer
-            m_controlTimer.start(CONTROL_TIMER_VALUE_MS);
-        }
-        else // Motor already moving
-        {
-            const double currentMathEnginePos = m_kinematicEngine->getCurrentState().position;
+                    m_lastTickNsecs = 0; // Reset last tick timestamp
+                    m_dtTimer.start();   // reset elapsed timer
+                    m_controlTimer.start(CONTROL_TIMER_VALUE_MS);
+                }
+                else // Motor already moving
+                {
+                    const double currentMathEnginePos = m_kinematicEngine->getCurrentState().position;
 
-            // Update the math engine
-            m_kinematicEngine->updatePositionMove(currentMathEnginePos + distance_mm, safeVel, safeAcc);
-        }
+                    // Update the math engine
+                    m_kinematicEngine->updatePositionMove(currentMathEnginePos + distance_mm, safeVel, safeAcc);
+                }
+            },
+            Qt::QueuedConnection);
     }
 
     void StepperMotor::moveDirection(MotorDirection dir, Config::kinematic_profile_t profile)
     {
-        // Clamp to safety limits
-        double safeVel = std::min(profile.targetVelocityMmS, m_hwConfig.maxVelocityMmS);
-        double safeAcc = std::min(profile.accelerationMmS2, m_hwConfig.maxAccelerationMmS2);
+        QMetaObject::invokeMethod(
+            this,
+            [&]() {
+                // Clamp to safety limits
+                double safeVel = std::min(profile.targetVelocityMmS, m_hwConfig.maxVelocityMmS);
+                double safeAcc = std::min(profile.accelerationMmS2, m_hwConfig.maxAccelerationMmS2);
 
-        // Extract step fraction safely
-        uint16_t stepFrac = 1;
-        if (auto *p = std::get_if<Config::stepper_kinematics_params_t>(&profile.params))
-            stepFrac = p->stepFraction;
+                // Extract step fraction safely
+                uint16_t stepFrac = 1;
+                if (auto *p = std::get_if<Config::stepper_kinematics_params_t>(&profile.params))
+                    stepFrac = p->stepFraction;
 
-        m_currentStepFraction = stepFrac; // Store for MCU translation
-        m_lastSentHz.reset();             // Reset cached "last sent frequency" value;
+                m_currentStepFraction = stepFrac; // Store for MCU translation
+                m_lastSentHz.reset();             // Reset cached "last sent frequency" value;
 
-        const double sign = (dir == MotorDirection::Positive) ? 1.0 : -1.0;
+                const double sign = (dir == MotorDirection::Positive) ? 1.0 : -1.0;
 
-        if (!m_controlTimer.isActive()) // Start the control timer
-        {
-            // Initialize the pure math engine
-            m_kinematicEngine->startVelocityMove(getEncoderPositionMm(), sign, safeVel, safeAcc);
+                if (!m_controlTimer.isActive()) // Start the control timer
+                {
+                    // Initialize the pure math engine
+                    m_kinematicEngine->startVelocityMove(getEncoderPositionMm(), sign, safeVel, safeAcc);
 
-            m_lastTickNsecs = 0; // Reset last tick timestamp
-            m_dtTimer.start();   // reset elapsed timer
-            m_controlTimer.start(CONTROL_TIMER_VALUE_MS);
-        }
-        else // Motor already moving
-        {
-            // Update the math engine
-            m_kinematicEngine->updateVelocityMove(sign, safeVel, safeAcc);
-        }
+                    m_lastTickNsecs = 0; // Reset last tick timestamp
+                    m_dtTimer.start();   // reset elapsed timer
+                    m_controlTimer.start(CONTROL_TIMER_VALUE_MS);
+                }
+                else // Motor already moving
+                {
+                    // Update the math engine
+                    m_kinematicEngine->updateVelocityMove(sign, safeVel, safeAcc);
+                }
+            },
+            Qt::QueuedConnection);
     }
 
     void StepperMotor::emergencyStop(void)
     {
-        m_controlTimer.stop();
-        m_lastSentHz.reset();
-        m_lastTickNsecs = 0;
+        QMetaObject::invokeMethod(
+            this,
+            [&]() {
+                m_controlTimer.stop();
+                m_lastSentHz.reset();
+                m_lastTickNsecs = 0;
 
-        const uint8_t payload[] = {'1', m_byteId};
-        sendPayload(payload, sizeof(payload));
-    }
-
-    void StepperMotor::home(void)
-    {
-        throw std::runtime_error("Not implemented");
+                const uint8_t payload[] = {'1', m_byteId};
+                sendPayload(payload, sizeof(payload));
+            },
+            Qt::QueuedConnection);
     }
 
     void StepperMotor::resetEncoder(const double offsetMm)
     {
-        const double topsPerMm    = m_hwConfig.encoderTopsPerRev / m_hwConfig.screwPitchMm;
-        const int32_t encoderTops = std::round(offsetMm * topsPerMm);
-        const uint8_t payload[]   = {
-            'R',
-            m_byteId,
-            static_cast<uint8_t>((encoderTops >> 24) & 0xFF),
-            static_cast<uint8_t>((encoderTops >> 16) & 0xFF),
-            static_cast<uint8_t>((encoderTops >> 8) & 0xFF),
-            static_cast<uint8_t>(encoderTops & 0xFF)};
+        QMetaObject::invokeMethod(
+            this,
+            [&]() {
+                const double topsPerMm    = m_hwConfig.encoderTopsPerRev / m_hwConfig.screwPitchMm;
+                const int32_t encoderTops = std::round(offsetMm * topsPerMm);
+                const uint8_t payload[]   = {
+                    'R',
+                    m_byteId,
+                    static_cast<uint8_t>((encoderTops >> 24) & 0xFF),
+                    static_cast<uint8_t>((encoderTops >> 16) & 0xFF),
+                    static_cast<uint8_t>((encoderTops >> 8) & 0xFF),
+                    static_cast<uint8_t>(encoderTops & 0xFF)};
 
-        sendPayload(payload, sizeof(payload));
+                sendPayload(payload, sizeof(payload));
+            },
+            Qt::QueuedConnection);
     }
 
     bool StepperMotor::isMoving(void) const
@@ -189,7 +212,7 @@ namespace Kub3::HAL::Act
 
     double StepperMotor::getEncoderPositionMm(void) const
     {
-        const double encoderValue = m_encoderValueGetter ? m_encoderValueGetter() : 0;
+        const int32_t encoderValue = m_encoderValueGetter ? m_encoderValueGetter() : 0;
 
         return static_cast<double>(encoderValue) * (static_cast<double>(m_hwConfig.encoderTopsPerRev) / m_hwConfig.screwPitchMm);
     }

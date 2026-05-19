@@ -27,9 +27,9 @@ namespace Kub3::HAL::Act
         m_kinematicEngine(std::move(kinematicEngine)),
         m_controlTimer(this)
     {
-        qDebug() << std::format("DirectCurrentMotor[{}] Loaded config:", m_id).c_str();
-        qDebug() << std::format("--- maxVelocityMmS={}", m_hwConfig.maxVelocityMmS).c_str();
-        qDebug() << std::format("--- maxAccelerationMmS2={}", m_hwConfig.maxAccelerationMmS2).c_str();
+        qInfo() << std::format("DirectCurrentMotor[{}] Loaded config:", m_id).c_str();
+        qInfo() << std::format("--- maxVelocityMmS={}", m_hwConfig.maxVelocityMmS).c_str();
+        qInfo() << std::format("--- maxAccelerationMmS2={}", m_hwConfig.maxAccelerationMmS2).c_str();
 
         if (!m_kinematicEngine)
         {
@@ -135,11 +135,6 @@ namespace Kub3::HAL::Act
         // Command format: C<MOTOR>S
         QString command = QString("C%1S").arg(m_motorByteId);
         sendPayload(command.toUtf8());
-    }
-
-    void DirectCurrentMotor::home(void)
-    {
-        throw std::runtime_error("Not implemented");
     }
 
     bool DirectCurrentMotor::isMoving(void) const

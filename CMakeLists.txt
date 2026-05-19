@@ -21,7 +21,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_COMPILE_WARNING_AS_ERROR ON)
 
-set(CMAKE_AUTOUIC_SEARCH_PATHS "gui;gui/Views;gui/Modules;gui/Components;tools/configurator/gui")
+set(CMAKE_AUTOUIC_SEARCH_PATHS
+    # Main app
+    "gui;gui/Views;gui/Modules;gui/Components"
+    # Configurator tool
+    "tools/configurator/gui"
+    # Motor tester tool
+    "tools/motor_tester/gui"
+)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -309,47 +316,10 @@ target_link_libraries(Kub3Software PRIVATE
 )
 
 # ==============================================================================
-# 6. CONFIGURATOR EXECUTABLE: Kub3Configurator
+# 6. STANDALONE TOOLS
 # ==============================================================================
-qt_add_executable(Kub3Configurator
-    MANUAL_FINALIZATION
-    # Sources
-    tools/configurator/src/main.cpp
-    tools/configurator/src/utils.cpp
-    tools/configurator/src/ConfigWindow.cpp
-    tools/configurator/src/pages/MotorConfigPage.cpp
-    tools/configurator/src/pages/CameraConfigPage.cpp
-    tools/configurator/src/pages/CameraGeneralPage.cpp
-    tools/configurator/src/pages/ForceConfigPage.cpp
-    tools/configurator/src/pages/DrawersPositionsPage.cpp
-    tools/configurator/src/pages/AlignmentPositionsPage.cpp
-    tools/configurator/src/pages/MCUConfigPage.cpp
-    # Headers
-    tools/configurator/include/utils.h
-    tools/configurator/include/ConfigWindow.h
-    tools/configurator/include/pages/MotorConfigPage.h
-    tools/configurator/include/pages/CameraConfigPage.h
-    tools/configurator/include/pages/CameraGeneralPage.h
-    tools/configurator/include/pages/ForceConfigPage.h
-    tools/configurator/include/pages/DrawersPositionsPage.h
-    tools/configurator/include/pages/AlignmentPositionsPage.h
-    tools/configurator/include/pages/MCUConfigPage.h
-    # UI
-    tools/configurator/gui/resources.qrc
-    tools/configurator/gui/ConfigWindow.ui
-)
-
-qt_finalize_target(Kub3Configurator)
-
-target_include_directories(Kub3Configurator PRIVATE
-    tools/configurator/include
-)
-
-target_link_libraries(Kub3Configurator PRIVATE
-    Kub3Core
-    Qt6::Gui
-    Qt6::Widgets
-)
+add_subdirectory(tools/configurator)
+add_subdirectory(tools/motor_tester)
 
 # ==============================================================================
 # 7. TESTS
@@ -368,10 +338,8 @@ set_target_properties(Kub3Software PROPERTIES
     BUILD_WITH_INSTALL_RPATH FALSE
 )
 
-# Install the main executable into the "bin" directory of our output folder
+# Install the main executable into the "bin" dir of the output folder
 install(TARGETS Kub3Software    RUNTIME DESTINATION bin)
-# Install the configurator executable into the "bin" directory of our output folder
-install(TARGETS Kub3Configurator RUNTIME DESTINATION bin)
 
 # Explicitly deploy the MVS Camera libraries
 if(MVS_LIBRARY)
