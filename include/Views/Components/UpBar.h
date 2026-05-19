@@ -1,7 +1,7 @@
 #pragma once
 
-#include <QWidget>
 #include <QFrame>
+#include <QWidget>
 #include <Views/ViewBase.h>
 
 class UpBar : public QFrame {
@@ -19,4 +19,5 @@ protected:
 private:
     QColor m_color        = Qt::black;
     QLabel *m_topBarTitle = nullptr;
+    QLabel *m_logoTopBar  = nullptr;
 };

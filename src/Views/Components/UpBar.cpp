@@ -8,30 +8,25 @@
 
 UpBar::UpBar(QWidget *parent) : QFrame(parent) {
     m_topBarTitle = new QLabel(this);
-    m_topBarTitle->setAlignment(Qt::AlignCenter);
-    
-    if (auto layout = this->layout()) {
-        QLabel *logoTopBar = new QLabel();
-        logoTopBar->setPixmap(QPixmap(":/icons/logoKloeBlanc.svg").scaledToHeight(25));
-        logoTopBar->setStyleSheet("background-color: #000");
-        layout->addWidget(logoTopBar);
-        layout->addWidget(m_topBarTitle);
-    }
+    m_logoTopBar  = new QLabel(this);
+    m_logoTopBar->setPixmap(QPixmap(":/icons/logoKloeBlanc.svg"));
 }
 
 void UpBar::setTextColor(const QColor &color) {
 }
 
 void UpBar::setBackgroundColor(const QColor &color) {
+    this->setStyleSheet(QString("%2 background-color: %1;").arg(color.name()).arg(TITLE_BAR));
 }
 
 void UpBar::setTitleBarConfig(Kub3::UI::Views::TitleBarConfig titleBar) {
-    if (titleBar.showTitleBar) {
-        // m_topBarTitle->setText(titleBar.viewTitle);
-        m_topBarTitle->setText("e");
-        m_topBarTitle->setStyleSheet(QString("color: %1;").arg(titleBar.textColor.name()));
-        this->setStyleSheet(QString("%2 background-color: %1;").arg(titleBar.bgColor.name()).arg(TITLE_BAR));
+    if (!titleBar.showTitleBar) {
+        return;
     }
+    this->setBackgroundColor(titleBar.bgColor);
+    m_topBarTitle->setText(titleBar.viewTitle);
+    m_topBarTitle->setAlignment(Qt::AlignCenter);
+    m_topBarTitle->setStyleSheet(QString("color: %1;").arg(titleBar.textColor.name()));
 }
 
 void UpBar::paintEvent(QPaintEvent *) {
