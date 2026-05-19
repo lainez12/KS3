@@ -17,7 +17,9 @@ protected:
     void paintEvent(QPaintEvent *) override;
 
 private:
-    QColor m_color        = Qt::black;
-    QLabel *m_topBarTitle = nullptr;
-    QLabel *m_logoTopBar  = nullptr;
+    QHBoxLayout *layoutIntern = nullptr;
+    QLabel *m_logoTopBar   = nullptr;
+    QLabel *m_topBarTitle  = nullptr;
+    QLabel *m_iconPath     = nullptr;
+    QLabel *m_sectionTitle = nullptr;
 };

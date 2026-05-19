@@ -127,7 +127,8 @@ void MachineStatusView::configTitleBar() {
         "Machine Status",
         QColor("#FFF"),
         QColor("#0072BA"),
-        ":/icons/home.svg",
+        ":/icons/admin.svg",
+        "Settings",
         true,
         true);
 }

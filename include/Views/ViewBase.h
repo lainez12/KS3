@@ -26,12 +26,13 @@ namespace Kub3::UI::Views {
         QColor textColor;
         QColor bgColor;
         QString iconPath;
+        QString sectionTitle;
         bool showTitleBar   = false;
         bool m_showLeftLogo = true;
 
         TitleBarConfig() = default;
 
-        TitleBarConfig(const QString &t, const QColor &ct, const QColor &cbg, const QString &i, const bool s, const bool sl) : viewTitle(t), textColor(ct), bgColor(cbg), iconPath(i), showTitleBar(s), m_showLeftLogo(sl) {
+        TitleBarConfig(const QString &t, const QColor &ct, const QColor &cbg, const QString &i, const QString &st, const bool s, const bool sl) : viewTitle(t), textColor(ct), bgColor(cbg), iconPath(i), sectionTitle(st), showTitleBar(s), m_showLeftLogo(sl) {
         }
     };
 
