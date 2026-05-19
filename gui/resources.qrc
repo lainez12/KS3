@@ -2,13 +2,82 @@
     <qresource prefix="/">
         <file>fonts/ArtNormFont.ttf</file>
         <file>styles/app.qss</file>
-        <file>icons/logoKloe.png</file>
+        <file>icons/logoKloe.svg</file>
         <file>icons/logoKloeBlanc.svg</file>
         <file>icons/home.svg</file>
         <file>icons/settings.svg</file>
         <file>icons/eject.svg</file>
         <file>icons/insert.svg</file>
         <file>icons/flood_icon.svg</file>
+        <file>icons/abandon.svg</file>
+        <file>icons/about.svg</file>
+        <file>icons/admin.svg</file>
+        <file>icons/anti-collision.svg</file>
+        <file>icons/back.svg</file>
+        <file>icons/bg-move-camera-droite.svg</file>
+        <file>icons/bg-move-camera-gauche.svg</file>
+        <file>icons/cam-settings-left-checked.svg</file>
+        <file>icons/cam-settings-left.svg</file>
+        <file>icons/cam-settings-righ-checked.svg</file>
+        <file>icons/cam-settings-righ.svg</file>
+        <file>icons/check.svg</file>
+        <file>icons/continue.svg</file>
+        <file>icons/croix.svg</file>
+        <file>icons/delete.svg</file>
+        <file>icons/deselect-all.svg</file>
+        <file>icons/eject.svg</file>
+        <file>icons/fleche-bas.svg</file>
+        <file>icons/fleche-droite.svg</file>
+        <file>icons/fleche-gauche.svg</file>
+        <file>icons/fleche-haut.svg</file>
+        <file>icons/fleche-page-droite.svg</file>
+        <file>icons/fleche-page-gauche.svg</file>
+        <file>icons/frowning.svg</file>
+        <file>icons/go-to.svg</file>
+        <file>icons/gram.svg</file>
+        <file>icons/hard-force-contact.svg</file>
+        <file>icons/home.svg</file>
+        <file>icons/insert.svg</file>
+        <file>icons/led-test.svg</file>
+        <file>icons/load-on-usb.svg</file>
+        <file>icons/load.svg</file>
+        <file>icons/mask-alignment_icon.svg</file>
+        <file>icons/mask-exposure_icon.svg</file>
+        <file>icons/masking-distance.svg</file>
+        <file>icons/measurement.svg</file>
+        <file>icons/micron.svg</file>
+        <file>icons/moins-wafer.svg</file>
+        <file>icons/move-cam.svg</file>
+        <file>icons/newton.svg</file>
+        <file>icons/operating-times.svg</file>
+        <file>icons/pick-up-xy.svg</file>
+        <file>icons/plus-wafer.svg</file>
+        <file>icons/question.svg</file>
+        <file>icons/redo.svg</file>
+        <file>icons/rouge.svg</file>
+        <file>icons/save.svg</file>
+        <file>icons/schema-continuous.svg</file>
+        <file>icons/schema-flashing.svg</file>
+        <file>icons/schema-mask-to-substrate.png</file>
+        <file>icons/screenshot.svg</file>
+        <file>icons/screenshots-export.svg</file>
+        <file>icons/select-all.svg</file>
+        <file>icons/settings.svg</file>
+        <file>icons/smile.svg</file>
+        <file>icons/speed-motor-high.svg</file>
+        <file>icons/speed-motor-low.svg</file>
+        <file>icons/speed-motor-subst.svg</file>
+        <file>icons/stop.svg</file>
+        <file>icons/temperature.svg</file>
+        <file>icons/usb-software.svg</file>
+        <file>icons/visual-mark.svg</file>
+        <file>icons/wafer4pouce.png</file>
+        <file>icons/wafer4pouces.png</file>
+        <file>icons/wafer6pouce.png</file>
+        <file>icons/wafer6pouces.svg</file>
+        <file>icons/warning-blanc.svg</file>
+        <file>icons/warning-fond-blanc.svg</file>
+        <file>icons/warning-fond-rouge.svg</file>
         <file>images/bg.png</file>
     </qresource>
 </RCC>
