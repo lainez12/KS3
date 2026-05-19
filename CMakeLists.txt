@@ -193,12 +193,11 @@ qt_add_executable(Kub3Software
     src/Views/MainWindow.cpp
     src/Views/ViewBase.cpp
     src/Views/NavButtonManager.cpp
-    src/Views/TopBar.cpp
-    src/Views/BottomBar.cpp
     src/Views/DebugView.cpp
     src/Views/HomeView.cpp
     src/Views/MachineStatusView.cpp
     src/Views/Components/NavButton.cpp
+    src/Views/Components/UpBar.cpp
     src/Views/Components/ActionBox.cpp
     src/Views/Components/BottomCroppedCircle.cpp
     # Headers
@@ -209,12 +208,11 @@ qt_add_executable(Kub3Software
     include/Views/MainWindow.h
     include/Views/ViewBase.h
     include/Views/NavButtonManager.h
-    include/Views/TopBar.h
-    include/Views/BottomBar.h
     include/Views/DebugView.h
     include/Views/HomeView.h
     include/Views/MachineStatusView.h
     include/Views/Components/NavButton.h
+    include/Views/Components/UpBar.h
     include/Views/Components/ActionBox.h
     include/Views/Components/BottomCroppedCircle.h
     # UI
