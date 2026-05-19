@@ -37,8 +37,6 @@ public:
         emergencyStopCalls++;
     }
 
-    void home() override {}
-
     bool isMoving() const override
     {
         return false;

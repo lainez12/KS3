@@ -163,7 +163,7 @@ namespace Kub3
     void ApplicationBuilder::powerOff(void)
     {
 #ifdef BUILD_DEBUG
-        qDebug() << "[ApplicationBuilder::powerOff] triggered (debug mode: closing app).";
+        qInfo() << "[ApplicationBuilder::powerOff] triggered (debug mode: closing app).";
         qApp->quit();
 #else
         if (std::system("sudo poweroff") != 0)

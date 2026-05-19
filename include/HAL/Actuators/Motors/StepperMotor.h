@@ -29,7 +29,7 @@ namespace Kub3::HAL::Act
             uint8_t byteId,
             Weak<MCUDriver> driver,
             Config::stepper_hw_properties_t hwConfig,
-            std::function<double()> positionGetter,
+            std::function<int32_t()> positionGetter,
             Unique<IKinematicGenerator> kinematicEngine,
             QObject *parent = nullptr);
 
@@ -42,7 +42,6 @@ namespace Kub3::HAL::Act
         void moveRelative(double distance_mm, Config::kinematic_profile_t profile) override;
         void moveDirection(MotorDirection dir, Config::kinematic_profile_t profile) override;
         void emergencyStop(void) override;
-        void home(void) override;
         void resetEncoder(const double offsetMm = 0.0) override;
 
         // Getters

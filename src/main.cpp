@@ -38,10 +38,10 @@ static void loadStyles(QApplication *app)
     if (fontId != -1)
     {
         QString familyName = QFontDatabase::applicationFontFamilies(fontId).at(0);
-        qDebug() << "Loaded font family w/ name:" << familyName;
+        qInfo() << "Loaded font family w/ name:" << familyName;
     }
     else
-        qDebug() << "Failed to load font: ':/fonts/ArtNormFont.ttf'";
+        qWarning() << "Failed to load font: ':/fonts/ArtNormFont.ttf'";
 }
 
 int main(int argc, char *argv[])

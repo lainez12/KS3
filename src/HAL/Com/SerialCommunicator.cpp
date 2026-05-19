@@ -83,6 +83,7 @@ namespace Kub3::HAL::Com
             qWarning() << "[Serial] Incomplete write. Expected:" << data.size() << "Written:" << bytesWritten;
         }
 
+        // qInfo() << "[Serial]" << bytesWritten << "bytes written:" << data.toHex(' ');
         m_serialPort.waitForBytesWritten(100); // 100ms timeout
         return true;
     }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QMetaType>
 #include <cstdint>
 #include <string>
 #include <variant>
@@ -7,8 +8,7 @@
 namespace Kub3::Config
 {
 
-    typedef struct stepper_kinematics_params_s
-    {
+    typedef struct stepper_kinematics_params_s {
         uint8_t stepFraction = 1; // Default value
     } stepper_kinematics_params_t;
 
@@ -18,8 +18,7 @@ namespace Kub3::Config
         stepper_kinematics_params_t // Steppers
         >;
 
-    typedef struct kinematic_profile_s
-    {
+    typedef struct kinematic_profile_s {
         std::string id;
         double initialVelocityMmS = 0.0;
         double targetVelocityMmS;
@@ -29,3 +28,5 @@ namespace Kub3::Config
     } kinematic_profile_t;
 
 }
+
+Q_DECLARE_METATYPE(Kub3::Config::kinematic_profile_t)
