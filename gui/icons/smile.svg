@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   id="svg2"
+   width="167.45084"
+   height="108.97933"
+   viewBox="0 0 167.45084 108.97933"
+   sodipodi:docname="yes-enabled.ai"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs6">
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath24">
+      <path
+         d="M 0,841.89 H 595.276 V 0 H 0 Z"
+         id="path22" />
+    </clipPath>
+  </defs>
+  <sodipodi:namedview
+     id="namedview4"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false" />
+  <g
+     id="g10"
+     inkscape:groupmode="layer"
+     inkscape:label="Page 1"
+     transform="matrix(1.3333333,0,0,-1.3333333,-358.04093,1084.798)">
+    <g
+       id="g18">
+      <g
+         id="g20"
+         clip-path="url(#clipPath24)">
+        <g
+           id="g42"
+           transform="translate(306.4297,803.3185)">
+          <path
+             d="m 0,0 c 0,-5.678 -4.605,-10.28 -10.286,-10.28 -5.681,0 -10.287,4.602 -10.287,10.28 0,5.678 4.606,10.28 10.287,10.28 C -4.605,10.28 0,5.678 0,0"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path44" />
+        </g>
+        <g
+           id="g46"
+           transform="translate(379.1572,803.3185)">
+          <path
+             d="m 0,0 c 0,-5.678 -4.605,-10.28 -10.286,-10.28 -5.682,0 -10.287,4.602 -10.287,10.28 0,5.678 4.605,10.28 10.287,10.28 C -4.605,10.28 0,5.678 0,0"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path48" />
+        </g>
+        <g
+           id="g50"
+           transform="translate(331.3262,731.864)">
+          <path
+             d="m 0,0 c -22.163,0 -44.324,8.432 -61.197,25.293 -2.131,2.129 -2.131,5.582 -0.002,7.715 2.131,2.13 5.585,2.129 7.715,10e-4 29.489,-29.474 77.477,-29.474 106.965,0 2.133,2.129 5.586,2.128 7.715,-10e-4 2.129,-2.131 2.129,-5.585 -10e-4,-7.715 C 44.323,8.432 22.161,0 0,0"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path52" />
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

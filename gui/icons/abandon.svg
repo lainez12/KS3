@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   id="svg828"
+   width="165.448"
+   height="165.44499"
+   viewBox="0 0 165.448 165.44499"
+   sodipodi:docname="abandon-enabled.ai"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs832">
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath850">
+      <path
+         d="M 0,841.89 H 595.276 V 0 H 0 Z"
+         id="path848" />
+    </clipPath>
+  </defs>
+  <sodipodi:namedview
+     id="namedview830"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false" />
+  <g
+     id="g836"
+     inkscape:groupmode="layer"
+     inkscape:label="Page 1"
+     transform="matrix(1.3333333,0,0,-1.3333333,-329.04318,1086.8124)">
+    <g
+       id="g844">
+      <g
+         id="g846"
+         clip-path="url(#clipPath850)">
+        <g
+           id="g852"
+           transform="translate(269.437,662.5334)" />
+        <g
+           id="g856"
+           transform="translate(229.7622,626.1188)" />
+        <g
+           id="g884"
+           transform="translate(325.7959,753.0676)">
+          <path
+             d="m 0,0 41.558,41.557 c 4.686,4.687 4.686,12.284 0,16.971 -4.686,4.685 -12.286,4.685 -16.971,0 L -16.971,16.971 -58.528,58.528 c -4.685,4.685 -12.285,4.685 -16.971,0 -4.686,-4.687 -4.686,-12.284 0,-16.971 L -33.941,0 -75.499,-41.557 c -4.686,-4.687 -4.686,-12.284 0,-16.971 2.343,-2.343 5.415,-3.514 8.486,-3.514 3.071,0 6.142,1.171 8.485,3.514 l 41.557,41.557 41.558,-41.557 c 2.343,-2.343 5.414,-3.514 8.485,-3.514 3.072,0 6.143,1.171 8.486,3.514 4.686,4.687 4.686,12.284 0,16.971 z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path886" />
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
