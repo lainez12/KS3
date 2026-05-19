@@ -32,13 +32,13 @@ MachineStatusView::~MachineStatusView()
 
 void MachineStatusView::ps_booleanSensorUpdate(const QString &sensorId, bool value)
 {
-    if (auto it = m_boolSensorsMap.find(sensorId.toUtf8().constData()); it != m_boolSensorsMap.end())
+    if (auto it = m_boolSensorsMap.find(sensorId); it != m_boolSensorsMap.end())
         this->updateBoolSensorsText(it->second, value);
 }
 
 void MachineStatusView::ps_integerSensorUpdate(const QString &sensorId, int32_t value)
 {
-    if (auto it = m_intSensorsMap.find(sensorId.toUtf8().constData()); it != m_intSensorsMap.end())
+    if (auto it = m_intSensorsMap.find(sensorId); it != m_intSensorsMap.end())
         this->updateIntSensorsText(it->second, value);
 }
 
@@ -84,75 +84,93 @@ void MachineStatusView::updateUIntSensorsText(QLabel *label, const uint32_t valu
 void MachineStatusView::populateBoolSensorsMap(void)
 {
     // Wafer conveyor limits
-    m_boolSensorsMap.insert({CW0, ui->cw0Value});
-    m_boolSensorsMap.insert({CW1, ui->cw1Value});
-    m_boolSensorsMap.insert({CW2, ui->cw2Value});
+    m_boolSensorsMap.emplace(CW0, ui->cw0Value);
+    m_boolSensorsMap.emplace(CW1, ui->cw1Value);
+    m_boolSensorsMap.emplace(CW2, ui->cw2Value);
 
     // Mask conveyor limits
-    m_boolSensorsMap.insert({CM0, ui->cm0Value});
-    m_boolSensorsMap.insert({CM1, ui->cm1Value});
-    m_boolSensorsMap.insert({CM2, ui->cm2Value});
-    m_boolSensorsMap.insert({CM3, ui->cm3Value});
+    m_boolSensorsMap.emplace(CM0, ui->cm0Value);
+    m_boolSensorsMap.emplace(CM1, ui->cm1Value);
+    m_boolSensorsMap.emplace(CM2, ui->cm2Value);
+    m_boolSensorsMap.emplace(CM3, ui->cm3Value);
 
     // Z-motors limits
-    m_boolSensorsMap.insert({Z_LEFT_LOW_LIMIT, ui->t2mkLeftLowValue});
-    m_boolSensorsMap.insert({Z_RIGHT_LOW_LIMIT, ui->t2mkRightLowValue});
-    m_boolSensorsMap.insert({Z_BACK_LOW_LIMIT, ui->t2mkBackLowValue});
-    m_boolSensorsMap.insert({Z_LEFT_HIGH_LIMIT, ui->t2mkLeftHighValue});
-    m_boolSensorsMap.insert({Z_RIGHT_HIGH_LIMIT, ui->t2mkRightHighValue});
-    m_boolSensorsMap.insert({Z_BACK_HIGH_LIMIT, ui->t2mkBackHighValue});
+    m_boolSensorsMap.emplace(Z_LEFT_LOW_LIMIT, ui->t2mkLeftLowValue);
+    m_boolSensorsMap.emplace(Z_RIGHT_LOW_LIMIT, ui->t2mkRightLowValue);
+    m_boolSensorsMap.emplace(Z_BACK_LOW_LIMIT, ui->t2mkBackLowValue);
+    m_boolSensorsMap.emplace(Z_LEFT_HIGH_LIMIT, ui->t2mkLeftHighValue);
+    m_boolSensorsMap.emplace(Z_RIGHT_HIGH_LIMIT, ui->t2mkRightHighValue);
+    m_boolSensorsMap.emplace(Z_BACK_HIGH_LIMIT, ui->t2mkBackHighValue);
 
     // Stowage zone limits
-    m_boolSensorsMap.insert({Z1, ui->_3Z1Value});
-    m_boolSensorsMap.insert({WAFER_ON, ui->waferOnValue});
-    m_boolSensorsMap.insert({Z2, ui->_3Z2Value});
+    m_boolSensorsMap.emplace(Z1, ui->_3Z1Value);
+    m_boolSensorsMap.emplace(WAFER_ON, ui->waferOnValue);
+    m_boolSensorsMap.emplace(Z2, ui->_3Z2Value);
 
     // ARDKO limits
-    m_boolSensorsMap.insert({ARDKO_BACK_LEFT_LIMIT, ui->ardkoBackLeftValue});
-    m_boolSensorsMap.insert({ARDKO_BACK_RIGHT_LIMIT, ui->ardkoBackRightValue});
-    m_boolSensorsMap.insert({ARDKO_FRONT_LEFT_LIMIT, ui->ardkoFrontLeftValue});
-    m_boolSensorsMap.insert({ARDKO_FRONT_RIGHT_LIMIT, ui->ardkoFrontRightValue});
+    m_boolSensorsMap.emplace(ARDKO_BACK_LEFT_LIMIT, ui->ardkoBackLeftValue);
+    m_boolSensorsMap.emplace(ARDKO_BACK_RIGHT_LIMIT, ui->ardkoBackRightValue);
+    m_boolSensorsMap.emplace(ARDKO_FRONT_LEFT_LIMIT, ui->ardkoFrontLeftValue);
+    m_boolSensorsMap.emplace(ARDKO_FRONT_RIGHT_LIMIT, ui->ardkoFrontRightValue);
 
     // Solenoid valves state (opened/closed)
     // TODO: complete valve states
-    // m_boolSensorsMap.insert({MASK_VACUUM_VALVE_STATUS, ui->});
-    // m_boolSensorsMap.insert({WAFER_VACUUM_VALVE_STATUS, ui->});
-    m_boolSensorsMap.insert({WAFER_COMPRESSED_AIR_VALVE_STATUS, ui->waferCompressedAirValveValue});
+    // m_boolSensorsMap.emplace(MASK_VACUUM_VALVE_STATUS, ui->);
+    // m_boolSensorsMap.emplace(WAFER_VACUUM_VALVE_STATUS, ui->);
+    m_boolSensorsMap.emplace(WAFER_COMPRESSED_AIR_VALVE_STATUS, ui->waferCompressedAirValveValue);
 
     // Pressure thresholds
-    m_boolSensorsMap.insert({MASK_VACUUM_ACTIVE, ui->maskVacuumValue});
-    m_boolSensorsMap.insert({WAFER_VACUUM_ACTIVE, ui->waferVacuumValue});
-    m_boolSensorsMap.insert({WAFER_COMPRESSED_AIR_ACTIVE, ui->waferCompressedAirValue});
+    m_boolSensorsMap.emplace(MASK_VACUUM_ACTIVE, ui->maskVacuumValue);
+    m_boolSensorsMap.emplace(WAFER_VACUUM_ACTIVE, ui->waferVacuumValue);
+    m_boolSensorsMap.emplace(WAFER_COMPRESSED_AIR_ACTIVE, ui->waferCompressedAirValue);
 
     // Alignment stages limits
-    m_boolSensorsMap.insert({X_STAGE_LEFT_LIMIT, ui->waferXLeftValue});
-    m_boolSensorsMap.insert({X_STAGE_RIGHT_LIMIT, ui->waferXRightValue});
-    m_boolSensorsMap.insert({Y_STAGE_BACK_LIMIT, ui->waferYBackValue});
-    m_boolSensorsMap.insert({Y_STAGE_FRONT_LIMIT, ui->waferYFrontValue});
-    m_boolSensorsMap.insert({THETA_STAGE_ANTI_CLOCKWISE_LIMIT, ui->waferThetaCCWValue});
-    m_boolSensorsMap.insert({THETA_STAGE_CLOCKWISE_LIMIT, ui->waferThetaCWValue});
+    m_boolSensorsMap.emplace(X_STAGE_LEFT_LIMIT, ui->waferXLeftValue);
+    m_boolSensorsMap.emplace(X_STAGE_RIGHT_LIMIT, ui->waferXRightValue);
+    m_boolSensorsMap.emplace(Y_STAGE_BACK_LIMIT, ui->waferYBackValue);
+    m_boolSensorsMap.emplace(Y_STAGE_FRONT_LIMIT, ui->waferYFrontValue);
+    m_boolSensorsMap.emplace(THETA_STAGE_ANTI_CLOCKWISE_LIMIT, ui->waferThetaCCWValue);
+    m_boolSensorsMap.emplace(THETA_STAGE_CLOCKWISE_LIMIT, ui->waferThetaCWValue);
 
     // Cameras limits
-    m_boolSensorsMap.insert({LEFT_CAMERA_X_LEFT_LIMIT, ui->leftCameraXLeftLimitValue});
-    // m_boolSensorsMap.insert({LEFT_CAMERA_X_RIGHT_LIMIT, });
-    m_boolSensorsMap.insert({LEFT_CAMERA_Y_FRONT_LIMIT, ui->leftCameraYFrontLimitValue});
-    // m_boolSensorsMap.insert({LEFT_CAMERA_Y_BACK_LIMIT, });
-    // m_boolSensorsMap.insert({RIGHT_CAMERA_X_LEFT_LIMIT, });
-    m_boolSensorsMap.insert({RIGHT_CAMERA_X_RIGHT_LIMIT, ui->rightCameraYFrontLimitValue});
-    m_boolSensorsMap.insert({RIGHT_CAMERA_Y_FRONT_LIMIT, ui->rightCameraYFrontLimitValue});
-    // m_boolSensorsMap.insert({RIGHT_CAMERA_Y_BACK_LIMIT, });
+    m_boolSensorsMap.emplace(LEFT_CAMERA_X_LEFT_LIMIT, ui->leftCameraXLeftLimitValue);
+    // m_boolSensorsMap.emplace(LEFT_CAMERA_X_RIGHT_LIMIT, );
+    m_boolSensorsMap.emplace(LEFT_CAMERA_Y_FRONT_LIMIT, ui->leftCameraYFrontLimitValue);
+    // m_boolSensorsMap.emplace(LEFT_CAMERA_Y_BACK_LIMIT, );
+    // m_boolSensorsMap.emplace(RIGHT_CAMERA_X_LEFT_LIMIT, );
+    m_boolSensorsMap.emplace(RIGHT_CAMERA_X_RIGHT_LIMIT, ui->rightCameraXRightLimitValue);
+    m_boolSensorsMap.emplace(RIGHT_CAMERA_Y_FRONT_LIMIT, ui->rightCameraYFrontLimitValue);
+    // m_boolSensorsMap.emplace(RIGHT_CAMERA_Y_BACK_LIMIT, );
 
     // Cameras' deck limits
-    m_boolSensorsMap.insert({DECK_BACK_LIMIT, ui->deckBackLimitValue});
-    m_boolSensorsMap.insert({DECK_FRONT_LIMIT, ui->deckFrontLimitValue});
+    m_boolSensorsMap.emplace(DECK_BACK_LIMIT, ui->deckBackLimitValue);
+    m_boolSensorsMap.emplace(DECK_FRONT_LIMIT, ui->deckFrontLimitValue);
 }
 
 void MachineStatusView::populateIntegerSensorsMap(void)
-{}
+{
+    // Encoders
+    m_intSensorsMap.emplace(WAFER_ENCODER, ui->waferPosValue);
+    m_intSensorsMap.emplace(MASK_ENCODER, ui->maskPosValue);
+    m_intSensorsMap.emplace(Z_LEFT_ENCODER, ui->leftZPosValue);
+    m_intSensorsMap.emplace(Z_RIGHT_ENCODER, ui->rightZPosValue);
+    m_intSensorsMap.emplace(Z_BACK_ENCODER, ui->backZPosValue);
+    m_intSensorsMap.emplace(X_STAGE_ENCODER, ui->xStagePosValue);
+    m_intSensorsMap.emplace(Y_STAGE_ENCODER, ui->yStagePosValue);
+    m_intSensorsMap.emplace(THETA_STAGE_ENCODER, ui->thetaStagePosValue);
+    m_intSensorsMap.emplace(LEFT_CAMERA_X_ENCODER, ui->leftCamXPosValue);
+    m_intSensorsMap.emplace(LEFT_CAMERA_Y_ENCODER, ui->leftCamYPosValue);
+    m_intSensorsMap.emplace(RIGHT_CAMERA_X_ENCODER, ui->rightCamXPosValue);
+    m_intSensorsMap.emplace(RIGHT_CAMERA_Y_ENCODER, ui->rightCamYPosValue);
+
+    // Temperatures
+    m_intSensorsMap.emplace(INTERNAL_TEMPERATURE, ui->internalTempValue);
+    m_intSensorsMap.emplace(EXTERNAL_TEMPERATURE, ui->externalTempValue);
+}
 
 void MachineStatusView::populateUnsignedIntegerSensorsMap(void)
 {
-    m_uintSensorsMap.insert({FORCE_LEFT, ui->forceLeftValue});
-    m_uintSensorsMap.insert({FORCE_RIGHT, ui->forceRightValue});
-    m_uintSensorsMap.insert({FORCE_BACK, ui->forceBackValue});
+    m_uintSensorsMap.emplace(FORCE_LEFT, ui->forceLeftValue);
+    m_uintSensorsMap.emplace(FORCE_RIGHT, ui->forceRightValue);
+    m_uintSensorsMap.emplace(FORCE_BACK, ui->forceBackValue);
 }

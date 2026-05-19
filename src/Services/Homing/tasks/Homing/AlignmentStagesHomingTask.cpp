@@ -18,6 +18,13 @@ namespace Kub3::Services
 
     void AlignmentStagesHomingTask::start(void)
     {
+        const bool z1 = HAL::MS::readBool(m_repo, Z1);
+        const bool z2 = HAL::MS::readBool(m_repo, Z2);
+
+        // Between Z1 and Z2 is the danger zone.
+        if (z1 && !z2)
+            throw std::runtime_error("CRITICAL: Attempted to move alignment stages while Z is inside the collision zone.");
+
         handleSingleMotorLogic(m_xMotorBundle);
         handleSingleMotorLogic(m_yMotorBundle);
         handleSingleMotorLogic(m_thetaMotorBundle);
@@ -25,9 +32,9 @@ namespace Kub3::Services
 
     bool AlignmentStagesHomingTask::tick(void)
     {
-        const double xStageCentered     = handleSingleMotorLogic(m_xMotorBundle);
-        const double yStageCentered     = handleSingleMotorLogic(m_yMotorBundle);
-        const double thetaStageCentered = handleSingleMotorLogic(m_thetaMotorBundle);
+        const bool xStageCentered     = handleSingleMotorLogic(m_xMotorBundle);
+        const bool yStageCentered     = handleSingleMotorLogic(m_yMotorBundle);
+        const bool thetaStageCentered = handleSingleMotorLogic(m_thetaMotorBundle);
 
         return xStageCentered && yStageCentered && thetaStageCentered;
     }

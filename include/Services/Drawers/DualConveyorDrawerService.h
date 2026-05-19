@@ -4,12 +4,13 @@
 #include <QElapsedTimer>
 #include <memory>
 
-#include "Config/machine_config.h"
-#include "HAL/Actuators/ActuatorRegistry.h"
-#include "HAL/MachineStatus/IMachineStatusRepo.h"
+#include <Config/machine_config.h>
+#include <HAL/Actuators/ActuatorRegistry.h>
+#include <HAL/MachineStatus/IMachineStatusRepo.h>
+#include <Services/BaseTaskService.h>
+#include <utils.h>
+
 #include "IDrawerService.h"
-#include "Services/BaseTaskService.h"
-#include "utils.h"
 
 namespace Kub3::Services
 {

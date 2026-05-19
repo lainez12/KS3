@@ -16,8 +16,8 @@ namespace Kub3::HAL::Act
 
     enum class MotorDirection
     {
-        Positive, // Away from the motor
-        Negative  // Towards the motor
+        Positive = 0x0, // Away from the motor
+        Negative = 0x1  // Towards the motor
     };
 
     class IMotor : public IActuator

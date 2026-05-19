@@ -51,9 +51,9 @@ namespace Kub3::Services
         // Initialization limits reached and motors stopped, reset encoders
         if (xStageInitLimit && yStageInitLimit && thetaStageInitLimit)
         {
-            m_xStageMotor->resetEncoder(0.0);     // TODO: get offset value from config
-            m_yStageMotor->resetEncoder(0.0);     // TODO: get offset value from config
-            m_thetaStageMotor->resetEncoder(0.0); // TODO: get offset value from config
+            m_xStageMotor->resetEncoder(0.0);
+            m_yStageMotor->resetEncoder(0.0);
+            m_thetaStageMotor->resetEncoder(0.0);
             return true;
         }
         return false;

@@ -83,7 +83,8 @@ namespace Kub3::Services
             // Init mask conveyor
             enqueueTask<MaskConveyorInitTask>(
                 m_repo, maskConvMotor,
-                m_maskConveyorFastProfile, m_maskConveyorFineProfile, m_maskConveyorContactProfile, 0.0); // TODO: Get cm3 reset pos from config
+                m_maskConveyorFastProfile, m_maskConveyorFineProfile, m_maskConveyorContactProfile,
+                m_processConfig.cm3_reset_pos_mm);
             // Init wafer conveyor
             enqueueTask<WaferConveyorInitTask>(m_repo, waferConvMotor, m_waferConveyorFastProfile, m_waferConveyorFineProfile);
         }
@@ -95,7 +96,8 @@ namespace Kub3::Services
             const camera_motor_bundle_t rightCamYBundle = buildCameraMotorBundle(CameraMotorIdArg::RightY);
 
             enqueueTask<CamerasInitTask, CAMERAS_TASKS_QUEUE_LANE>(
-                m_repo, leftCamXBundle.motor, leftCamYBundle.motor, rightCamXBundle.motor, rightCamYBundle.motor,
+                m_repo, m_processConfig,
+                leftCamXBundle.motor, leftCamYBundle.motor, rightCamXBundle.motor, rightCamYBundle.motor,
                 m_leftCameraXKineProfile);
             enqueueTask<CamerasHomingTask, CAMERAS_TASKS_QUEUE_LANE>(
                 m_repo, leftCamXBundle, leftCamYBundle, rightCamXBundle, rightCamYBundle,
@@ -298,20 +300,32 @@ namespace Kub3::Services
 
     camera_motor_bundle_t HomingService::buildCameraMotorBundle(CameraMotorIdArg arg)
     {
-        auto argToId = [](CameraMotorIdArg arg) -> const char * {
-            if (arg == CameraMotorIdArg::LeftX)
-                return LEFT_CAMERA_X_MOTOR;
-            if (arg == CameraMotorIdArg::LeftY)
-                return LEFT_CAMERA_Y_MOTOR;
-            if (arg == CameraMotorIdArg::RightX)
-                return RIGHT_CAMERA_X_MOTOR;
-            // if (arg == CameraMotorIdArg::RightY)
-            return RIGHT_CAMERA_Y_MOTOR;
-        };
+        const char *motorId = nullptr;
+        double centerPosMm  = 0.0;
+
+        switch (arg)
+        {
+        case CameraMotorIdArg::LeftX:
+            motorId     = LEFT_CAMERA_X_MOTOR;
+            centerPosMm = m_processConfig.left_cam_x_reset_pos_mm;
+            break;
+        case CameraMotorIdArg::LeftY:
+            motorId     = LEFT_CAMERA_Y_MOTOR;
+            centerPosMm = m_processConfig.left_cam_y_reset_pos_mm;
+            break;
+        case CameraMotorIdArg::RightX:
+            motorId     = RIGHT_CAMERA_X_MOTOR;
+            centerPosMm = m_processConfig.right_cam_x_reset_pos_mm;
+            break;
+        case CameraMotorIdArg::RightY:
+            motorId     = RIGHT_CAMERA_Y_MOTOR;
+            centerPosMm = m_processConfig.right_cam_y_reset_pos_mm;
+            break;
+        }
 
         return camera_motor_bundle_t{
-            .motor            = m_registry->get<HAL::Act::IMotor>(argToId(arg)),
-            .centerPositionMm = 0.0 // TODO: Get from config
+            .motor            = m_registry->get<HAL::Act::IMotor>(motorId),
+            .centerPositionMm = centerPosMm,
         };
     }
 
@@ -345,21 +359,20 @@ namespace Kub3::Services
             return stage_motor_bundle_t{
                 .motor            = m_registry->get<HAL::Act::IMotor>(X_STAGE_MOTOR),
                 .kinematic        = m_xStageKineProfile,
-                .centerPositionMm = 0.0 // TODO: get from config
-            };
+                .centerPositionMm = m_processConfig.x_stage_center_pos_mm};
 
         if (arg == StageMotorIdArg::YStage)
             return stage_motor_bundle_t{
                 .motor            = m_registry->get<HAL::Act::IMotor>(Y_STAGE_MOTOR),
                 .kinematic        = m_yStageKineProfile,
-                .centerPositionMm = 0.0, // TODO: Get from config
+                .centerPositionMm = m_processConfig.y_stage_center_pos_mm,
             };
 
         // if (arg == StageMotorIdArg::ThetaStage)
         return stage_motor_bundle_t{
             .motor            = m_registry->get<HAL::Act::IMotor>(THETA_STAGE_MOTOR),
             .kinematic        = m_thetaStageKineProfile,
-            .centerPositionMm = 0.0, // TODO: Get from config
+            .centerPositionMm = m_processConfig.theta_stage_center_pos_mm,
         };
     }
 

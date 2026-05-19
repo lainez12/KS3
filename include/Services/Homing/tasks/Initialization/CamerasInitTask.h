@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Config/machine_config.h>
 #include <HAL/Actuators/Motors/IMotor.h>
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
 #include <Services/ITask.h>
@@ -12,6 +13,7 @@ namespace Kub3::Services
     {
     public:
         CamerasInitTask(Shared<HAL::MS::IMachineStatusRepo> repo,
+                        const Config::process_config_t &processConfig,
                         Shared<HAL::Act::IMotor> leftCamXMotor,
                         Shared<HAL::Act::IMotor> leftCamYMotor,
                         Shared<HAL::Act::IMotor> rightCamXMotor,
@@ -26,11 +28,13 @@ namespace Kub3::Services
         void handleSingleMotorLogic(Shared<HAL::Act::IMotor> motor, bool limitValue);
 
     private:
+        Shared<HAL::MS::IMachineStatusRepo> m_repo;
+        const Config::process_config_t &m_processConfig;
+
         Shared<HAL::Act::IMotor> m_leftCamXMotor;
         Shared<HAL::Act::IMotor> m_leftCamYMotor;
         Shared<HAL::Act::IMotor> m_rightCamXMotor;
         Shared<HAL::Act::IMotor> m_rightCamYMotor;
-        Shared<HAL::MS::IMachineStatusRepo> m_repo;
         Config::kinematic_profile_t m_kinematicProfile;
     };
 

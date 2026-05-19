@@ -78,7 +78,7 @@ TEST_CASE("MachineStatusRepo: Signal Anti-Spam Logic", "[HAL][MachineStatus]")
 
         // Verify the signal argument was "InterlockSafe"
         QList<QVariant> arguments = spy.takeFirst();
-        REQUIRE(arguments.at(0).toString().toStdString() == "InterlockSafe");
+        REQUIRE(arguments.at(0).value<std::string>() == "InterlockSafe");
     }
 
     SECTION("Ignores duplicate updates (Anti-Spam)")

@@ -6,12 +6,14 @@ namespace Kub3::Services
 {
 
     CamerasInitTask::CamerasInitTask(Shared<HAL::MS::IMachineStatusRepo> repo,
+                                     const Config::process_config_t &processConfig,
                                      Shared<HAL::Act::IMotor> leftCamXMotor,
                                      Shared<HAL::Act::IMotor> leftCamYMotor,
                                      Shared<HAL::Act::IMotor> rightCamXMotor,
                                      Shared<HAL::Act::IMotor> rightCamYMotor,
                                      Config::kinematic_profile_t kinematicProfile) :
         m_repo(std::move(repo)),
+        m_processConfig(processConfig),
         m_leftCamXMotor(std::move(leftCamXMotor)),
         m_leftCamYMotor(std::move(leftCamYMotor)),
         m_rightCamXMotor(std::move(rightCamXMotor)),
@@ -50,13 +52,13 @@ namespace Kub3::Services
         handleSingleMotorLogic(m_rightCamXMotor, rightCamXLimitVal);
         handleSingleMotorLogic(m_rightCamYMotor, rightCamYLimitVal);
 
-        // Initialization limits reached and motors stopped, reset encoders
+        // Initialization limits reached and motors stopped, reset encoders using config values (in mm)
         if (leftCamXLimitVal && leftCamYLimitVal && rightCamXLimitVal && rightCamYLimitVal)
         {
-            m_leftCamXMotor->resetEncoder(0.0);  // TODO: get offset value from config
-            m_leftCamYMotor->resetEncoder(0.0);  // TODO: get offset value from config
-            m_rightCamXMotor->resetEncoder(0.0); // TODO: get offset value from config
-            m_rightCamYMotor->resetEncoder(0.0); // TODO: get offset value from config
+            m_leftCamXMotor->resetEncoder(m_processConfig.left_cam_x_reset_pos_mm);
+            m_leftCamYMotor->resetEncoder(m_processConfig.left_cam_y_reset_pos_mm);
+            m_rightCamXMotor->resetEncoder(m_processConfig.right_cam_x_reset_pos_mm);
+            m_rightCamYMotor->resetEncoder(m_processConfig.right_cam_y_reset_pos_mm);
             return true;
         }
         return false;

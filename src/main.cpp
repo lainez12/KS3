@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
     try
     {
         ret = appBuilder
-                  .loadConfigurations("/tmp/hardware.ini", "/tmp/process.ini")
+                  .loadConfigurations(KUB3_HARDWARE_CONFIG_PATH, KUB3_PROCESS_CONFIG_PATH)
                   .buildHardwareTier()
                   .buildLogicTier()
                   .buildUserInterfaceTier()

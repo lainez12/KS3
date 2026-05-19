@@ -101,7 +101,7 @@
       </widget>
      </item>
      <item row="15" column="1">
-      <widget class="QLabel" name="label_position_y">
+      <widget class="QLabel" name="yStagePosValue">
        <property name="font">
         <font>
          <bold>true</bold>
@@ -144,7 +144,7 @@
       </widget>
      </item>
      <item row="14" column="1">
-      <widget class="QLabel" name="label_position_x">
+      <widget class="QLabel" name="xStagePosValue">
        <property name="font">
         <font>
          <bold>true</bold>
@@ -189,7 +189,7 @@
       </widget>
      </item>
      <item row="16" column="1">
-      <widget class="QLabel" name="label_position_theta">
+      <widget class="QLabel" name="thetaStagePosValue">
        <property name="font">
         <font>
          <bold>true</bold>
@@ -953,7 +953,7 @@
       </spacer>
      </item>
      <item row="17" column="1">
-      <widget class="QLabel" name="label_position_wafer">
+      <widget class="QLabel" name="waferPosValue">
        <property name="font">
         <font>
          <bold>true</bold>
@@ -968,7 +968,7 @@
       </widget>
      </item>
      <item row="18" column="1">
-      <widget class="QLabel" name="label_position_mask">
+      <widget class="QLabel" name="maskPosValue">
        <property name="font">
         <font>
          <bold>true</bold>
@@ -1029,13 +1029,6 @@
       <widget class="QLabel" name="rightCameraXRightLimitLabel">
        <property name="text">
         <string>Right camera X Right limit</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="Line" name="line_11">
-       <property name="orientation">
-        <enum>Qt::Orientation::Horizontal</enum>
        </property>
       </widget>
      </item>
@@ -1159,13 +1152,6 @@
        </property>
       </widget>
      </item>
-     <item row="10" column="1">
-      <widget class="Line" name="line_17">
-       <property name="orientation">
-        <enum>Qt::Orientation::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
      <item row="2" column="1">
       <widget class="QLabel" name="deckBackLimitLabel">
        <property name="enabled">
@@ -1254,7 +1240,7 @@
       </widget>
      </item>
      <item row="12" column="2">
-      <widget class="QLabel" name="label_position_leftCameraX">
+      <widget class="QLabel" name="leftCamXPosValue">
        <property name="font">
         <font>
          <bold>true</bold>
@@ -1269,7 +1255,7 @@
       </widget>
      </item>
      <item row="13" column="2">
-      <widget class="QLabel" name="label_position_leftCameraY">
+      <widget class="QLabel" name="leftCamYPosValue">
        <property name="font">
         <font>
          <bold>true</bold>
@@ -1284,7 +1270,7 @@
       </widget>
      </item>
      <item row="15" column="2">
-      <widget class="QLabel" name="label_position_rightCameraY">
+      <widget class="QLabel" name="rightCamYPosValue">
        <property name="font">
         <font>
          <bold>true</bold>
@@ -1299,7 +1285,7 @@
       </widget>
      </item>
      <item row="14" column="2">
-      <widget class="QLabel" name="label_position_rightCameraX">
+      <widget class="QLabel" name="rightCamXPosValue">
        <property name="font">
         <font>
          <bold>true</bold>
@@ -1310,6 +1296,20 @@
        </property>
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="10" column="1" colspan="2">
+      <widget class="Line" name="line_17">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1" colspan="2">
+      <widget class="Line" name="line_11">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
        </property>
       </widget>
      </item>
@@ -1396,7 +1396,7 @@
       </widget>
      </item>
      <item row="30" column="1">
-      <widget class="QLabel" name="label_position_motorRight">
+      <widget class="QLabel" name="rightZPosValue">
        <property name="font">
         <font>
          <bold>true</bold>
@@ -1874,7 +1874,7 @@
       </widget>
      </item>
      <item row="25" column="1">
-      <widget class="QLabel" name="label_TemperatureExterne">
+      <widget class="QLabel" name="externalTempValue">
        <property name="font">
         <font>
          <bold>true</bold>
@@ -1964,7 +1964,7 @@
       </widget>
      </item>
      <item row="31" column="1">
-      <widget class="QLabel" name="label_position_motorBack">
+      <widget class="QLabel" name="backZPosValue">
        <property name="font">
         <font>
          <bold>true</bold>
@@ -2074,7 +2074,7 @@
       </spacer>
      </item>
      <item row="29" column="1">
-      <widget class="QLabel" name="label_position_motorLeft">
+      <widget class="QLabel" name="leftZPosValue">
        <property name="font">
         <font>
          <bold>true</bold>
@@ -2096,7 +2096,7 @@
       </widget>
      </item>
      <item row="24" column="1">
-      <widget class="QLabel" name="label_TemperatureInterne">
+      <widget class="QLabel" name="internalTempValue">
        <property name="font">
         <font>
          <bold>true</bold>
