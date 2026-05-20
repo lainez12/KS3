@@ -70,7 +70,7 @@ void HomeView::configTitleBar() {
 }
 
 void HomeView::onSettingsButtonClicked(const QString &buttonId) {
-    emit s_openView(Kub3::UI::ViewId::MACHINE_STATUS_VIEW);
+    emit s_openView(Kub3::UI::ViewId::SETTINGS_VIEW);
 }
 void HomeView::onOpenButtonClicked(const QString &buttonId) {
     setNavButtonEnabled(ID_BTN_SETTINGS, false);

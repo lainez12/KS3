@@ -1,35 +1,49 @@
 #include "Views/SettingsView.h"
 #include "ui_SettingsView.h"
 
-#define ID_BTN_HOME "H"
-#define BLUE_COLOR "#0070DB"
+#define ID_BTN_HOME  "H"
+#define BLUE_COLOR   "#0070DB"
+#define BUTTONS_SIZE 150
 
 SettingsView::SettingsView(Unique<SettingsViewModel> viewModel, QWidget *parent) :
     ViewBase(std::move(viewModel), parent),
     ui(new Ui::SettingsView) {
     ui->setupUi(this);
+
+    createNavButtonsConfigs();
+    configTitleBar();
+
+    ui->opeTimesBtn->setup("Operation Times", BLUE_COLOR, ":/icons/operating-times.svg");
+    ui->opeTimesBtn->setSize(BUTTONS_SIZE);
+    ui->aboutBtn->setup("About", BLUE_COLOR, ":/icons/about.svg");
+    ui->aboutBtn->setSize(BUTTONS_SIZE);
+    ui->temperatureBtn->setup("Temperature", BLUE_COLOR, ":/icons/temperature.svg");
+    ui->temperatureBtn->setSize(BUTTONS_SIZE);
+    ui->screenshootBtn->setup("Screenshot export", BLUE_COLOR, ":/icons/screenshots-export.svg");
+    ui->screenshootBtn->setSize(BUTTONS_SIZE);
+    ui->ledTestBtn->setup("Led test", BLUE_COLOR, ":/icons/led-test.svg");
+    ui->ledTestBtn->setSize(BUTTONS_SIZE);
+    ui->updateSoftBtn->setup("Update software", BLUE_COLOR, ":/icons/load-on-usb.svg");
+    ui->updateSoftBtn->setSize(BUTTONS_SIZE);
 }
 SettingsView::~SettingsView() {
 }
 
 void SettingsView::resizeEvent(QResizeEvent *ev) {
     QWidget::resizeEvent(ev);
-    ui->buttonsLayout->setSpacing(this->width() * 0.07); // 7% of window width
+    ui->buttonsLayout->setSpacing(this->width() * 0.03); // 7% of window width
 }
 
-void SettingsView::createNavButtonsConfigs()
-{
+void SettingsView::createNavButtonsConfigs() {
     NavButtonConfig homeBtn(
         "Home",
         QColor(BLUE_COLOR),
         ":/icons/home.svg",
         ID_BTN_HOME,
-        std::bind(&SettingsView::onHomeButtonClicked, this, std::placeholders::_1)
-    );
+        std::bind(&SettingsView::onHomeButtonClicked, this, std::placeholders::_1));
     addNavButton("left", homeBtn);
 }
-void SettingsView::configTitleBar()
-{
+void SettingsView::configTitleBar() {
     m_titleBar = TitleBarConfig(
         "Parameters",
         QColor("#FFF"),
@@ -37,8 +51,7 @@ void SettingsView::configTitleBar()
         ":/icons/admin.svg",
         "Parameters",
         true,
-        true
-    );
+        true);
 }
 
 void SettingsView::onHomeButtonClicked(const QString &buttonId) {

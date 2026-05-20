@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow) {
     ui->setupUi(this);
     m_backgroundPixmap = QPixmap(":/images/bg.png");
-    m_topBar = ui->upBar;
+    m_topBar           = ui->upBar;
     m_topBar->hide();
 
     QHBoxLayout *mainLayout = qobject_cast<QHBoxLayout *>(ui->bottomBar->layout());

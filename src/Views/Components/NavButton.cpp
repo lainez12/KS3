@@ -67,3 +67,10 @@ void NavButton::setEnabledNavButton(bool state) {
 void NavButton::mouseReleaseEvent(QMouseEvent *event) {
     emit clicked();
 }
+
+void NavButton::setSize(const uint sizePx) {
+    int iconSizePx = static_cast<int>(sizePx * (2.0 / 3.0));
+
+    m_circle->setFixedSize(QSize(sizePx, sizePx));
+    m_iconLabel->setFixedSize(QSize(iconSizePx, iconSizePx));
+}

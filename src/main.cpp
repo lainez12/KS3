@@ -45,18 +45,26 @@ static void loadStyles(QApplication *app) {
 
     if (f.open(QFile::ReadOnly | QFile::Text)) {
         QTextStream ts(&f);
-        QString content = ts.readAll();
+        QString content    = ts.readAll();
         QString stylesheet = preprocesVariablesStyles(content);
         app->setStyleSheet(stylesheet);
         f.close();
     }
     // Load fonts
-    int fontId = QFontDatabase::addApplicationFont(":/fonts/ArtNormFont.ttf");
+    int fontId      = QFontDatabase::addApplicationFont(":/fonts/ArtNormFont.ttf");
+    int fontIdArial = QFontDatabase::addApplicationFont(":/fonts/arial.ttf");
     if (fontId != -1) {
-        QString familyName = QFontDatabase::applicationFontFamilies(fontId).at(0);
-        qDebug() << "Loaded font family w/ name:" << familyName;
+        QString familyNameArt   = QFontDatabase::applicationFontFamilies(fontId).at(0);
+        qDebug() << "Loaded font family w/ name:" << familyNameArt;
     } else {
         qDebug() << "Failed to load font: ':/fonts/ArtNormFont.ttf'";
+    }
+
+    if(fontIdArial != -1){
+        QString familyNameArial = QFontDatabase::applicationFontFamilies(fontIdArial).at(0);
+        qDebug() << "Loaded font family w/ name:" << familyNameArial;
+    } else {
+        qDebug() << "Failed to load font: ':/fonts/arial.ttf'";
     }
 }
 

@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>fonts/ArtNormFont.ttf</file>
+        <file>fonts/arial.ttf</file>
         <file>styles/app.qss</file>
         <file>icons/logoKloe.svg</file>
         <file>icons/logoKloeBlanc.svg</file>

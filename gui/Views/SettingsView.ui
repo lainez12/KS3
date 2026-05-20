@@ -49,7 +49,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="ActionBox" name="abouBtn">
+      <widget class="NavButton" name="aboutBtn">
        <property name="minimumSize">
         <size>
          <width>0</width>
@@ -59,10 +59,19 @@
       </widget>
      </item>
      <item>
-      <widget class="ActionBox" name="temperatureBtn"/>
+      <widget class="NavButton" name="temperatureBtn"/>
      </item>
      <item>
-      <widget class="ActionBox" name="opeTimesBtn"/>
+      <widget class="NavButton" name="opeTimesBtn"/>
+     </item>
+     <item>
+      <widget class="NavButton" name="screenshootBtn"/>
+     </item>
+     <item>
+      <widget class="NavButton" name="ledTestBtn"/>
+     </item>
+     <item>
+      <widget class="NavButton" name="updateSoftBtn"/>
      </item>
      <item>
       <spacer name="rightGap">
@@ -99,9 +108,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>ActionBox</class>
+   <class>NavButton</class>
    <extends>QWidget</extends>
-   <header>Views/Components/ActionBox.h</header>
+   <header>Views/Components/NavButton.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

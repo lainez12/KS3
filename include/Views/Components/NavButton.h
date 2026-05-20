@@ -15,6 +15,7 @@ public:
     void setIcon(const QString &iconPath);
     void setText(const QString &newText);
     void setEnabledNavButton(bool state);
+    void setSize(const uint sizePx);
 
 signals:
     void clicked(void);
