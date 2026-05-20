@@ -109,7 +109,7 @@ TEST_CASE("StepperMotor Thread-Safe Dispatch & Queued Connections", "[actuators]
     auto kinematicEngine = buildKinematicGenerator(KinematicGeneratorKind::TRAPEZOIDAL);
 
     // Instantiate the motor
-    StepperMotor motor("TEST_M1", 0x01, mcuDriver, hwConfig, dummyPosGetter, std::move(kinematicEngine));
+    StepperMotor motor("TEST_M1", 0x01, mcuDriver, hwConfig, dummyPosGetter, "", std::move(kinematicEngine));
 
     SECTION("Generates Move Commands and resolves with a Stop Command over the Event Loop")
     {

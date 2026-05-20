@@ -10,12 +10,14 @@ qt_add_executable(Kub3MotorTester
     src/MotorTestService.cpp
     src/MotorTestViewModel.cpp
     src/MotorTestWindow.cpp
+    src/RealTimeCurveWidget.cpp
     # Headers
     include/ApplicationBuilder.h
     include/MotorTestController.h
     include/MotorTestService.h
     include/MotorTestViewModel.h
     include/MotorTestWindow.h
+    include/RealTimeCurveWidget.h
     # UI
     gui/resources.qrc
     gui/MotorTestWindow.ui

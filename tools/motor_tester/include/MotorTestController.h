@@ -36,9 +36,7 @@ namespace Kub3::Tools::MotorTester
         void ps_stopJog();
         void ps_moveToAbsolute(double positionMm, Kub3::Config::kinematic_profile_t profile);
         void ps_emergencyStopAll();
-
-    private slots:
-        void onTick();
+        void ps_onMachineStatusUpdate(const std::string &key);
 
     signals:
         // Pushed to ViewModel
@@ -48,7 +46,6 @@ namespace Kub3::Tools::MotorTester
 
     private:
         Unique<MotorTestService> m_service;
-        QTimer *m_tickTimer = nullptr;
     };
 
 } // namespace Kub3::Tools::MotorTester

@@ -13,6 +13,14 @@ namespace Kub3::Tools::MotorTester
     {
         ui->setupUi(this);
 
+        // --- Configure the Plots ---
+        ui->plotPosition->setCurveProperties("Position", "mm", QColor("#0055ff")); // Deep Blue
+        ui->plotPosition->setHistory(250, 50.0);
+        ui->plotSpeed->setCurveProperties("Speed", "mm/s", QColor("#e67e22")); // Burnt Orange
+        ui->plotSpeed->setHistory(250, 50.0);
+        ui->plotAcceleration->setCurveProperties("Acceleration", "mm/s²", QColor("#c0392b")); // Dark Red
+        ui->plotAcceleration->setHistory(250, 50.0);
+
         // Populate step fraction combo box
         ui->cbStepFraction->addItem("1 (Full Step)", 1);
         ui->cbStepFraction->addItem("2 (Half Step)", 2);
@@ -95,6 +103,23 @@ namespace Kub3::Tools::MotorTester
             ui->lblPos->setText(QString::number(m_viewModel->position(), 'f', 4) + " mm");
             ui->lblSpd->setText(QString::number(m_viewModel->speed(), 'f', 2) + " mm/s");
             ui->lblAcc->setText(QString::number(m_viewModel->acceleration(), 'f', 2) + " mm/s²");
+        });
+
+        // Push data to the plots
+        connect(m_viewModel.get(), &MotorTestViewModel::s_telemetryChanged, this, [this]() {
+            ui->plotPosition->addDataPoint(m_viewModel->position());
+            ui->plotSpeed->addDataPoint(m_viewModel->speed());
+            ui->plotAcceleration->addDataPoint(m_viewModel->acceleration());
+        });
+
+        // Clear the plots when the motor changes
+        connect(m_viewModel.get(), &MotorTestViewModel::s_hasValidMotorChanged, this, [this]() {
+            ui->plotPosition->clear();
+            ui->plotSpeed->clear();
+            ui->plotAcceleration->clear();
+
+            bool valid = m_viewModel->hasValidMotor();
+            ui->grpKinematics->setEnabled(valid);
         });
     }
 

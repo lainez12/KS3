@@ -30,6 +30,7 @@ namespace Kub3::HAL::Act
             Weak<MCUDriver> driver,
             Config::stepper_hw_properties_t hwConfig,
             std::function<int32_t()> positionGetter,
+            std::string encoderId,
             Unique<IKinematicGenerator> kinematicEngine,
             QObject *parent = nullptr);
 
@@ -46,6 +47,10 @@ namespace Kub3::HAL::Act
 
         // Getters
         bool isMoving(void) const;
+        [[nodiscard]] std::string_view getEncoderId(void) const override
+        {
+            return m_encoderId;
+        };
         [[nodiscard]] double getEncoderPositionMm(void) const override;
 
     private slots:
@@ -60,6 +65,7 @@ namespace Kub3::HAL::Act
         const uint8_t m_byteId;
         const Config::stepper_hw_properties_t m_hwConfig;
         Weak<MCUDriver> m_driver;
+        const std::string m_encoderId;
         std::function<int32_t()> m_encoderValueGetter;
 
         // Velocity curve and trajectory member variables

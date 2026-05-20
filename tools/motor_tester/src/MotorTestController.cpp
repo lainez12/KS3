@@ -24,27 +24,20 @@ namespace Kub3::Tools::MotorTester
             motorList << QString::fromStdString(id);
         }
         emit s_availableMotorsDiscovered(motorList);
-
-        // 2. Start 50Hz Polling Timer
-        m_tickTimer = new QTimer(this);
-        m_tickTimer->setInterval(20);
-        connect(m_tickTimer, &QTimer::timeout, this, &MotorTestController::onTick);
-        m_tickTimer->start();
     }
 
     void MotorTestController::stop()
     {
-        if (m_tickTimer)
-            m_tickTimer->stop();
         m_service->stop();
     }
 
-    void MotorTestController::onTick()
+    void MotorTestController::ps_onMachineStatusUpdate(const std::string &sensorId)
     {
-        m_service->tick();
-        if (m_service->hasValidMotor())
+        if (m_service->hasValidMotor() && m_service->getCurrentEncoderId() == sensorId)
         {
-            auto tel = m_service->getTelemetry();
+            m_service->tick();
+
+            const auto tel = m_service->getTelemetry();
             emit s_telemetryUpdated(tel.positionMm, tel.speedMmS, tel.accelMmS2);
         }
     }
@@ -74,7 +67,6 @@ namespace Kub3::Tools::MotorTester
     void MotorTestController::ps_emergencyStopAll()
     {
         m_service->emergencyStopAll();
-        emit s_motorSelectionChanged(false);
     }
 
 } // namespace Kub3::Tools::MotorTester

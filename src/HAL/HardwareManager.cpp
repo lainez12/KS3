@@ -660,7 +660,7 @@ namespace Kub3::HAL
 
         return std::make_shared<Act::StepperMotor>(
             it->second.id, byteId, driver, *hwProps,
-            std::move(encoderGetter),
+            std::move(encoderGetter), encoderId,
             std::move(kinematicEngine));
     }
 

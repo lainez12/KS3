@@ -61,6 +61,10 @@ namespace Kub3::Tools::MotorTester
     {
         qInfo() << "[MotorTester] Wiring strictly decoupled architecture...";
 
+        // Machine repository (HAL) -> Controller (Logic Thread)
+        QObject::connect(m_repo.get(), &HAL::MS::IMachineStatusRepo::s_sensorValueChanged,
+                         m_controller, &Tools::MotorTester::MotorTestController::ps_onMachineStatusUpdate);
+
         // ViewModel (Main Thread) -> Controller (Logic Thread)
         QObject::connect(m_viewModel.get(), &MotorTestViewModel::cmdSelectMotor, m_controller, &MotorTestController::ps_selectMotor, Qt::QueuedConnection);
         QObject::connect(m_viewModel.get(), &MotorTestViewModel::cmdJog, m_controller, &MotorTestController::ps_startJog, Qt::QueuedConnection);

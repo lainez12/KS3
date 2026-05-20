@@ -135,7 +135,6 @@ namespace Kub3::Tools::MotorTester
             if (auto motor = m_actuatorRegistry->get<HAL::Act::IMotor>(id); motor)
                 motor->emergencyStop();
         }
-        m_selectedMotor = std::nullopt;
     }
 
 } // namespace Kub3::Tools::MotorTester

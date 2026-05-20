@@ -42,6 +42,11 @@ public:
         return false;
     }
 
+    std::string_view getEncoderId(void) const override
+    {
+        return "";
+    }
+
     double getEncoderPositionMm() const override
     {
         return 0.0;

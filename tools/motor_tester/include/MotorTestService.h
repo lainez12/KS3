@@ -55,6 +55,12 @@ namespace Kub3::Tools::MotorTester
         {
             return m_telemetry;
         }
+        [[nodiscard]] std::string_view getCurrentEncoderId(void) const
+        {
+            if (!m_selectedMotor.has_value())
+                return "";
+            return m_selectedMotor.value()->getEncoderId();
+        }
 
     private:
         Shared<HAL::Act::ActuatorRegistry> m_actuatorRegistry;

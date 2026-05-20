@@ -14,6 +14,7 @@ namespace Kub3::HAL::Act
                                Weak<MCUDriver> driver,
                                Config::stepper_hw_properties_t hwConfig,
                                std::function<int32_t()> posGetter,
+                               std::string encoderId,
                                Unique<IKinematicGenerator> kinematicEngine,
                                QObject *parent) :
         QObject(parent),
@@ -22,6 +23,7 @@ namespace Kub3::HAL::Act
         m_hwConfig(std::move(hwConfig)),
         m_driver(std::move(driver)),
         m_encoderValueGetter(std::move(posGetter)),
+        m_encoderId(std::move(encoderId)),
         m_kinematicEngine(std::move(kinematicEngine)),
         m_controlTimer(this)
     {
@@ -214,7 +216,7 @@ namespace Kub3::HAL::Act
     {
         const int32_t encoderValue = m_encoderValueGetter ? m_encoderValueGetter() : 0;
 
-        return static_cast<double>(encoderValue) * (static_cast<double>(m_hwConfig.encoderTopsPerRev) / m_hwConfig.screwPitchMm);
+        return static_cast<double>(encoderValue) * (m_hwConfig.screwPitchMm / static_cast<double>(m_hwConfig.encoderTopsPerRev));
     }
 
     void StepperMotor::onControlTick(void)
@@ -232,6 +234,8 @@ namespace Kub3::HAL::Act
             return;
         }
 
+        qDebug() << "===============================";
+        qDebug() << "Computed velocity (mm/s):" << state.velocity;
         // Convert physical velocity to hardware frequency
         const uint16_t hz = computeFrequencyHz(std::abs(state.velocity), m_currentStepFraction);
 
@@ -265,7 +269,9 @@ namespace Kub3::HAL::Act
         const double stepsPerMm = (static_cast<double>(m_hwConfig.stepsPerRev) * stepFraction) / m_hwConfig.screwPitchMm;
         const double roundedHz  = std::round(velocityMmS * stepsPerMm);
 
-        return static_cast<uint16_t>(std::clamp(roundedHz, 0.0, static_cast<double> UINT16_MAX));
+        qDebug() << "Computed steps per millimeter:" << stepsPerMm;
+        qDebug() << "Computed frequency:" << roundedHz;
+        return static_cast<uint16_t>(std::clamp(roundedHz, 0.0, static_cast<double>(UINT16_MAX)));
     }
 
 } // namespace Kub3::HAL::Act
