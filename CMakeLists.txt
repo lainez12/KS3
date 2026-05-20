@@ -190,12 +190,14 @@ qt_add_executable(Kub3Software
     src/ViewModels/HomeViewModel.cpp
     src/ViewModels/DebugViewModel.cpp
     src/ViewModels/MachineStatusViewModel.cpp
+    src/ViewModels/SettingsViewModel.cpp
     src/Views/MainWindow.cpp
     src/Views/ViewBase.cpp
     src/Views/NavButtonManager.cpp
     src/Views/DebugView.cpp
     src/Views/HomeView.cpp
     src/Views/MachineStatusView.cpp
+    src/Views/SettingsView.cpp
     src/Views/Components/NavButton.cpp
     src/Views/Components/UpBar.cpp
     src/Views/Components/ActionBox.cpp
@@ -205,12 +207,14 @@ qt_add_executable(Kub3Software
     include/ViewModels/HomeViewModel.h
     include/ViewModels/DebugViewModel.h
     include/ViewModels/MachineStatusViewModel.h
+    include/ViewModels/SettingsViewModel.h
     include/Views/MainWindow.h
     include/Views/ViewBase.h
     include/Views/NavButtonManager.h
     include/Views/DebugView.h
     include/Views/HomeView.h
     include/Views/MachineStatusView.h
+    include/Views/SettingsView.h
     include/Views/Components/NavButton.h
     include/Views/Components/UpBar.h
     include/Views/Components/ActionBox.h
@@ -221,6 +225,7 @@ qt_add_executable(Kub3Software
     gui/Views/DebugView.ui
     gui/Views/HomeView.ui
     gui/Views/MachineStatusView.ui
+    gui/Views/SettingsView.ui
 )
 
 qt_finalize_target(Kub3Software)

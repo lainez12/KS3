@@ -13,6 +13,7 @@
 #include "Views/DebugView.h"
 #include "Views/HomeView.h"
 #include "Views/MachineStatusView.h"
+#include "Views/SettingsView.h"
 #include "Views/ViewBase.h"
 
 namespace Ui {

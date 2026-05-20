@@ -18,6 +18,7 @@
 // --- UI
 #include <ViewModels/HomeViewModel.h>
 #include <ViewModels/MachineStatusViewModel.h>
+#include <ViewModels/SettingsViewModel.h>
 #include <Views/MainWindow.h>
 
 namespace Kub3 {
