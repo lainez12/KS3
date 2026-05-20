@@ -110,16 +110,6 @@ void MachineStatusView::createNavButtonsConfigs() {
             emit s_openView(Kub3::UI::ViewId::HOME_VIEW);
         });
     addNavButton("left", homeBtn);
-
-    NavButtonConfig openCloseBtn(
-        "Open/Close",
-        QColor("#0072BA"),
-        ":/icons/eject.svg",
-        "open/close",
-        [this](const QString &) {
-            qDebug() << "Open/Close button clicked in MachineStatusView";
-        });
-    addNavButton("right", openCloseBtn);
 }
 
 void MachineStatusView::configTitleBar() {
@@ -130,5 +120,6 @@ void MachineStatusView::configTitleBar() {
         ":/icons/admin.svg",
         "Settings",
         true,
-        true);
+        true
+    );
 }
