@@ -150,34 +150,6 @@
     <item row="7" column="0" colspan="2">
      <widget class="QWidget" name="widget" native="true">
       <layout class="QGridLayout" name="gridLayout" columnstretch="0,0,0,0">
-       <item row="8" column="0" colspan="2">
-        <widget class="QPushButton" name="btnJogNeg">
-         <property name="text">
-          <string>Negative move</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0" colspan="2">
-        <widget class="QLabel" name="label">
-         <property name="text">
-          <string>Target velocity (mm/s)</string>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="0" colspan="2">
-        <widget class="QPushButton" name="btnJogPos">
-         <property name="text">
-          <string>Positive move</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="0" colspan="2">
-        <widget class="QLabel" name="label_2">
-         <property name="text">
-          <string>Acceleration (mm/s²)</string>
-         </property>
-        </widget>
-       </item>
        <item row="9" column="0" colspan="4">
         <widget class="QPushButton" name="btnEmergencyStop">
          <property name="minimumSize">
@@ -191,59 +163,31 @@
          </property>
         </widget>
        </item>
-       <item row="8" column="2" colspan="2">
-        <widget class="QPushButton" name="btnGoAbs">
+       <item row="3" column="0" colspan="2">
+        <widget class="QLabel" name="label">
          <property name="text">
-          <string>Move to absolute position</string>
+          <string>Target velocity (mm/s)</string>
          </property>
         </widget>
        </item>
-       <item row="7" column="2" colspan="2">
-        <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,0">
-         <item>
-          <widget class="QDoubleSpinBox" name="spinTargetPos">
-           <property name="minimum">
-            <double>-100000.000000000000000</double>
-           </property>
-           <property name="maximum">
-            <double>100000.000000000000000</double>
-           </property>
-           <property name="singleStep">
-            <double>0.500000000000000</double>
-           </property>
-           <property name="stepType">
-            <enum>QAbstractSpinBox::StepType::DefaultStepType</enum>
-           </property>
-           <property name="value">
-            <double>100.000000000000000</double>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="label_8">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>mm</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
+       <item row="3" column="2" colspan="2">
+        <widget class="QDoubleSpinBox" name="spinVelocity">
+         <property name="value">
+          <double>8.000000000000000</double>
+         </property>
+        </widget>
        </item>
        <item row="6" column="0" colspan="4">
         <widget class="Line" name="line">
          <property name="orientation">
           <enum>Qt::Orientation::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0" colspan="2">
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>Acceleration (mm/s²)</string>
          </property>
         </widget>
        </item>
@@ -273,12 +217,75 @@
          </property>
         </widget>
        </item>
-       <item row="3" column="2" colspan="2">
-        <widget class="QDoubleSpinBox" name="spinVelocity">
-         <property name="value">
-          <double>8.000000000000000</double>
-         </property>
-        </widget>
+       <item row="7" column="0" colspan="4">
+        <layout class="QGridLayout" name="gridLayout_5" columnstretch="5,3,1,1">
+         <item row="1" column="0">
+          <widget class="QPushButton" name="btnJogPos">
+           <property name="text">
+            <string>Positive move</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="2">
+          <widget class="QDoubleSpinBox" name="spinTargetPos">
+           <property name="minimum">
+            <double>-100000.000000000000000</double>
+           </property>
+           <property name="maximum">
+            <double>100000.000000000000000</double>
+           </property>
+           <property name="singleStep">
+            <double>0.500000000000000</double>
+           </property>
+           <property name="stepType">
+            <enum>QAbstractSpinBox::StepType::DefaultStepType</enum>
+           </property>
+           <property name="value">
+            <double>100.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QPushButton" name="btnJogNeg">
+           <property name="text">
+            <string>Negative move</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1" colspan="3">
+          <widget class="QPushButton" name="btnGoAbs">
+           <property name="text">
+            <string>Move to absolute position</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="3">
+          <widget class="QLabel" name="label_8">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>mm</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLabel" name="label_9">
+           <property name="text">
+            <string>Position</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
       </layout>
      </widget>

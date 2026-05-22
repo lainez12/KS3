@@ -53,6 +53,12 @@ public:
     }
 
     void resetEncoder(const double offsetMm = 0.0) override {}
+
+private:
+    double computePrecisionMm(const Kub3::Config::kinematic_profile_t &profile) override
+    {
+        return 0.01;
+    };
 };
 
 class MockMachineStatusRepo final : public MS::IMachineStatusRepo

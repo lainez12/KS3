@@ -57,6 +57,7 @@ namespace Kub3::HAL::Act
         void onControlTick(void);
 
     private:
+        double computePrecisionMm(const Config::kinematic_profile_t &profile) override;
         uint16_t computeFrequencyHz(double velocityMmS, uint8_t stepFraction) const;
         void sendPayload(const uint8_t *payload, uint32_t size) const;
 

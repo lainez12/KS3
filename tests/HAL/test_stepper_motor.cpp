@@ -41,14 +41,11 @@ public:
             return false;
         lastPayload = data;
 
-        std::cerr << "Sending: " << data.toHex(' ').toStdString() << std::endl;
-
-        if (data[0] == '2') // '2' == Move Command
+        if (data[1] == '2') // '2' == Move Command
             moveCommandsSent++;
-        else if (data[0] == '1') // '1' == Stop Command
+        else if (data[1] == '1') // '1' == Stop Command
         {
             stopCommandReceived = true;
-            std::cerr << "\n>>> QUITTING" << std::endl;
             // Break the Qt Event Loop
             if (m_eventLoop)
                 m_eventLoop->quit();
@@ -99,10 +96,11 @@ TEST_CASE("StepperMotor Thread-Safe Dispatch & Queued Connections", "[actuators]
 
     // Setup physical constraints
     stepper_hw_properties_t hwConfig = {
-        .stepsPerRev         = 200,
+        .stepsPerRev         = 100,
         .screwPitchMm        = 5.0,
         .maxVelocityMmS      = 100.0,
         .maxAccelerationMmS2 = 500.0,
+        .encoderTopsPerRev   = 100,
     };
 
     auto dummyPosGetter  = []() { return 0.0; };
@@ -117,7 +115,7 @@ TEST_CASE("StepperMotor Thread-Safe Dispatch & Queued Connections", "[actuators]
             .id                 = "dummyProfile",
             .initialVelocityMmS = 0.0,
             .targetVelocityMmS  = 10.0,
-            .accelerationMmS2   = 200.0,
+            .accelerationMmS2   = 10.0,
             .params             = stepper_kinematics_params_t{16},
         };
 
@@ -148,11 +146,10 @@ TEST_CASE("StepperMotor Thread-Safe Dispatch & Queued Connections", "[actuators]
 
         // The last payload pushed to the bus MUST be the stop sequence
         REQUIRE(commObserver->lastPayload.size() >= 2);
-        REQUIRE(commObserver->lastPayload[0] == '1');
-        REQUIRE(commObserver->lastPayload[1] == 0x01); // Asserts correct Motor Byte ID
+        REQUIRE(commObserver->lastPayload[1] == '1');
+        REQUIRE(commObserver->lastPayload[2] == 0x01); // Asserts correct Motor Byte ID
     }
 
-    // TODO: fix flakiness
     SECTION("On-the-fly profile updates do not interrupt motion")
     {
         kinematic_profile_t fastProfile = {
@@ -167,7 +164,7 @@ TEST_CASE("StepperMotor Thread-Safe Dispatch & Queued Connections", "[actuators]
             .params            = stepper_kinematics_params_t{16},
         };
 
-        // 1. Start a long move
+        // Start a long move
         motor.moveAbsolute(200.0, fastProfile);
 
         // Let it run for just 200ms (It won't reach 200mm in 200ms)
@@ -177,17 +174,17 @@ TEST_CASE("StepperMotor Thread-Safe Dispatch & Queued Connections", "[actuators]
         interruptTimer.start(200);
         loop.exec(); // Blocks until interruptTimer fires
 
-        // 2. Verify we are moving and have NOT received a stop command
+        // Verify we are moving and have NOT received a stop command
         REQUIRE(commObserver->moveCommandsSent > 0);
         REQUIRE(commObserver->stopCommandReceived == false);
 
         const int moveCommandsBeforeUpdate = commObserver->moveCommandsSent;
 
-        // 3. ON-THE-FLY INJECTION: Slow down, but keep going to 200mm
+        // ON-THE-FLY INJECTION: Slow down, but keep going to 200mm
         std::cerr << "[UPDATING KINEMATICS PROFILE] fast -> slow" << std::endl;
         motor.moveAbsolute(12.0, slowProfile);
 
-        // 4. Setup finish trap
+        // Setup finish trap
         QTimer timeoutTimer;
         timeoutTimer.setSingleShot(true);
 

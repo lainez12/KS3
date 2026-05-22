@@ -778,7 +778,7 @@ static std::string_view arduino3KeyExtractor(const Kub3::HAL::Com::packet_t &pac
 
 static bool limitSwitchParser(const QByteArray &d)
 {
-    return !d.isEmpty() && d[0] != 0x0;
+    return !d.isEmpty() && (d[0] != 0x0 && d[0] != '0');
 }
 
 static bool valveStatusParser(const QByteArray &d)

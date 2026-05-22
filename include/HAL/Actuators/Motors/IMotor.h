@@ -32,6 +32,9 @@ namespace Kub3::HAL::Act
         virtual bool isMoving(void) const                               = 0;
         [[nodiscard]] virtual std::string_view getEncoderId(void) const = 0;
         [[nodiscard]] virtual double getEncoderPositionMm(void) const   = 0;
+
+    private:
+        virtual double computePrecisionMm(const Config::kinematic_profile_t &profile) = 0;
     };
 
 } // namespace KUB3::HAL

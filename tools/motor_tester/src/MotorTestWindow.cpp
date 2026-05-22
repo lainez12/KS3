@@ -14,12 +14,21 @@ namespace Kub3::Tools::MotorTester
         ui->setupUi(this);
 
         // --- Configure the Plots ---
-        ui->plotPosition->setCurveProperties("Position", "mm", QColor("#0055ff")); // Deep Blue
-        ui->plotPosition->setHistory(250, 50.0);
-        ui->plotSpeed->setCurveProperties("Speed", "mm/s", QColor("#e67e22")); // Burnt Orange
-        ui->plotSpeed->setHistory(250, 50.0);
-        ui->plotAcceleration->setCurveProperties("Acceleration", "mm/s²", QColor("#c0392b")); // Dark Red
-        ui->plotAcceleration->setHistory(250, 50.0);
+        // Position Plot: Reference (Blue) vs Real Position (Green)
+        ui->plotPosition->setUnit("mm");
+        ui->plotPosition->configureCurve("ref", "Reference", QColor("#0055ff")); // Deep Blue
+        ui->plotPosition->configureCurve("real", "Real", QColor("#2ecc71"));     // Emerald Green
+        ui->plotPosition->setHistory(30000);                                     // 30-second window
+        // Speed Plot: Reference (Orange) vs Real Speed (Purple)
+        ui->plotSpeed->setUnit("mm/s");
+        ui->plotSpeed->configureCurve("ref", "Reference", QColor("#e67e22")); // Burnt Orange
+        ui->plotSpeed->configureCurve("real", "Real", QColor("#9b59b6"));     // Purple
+        ui->plotSpeed->setHistory(30000);
+        // Acceleration Plot: Reference (Dark Red) vs Real Acceleration (Gray)
+        ui->plotAcceleration->setUnit("mm/s²");
+        ui->plotAcceleration->configureCurve("ref", "Reference", QColor("#c0392b")); // Dark Red
+        ui->plotAcceleration->configureCurve("real", "Real", QColor("#7f8c8d"));     // Gray
+        ui->plotAcceleration->setHistory(30000);
 
         // Populate step fraction combo box
         ui->cbStepFraction->addItem("1 (Full Step)", 1);
@@ -107,9 +116,9 @@ namespace Kub3::Tools::MotorTester
 
         // Push data to the plots
         connect(m_viewModel.get(), &MotorTestViewModel::s_telemetryChanged, this, [this]() {
-            ui->plotPosition->addDataPoint(m_viewModel->position());
-            ui->plotSpeed->addDataPoint(m_viewModel->speed());
-            ui->plotAcceleration->addDataPoint(m_viewModel->acceleration());
+            ui->plotPosition->addDataPoint("real", m_viewModel->position());
+            ui->plotSpeed->addDataPoint("real", m_viewModel->speed());
+            ui->plotAcceleration->addDataPoint("real", m_viewModel->acceleration());
         });
 
         // Clear the plots when the motor changes

@@ -54,6 +54,7 @@ namespace Kub3::HAL::Act
         void onControlTick(void);
 
     private:
+        double computePrecisionMm(const Config::kinematic_profile_t &profile) override;
         uint16_t computePwm(double velocityMmS) const;
         void sendPayload(const QByteArray &payload) const;
 
