@@ -18,6 +18,10 @@ HomeView::HomeView(Unique<HomeViewModel> viewModel, QWidget *parent) :
     ui->maskExpBtn->setup("Mask Exposure", "#0000cd", ":/icons/mask-exposure_icon.svg");     // Blue
     ui->maskAlignBtn->setup("Mask Alignment", "#00ced1", ":/icons/mask-alignment_icon.svg"); // Cyan
 
+    connect(ui->floodBtn, &ActionBox::clicked, this, &HomeView::onFloodExposureClicked);
+    //connect(ui->maskExpBtn, &ActionBox::clicked, this, &HomeView::onMaskExposureClicked);
+    //connect(ui->maskAlignBtn, &ActionBox::clicked, this, &HomeView::onMaskAlignmentClicked);
+
     this->updateMachineLogo(this->height());
 }
 
@@ -94,4 +98,8 @@ void HomeView::onCloseButtonCliked(const QString &buttonId) {
         ID_BTN_OPEN,
         std::bind(&HomeView::onOpenButtonClicked, this, std::placeholders::_1));
     addNavButton("right", openBtn);
+}
+
+void HomeView::onFloodExposureClicked() {
+    emit s_openView(Kub3::UI::ViewId::EXPOSURE_SETTINGS_VIEW);
 }

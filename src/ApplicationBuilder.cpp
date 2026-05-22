@@ -66,15 +66,18 @@ namespace Kub3 {
         m_mainWindow = std::make_unique<MainWindow>();
 
         {
-            auto machineStatusViewModel = std::make_unique<UI::ViewModels::MachineStatusViewModel>(m_repo);
-            auto homeViewModel          = std::make_unique<UI::ViewModels::HomeViewModel>(m_repo);
-            auto settingsViewModel      = std::make_unique<UI::ViewModels::SettingsViewModel>(m_repo);
-            auto *settingsView          = new SettingsView(std::move(settingsViewModel), m_mainWindow.get());
-            auto *machineStatusView = new MachineStatusView(std::move(machineStatusViewModel), m_mainWindow.get());
-            auto *homeView          = new HomeView(std::move(homeViewModel), m_mainWindow.get());
+            auto machineStatusViewModel    = std::make_unique<UI::ViewModels::MachineStatusViewModel>(m_repo);
+            auto homeViewModel             = std::make_unique<UI::ViewModels::HomeViewModel>(m_repo);
+            auto settingsViewModel         = std::make_unique<UI::ViewModels::SettingsViewModel>(m_repo);
+            auto exposureSettingsViewModel = std::make_unique<UI::ViewModels::ExposureSettingsViewModel>(m_repo);
+            auto *settingsView             = new SettingsView(std::move(settingsViewModel), m_mainWindow.get());
+            auto *exposureSettingsView     = new ExposureSettingsView(std::move(exposureSettingsViewModel), m_mainWindow.get());
+            auto *machineStatusView        = new MachineStatusView(std::move(machineStatusViewModel), m_mainWindow.get());
+            auto *homeView                 = new HomeView(std::move(homeViewModel), m_mainWindow.get());
             m_mainWindow->addView(Kub3::UI::ViewId::HOME_VIEW, homeView);
             m_mainWindow->addView(Kub3::UI::ViewId::MACHINE_STATUS_VIEW, machineStatusView);
             m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_VIEW, settingsView);
+            m_mainWindow->addView(Kub3::UI::ViewId::EXPOSURE_SETTINGS_VIEW, exposureSettingsView);
         }
 
         if (m_masterFSM) {

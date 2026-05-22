@@ -25,6 +25,8 @@ protected:
 
 private:
     BottomCroppedCircle *m_circle;
+    QColor colorEnabled;
+    QColor colorDisabled;
     QLabel *m_iconLabel;
     QLabel *m_text;
 };

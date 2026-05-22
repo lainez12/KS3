@@ -15,6 +15,7 @@
 #include "Views/MachineStatusView.h"
 #include "Views/SettingsView.h"
 #include "Views/ViewBase.h"
+#include "Views/ExposureSettingsView.h"
 
 namespace Ui {
     class MainWindow;

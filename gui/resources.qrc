@@ -59,7 +59,11 @@
         <file>icons/save.svg</file>
         <file>icons/schema-continuous.svg</file>
         <file>icons/schema-flashing.svg</file>
+        <file>icons/schema-flashing-vide.svg</file>
         <file>icons/schema-mask-to-substrate.png</file>
+        <file>icons/carre-bleu-fonce.png</file>
+        <file>icons/carre-bleu-clair.png</file>
+        <file>icons/last-cycle-enabled.png</file>
         <file>icons/screenshot.svg</file>
         <file>icons/screenshots-export.svg</file>
         <file>icons/select-all.svg</file>

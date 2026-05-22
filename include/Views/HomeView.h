@@ -1,6 +1,7 @@
 #ifndef HOMEVIEW_H
 #define HOMEVIEW_H
 
+#include "Views/Components/NavButton.h"
 #include <QWidget>
 #include <ViewModels/HomeViewModel.h>
 
@@ -24,7 +25,7 @@ namespace Kub3::UI::Views {
     signals:
 
     public slots:
-
+        void onFloodExposureClicked();
     private slots:
 
     protected:

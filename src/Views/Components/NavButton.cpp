@@ -21,7 +21,7 @@ NavButton::NavButton(QWidget *parent) :
         m_iconLabel->setAlignment(Qt::AlignCenter);
         m_iconLabel->setStyleSheet("color: white;");
         m_iconLabel->setScaledContents(true); // Allow image to scale
-        m_iconLabel->setFixedSize(40, 40);    // Size of the white icon
+        m_iconLabel->setFixedSize(35, 35);    // Size of the white icon
 
         circleLayout->addWidget(m_iconLabel);
     }
@@ -37,6 +37,8 @@ NavButton::NavButton(QWidget *parent) :
 void NavButton::setup(const QString &text, const QColor &color, const QString &iconPath) {
     m_text->setText(text);
     m_circle->setColor(color);
+    colorEnabled  = color;
+    colorDisabled = QColor("#505050");
 
     if (!iconPath.isEmpty())
         this->setIcon(iconPath);
@@ -56,11 +58,11 @@ void NavButton::setText(const QString &newText) {
 void NavButton::setEnabledNavButton(bool state) {
     setEnabled(state);
     if (state) {
-        m_text->setStyleSheet("color: #0072ba; font-size: 12px;");
-        m_circle->setColor(QColor("#0072ba"));
+        m_text->setStyleSheet(QString("color: %1; font-size: 12px;").arg(colorEnabled.name()));
+        m_circle->setColor(colorEnabled);
     } else {
         m_text->setStyleSheet("color: #505050; font-size: 12px;");
-        m_circle->setColor(QColor("#505050"));
+        m_circle->setColor(colorDisabled);
     }
 }
 

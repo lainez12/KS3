@@ -13,7 +13,8 @@ UpBar::UpBar(QWidget *parent) : QFrame(parent) {
 
     QHBoxLayout *leftLayout = new QHBoxLayout();
     m_logoTopBar            = new QLabel(this);
-    m_logoTopBar->setPixmap(QPixmap(PATH_LOGO));
+    logoImage               = new QPixmap(PATH_LOGO);
+    m_logoTopBar->setPixmap(*logoImage);
     m_logoTopBar->setScaledContents(true);
     leftLayout->addWidget(m_logoTopBar);
 
@@ -55,6 +56,9 @@ void UpBar::setTitleBarConfig(Kub3::UI::Views::TitleBarConfig titleBar) {
 
 void UpBar::paintEvent(QPaintEvent *) {
     QPainter painter(this);
-    m_logoTopBar->setFixedSize(this->width() * 0.08, this->height() * 0.38);
-    m_iconPath->setFixedSize(this->width() * 0.05, this->height() * 0.62);
+    int widthLogoKloe  = this->width() * 0.08;
+    int heightLogoKloe = widthLogoKloe / (logoImage->width() / logoImage->height()); // Aspect ratio of the logo
+    m_logoTopBar->setFixedSize(widthLogoKloe, heightLogoKloe);
+    int widthIconPath = this->width() * 0.04;
+    m_iconPath->setFixedSize(widthIconPath, widthIconPath);
 }
