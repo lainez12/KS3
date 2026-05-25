@@ -14,7 +14,7 @@ using namespace Kub3::HAL::Act;
 using namespace Kub3::Config;
 using namespace Kub3::Algorithms::Kinematic;
 
-class MockCommunicator final : public Com::ICommunicator
+class MockCommunicator : public Com::ICommunicator
 {
 public:
     int moveCommandsSent     = 0;
@@ -73,6 +73,28 @@ public:
     }
 };
 
+class SimulatedCommunicator : public MockCommunicator
+{
+public:
+    std::shared_ptr<int32_t> encoder;
+    double targetPosMm;
+    double screwPitch;
+    int encoderTops;
+
+    bool send(QByteArray &&data) override
+    {
+        bool ok = MockCommunicator::send(std::move(data));
+        if (ok && lastPayload[1] == '2') // Move Command
+        {
+            if (lastPayload[3] == '1')
+                *encoder += 5;
+            else if (lastPayload[3] == '0')
+                *encoder -= 5;
+        }
+        return ok;
+    }
+};
+
 TEST_CASE("StepperMotor Thread-Safe Dispatch & Queued Connections", "[actuators][qt]")
 {
     // 1. Initialize QCoreApplication (Required once per process for Qt QueuedConnections)
@@ -87,12 +109,9 @@ TEST_CASE("StepperMotor Thread-Safe Dispatch & Queued Connections", "[actuators]
     // 2. Setup a local Qt Event Loop
     QEventLoop loop;
 
-    Unique<MockCommunicator> mockCommunicator = std::make_unique<MockCommunicator>();
-    MockCommunicator *commObserver            = mockCommunicator.get();
-    Unique<MockParser> mockParser             = std::make_unique<MockParser>();
-    Shared<MockMCUDriver> mcuDriver           = std::make_shared<MockMCUDriver>(std::move(mockCommunicator), std::move(mockParser));
-
-    commObserver->m_eventLoop = &loop;
+    // Shared simulated encoder state (in Encoder Ticks)
+    // At stepsPerRev = 100, encoderTopsPerRev = 100, 1 tick = 1 step
+    auto simulatedEncoderTops = std::make_shared<int32_t>(0);
 
     // Setup physical constraints
     stepper_hw_properties_t hwConfig = {
@@ -103,7 +122,20 @@ TEST_CASE("StepperMotor Thread-Safe Dispatch & Queued Connections", "[actuators]
         .encoderTopsPerRev   = 100,
     };
 
-    auto dummyPosGetter  = []() { return 0.0; };
+    auto simComm         = std::make_unique<SimulatedCommunicator>();
+    simComm->encoder     = simulatedEncoderTops;
+    simComm->screwPitch  = hwConfig.screwPitchMm;
+    simComm->encoderTops = hwConfig.encoderTopsPerRev;
+
+    MockCommunicator *commObserver = simComm.get();
+    commObserver->m_eventLoop      = &loop;
+
+    Unique<MockParser> mockParser   = std::make_unique<MockParser>();
+    Shared<MockMCUDriver> mcuDriver = std::make_shared<MockMCUDriver>(std::move(simComm), std::move(mockParser));
+
+    auto dummyPosGetter = [simulatedEncoderTops]() {
+        return *simulatedEncoderTops;
+    };
     auto kinematicEngine = buildKinematicGenerator(KinematicGeneratorKind::TRAPEZOIDAL);
 
     // Instantiate the motor
@@ -124,16 +156,11 @@ TEST_CASE("StepperMotor Thread-Safe Dispatch & Queued Connections", "[actuators]
 
         // 3. Setup Timeout Safety Net
         QTimer timeoutTimer;
-
         timeoutTimer.setSingleShot(true);
-        QObject::connect(
-            &timeoutTimer,
-            &QTimer::timeout,
-            &loop,
-            [&]() {
-                FAIL("Qt Event Loop timed out. The Motor never finished the move.");
-                loop.quit();
-            });
+        QObject::connect(&timeoutTimer, &QTimer::timeout, &loop, [&]() {
+            FAIL("Qt Event Loop timed out. The Motor never finished the move.");
+            loop.quit();
+        });
         timeoutTimer.start(2000); // 2 seconds timeout
 
         // Blocks execution here, allowing the StepperMotor's internal 50Hz QTimer to fire and invokeMethod() to push bytes to our MockMCUDriver.
@@ -143,7 +170,6 @@ TEST_CASE("StepperMotor Thread-Safe Dispatch & Queued Connections", "[actuators]
         // 4. Architectural Verification
         REQUIRE(commObserver->moveCommandsSent > 0);
         REQUIRE(commObserver->stopCommandReceived == true);
-
         // The last payload pushed to the bus MUST be the stop sequence
         REQUIRE(commObserver->lastPayload.size() >= 2);
         REQUIRE(commObserver->lastPayload[1] == '1');
