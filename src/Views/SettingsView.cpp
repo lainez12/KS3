@@ -23,7 +23,7 @@ SettingsView::SettingsView(Unique<SettingsViewModel> viewModel, QWidget *parent)
     ui->screenshootBtn->setSize(BUTTONS_SIZE);
     ui->ledTestBtn->setup("Led test", BLUE_COLOR, ":/icons/led-test.svg");
     ui->ledTestBtn->setSize(BUTTONS_SIZE);
-    ui->updateSoftBtn->setup("Update software", BLUE_COLOR, ":/icons/load-on-usb.svg");
+    ui->updateSoftBtn->setup("Update software", BLUE_COLOR, ":/icons/usb-software.svg");
     ui->updateSoftBtn->setSize(BUTTONS_SIZE);
 }
 SettingsView::~SettingsView() {

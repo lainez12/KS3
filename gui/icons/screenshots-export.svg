@@ -4,10 +4,11 @@
 <svg
    version="1.1"
    id="svg2"
-   width="69.92041"
-   height="82.653473"
-   viewBox="0 0 69.920412 82.653473"
-   sodipodi:docname="screenshots-export-enabled.ai"
+   width="83"
+   height="83"
+   viewBox="0 0 83.000004 83"
+   sodipodi:docname="screenshots-export.svg"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -31,14 +32,31 @@
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
-     showgrid="false" />
+     showgrid="false"
+     inkscape:zoom="10.005629"
+     inkscape:cx="19.389086"
+     inkscape:cy="26.235232"
+     inkscape:window-width="1920"
+     inkscape:window-height="1008"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g10"
+     showguides="true">
+    <sodipodi:guide
+       position="41.483817,90.809136"
+       orientation="1,0"
+       id="guide130"
+       inkscape:locked="false" />
+  </sodipodi:namedview>
   <g
      id="g10"
      inkscape:groupmode="layer"
      inkscape:label="Page 1"
      transform="matrix(1.3333333,0,0,-1.3333333,-874.54313,521.84439)">
     <g
-       id="g28">
+       id="g28"
+       transform="translate(4.9073405,0.06209708)">
       <g
          id="g30"
          clip-path="url(#clipPath34)">

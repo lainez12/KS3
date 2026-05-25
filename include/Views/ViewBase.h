@@ -15,6 +15,7 @@ namespace Kub3::UI {
     enum class ViewId {
         HOME_VIEW,
         EXPOSURE_SETTINGS_VIEW,
+        FAVORITE_EXPOSURE_SETTINGS_VIEW,
         SETTINGS_VIEW,
         ALIGNMENT_VIEW,
         MACHINE_STATUS_VIEW

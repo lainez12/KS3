@@ -192,7 +192,9 @@ qt_add_executable(Kub3Software
     src/ViewModels/MachineStatusViewModel.cpp
     src/ViewModels/SettingsViewModel.cpp
     src/ViewModels/ExposureSettingsViewModel.cpp
+    src/ViewModels/FavoriteExposureSettingsViewModel.cpp
     src/Views/ExposureSettingsView.cpp
+    src/Views//FavoriteExposureSettingsView.cpp
     src/Views/MainWindow.cpp
     src/Views/ViewBase.cpp
     src/Views/NavButtonManager.cpp
@@ -211,7 +213,9 @@ qt_add_executable(Kub3Software
     include/ViewModels/MachineStatusViewModel.h
     include/ViewModels/SettingsViewModel.h
     include/ViewModels/ExposureSettingsViewModel.h
+    include/ViewModels/FavoriteExposureSettingsViewModel.h
     include/Views/ExposureSettingsView.h
+    include/Views/FavoriteExposureSettingsView.h
     include/Views/MainWindow.h
     include/Views/ViewBase.h
     include/Views/NavButtonManager.h
@@ -228,6 +232,7 @@ qt_add_executable(Kub3Software
     gui/MainWindow.ui
     gui/Views/DebugView.ui
     gui/Views/ExposureSettingsView.ui
+    gui/Views/FavoriteExposureSettingsView.ui
     gui/Views/HomeView.ui
     gui/Views/MachineStatusView.ui
     gui/Views/SettingsView.ui

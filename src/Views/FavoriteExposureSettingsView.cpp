@@ -1,0 +1,162 @@
+#include "Views/FavoriteExposureSettingsView.h"
+#include "ui_FavoriteExposureSettingsView.h"
+#include <QGraphicsDropShadowEffect>
+#include <QRegularExpression>
+#include <QString>
+
+#define ID_BTN_HOME       "H"
+#define ID_BTN_BACK       "B"
+#define ID_BTN_SAVE       "S"
+#define ID_BTN_VALIDATE   "V"
+#define PURPLE_COLOR      "#7D20E8"
+#define BLUE_COLOR        "#0070DB"
+#define BLUE_COLOR_SHADOW "#B2D4F4"
+#define GREEN_COLOR       "#52AE32"
+#define ORANGE_COLOR      "#E85420"
+#define BUTTONS_SIZE      150
+
+FavoriteExposureSettingsView::FavoriteExposureSettingsView(Unique<FavoriteExposureSettingsViewModel> viewModel, QWidget *parent) :
+    ViewBase(std::move(viewModel), parent),
+    ui(new Ui::FavoriteExposureSettingsView) {
+    ui->setupUi(this);
+
+    ui->inputsStack->setCurrentWidget(ui->pageContinuous);
+
+    createNavButtonsConfigs();
+    configTitleBar();
+
+    // ui->flashingContainer->hide();
+
+    setUpShawedBoxStyle(ui->minContinuouspinBox);
+    setUpShawedBoxStyle(ui->segContinuouspinBox);
+    setUpShawedBoxStyle(ui->numberCyclespinBox);
+    setUpShawedBoxStyle(ui->minOnFlashingspinBox);
+    setUpShawedBoxStyle(ui->segOnFlashingspinBox);
+    setUpShawedBoxStyle(ui->minOffFlashingspinBox);
+    setUpShawedBoxStyle(ui->segOffFlashingspinBox);
+    setUpShawedBoxStyle(ui->powerContinuouspinBox);
+    setUpShawedBoxStyle(ui->powerFlashingspinBox);
+
+    QPixmap pixmapLastCycle(":icons/last-cycle-enabled.png");
+
+    QPalette paleta;
+    paleta.setBrush(QPalette::Window, pixmapLastCycle.scaled(ui->containerLastCycle->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+    ui->containerLastCycle->setPalette(paleta);
+    ui->containerLastCycle->setAutoFillBackground(true);
+    ui->containerLastCycle->setStyleSheet("border-image: url(:/icons/last-cycle-enabled.png);");
+
+    ui->lastCycleTextLabel->setStyleSheet("background: transparent; border-image: none; color: " ORANGE_COLOR "; font-size: 18px; font-weight: 700;");
+
+    connect(ui->favoriteSettingslabel, &QPushButton::clicked, this, [this]() { emit s_openView(Kub3::UI::ViewId::SETTINGS_VIEW); });
+    connect(ui->continuousModeBtn, &QPushButton::clicked, this, &FavoriteExposureSettingsView::switchToContinuousMode);
+    connect(ui->flashingModeBtn, &QPushButton::clicked, this, &FavoriteExposureSettingsView::switchToFlashingMode);
+}
+FavoriteExposureSettingsView::~FavoriteExposureSettingsView() {
+}
+
+void FavoriteExposureSettingsView::resizeEvent(QResizeEvent *ev) {
+    QWidget::resizeEvent(ev);
+}
+
+void FavoriteExposureSettingsView::createNavButtonsConfigs() {
+    NavButtonConfig homeBtn(
+        "Home",
+        QColor(BLUE_COLOR),
+        ":/icons/home.svg",
+        ID_BTN_HOME,
+        std::bind(&FavoriteExposureSettingsView::onHomeButtonClicked, this, std::placeholders::_1));
+    addNavButton("left", homeBtn);
+
+    NavButtonConfig backBtn(
+        "Back",
+        QColor(BLUE_COLOR),
+        ":/icons/back.svg",
+        ID_BTN_BACK,
+        std::bind(&FavoriteExposureSettingsView::onBackButtonClicked, this, std::placeholders::_1));
+    addNavButton("left", backBtn);
+
+    NavButtonConfig saveBtn(
+        "Save",
+        QColor(BLUE_COLOR),
+        ":/icons/save.svg",
+        ID_BTN_SAVE,
+        std::bind(&FavoriteExposureSettingsView::onSaveButtonClicked, this, std::placeholders::_1));
+    addNavButton("right", saveBtn);
+
+    NavButtonConfig validateBtn(
+        "Validate",
+        QColor(GREEN_COLOR),
+        ":/icons/check.svg",
+        ID_BTN_VALIDATE,
+        std::bind(&FavoriteExposureSettingsView::onValidateButtonClicked, this, std::placeholders::_1));
+    addNavButton("right", validateBtn);
+}
+void FavoriteExposureSettingsView::configTitleBar() {
+    m_titleBar = TitleBarConfig(
+        "Exposure Settings",
+        QColor("#FFF"),
+        QColor(PURPLE_COLOR),
+        ":/icons/flood_icon.svg",
+        "Flood Exposure",
+        true,
+        true);
+}
+
+void FavoriteExposureSettingsView::onHomeButtonClicked(const QString &buttonId) {
+    emit s_openView(Kub3::UI::ViewId::HOME_VIEW);
+}
+
+void FavoriteExposureSettingsView::onBackButtonClicked(const QString &buttonId) {
+    // emit s_openView(Kub3::UI::ViewId::BACK_VIEW);
+}
+
+void FavoriteExposureSettingsView::onSaveButtonClicked(const QString &buttonId) {
+    // emit s_openView(Kub3::UI::ViewId::SAVE_VIEW);
+}
+
+void FavoriteExposureSettingsView::onValidateButtonClicked(const QString &buttonId) {
+    // emit s_openView(Kub3::UI::ViewId::VALIDATE_VIEW);
+}
+
+void FavoriteExposureSettingsView::setUpShawedBoxStyle(QWidget *widget) {
+    QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect();
+    shadow->setBlurRadius(50);                   // Softness
+    shadow->setOffset(5, 10);                    // Direction (x, y)
+    shadow->setColor(QColor(BLUE_COLOR_SHADOW)); // Blue with transparency
+    widget->setGraphicsEffect(shadow);
+}
+
+void FavoriteExposureSettingsView::switchToFlashingMode() {
+    ui->inputsStack->setCurrentWidget(ui->pageFlashing);
+    if (m_isFlashingMode)
+        return;
+
+    QString styleSheet = ui->flashingModeBtn->styleSheet();
+    ui->continuousModeBtn->setStyleSheet(styleSheet);
+    ui->continuousCarre->setPixmap(QPixmap(":/icons/carre-bleu-clair.png"));
+
+    styleSheet.replace(QRegularExpression(BLUE_COLOR_SHADOW), BLUE_COLOR);
+
+    ui->flashingModeBtn->setStyleSheet(styleSheet);
+    ui->flashingCarre->setPixmap(QPixmap(":/icons/carre-bleu-fonce.png"));
+    m_isFlashingMode = true;
+    ui->imageFlashingMode->setPixmap(QPixmap(":/icons/schema-flashing.svg"));
+}
+
+void FavoriteExposureSettingsView::switchToContinuousMode() {
+
+    ui->inputsStack->setCurrentWidget(ui->pageContinuous);
+
+    if (!m_isFlashingMode)
+        return;
+
+    m_isFlashingMode   = false;
+    QString styleSheet = ui->flashingModeBtn->styleSheet();
+    ui->imageFlashingMode->setPixmap(QPixmap(":/icons/schema-flashing-vide.svg"));
+    ui->continuousModeBtn->setStyleSheet(styleSheet);
+    ui->flashingCarre->setPixmap(QPixmap(":/icons/carre-bleu-clair.png"));
+
+    styleSheet.replace(QRegularExpression(BLUE_COLOR), BLUE_COLOR_SHADOW);
+    ui->flashingModeBtn->setStyleSheet(styleSheet);
+    ui->continuousCarre->setPixmap(QPixmap(":/icons/carre-bleu-fonce.png"));
+}
