@@ -17,6 +17,7 @@ namespace Kub3::UI {
         EXPOSURE_SETTINGS_VIEW,
         FAVORITE_EXPOSURE_SETTINGS_VIEW,
         SETTINGS_VIEW,
+        SETTINGS_ABOUT_VIEW,
         ALIGNMENT_VIEW,
         MACHINE_STATUS_VIEW
     };
@@ -129,6 +130,7 @@ namespace Kub3::UI::Views {
     protected:
         void showEvent(QShowEvent *event) override;
         void hideEvent(QHideEvent *event) override;
+        void setUpShawedBoxStyle(QWidget *widget);
 
     protected:
         Unique<ViewModels::IViewModel> m_viewModel;

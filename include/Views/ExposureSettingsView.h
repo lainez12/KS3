@@ -36,7 +36,6 @@ namespace Kub3::UI::Views {
         void onBackButtonClicked(const QString &buttonId);
         void onSaveButtonClicked(const QString &buttonId);
         void onValidateButtonClicked(const QString &buttonId);
-        void setUpShawedBoxStyle(QWidget *widget);
 
         void switchToFlashingMode();
         void switchToContinuousMode();

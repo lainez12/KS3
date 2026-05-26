@@ -11,11 +11,13 @@
 #include "Views/Components/NavButton.h"
 #include "Views/Components/UpBar.h"
 #include "Views/DebugView.h"
+#include "Views/ExposureSettingsView.h"
+#include "Views/FavoriteExposureSettingsView.h"
 #include "Views/HomeView.h"
 #include "Views/MachineStatusView.h"
 #include "Views/SettingsView.h"
 #include "Views/ViewBase.h"
-#include "Views/ExposureSettingsView.h"
+#include "Views/ViewsSettings/VersionView.h"
 
 namespace Ui {
     class MainWindow;

@@ -20,7 +20,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-set(CMAKE_AUTOUIC_SEARCH_PATHS "gui;gui/Views;gui/Components;tools/configurator/gui")
+set(CMAKE_AUTOUIC_SEARCH_PATHS "gui;gui/Views;gui/Components;gui/Views/ViewsSettings;tools/configurator/gui")
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -193,8 +193,9 @@ qt_add_executable(Kub3Software
     src/ViewModels/SettingsViewModel.cpp
     src/ViewModels/ExposureSettingsViewModel.cpp
     src/ViewModels/FavoriteExposureSettingsViewModel.cpp
+    src/ViewModels/ViewModelsSettings/VersionViewModel.cpp
     src/Views/ExposureSettingsView.cpp
-    src/Views//FavoriteExposureSettingsView.cpp
+    src/Views/FavoriteExposureSettingsView.cpp
     src/Views/MainWindow.cpp
     src/Views/ViewBase.cpp
     src/Views/NavButtonManager.cpp
@@ -202,6 +203,8 @@ qt_add_executable(Kub3Software
     src/Views/HomeView.cpp
     src/Views/MachineStatusView.cpp
     src/Views/SettingsView.cpp
+    src/Views/ViewsSettings/VersionView.cpp
+    src/Views/Components/FavoriteExposureSettingButton.cpp
     src/Views/Components/NavButton.cpp
     src/Views/Components/UpBar.cpp
     src/Views/Components/ActionBox.cpp
@@ -214,6 +217,7 @@ qt_add_executable(Kub3Software
     include/ViewModels/SettingsViewModel.h
     include/ViewModels/ExposureSettingsViewModel.h
     include/ViewModels/FavoriteExposureSettingsViewModel.h
+    include/ViewModels/ViewModelsSettings/VersionViewModel.h
     include/Views/ExposureSettingsView.h
     include/Views/FavoriteExposureSettingsView.h
     include/Views/MainWindow.h
@@ -223,6 +227,8 @@ qt_add_executable(Kub3Software
     include/Views/HomeView.h
     include/Views/MachineStatusView.h
     include/Views/SettingsView.h
+    include/Views/ViewsSettings/VersionView.h
+    include/Views/Components/FavoriteExposureSettingButton.h
     include/Views/Components/NavButton.h
     include/Views/Components/UpBar.h
     include/Views/Components/ActionBox.h
@@ -236,6 +242,7 @@ qt_add_executable(Kub3Software
     gui/Views/HomeView.ui
     gui/Views/MachineStatusView.ui
     gui/Views/SettingsView.ui
+    gui/Views/ViewsSettings/VersionView.ui
 )
 
 qt_finalize_target(Kub3Software)

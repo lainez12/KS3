@@ -66,18 +66,24 @@ namespace Kub3 {
         m_mainWindow = std::make_unique<MainWindow>();
 
         {
-            auto machineStatusViewModel    = std::make_unique<UI::ViewModels::MachineStatusViewModel>(m_repo);
-            auto homeViewModel             = std::make_unique<UI::ViewModels::HomeViewModel>(m_repo);
-            auto settingsViewModel         = std::make_unique<UI::ViewModels::SettingsViewModel>(m_repo);
-            auto exposureSettingsViewModel = std::make_unique<UI::ViewModels::ExposureSettingsViewModel>(m_repo);
-            auto *settingsView             = new SettingsView(std::move(settingsViewModel), m_mainWindow.get());
-            auto *exposureSettingsView     = new ExposureSettingsView(std::move(exposureSettingsViewModel), m_mainWindow.get());
-            auto *machineStatusView        = new MachineStatusView(std::move(machineStatusViewModel), m_mainWindow.get());
-            auto *homeView                 = new HomeView(std::move(homeViewModel), m_mainWindow.get());
+            auto machineStatusViewModel            = std::make_unique<UI::ViewModels::MachineStatusViewModel>(m_repo);
+            auto homeViewModel                     = std::make_unique<UI::ViewModels::HomeViewModel>(m_repo);
+            auto settingsViewModel                 = std::make_unique<UI::ViewModels::SettingsViewModel>(m_repo);
+            auto exposureSettingsViewModel         = std::make_unique<UI::ViewModels::ExposureSettingsViewModel>(m_repo);
+            auto favoriteExposureSettingsViewModel = std::make_unique<UI::ViewModels::FavoriteExposureSettingsViewModel>(m_repo);
+            auto versionViewModel                  = std::make_unique<UI::ViewModels::ViewsModelSettings::VersionViewModel>(m_repo);
+            auto *settingsView                     = new SettingsView(std::move(settingsViewModel), m_mainWindow.get());
+            auto *exposureSettingsView             = new ExposureSettingsView(std::move(exposureSettingsViewModel), m_mainWindow.get());
+            auto *favoriteExposureSettingsView     = new FavoriteExposureSettingsView(std::move(favoriteExposureSettingsViewModel), m_mainWindow.get());
+            auto *versionView                      = new VersionView(std::move(versionViewModel), m_mainWindow.get());
+            auto *machineStatusView                = new MachineStatusView(std::move(machineStatusViewModel), m_mainWindow.get());
+            auto *homeView                         = new HomeView(std::move(homeViewModel), m_mainWindow.get());
             m_mainWindow->addView(Kub3::UI::ViewId::HOME_VIEW, homeView);
             m_mainWindow->addView(Kub3::UI::ViewId::MACHINE_STATUS_VIEW, machineStatusView);
             m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_VIEW, settingsView);
             m_mainWindow->addView(Kub3::UI::ViewId::EXPOSURE_SETTINGS_VIEW, exposureSettingsView);
+            m_mainWindow->addView(Kub3::UI::ViewId::FAVORITE_EXPOSURE_SETTINGS_VIEW, favoriteExposureSettingsView);
+            m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_ABOUT_VIEW, versionView);
         }
 
         if (m_masterFSM) {

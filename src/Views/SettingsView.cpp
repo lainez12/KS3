@@ -1,8 +1,9 @@
 #include "Views/SettingsView.h"
+#include "Views/Colors.h"
 #include "ui_SettingsView.h"
 
-#define ID_BTN_HOME  "H"
-#define BLUE_COLOR   "#0070DB"
+#define ID_BTN_HOME "H"
+
 #define BUTTONS_SIZE 150
 
 SettingsView::SettingsView(Unique<SettingsViewModel> viewModel, QWidget *parent) :
@@ -25,6 +26,8 @@ SettingsView::SettingsView(Unique<SettingsViewModel> viewModel, QWidget *parent)
     ui->ledTestBtn->setSize(BUTTONS_SIZE);
     ui->updateSoftBtn->setup("Update software", BLUE_COLOR, ":/icons/usb-software.svg");
     ui->updateSoftBtn->setSize(BUTTONS_SIZE);
+
+    connect(ui->aboutBtn, &NavButton::clicked, this, [this]() { emit s_openView(Kub3::UI::ViewId::SETTINGS_ABOUT_VIEW); });
 }
 SettingsView::~SettingsView() {
 }

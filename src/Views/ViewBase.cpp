@@ -1,29 +1,35 @@
+#include "Views/Colors.h"
 #include <Views/ViewBase.h>
 
-namespace Kub3::UI::Views
-{
+#include <QGraphicsDropShadowEffect>
+
+namespace Kub3::UI::Views {
 
     ViewBase::ViewBase(Unique<ViewModels::IViewModel> viewModel, QWidget *parent) :
         QWidget(parent),
-        m_viewModel(std::move(viewModel))
-    {}
+        m_viewModel(std::move(viewModel)) {
+    }
 
-    void ViewBase::showEvent(QShowEvent *event)
-    {
-        if (m_viewModel)
-        {
+    void ViewBase::showEvent(QShowEvent *event) {
+        if (m_viewModel) {
             m_viewModel->loadConnections();
         }
         QWidget::showEvent(event);
     }
 
-    void ViewBase::hideEvent(QHideEvent *event)
-    {
+    void ViewBase::hideEvent(QHideEvent *event) {
         QWidget::hideEvent(event);
-        if (m_viewModel)
-        {
+        if (m_viewModel) {
             m_viewModel->unloadConnections();
         }
+    }
+
+    void ViewBase::setUpShawedBoxStyle(QWidget *widget) {
+        QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect();
+        shadow->setBlurRadius(50);                   // Softness
+        shadow->setOffset(5, 10);                    // Direction (x, y)
+        shadow->setColor(QColor(BLUE_COLOR_SHADOW)); // Blue with transparency
+        widget->setGraphicsEffect(shadow);
     }
 
 } // namespace Kub3::UI::Views
