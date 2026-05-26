@@ -38,7 +38,7 @@ namespace Kub3::UI::Views {
             QColor("#FFF"),
             QColor(BLUE_COLOR),
             ":/icons/admin-circle.svg",
-            "Parameters",
+            "Settings",
             true,
             true);
     }
@@ -48,7 +48,7 @@ namespace Kub3::UI::Views {
     }
 
     void SettingsViewBase::onBackButtonClicked(const QString &buttonId) {
-        emit s_goBack();
+        emit s_openView(Kub3::UI::ViewId::SETTINGS_VIEW);
     }
 
 } // namespace Kub3::UI::Views

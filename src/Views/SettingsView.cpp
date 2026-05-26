@@ -29,6 +29,10 @@ SettingsView::SettingsView(Unique<SettingsViewModel> viewModel, QWidget *parent)
 
     connect(ui->aboutBtn, &NavButton::clicked, this, [this]() { emit s_openView(Kub3::UI::ViewId::SETTINGS_ABOUT_VIEW); });
     connect(ui->temperatureBtn, &NavButton::clicked, this, [this]() { emit s_openView(Kub3::UI::ViewId::SETTINGS_TEMPERATURE_VIEW); });
+    connect(ui->opeTimesBtn, &NavButton::clicked, this, [this]() { emit s_openView(Kub3::UI::ViewId::SETTINGS_OPERATING_TIMES_VIEW); });
+    connect(ui->screenshootBtn, &NavButton::clicked, this, [this]() { emit s_openView(Kub3::UI::ViewId::SETTINGS_SCREENSHOT_EXPORT_VIEW); });
+    connect(ui->ledTestBtn, &NavButton::clicked, this, [this]() { emit s_openView(Kub3::UI::ViewId::SETTINGS_LED_TEST_VIEW); });
+    connect(ui->updateSoftBtn, &NavButton::clicked, this, [this]() { emit s_openView(Kub3::UI::ViewId::SETTINGS_UPDATE_SOFTWARE_VIEW); });
 }
 SettingsView::~SettingsView() {
 }

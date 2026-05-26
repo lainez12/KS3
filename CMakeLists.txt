@@ -195,6 +195,10 @@ qt_add_executable(Kub3Software
     src/ViewModels/FavoriteExposureSettingsViewModel.cpp
     src/ViewModels/ViewModelsSettings/VersionViewModel.cpp
     src/ViewModels/ViewModelsSettings/TemperatureViewModel.cpp
+    src/ViewModels/ViewModelsSettings/UpdateSoftwareViewModel.cpp
+    src/ViewModels/ViewModelsSettings/ScreenshotExportViewModel.cpp
+    src/ViewModels/ViewModelsSettings/LedTestViewModel.cpp
+    src/ViewModels/ViewModelsSettings/OperatingTimesViewModel.cpp
     src/Views/ExposureSettingsView.cpp
     src/Views/FavoriteExposureSettingsView.cpp
     src/Views/MainWindow.cpp
@@ -207,6 +211,10 @@ qt_add_executable(Kub3Software
     src/Views/SettingsView.cpp
     src/Views/ViewsSettings/VersionView.cpp
     src/Views/ViewsSettings/TemperatureView.cpp
+    src/Views/ViewsSettings/UpdateSoftwareView.cpp
+    src/Views/ViewsSettings/ScreenshotExportView.cpp
+    src/Views/ViewsSettings/LedTestView.cpp
+    src/Views/ViewsSettings/OperatingTimesView.cpp
     src/Views/Components/FavoriteExposureSettingButton.cpp
     src/Views/Components/NavButton.cpp
     src/Views/Components/UpBar.cpp
@@ -222,6 +230,10 @@ qt_add_executable(Kub3Software
     include/ViewModels/FavoriteExposureSettingsViewModel.h
     include/ViewModels/ViewModelsSettings/VersionViewModel.h
     include/ViewModels/ViewModelsSettings/TemperatureViewModel.h
+    include/ViewModels/ViewModelsSettings/UpdateSoftwareViewModel.h
+    include/ViewModels/ViewModelsSettings/ScreenshotExportViewModel.h
+    include/ViewModels/ViewModelsSettings/LedTestViewModel.h
+    include/ViewModels/ViewModelsSettings/OperatingTimesViewModel.h
     include/Views/ExposureSettingsView.h
     include/Views/FavoriteExposureSettingsView.h
     include/Views/MainWindow.h
@@ -234,6 +246,10 @@ qt_add_executable(Kub3Software
     include/Views/SettingsView.h
     include/Views/ViewsSettings/TemperatureView.h
     include/Views/ViewsSettings/VersionView.h
+    include/Views/ViewsSettings/UpdateSoftwareView.h
+    include/Views/ViewsSettings/ScreenshotExportView.h
+    include/Views/ViewsSettings/LedTestView.h
+    include/Views/ViewsSettings/OperatingTimesView.h
     include/Views/Components/FavoriteExposureSettingButton.h
     include/Views/Components/NavButton.h
     include/Views/Components/UpBar.h
@@ -250,6 +266,10 @@ qt_add_executable(Kub3Software
     gui/Views/SettingsView.ui
     gui/Views/ViewsSettings/VersionView.ui
     gui/Views/ViewsSettings/TemperatureView.ui
+    gui/Views/ViewsSettings/UpdateSoftwareView.ui
+    gui/Views/ViewsSettings/ScreenshotExportView.ui
+    gui/Views/ViewsSettings/LedTestView.ui
+    gui/Views/ViewsSettings/OperatingTimesView.ui
 )
 
 qt_finalize_target(Kub3Software)
