@@ -39,8 +39,6 @@ namespace Kub3::UI::Views {
 
     private:
         Ui::FavoriteExposureSettingsView *ui;
-
-        bool m_isFlashingMode = false;
     };
 
 } // namespace Kub3::UI::Views

@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <ViewModels/ViewModelsSettings/TemperatureViewModel.h>
+#include <Views/SettingsViewBase.h>
 
 #include "Views/ViewBase.h"
 
@@ -11,7 +12,7 @@ namespace Ui {
 } // namespace UI
 
 namespace Kub3::UI::Views::ViewsSettings {
-    class TemperatureView final : public ViewBase {
+    class TemperatureView final : public SettingsViewBase {
         using TemperatureViewModel = Kub3::UI::ViewModels::ViewsModelSettings::TemperatureViewModel;
 
         Q_OBJECT
@@ -20,25 +21,11 @@ namespace Kub3::UI::Views::ViewsSettings {
         explicit TemperatureView(Unique<TemperatureViewModel> viewModel, QWidget *parent = nullptr);
         ~TemperatureView();
 
-    signals:
-
-    public slots:
-
-    private slots:
-
     protected:
         void resizeEvent(QResizeEvent *event) override;
 
     private:
-        void createNavButtonsConfigs();
-        void configTitleBar();
-        void onHomeButtonClicked(const QString &buttonId);
-        void onBackButtonClicked(const QString &buttonId);
-
-    private:
         Ui::TemperatureView *ui;
-
-        bool m_isFlashingMode = false;
     };
 
 } // namespace Kub3::UI::Views

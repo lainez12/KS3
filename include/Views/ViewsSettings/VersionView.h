@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <ViewModels/ViewModelsSettings/VersionViewModel.h>
+#include <Views/SettingsViewBase.h>
 
 #include "Views/ViewBase.h"
 
@@ -11,7 +12,7 @@ namespace Ui {
 } // namespace UI
 
 namespace Kub3::UI::Views::ViewsSettings {
-    class VersionView final : public ViewBase {
+    class VersionView final : public SettingsViewBase {
         using VersionViewModel = Kub3::UI::ViewModels::ViewsModelSettings::VersionViewModel;
 
         Q_OBJECT
@@ -20,25 +21,11 @@ namespace Kub3::UI::Views::ViewsSettings {
         explicit VersionView(Unique<VersionViewModel> viewModel, QWidget *parent = nullptr);
         ~VersionView();
 
-    signals:
-
-    public slots:
-
-    private slots:
-
     protected:
         void resizeEvent(QResizeEvent *event) override;
 
     private:
-        void createNavButtonsConfigs();
-        void configTitleBar();
-        void onHomeButtonClicked(const QString &buttonId);
-        void onBackButtonClicked(const QString &buttonId);
-
-    private:
         Ui::VersionView *ui;
-
-        bool m_isFlashingMode = false;
     };
 
 } // namespace Kub3::UI::Views

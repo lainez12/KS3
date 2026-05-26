@@ -199,6 +199,7 @@ qt_add_executable(Kub3Software
     src/Views/FavoriteExposureSettingsView.cpp
     src/Views/MainWindow.cpp
     src/Views/ViewBase.cpp
+    src/Views/SettingsViewBase.cpp
     src/Views/NavButtonManager.cpp
     src/Views/DebugView.cpp
     src/Views/HomeView.cpp
@@ -225,6 +226,7 @@ qt_add_executable(Kub3Software
     include/Views/FavoriteExposureSettingsView.h
     include/Views/MainWindow.h
     include/Views/ViewBase.h
+    include/Views/SettingsViewBase.h
     include/Views/NavButtonManager.h
     include/Views/DebugView.h
     include/Views/HomeView.h
