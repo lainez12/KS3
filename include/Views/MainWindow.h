@@ -17,6 +17,7 @@
 #include "Views/MachineStatusView.h"
 #include "Views/SettingsView.h"
 #include "Views/ViewBase.h"
+#include "Views/ViewsSettings/TemperatureView.h"
 #include "Views/ViewsSettings/VersionView.h"
 
 namespace Ui {

@@ -28,6 +28,7 @@ SettingsView::SettingsView(Unique<SettingsViewModel> viewModel, QWidget *parent)
     ui->updateSoftBtn->setSize(BUTTONS_SIZE);
 
     connect(ui->aboutBtn, &NavButton::clicked, this, [this]() { emit s_openView(Kub3::UI::ViewId::SETTINGS_ABOUT_VIEW); });
+    connect(ui->temperatureBtn, &NavButton::clicked, this, [this]() { emit s_openView(Kub3::UI::ViewId::SETTINGS_TEMPERATURE_VIEW); });
 }
 SettingsView::~SettingsView() {
 }
@@ -51,7 +52,7 @@ void SettingsView::configTitleBar() {
         "Parameters",
         QColor("#FFF"),
         QColor(BLUE_COLOR),
-        ":/icons/admin.svg",
+        ":/icons/admin-circle.svg",
         "Parameters",
         true,
         true);

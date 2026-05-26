@@ -194,6 +194,7 @@ qt_add_executable(Kub3Software
     src/ViewModels/ExposureSettingsViewModel.cpp
     src/ViewModels/FavoriteExposureSettingsViewModel.cpp
     src/ViewModels/ViewModelsSettings/VersionViewModel.cpp
+    src/ViewModels/ViewModelsSettings/TemperatureViewModel.cpp
     src/Views/ExposureSettingsView.cpp
     src/Views/FavoriteExposureSettingsView.cpp
     src/Views/MainWindow.cpp
@@ -204,6 +205,7 @@ qt_add_executable(Kub3Software
     src/Views/MachineStatusView.cpp
     src/Views/SettingsView.cpp
     src/Views/ViewsSettings/VersionView.cpp
+    src/Views/ViewsSettings/TemperatureView.cpp
     src/Views/Components/FavoriteExposureSettingButton.cpp
     src/Views/Components/NavButton.cpp
     src/Views/Components/UpBar.cpp
@@ -218,6 +220,7 @@ qt_add_executable(Kub3Software
     include/ViewModels/ExposureSettingsViewModel.h
     include/ViewModels/FavoriteExposureSettingsViewModel.h
     include/ViewModels/ViewModelsSettings/VersionViewModel.h
+    include/ViewModels/ViewModelsSettings/TemperatureViewModel.h
     include/Views/ExposureSettingsView.h
     include/Views/FavoriteExposureSettingsView.h
     include/Views/MainWindow.h
@@ -227,6 +230,7 @@ qt_add_executable(Kub3Software
     include/Views/HomeView.h
     include/Views/MachineStatusView.h
     include/Views/SettingsView.h
+    include/Views/ViewsSettings/TemperatureView.h
     include/Views/ViewsSettings/VersionView.h
     include/Views/Components/FavoriteExposureSettingButton.h
     include/Views/Components/NavButton.h
@@ -243,6 +247,7 @@ qt_add_executable(Kub3Software
     gui/Views/MachineStatusView.ui
     gui/Views/SettingsView.ui
     gui/Views/ViewsSettings/VersionView.ui
+    gui/Views/ViewsSettings/TemperatureView.ui
 )
 
 qt_finalize_target(Kub3Software)

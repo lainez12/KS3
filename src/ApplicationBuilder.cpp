@@ -72,10 +72,12 @@ namespace Kub3 {
             auto exposureSettingsViewModel         = std::make_unique<UI::ViewModels::ExposureSettingsViewModel>(m_repo);
             auto favoriteExposureSettingsViewModel = std::make_unique<UI::ViewModels::FavoriteExposureSettingsViewModel>(m_repo);
             auto versionViewModel                  = std::make_unique<UI::ViewModels::ViewsModelSettings::VersionViewModel>(m_repo);
+            auto temperatureViewModel                = std::make_unique<UI::ViewModels::ViewsModelSettings::TemperatureViewModel>(m_repo);
             auto *settingsView                     = new SettingsView(std::move(settingsViewModel), m_mainWindow.get());
             auto *exposureSettingsView             = new ExposureSettingsView(std::move(exposureSettingsViewModel), m_mainWindow.get());
             auto *favoriteExposureSettingsView     = new FavoriteExposureSettingsView(std::move(favoriteExposureSettingsViewModel), m_mainWindow.get());
             auto *versionView                      = new VersionView(std::move(versionViewModel), m_mainWindow.get());
+            auto *temperatureView                  = new TemperatureView(std::move(temperatureViewModel), m_mainWindow.get());
             auto *machineStatusView                = new MachineStatusView(std::move(machineStatusViewModel), m_mainWindow.get());
             auto *homeView                         = new HomeView(std::move(homeViewModel), m_mainWindow.get());
             m_mainWindow->addView(Kub3::UI::ViewId::HOME_VIEW, homeView);
@@ -84,6 +86,7 @@ namespace Kub3 {
             m_mainWindow->addView(Kub3::UI::ViewId::EXPOSURE_SETTINGS_VIEW, exposureSettingsView);
             m_mainWindow->addView(Kub3::UI::ViewId::FAVORITE_EXPOSURE_SETTINGS_VIEW, favoriteExposureSettingsView);
             m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_ABOUT_VIEW, versionView);
+            m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_TEMPERATURE_VIEW, temperatureView);
         }
 
         if (m_masterFSM) {
