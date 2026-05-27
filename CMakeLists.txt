@@ -20,7 +20,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-set(CMAKE_AUTOUIC_SEARCH_PATHS "gui;gui/Views;gui/Components;gui/Views/ViewsSettings;tools/configurator/gui")
+set(CMAKE_AUTOUIC_SEARCH_PATHS "gui;gui/Views;gui/Components;gui/Views/ViewsSettings;gui/Views/ViewsExposure;tools/configurator/gui")
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -191,19 +191,20 @@ qt_add_executable(Kub3Software
     src/ViewModels/DebugViewModel.cpp
     src/ViewModels/ViewModelsSettings/MachineStatusViewModel.cpp
     src/ViewModels/SettingsViewModel.cpp
-    src/ViewModels/ExposureSettingsViewModel.cpp
-    src/ViewModels/FavoriteExposureSettingsViewModel.cpp
+    src/ViewModels/ViewModelsExposure/ExposureSettingsViewModel.cpp
+    src/ViewModels/ViewModelsExposure/FavoriteExposureSettingsViewModel.cpp
     src/ViewModels/ViewModelsSettings/VersionViewModel.cpp
     src/ViewModels/ViewModelsSettings/TemperatureViewModel.cpp
     src/ViewModels/ViewModelsSettings/UpdateSoftwareViewModel.cpp
     src/ViewModels/ViewModelsSettings/ScreenshotExportViewModel.cpp
     src/ViewModels/ViewModelsSettings/LedTestViewModel.cpp
     src/ViewModels/ViewModelsSettings/OperatingTimesViewModel.cpp
-    src/Views/ExposureSettingsView.cpp
-    src/Views/FavoriteExposureSettingsView.cpp
+    src/Views/ViewsExposure/ExposureSettingsView.cpp
+    src/Views/ViewsExposure/FavoriteExposureSettingsView.cpp
     src/Views/MainWindow.cpp
     src/Views/ViewBase.cpp
     src/Views/SettingsViewBase.cpp
+    src/Views/ExposureViewBase.cpp
     src/Views/Components/NavButtonManager.cpp
     src/Views/DebugView.cpp
     src/Views/HomeView.cpp
@@ -226,19 +227,20 @@ qt_add_executable(Kub3Software
     include/ViewModels/DebugViewModel.h
     include/ViewModels/ViewModelsSettings/MachineStatusViewModel.h
     include/ViewModels/SettingsViewModel.h
-    include/ViewModels/ExposureSettingsViewModel.h
-    include/ViewModels/FavoriteExposureSettingsViewModel.h
+    include/ViewModels/ViewModelsExposure/ExposureSettingsViewModel.h
+    include/ViewModels/ViewModelsExposure/FavoriteExposureSettingsViewModel.h
     include/ViewModels/ViewModelsSettings/VersionViewModel.h
     include/ViewModels/ViewModelsSettings/TemperatureViewModel.h
     include/ViewModels/ViewModelsSettings/UpdateSoftwareViewModel.h
     include/ViewModels/ViewModelsSettings/ScreenshotExportViewModel.h
     include/ViewModels/ViewModelsSettings/LedTestViewModel.h
     include/ViewModels/ViewModelsSettings/OperatingTimesViewModel.h
-    include/Views/ExposureSettingsView.h
-    include/Views/FavoriteExposureSettingsView.h
+    include/Views/ViewsExposure/ExposureSettingsView.h
+    include/Views/ViewsExposure/FavoriteExposureSettingsView.h
     include/Views/MainWindow.h
     include/Views/ViewBase.h
     include/Views/SettingsViewBase.h
+    include/Views/ExposureViewBase.h
     include/Views/Components/NavButtonManager.h
     include/Views/DebugView.h
     include/Views/HomeView.h
@@ -259,8 +261,8 @@ qt_add_executable(Kub3Software
     gui/resources.qrc
     gui/MainWindow.ui
     gui/Views/DebugView.ui
-    gui/Views/ExposureSettingsView.ui
-    gui/Views/FavoriteExposureSettingsView.ui
+    gui/Views/ViewsExposure/ExposureSettingsView.ui
+    gui/Views/ViewsExposure/FavoriteExposureSettingsView.ui
     gui/Views/HomeView.ui
     gui/Views/ViewsSettings/MachineStatusView.ui
     gui/Views/SettingsView.ui

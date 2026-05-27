@@ -168,7 +168,7 @@ void MainWindow::clearBottomBar() {
 
 NavButton *MainWindow::createNavButton(const Kub3::UI::Views::NavButtonConfig &config) {
     NavButton *btn = new NavButton();
-    btn->setup(config.text, config.color, config.iconPath);
+    btn->setup(config.text, config.colorEnabled, config.colorDisabled, config.iconPath);
     btn->setEnabledNavButton(config.enabled);
 
     connect(btn, &NavButton::clicked,

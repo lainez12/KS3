@@ -1,4 +1,4 @@
-#include <ViewModels/ExposureSettingsViewModel.h>
+#include <ViewModels/ViewModelsExposure/ExposureSettingsViewModel.h>
 
 namespace Kub3::UI::ViewModels {
     ExposureSettingsViewModel::ExposureSettingsViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent) :

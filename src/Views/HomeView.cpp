@@ -19,8 +19,8 @@ HomeView::HomeView(Unique<HomeViewModel> viewModel, QWidget *parent) :
     ui->maskAlignBtn->setup("Mask Alignment", "#00ced1", ":/icons/mask-alignment_icon.svg"); // Cyan
 
     connect(ui->floodBtn, &ActionBox::clicked, this, &HomeView::onFloodExposureClicked);
-    //connect(ui->maskExpBtn, &ActionBox::clicked, this, &HomeView::onMaskExposureClicked);
-    //connect(ui->maskAlignBtn, &ActionBox::clicked, this, &HomeView::onMaskAlignmentClicked);
+    // connect(ui->maskExpBtn, &ActionBox::clicked, this, &HomeView::onMaskExposureClicked);
+    // connect(ui->maskAlignBtn, &ActionBox::clicked, this, &HomeView::onMaskAlignmentClicked);
 
     this->updateMachineLogo(this->height());
 }
@@ -56,6 +56,7 @@ void HomeView::createNavButtonsConfigs() {
     NavButtonConfig settingsBtn(
         "settings",
         QColor("#0072BA"),
+        QColor("#B2D4F4"),
         ":/icons/settings.svg",
         ID_BTN_SETTINGS,
         std::bind(&HomeView::onSettingsButtonClicked, this, std::placeholders::_1));
@@ -64,6 +65,7 @@ void HomeView::createNavButtonsConfigs() {
     NavButtonConfig openBtn(
         "open",
         QColor("#0072BA"),
+        QColor("#B2D4F4"),
         ":/icons/eject.svg",
         ID_BTN_OPEN,
         std::bind(&HomeView::onOpenButtonClicked, this, std::placeholders::_1));
@@ -82,6 +84,7 @@ void HomeView::onOpenButtonClicked(const QString &buttonId) {
     NavButtonConfig closeBtn(
         "close",
         QColor("#0072BA"),
+        QColor("#B2D4F4"),
         ":/icons/insert.svg",
         ID_BTN_CLOSE,
         std::bind(&HomeView::onCloseButtonCliked, this, std::placeholders::_1));
@@ -94,6 +97,7 @@ void HomeView::onCloseButtonCliked(const QString &buttonId) {
     NavButtonConfig openBtn(
         "open",
         QColor("#0072BA"),
+        QColor("#B2D4F4"),
         ":/icons/eject.svg",
         ID_BTN_OPEN,
         std::bind(&HomeView::onOpenButtonClicked, this, std::placeholders::_1));

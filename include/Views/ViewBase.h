@@ -44,18 +44,7 @@ namespace Kub3::UI::Views {
         TitleBarConfig(const QString &t, const QColor &ct, const QColor &cbg, const QString &i, const QString &st, const bool s, const bool sl) : viewTitle(t), textColor(ct), bgColor(cbg), iconPath(i), sectionTitle(st), showTitleBar(s), m_showLeftLogo(sl) {
         }
     };
-
-    /**
-     * @class ViewBase
-     * Classe de base pour toutes les vues de l'application
-     *
-     * Gère :
-     * - La gestion du modèle de vue (ViewModel)
-     * - Les propriétés d'affichage (titre, barres, logo)
-     * - Les boutons de navigation via NavButtonManager
-     * - Les signaux pour synchroniser avec MainWindow
-     *
-     */
+    
     class ViewBase : public QWidget {
         Q_OBJECT
 
@@ -79,12 +68,6 @@ namespace Kub3::UI::Views {
             return m_buttonManager;
         }
 
-        /**
-         * Ajoute un bouton de navigation
-         * @param position Position du bouton ("left", "center", "right")
-         * @param config Configuration du bouton
-         * @param order Ordre d'apparition (optionnel)
-         */
         void addNavButton(const QString &position, const NavButtonConfig &config, int order = -1) {
             m_buttonManager.addButton(position, config, order);
             emit s_buttonConfigsUpdated();

@@ -11,7 +11,7 @@ class NavButton : public QWidget {
 public:
     explicit NavButton(QWidget *parent = nullptr);
 
-    void setup(const QString &text, const QColor &color, const QString &iconPath = "");
+    void setup(const QString &text, const QColor &colorEnabled, const QColor &colorDisabled, const QString &iconPath = "");
     void setIcon(const QString &iconPath);
     void setText(const QString &newText);
     void setEnabledNavButton(bool state);

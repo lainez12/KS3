@@ -14,6 +14,7 @@ namespace Kub3::UI::Views {
         NavButtonConfig homeBtn(
             "Home",
             QColor(BLUE_COLOR),
+            QColor(BLUE_COLOR_SHADOW),
             ":/icons/home.svg",
             "H",
             std::bind(&SettingsViewBase::onHomeButtonClicked, this, std::placeholders::_1));
@@ -22,6 +23,7 @@ namespace Kub3::UI::Views {
         NavButtonConfig backBtn(
             "Back",
             QColor(BLUE_COLOR),
+            QColor(BLUE_COLOR_SHADOW),
             ":/icons/back.svg",
             "B",
             std::bind(&SettingsViewBase::onBackButtonClicked, this, std::placeholders::_1));

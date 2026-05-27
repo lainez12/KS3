@@ -10,7 +10,8 @@ namespace Kub3::UI::Views {
 
     struct NavButtonConfig {
         QString text;
-        QColor color;
+        QColor colorEnabled;
+        QColor colorDisabled;
         QString iconPath;
         QString buttonId;
         std::function<void(const QString &)> callback;
@@ -19,7 +20,7 @@ namespace Kub3::UI::Views {
 
         NavButtonConfig() = default;
 
-        NavButtonConfig(const QString &t, const QColor &c, const QString &i, const QString &id, std::function<void(const QString &)> cb) : text(t), color(c), iconPath(i), buttonId(id), callback(cb) {
+        NavButtonConfig(const QString &t, const QColor &cE, const QColor &cD, const QString &i, const QString &id, std::function<void(const QString &)> cb) : text(t), colorEnabled(cE), colorDisabled(cD), iconPath(i), buttonId(id), callback(cb) {
         }
     };
 

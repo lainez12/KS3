@@ -34,11 +34,11 @@ NavButton::NavButton(QWidget *parent) :
     layout->addWidget(m_text, 0, Qt::AlignHCenter);
 }
 
-void NavButton::setup(const QString &text, const QColor &color, const QString &iconPath) {
+void NavButton::setup(const QString &text, const QColor &colorEnabled, const QColor &colorDisabled, const QString &iconPath) {
     m_text->setText(text);
-    m_circle->setColor(color);
-    colorEnabled  = color;
-    colorDisabled = QColor("#505050");
+    m_circle->setColor(colorEnabled);
+    this->colorEnabled  = colorEnabled;
+    this->colorDisabled = colorDisabled;
 
     if (!iconPath.isEmpty())
         this->setIcon(iconPath);
@@ -61,7 +61,7 @@ void NavButton::setEnabledNavButton(bool state) {
         m_text->setStyleSheet(QString("color: %1; font-size: 12px;").arg(colorEnabled.name()));
         m_circle->setColor(colorEnabled);
     } else {
-        m_text->setStyleSheet("color: #505050; font-size: 12px;");
+        m_text->setStyleSheet(QString("color: %1; font-size: 12px;").arg(colorDisabled.name()));
         m_circle->setColor(colorDisabled);
     }
 }

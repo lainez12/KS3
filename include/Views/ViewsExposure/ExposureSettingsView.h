@@ -2,16 +2,16 @@
 #define EXPOSURESETTINGSVIEW_H
 
 #include <QWidget>
-#include <ViewModels/ExposureSettingsViewModel.h>
+#include <ViewModels/ViewModelsExposure/ExposureSettingsViewModel.h>
 
-#include "ViewBase.h"
+#include <Views/ExposureViewBase.h>
 
 namespace Ui {
     class ExposureSettingsView;
 } // namespace UI
 
 namespace Kub3::UI::Views {
-    class ExposureSettingsView final : public ViewBase {
+    class ExposureSettingsView final : public ExposureViewBase {
         using ExposureSettingsViewModel = Kub3::UI::ViewModels::ExposureSettingsViewModel;
 
         Q_OBJECT
@@ -20,25 +20,18 @@ namespace Kub3::UI::Views {
         explicit ExposureSettingsView(Unique<ExposureSettingsViewModel> viewModel, QWidget *parent = nullptr);
         ~ExposureSettingsView();
 
-    signals:
-
-    public slots:
-
-    private slots:
-
     protected:
         void resizeEvent(QResizeEvent *event) override;
 
     private:
-        void createNavButtonsConfigs();
-        void configTitleBar();
-        void onHomeButtonClicked(const QString &buttonId);
+        void setNewNavButtonsConfigs();
         void onBackButtonClicked(const QString &buttonId);
         void onSaveButtonClicked(const QString &buttonId);
-        void onValidateButtonClicked(const QString &buttonId);
+        void onValidateButtonClicked(const QString &buttonId) override;
 
         void switchToFlashingMode();
         void switchToContinuousMode();
+
     private:
         Ui::ExposureSettingsView *ui;
 

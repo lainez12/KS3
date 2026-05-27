@@ -2,16 +2,16 @@
 #define FAVORITEEXPOSURESETTINGSVIEW_H
 
 #include <QWidget>
-#include <ViewModels/FavoriteExposureSettingsViewModel.h>
+#include <ViewModels/ViewModelsExposure/FavoriteExposureSettingsViewModel.h>
 
-#include "ViewBase.h"
+#include <Views/ExposureViewBase.h>
 
 namespace Ui {
     class FavoriteExposureSettingsView;
 } // namespace UI
 
 namespace Kub3::UI::Views {
-    class FavoriteExposureSettingsView final : public ViewBase {
+    class FavoriteExposureSettingsView final : public ExposureViewBase {
         using FavoriteExposureSettingsViewModel = Kub3::UI::ViewModels::FavoriteExposureSettingsViewModel;
 
         Q_OBJECT
@@ -20,22 +20,13 @@ namespace Kub3::UI::Views {
         explicit FavoriteExposureSettingsView(Unique<FavoriteExposureSettingsViewModel> viewModel, QWidget *parent = nullptr);
         ~FavoriteExposureSettingsView();
 
-    signals:
-
-    public slots:
-
-    private slots:
-
     protected:
         void resizeEvent(QResizeEvent *event) override;
 
     private:
-        void createNavButtonsConfigs();
-        void configTitleBar();
-        void onHomeButtonClicked(const QString &buttonId);
+        void setNewNavButtonsConfigs();
         void onBackButtonClicked(const QString &buttonId);
-        void onSaveButtonClicked(const QString &buttonId);
-        void onValidateButtonClicked(const QString &buttonId);
+        void onValidateButtonClicked(const QString &buttonId) override;
 
     private:
         Ui::FavoriteExposureSettingsView *ui;

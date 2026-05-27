@@ -103,6 +103,7 @@ void MachineStatusView::createNavButtonsConfigs() {
     NavButtonConfig homeBtn(
         "Home",
         QColor("#0072BA"),
+        QColor("#B2D4F4"),
         ":/icons/home.svg",
         "home",
         [this](const QString &) {

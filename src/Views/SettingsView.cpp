@@ -46,6 +46,7 @@ void SettingsView::createNavButtonsConfigs() {
     NavButtonConfig homeBtn(
         "Home",
         QColor(BLUE_COLOR),
+        QColor(BLUE_COLOR_SHADOW),
         ":/icons/home.svg",
         ID_BTN_HOME,
         std::bind(&SettingsView::onHomeButtonClicked, this, std::placeholders::_1));

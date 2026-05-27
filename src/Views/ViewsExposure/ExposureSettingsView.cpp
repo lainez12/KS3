@@ -1,4 +1,4 @@
-#include "Views/ExposureSettingsView.h"
+#include "Views/ViewsExposure/ExposureSettingsView.h"
 #include "Views/Components/Colors.h"
 #include "ui_ExposureSettingsView.h"
 #include <QGraphicsDropShadowEffect>
@@ -12,16 +12,15 @@
 #define BUTTONS_SIZE    150
 
 ExposureSettingsView::ExposureSettingsView(Unique<ExposureSettingsViewModel> viewModel, QWidget *parent) :
-    ViewBase(std::move(viewModel), parent),
+    ExposureViewBase(std::move(viewModel), parent),
     ui(new Ui::ExposureSettingsView) {
     ui->setupUi(this);
 
     ui->inputsStack->setCurrentWidget(ui->pageContinuous);
 
+    setNewNavButtonsConfigs();
     createNavButtonsConfigs();
-    configTitleBar();
-
-    // ui->flashingContainer->hide();
+    setDefaultTitleBar("Exposure Settings");
 
     setUpShawedBoxStyle(ui->minContinuouspinBox);
     setUpShawedBoxStyle(ui->segContinuouspinBox);
@@ -54,18 +53,12 @@ void ExposureSettingsView::resizeEvent(QResizeEvent *ev) {
     QWidget::resizeEvent(ev);
 }
 
-void ExposureSettingsView::createNavButtonsConfigs() {
-    NavButtonConfig homeBtn(
-        "Home",
-        QColor(BLUE_COLOR),
-        ":/icons/home.svg",
-        ID_BTN_HOME,
-        std::bind(&ExposureSettingsView::onHomeButtonClicked, this, std::placeholders::_1));
-    addNavButton("left", homeBtn);
+void ExposureSettingsView::setNewNavButtonsConfigs() {
 
     NavButtonConfig backBtn(
         "Back",
         QColor(BLUE_COLOR),
+        QColor(BLUE_COLOR_SHADOW),
         ":/icons/back.svg",
         ID_BTN_BACK,
         std::bind(&ExposureSettingsView::onBackButtonClicked, this, std::placeholders::_1));
@@ -74,32 +67,11 @@ void ExposureSettingsView::createNavButtonsConfigs() {
     NavButtonConfig saveBtn(
         "Save",
         QColor(BLUE_COLOR),
+        QColor(BLUE_COLOR_SHADOW),
         ":/icons/save.svg",
         ID_BTN_SAVE,
         std::bind(&ExposureSettingsView::onSaveButtonClicked, this, std::placeholders::_1));
     addNavButton("right", saveBtn);
-
-    NavButtonConfig validateBtn(
-        "Validate",
-        QColor(GREEN_COLOR),
-        ":/icons/check.svg",
-        ID_BTN_VALIDATE,
-        std::bind(&ExposureSettingsView::onValidateButtonClicked, this, std::placeholders::_1));
-    addNavButton("right", validateBtn);
-}
-void ExposureSettingsView::configTitleBar() {
-    m_titleBar = TitleBarConfig(
-        "Exposure Settings",
-        QColor("#FFF"),
-        QColor(PURPLE_COLOR),
-        ":/icons/flood_icon.svg",
-        "Flood Exposure",
-        true,
-        true);
-}
-
-void ExposureSettingsView::onHomeButtonClicked(const QString &buttonId) {
-    emit s_openView(Kub3::UI::ViewId::HOME_VIEW);
 }
 
 void ExposureSettingsView::onBackButtonClicked(const QString &buttonId) {
@@ -115,9 +87,9 @@ void ExposureSettingsView::onValidateButtonClicked(const QString &buttonId) {
 }
 
 void ExposureSettingsView::switchToFlashingMode() {
-    ui->inputsStack->setCurrentWidget(ui->pageFlashing);
     if (m_isFlashingMode)
         return;
+    ui->inputsStack->setCurrentWidget(ui->pageFlashing);
 
     QString styleSheet = ui->flashingModeBtn->styleSheet();
     ui->continuousModeBtn->setStyleSheet(styleSheet);
@@ -132,11 +104,9 @@ void ExposureSettingsView::switchToFlashingMode() {
 }
 
 void ExposureSettingsView::switchToContinuousMode() {
-
-    ui->inputsStack->setCurrentWidget(ui->pageContinuous);
-
     if (!m_isFlashingMode)
         return;
+    ui->inputsStack->setCurrentWidget(ui->pageContinuous);
 
     m_isFlashingMode   = false;
     QString styleSheet = ui->flashingModeBtn->styleSheet();
