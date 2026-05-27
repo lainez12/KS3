@@ -1,5 +1,5 @@
 #include "Views/SettingsView.h"
-#include "Views/Colors.h"
+#include "Views/Components/Colors.h"
 #include "ui_SettingsView.h"
 
 #define ID_BTN_HOME "H"

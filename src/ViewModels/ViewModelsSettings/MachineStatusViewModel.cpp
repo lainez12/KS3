@@ -1,7 +1,7 @@
 #include <HAL/MachineStatus/actuators_labels.h>
 #include <HAL/MachineStatus/sensors_labels.h>
 #include <HAL/MachineStatus/utils.h>
-#include <ViewModels/MachineStatusViewModel.h>
+#include <ViewModels/ViewModelsSettings/MachineStatusViewModel.h>
 
 namespace Kub3::UI::ViewModels {
 

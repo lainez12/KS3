@@ -1,5 +1,5 @@
 #include "Views/ViewsSettings/VersionView.h"
-#include "Views/Colors.h"
+#include "Views/Components/Colors.h"
 #include "ui_VersionView.h"
 #include <QString>
 

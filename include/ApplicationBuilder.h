@@ -17,8 +17,8 @@
 #include <MFSM/MasterFSM.h>
 // --- UI
 #include <ViewModels/HomeViewModel.h>
-#include <ViewModels/MachineStatusViewModel.h>
 #include <ViewModels/SettingsViewModel.h>
+#include <ViewModels/ViewModelsSettings/MachineStatusViewModel.h>
 #include <Views/MainWindow.h>
 
 namespace Kub3 {

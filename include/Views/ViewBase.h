@@ -8,7 +8,7 @@
 #include <memory>
 
 #include <ViewModels/IViewModel.h>
-#include <Views/NavButtonManager.h>
+#include <Views/Components/NavButtonManager.h>
 #include <utils.h>
 
 namespace Kub3::UI {

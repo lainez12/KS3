@@ -1,5 +1,5 @@
 #include <QDebug>
-#include <Views/NavButtonManager.h>
+#include <Views/Components/NavButtonManager.h>
 
 namespace Kub3::UI::Views {
 
@@ -33,7 +33,7 @@ namespace Kub3::UI::Views {
         for (auto &positionOrder : m_order) {
             positionOrder.removeAll(buttonId);
         }
-        
+
         m_buttons.remove(buttonId);
     }
 

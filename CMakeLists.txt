@@ -189,7 +189,7 @@ qt_add_executable(Kub3Software
     src/ApplicationBuilder.cpp
     src/ViewModels/HomeViewModel.cpp
     src/ViewModels/DebugViewModel.cpp
-    src/ViewModels/MachineStatusViewModel.cpp
+    src/ViewModels/ViewModelsSettings/MachineStatusViewModel.cpp
     src/ViewModels/SettingsViewModel.cpp
     src/ViewModels/ExposureSettingsViewModel.cpp
     src/ViewModels/FavoriteExposureSettingsViewModel.cpp
@@ -204,10 +204,10 @@ qt_add_executable(Kub3Software
     src/Views/MainWindow.cpp
     src/Views/ViewBase.cpp
     src/Views/SettingsViewBase.cpp
-    src/Views/NavButtonManager.cpp
+    src/Views/Components/NavButtonManager.cpp
     src/Views/DebugView.cpp
     src/Views/HomeView.cpp
-    src/Views/MachineStatusView.cpp
+    src/Views/ViewsSettings/MachineStatusView.cpp
     src/Views/SettingsView.cpp
     src/Views/ViewsSettings/VersionView.cpp
     src/Views/ViewsSettings/TemperatureView.cpp
@@ -224,7 +224,7 @@ qt_add_executable(Kub3Software
     include/ApplicationBuilder.h
     include/ViewModels/HomeViewModel.h
     include/ViewModels/DebugViewModel.h
-    include/ViewModels/MachineStatusViewModel.h
+    include/ViewModels/ViewModelsSettings/MachineStatusViewModel.h
     include/ViewModels/SettingsViewModel.h
     include/ViewModels/ExposureSettingsViewModel.h
     include/ViewModels/FavoriteExposureSettingsViewModel.h
@@ -239,10 +239,10 @@ qt_add_executable(Kub3Software
     include/Views/MainWindow.h
     include/Views/ViewBase.h
     include/Views/SettingsViewBase.h
-    include/Views/NavButtonManager.h
+    include/Views/Components/NavButtonManager.h
     include/Views/DebugView.h
     include/Views/HomeView.h
-    include/Views/MachineStatusView.h
+    include/Views/ViewsSettings/MachineStatusView.h
     include/Views/SettingsView.h
     include/Views/ViewsSettings/TemperatureView.h
     include/Views/ViewsSettings/VersionView.h
@@ -262,7 +262,7 @@ qt_add_executable(Kub3Software
     gui/Views/ExposureSettingsView.ui
     gui/Views/FavoriteExposureSettingsView.ui
     gui/Views/HomeView.ui
-    gui/Views/MachineStatusView.ui
+    gui/Views/ViewsSettings/MachineStatusView.ui
     gui/Views/SettingsView.ui
     gui/Views/ViewsSettings/VersionView.ui
     gui/Views/ViewsSettings/TemperatureView.ui

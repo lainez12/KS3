@@ -1,5 +1,5 @@
 #include "Views/FavoriteExposureSettingsView.h"
-#include "Views/Colors.h"
+#include "Views/Components/Colors.h"
 #include "Views/Components/FavoriteExposureSettingButton.h"
 #include "ui_FavoriteExposureSettingsView.h"
 #include <QRegularExpression>

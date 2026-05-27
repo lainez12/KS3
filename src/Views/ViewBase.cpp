@@ -1,4 +1,4 @@
-#include "Views/Colors.h"
+#include "Views/Components/Colors.h"
 #include <Views/ViewBase.h>
 
 #include <QGraphicsDropShadowEffect>

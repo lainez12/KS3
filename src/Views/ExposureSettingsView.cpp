@@ -1,5 +1,5 @@
 #include "Views/ExposureSettingsView.h"
-#include "Views/Colors.h"
+#include "Views/Components/Colors.h"
 #include "ui_ExposureSettingsView.h"
 #include <QGraphicsDropShadowEffect>
 #include <QRegularExpression>

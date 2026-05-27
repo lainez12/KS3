@@ -6,20 +6,17 @@
 #include <unordered_map>
 #include <utils.h>
 
-#include <ViewModels/MachineStatusViewModel.h>
+#include <ViewModels/ViewModelsSettings/MachineStatusViewModel.h>
 
-#include "ViewBase.h"
+#include <Views/ViewBase.h>
 
-namespace Ui
-{
+namespace Ui {
     class MachineStatusView;
 }
 
-namespace Kub3::UI::Views
-{
+namespace Kub3::UI::Views {
 
-    class MachineStatusView final : public ViewBase
-    {
+    class MachineStatusView final : public ViewBase {
         using MachineStatusViewModel = Kub3::UI::ViewModels::MachineStatusViewModel;
 
         Q_OBJECT

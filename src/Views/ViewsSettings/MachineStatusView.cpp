@@ -1,7 +1,7 @@
 #include "ui_MachineStatusView.h"
 
 #include <HAL/MachineStatus/sensors_labels.h>
-#include <Views/MachineStatusView.h>
+#include <Views/ViewsSettings/MachineStatusView.h>
 
 #define SUCCESS_QLABEL_STYLESHEET "QLabel{ background: green; color : white; }"
 #define FAILURE_QLABEL_STYLESHEET "QLabel{ background: red; color : white; }"
@@ -120,6 +120,5 @@ void MachineStatusView::configTitleBar() {
         ":/icons/admin.svg",
         "Settings",
         true,
-        true
-    );
+        true);
 }
