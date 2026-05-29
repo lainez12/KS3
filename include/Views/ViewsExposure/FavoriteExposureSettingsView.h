@@ -10,9 +10,9 @@ namespace Ui {
     class FavoriteExposureSettingsView;
 } // namespace UI
 
-namespace Kub3::UI::Views {
+namespace Kub3::UI::Views::ViewsExposure {
     class FavoriteExposureSettingsView final : public ExposureViewBase {
-        using FavoriteExposureSettingsViewModel = Kub3::UI::ViewModels::FavoriteExposureSettingsViewModel;
+        using FavoriteExposureSettingsViewModel = Kub3::UI::ViewModels::ViewsModelsExposure::FavoriteExposureSettingsViewModel;
 
         Q_OBJECT
 
@@ -34,6 +34,6 @@ namespace Kub3::UI::Views {
 
 } // namespace Kub3::UI::Views
 
-using FavoriteExposureSettingsView = Kub3::UI::Views::FavoriteExposureSettingsView;
+using FavoriteExposureSettingsView = Kub3::UI::Views::ViewsExposure::FavoriteExposureSettingsView;
 
 #endif

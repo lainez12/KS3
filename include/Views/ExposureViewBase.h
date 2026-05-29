@@ -17,10 +17,9 @@ namespace Kub3::UI::Views {
     private:
         void configTitleBar() override;
 
-        void onHomeButtonClicked(const QString &buttonId);
-
     protected:
         void setDefaultTitleBar(const QString &viewTitle);
+        void onHomeButtonClicked(const QString &buttonId);
         void createNavButtonsConfigs() final override;
         virtual void onValidateButtonClicked(const QString &buttonId) = 0;
     };

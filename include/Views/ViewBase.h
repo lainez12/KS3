@@ -16,6 +16,9 @@ namespace Kub3::UI {
         HOME_VIEW,
         EXPOSURE_SETTINGS_VIEW,
         FAVORITE_EXPOSURE_SETTINGS_VIEW,
+        COMPLETE_EXPOSURE_VIEW,
+        PROGRESS_EXPOSURE_VIEW,
+        RECAP_EXPOSURE_SETTINGS_VIEW,
         SETTINGS_VIEW,
         SETTINGS_ABOUT_VIEW,
         SETTINGS_TEMPERATURE_VIEW,
@@ -44,7 +47,7 @@ namespace Kub3::UI::Views {
         TitleBarConfig(const QString &t, const QColor &ct, const QColor &cbg, const QString &i, const QString &st, const bool s, const bool sl) : viewTitle(t), textColor(ct), bgColor(cbg), iconPath(i), sectionTitle(st), showTitleBar(s), m_showLeftLogo(sl) {
         }
     };
-    
+
     class ViewBase : public QWidget {
         Q_OBJECT
 

@@ -10,9 +10,9 @@ namespace Ui {
     class ExposureSettingsView;
 } // namespace UI
 
-namespace Kub3::UI::Views {
+namespace Kub3::UI::Views::ViewsExposure {
     class ExposureSettingsView final : public ExposureViewBase {
-        using ExposureSettingsViewModel = Kub3::UI::ViewModels::ExposureSettingsViewModel;
+        using ExposureSettingsViewModel = Kub3::UI::ViewModels::ViewsModelsExposure::ExposureSettingsViewModel;
 
         Q_OBJECT
 
@@ -40,6 +40,6 @@ namespace Kub3::UI::Views {
 
 } // namespace Kub3::UI::Views
 
-using ExposureSettingsView = Kub3::UI::Views::ExposureSettingsView;
+using ExposureSettingsView = Kub3::UI::Views::ViewsExposure::ExposureSettingsView;
 
 #endif

@@ -564,9 +564,16 @@ font-family: arial;</string>
              <rect>
               <x>80</x>
               <y>0</y>
-              <width>261</width>
+              <width>263</width>
               <height>71</height>
              </rect>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>-1</pointsize>
+              <italic>false</italic>
+              <bold>true</bold>
+             </font>
             </property>
             <property name="styleSheet">
              <string notr="true">background-image: &quot;&quot;;
@@ -633,7 +640,7 @@ Exposure power: 20%</string>
               <enum>Qt::TextFormat::AutoText</enum>
              </property>
              <property name="pixmap">
-              <pixmap resource="../resources.qrc">:/icons/carre-bleu-fonce.png</pixmap>
+              <pixmap resource="../../resources.qrc">:/icons/carre-bleu-fonce.png</pixmap>
              </property>
              <property name="scaledContents">
               <bool>true</bool>
@@ -697,7 +704,7 @@ font-size: 30px;</string>
                 <string/>
                </property>
                <property name="pixmap">
-                <pixmap resource="../resources.qrc">:/icons/carre-bleu-clair.png</pixmap>
+                <pixmap resource="../../resources.qrc">:/icons/carre-bleu-clair.png</pixmap>
                </property>
                <property name="scaledContents">
                 <bool>true</bool>
@@ -741,7 +748,7 @@ font-size: 30px;</string>
               <string/>
              </property>
              <property name="pixmap">
-              <pixmap resource="../resources.qrc">:/icons/schema-flashing-vide.svg</pixmap>
+              <pixmap resource="../../resources.qrc">:/icons/schema-flashing-vide.svg</pixmap>
              </property>
              <property name="scaledContents">
               <bool>true</bool>
@@ -855,6 +862,15 @@ color: #E85420;</string>
              </property>
              <property name="buttonSymbols">
               <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+             </property>
+             <property name="minimum">
+              <number>0</number>
+             </property>
+             <property name="maximum">
+              <number>100</number>
+             </property>
+             <property name="value">
+              <number>0</number>
              </property>
             </widget>
            </item>
@@ -1343,6 +1359,9 @@ color: #E85420;</string>
              <property name="buttonSymbols">
               <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
              </property>
+             <property name="minimum">
+              <number>1</number>
+             </property>
             </widget>
            </item>
           </layout>
@@ -1414,6 +1433,15 @@ color: #E85420;</string>
              </property>
              <property name="buttonSymbols">
               <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+             </property>
+             <property name="minimum">
+              <number>0</number>
+             </property>
+             <property name="maximum">
+              <number>100</number>
+             </property>
+             <property name="value">
+              <number>0</number>
              </property>
             </widget>
            </item>
@@ -1584,6 +1612,18 @@ color: #E85420;</string>
              <property name="keyboardTracking">
               <bool>true</bool>
              </property>
+             <property name="minimum">
+              <number>0</number>
+             </property>
+             <property name="maximum">
+              <number>59</number>
+             </property>
+             <property name="singleStep">
+              <number>1</number>
+             </property>
+             <property name="value">
+              <number>0</number>
+             </property>
             </widget>
            </item>
            <item row="4" column="2">
@@ -1650,6 +1690,15 @@ color: #E85420;</string>
              </property>
              <property name="buttonSymbols">
               <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+             </property>
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>59</number>
+             </property>
+             <property name="value">
+              <number>1</number>
              </property>
             </widget>
            </item>

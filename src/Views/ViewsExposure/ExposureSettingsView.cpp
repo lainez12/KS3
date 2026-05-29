@@ -45,6 +45,8 @@ ExposureSettingsView::ExposureSettingsView(Unique<ExposureSettingsViewModel> vie
     connect(ui->favoriteSettingslabel, &QPushButton::clicked, this, [this]() { emit s_openView(Kub3::UI::ViewId::FAVORITE_EXPOSURE_SETTINGS_VIEW); });
     connect(ui->continuousModeBtn, &QPushButton::clicked, this, &ExposureSettingsView::switchToContinuousMode);
     connect(ui->flashingModeBtn, &QPushButton::clicked, this, &ExposureSettingsView::switchToFlashingMode);
+
+    setNavButtonEnabled(ID_BTN_VALIDATE, true);
 }
 ExposureSettingsView::~ExposureSettingsView() {
 }
@@ -83,7 +85,7 @@ void ExposureSettingsView::onSaveButtonClicked(const QString &buttonId) {
 }
 
 void ExposureSettingsView::onValidateButtonClicked(const QString &buttonId) {
-    // emit s_openView(Kub3::UI::ViewId::VALIDATE_VIEW);
+    emit s_openView(Kub3::UI::ViewId::RECAP_EXPOSURE_SETTINGS_VIEW);
 }
 
 void ExposureSettingsView::switchToFlashingMode() {

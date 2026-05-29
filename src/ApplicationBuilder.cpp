@@ -69,8 +69,11 @@ namespace Kub3 {
             auto machineStatusViewModel            = std::make_unique<UI::ViewModels::MachineStatusViewModel>(m_repo);
             auto homeViewModel                     = std::make_unique<UI::ViewModels::HomeViewModel>(m_repo);
             auto settingsViewModel                 = std::make_unique<UI::ViewModels::SettingsViewModel>(m_repo);
-            auto exposureSettingsViewModel         = std::make_unique<UI::ViewModels::ExposureSettingsViewModel>(m_repo);
-            auto favoriteExposureSettingsViewModel = std::make_unique<UI::ViewModels::FavoriteExposureSettingsViewModel>(m_repo);
+            auto exposureSettingsViewModel         = std::make_unique<UI::ViewModels::ViewsModelsExposure::ExposureSettingsViewModel>(m_repo);
+            auto favoriteExposureSettingsViewModel = std::make_unique<UI::ViewModels::ViewsModelsExposure::FavoriteExposureSettingsViewModel>(m_repo);
+            auto recapExposureSettingsViewModel    = std::make_unique<UI::ViewModels::ViewsModelsExposure::RecapExposureSettingsViewModel>(m_repo);
+            auto progressExposureViewModel         = std::make_unique<UI::ViewModels::ViewsModelsExposure::ProgressExposureViewModel>(m_repo);
+            auto completeExposureViewModel         = std::make_unique<UI::ViewModels::ViewsModelsExposure::CompleteExposureViewModel>(m_repo);
             auto versionViewModel                  = std::make_unique<UI::ViewModels::ViewsModelSettings::VersionViewModel>(m_repo);
             auto temperatureViewModel              = std::make_unique<UI::ViewModels::ViewsModelSettings::TemperatureViewModel>(m_repo);
             auto operatingTimeViewModel            = std::make_unique<UI::ViewModels::ViewsModelSettings::OperatingTimesViewModel>(m_repo);
@@ -80,6 +83,9 @@ namespace Kub3 {
             auto *settingsView                     = new SettingsView(std::move(settingsViewModel), m_mainWindow.get());
             auto *exposureSettingsView             = new ExposureSettingsView(std::move(exposureSettingsViewModel), m_mainWindow.get());
             auto *favoriteExposureSettingsView     = new FavoriteExposureSettingsView(std::move(favoriteExposureSettingsViewModel), m_mainWindow.get());
+            auto *recapExposureSettingsView        = new RecapExposureSettingsView(std::move(recapExposureSettingsViewModel), m_mainWindow.get());
+            auto *progressExposureView             = new ProgressExposureView(std::move(progressExposureViewModel), m_mainWindow.get());
+            auto *completeExposureView             = new CompleteExposureView(std::move(completeExposureViewModel), m_mainWindow.get());
             auto *versionView                      = new VersionView(std::move(versionViewModel), m_mainWindow.get());
             auto *temperatureView                  = new TemperatureView(std::move(temperatureViewModel), m_mainWindow.get());
             auto *operatingTimeView                = new OperatingTimesView(std::move(operatingTimeViewModel), m_mainWindow.get());
@@ -93,6 +99,9 @@ namespace Kub3 {
             m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_VIEW, settingsView);
             m_mainWindow->addView(Kub3::UI::ViewId::EXPOSURE_SETTINGS_VIEW, exposureSettingsView);
             m_mainWindow->addView(Kub3::UI::ViewId::FAVORITE_EXPOSURE_SETTINGS_VIEW, favoriteExposureSettingsView);
+            m_mainWindow->addView(Kub3::UI::ViewId::RECAP_EXPOSURE_SETTINGS_VIEW, recapExposureSettingsView);
+            m_mainWindow->addView(Kub3::UI::ViewId::PROGRESS_EXPOSURE_VIEW, progressExposureView);
+            m_mainWindow->addView(Kub3::UI::ViewId::COMPLETE_EXPOSURE_VIEW, completeExposureView);
             m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_ABOUT_VIEW, versionView);
             m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_TEMPERATURE_VIEW, temperatureView);
             m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_OPERATING_TIMES_VIEW, operatingTimeView);
