@@ -1,3 +1,4 @@
+#include <Common/Enums.h>
 #include <MFSM/interlocks.h>
 #include <Services/Stowage/StowageService.h>
 
@@ -6,7 +7,7 @@ namespace Kub3::Interlocks
 
     using namespace MFSM;
 
-    Result canOperateDrawer(const SystemPosture &p, Services::DrawerTarget target, bool isEject)
+    Result canOperateDrawer(const SystemPosture &p, DrawerTarget target, bool isEject)
     {
         if (p.wafer == WaferPosture::AlignmentZone || p.wafer == WaferPosture::Unknown)
             return Result::Blocked("Action Rejected: Cannot operate drawer while Wafer is stowed.");

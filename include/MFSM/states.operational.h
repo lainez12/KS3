@@ -2,6 +2,7 @@
 
 #include <variant>
 
+#include <Common/Enums.h>
 #include <MFSM/events.h>
 #include <MFSM/posture.h>
 #include <Services/Drawers/IDrawerService.h>
@@ -24,7 +25,7 @@ namespace Kub3::MFSM
 
     struct StateDrawerOp {
         DrawerOperation kind;
-        Services::DrawerTarget target;
+        DrawerTarget target;
         ExpectedSystemPosture expectedSuccess;
     };
 

@@ -28,6 +28,7 @@ namespace Kub3::HAL::Act
             Weak<MCUDriver> driver,
             Config::dc_motor_hw_properties_t hwConfig,
             std::function<double()> positionGetter,
+            std::string encoderId,
             Unique<IKinematicGenerator> kinematicEngine,
             QObject *parent = nullptr);
 
@@ -43,12 +44,17 @@ namespace Kub3::HAL::Act
 
         // Getters
         [[nodiscard]] bool isMoving(void) const override;
+        [[nodiscard]] std::string_view getEncoderId(void) const override
+        {
+            return m_encoderId;
+        };
         [[nodiscard]] double getEncoderPositionMm(void) const override;
 
     private slots:
         void onControlTick(void);
 
     private:
+        double computePrecisionMm(const Config::kinematic_profile_t &profile) override;
         uint16_t computePwm(double velocityMmS) const;
         void sendPayload(const QByteArray &payload) const;
 
@@ -57,6 +63,7 @@ namespace Kub3::HAL::Act
         const uint8_t m_motorByteId;
         const Config::dc_motor_hw_properties_t m_hwConfig;
         Weak<MCUDriver> m_driver;
+        const std::string m_encoderId;
         std::function<double()> m_encoderValueGetter;
 
         Unique<IKinematicGenerator> m_kinematicEngine;

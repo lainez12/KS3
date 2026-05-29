@@ -42,12 +42,23 @@ public:
         return false;
     }
 
+    std::string_view getEncoderId(void) const override
+    {
+        return "";
+    }
+
     double getEncoderPositionMm() const override
     {
         return 0.0;
     }
 
     void resetEncoder(const double offsetMm = 0.0) override {}
+
+private:
+    double computePrecisionMm(const Kub3::Config::kinematic_profile_t &profile) override
+    {
+        return 0.01;
+    };
 };
 
 class MockMachineStatusRepo final : public MS::IMachineStatusRepo

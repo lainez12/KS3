@@ -1,6 +1,6 @@
-#include "MotorTestViewModel.h"
+#include "view_models/MotorTestViewModel.h"
 
-namespace Kub3::Tools::MotorTester
+namespace Kub3::Tools::Tester
 {
 
     MotorTestViewModel::MotorTestViewModel(QObject *parent) : QObject(parent) {}
@@ -88,4 +88,4 @@ namespace Kub3::Tools::MotorTester
         }
     }
 
-} // namespace Kub3::Tools::MotorTester
+} // namespace Kub3::Tools::Tester

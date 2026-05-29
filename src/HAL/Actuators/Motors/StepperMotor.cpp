@@ -14,6 +14,7 @@ namespace Kub3::HAL::Act
                                Weak<MCUDriver> driver,
                                Config::stepper_hw_properties_t hwConfig,
                                std::function<int32_t()> posGetter,
+                               std::string encoderId,
                                Unique<IKinematicGenerator> kinematicEngine,
                                QObject *parent) :
         QObject(parent),
@@ -22,6 +23,7 @@ namespace Kub3::HAL::Act
         m_hwConfig(std::move(hwConfig)),
         m_driver(std::move(driver)),
         m_encoderValueGetter(std::move(posGetter)),
+        m_encoderId(std::move(encoderId)),
         m_kinematicEngine(std::move(kinematicEngine)),
         m_controlTimer(this)
     {
@@ -42,7 +44,7 @@ namespace Kub3::HAL::Act
 
     void StepperMotor::sendPayload(const uint8_t *payload, uint32_t size) const
     {
-        auto sizedPayload = QByteArray(reinterpret_cast<const char *>(payload), size + 1);
+        auto sizedPayload = QByteArray(reinterpret_cast<const char *>(payload), size);
 
         sizedPayload.push_front(static_cast<uint8_t>(size));
         if (auto driver = m_driver.lock())
@@ -63,10 +65,11 @@ namespace Kub3::HAL::Act
     {
         QMetaObject::invokeMethod(
             this,
-            [&]() {
+            [this, position_mm, profile]() {
                 // Clamp to safety limits
-                double safeVel = std::min(profile.targetVelocityMmS, m_hwConfig.maxVelocityMmS);
-                double safeAcc = std::min(profile.accelerationMmS2, m_hwConfig.maxAccelerationMmS2);
+                const double safeVel     = std::min(profile.targetVelocityMmS, m_hwConfig.maxVelocityMmS);
+                const double safeAcc     = std::min(profile.accelerationMmS2, m_hwConfig.maxAccelerationMmS2);
+                const double precisionMm = this->computePrecisionMm(profile);
 
                 // Extract step fraction safely
                 uint8_t stepFrac = 1;
@@ -79,7 +82,7 @@ namespace Kub3::HAL::Act
                 if (!m_controlTimer.isActive()) // Start the control timer
                 {
                     // Initialize the math engine
-                    m_kinematicEngine->startPositionMove(getEncoderPositionMm(), position_mm, safeVel, safeAcc);
+                    m_kinematicEngine->startPositionMove(getEncoderPositionMm(), position_mm, safeVel, safeAcc, precisionMm);
 
                     m_lastTickNsecs = 0; // Reset last tick timestamp
                     m_dtTimer.start();   // reset elapsed timer
@@ -88,7 +91,7 @@ namespace Kub3::HAL::Act
                 else // Motor already moving
                 {
                     // Update the math engine
-                    m_kinematicEngine->updatePositionMove(position_mm, safeVel, safeAcc);
+                    m_kinematicEngine->updatePositionMove(position_mm, safeVel, safeAcc, precisionMm);
                 }
             },
             Qt::QueuedConnection);
@@ -98,10 +101,11 @@ namespace Kub3::HAL::Act
     {
         QMetaObject::invokeMethod(
             this,
-            [&]() {
+            [this, distance_mm, profile]() {
                 // Clamp to safety limits
-                double safeVel = std::min(profile.targetVelocityMmS, m_hwConfig.maxVelocityMmS);
-                double safeAcc = std::min(profile.accelerationMmS2, m_hwConfig.maxAccelerationMmS2);
+                const double safeVel     = std::min(profile.targetVelocityMmS, m_hwConfig.maxVelocityMmS);
+                const double safeAcc     = std::min(profile.accelerationMmS2, m_hwConfig.maxAccelerationMmS2);
+                const double precisionMm = this->computePrecisionMm(profile);
 
                 // Extract step fraction safely
                 uint8_t stepFrac = 1;
@@ -116,7 +120,7 @@ namespace Kub3::HAL::Act
                     const double encoderPos = getEncoderPositionMm();
 
                     // Initialize the math engine
-                    m_kinematicEngine->startPositionMove(encoderPos, encoderPos + distance_mm, safeVel, safeAcc);
+                    m_kinematicEngine->startPositionMove(encoderPos, encoderPos + distance_mm, safeVel, safeAcc, precisionMm);
 
                     m_lastTickNsecs = 0; // Reset last tick timestamp
                     m_dtTimer.start();   // reset elapsed timer
@@ -127,7 +131,7 @@ namespace Kub3::HAL::Act
                     const double currentMathEnginePos = m_kinematicEngine->getCurrentState().position;
 
                     // Update the math engine
-                    m_kinematicEngine->updatePositionMove(currentMathEnginePos + distance_mm, safeVel, safeAcc);
+                    m_kinematicEngine->updatePositionMove(currentMathEnginePos + distance_mm, safeVel, safeAcc, precisionMm);
                 }
             },
             Qt::QueuedConnection);
@@ -137,7 +141,7 @@ namespace Kub3::HAL::Act
     {
         QMetaObject::invokeMethod(
             this,
-            [&]() {
+            [this, dir, profile]() {
                 // Clamp to safety limits
                 double safeVel = std::min(profile.targetVelocityMmS, m_hwConfig.maxVelocityMmS);
                 double safeAcc = std::min(profile.accelerationMmS2, m_hwConfig.maxAccelerationMmS2);
@@ -174,7 +178,7 @@ namespace Kub3::HAL::Act
     {
         QMetaObject::invokeMethod(
             this,
-            [&]() {
+            [this]() {
                 m_controlTimer.stop();
                 m_lastSentHz.reset();
                 m_lastTickNsecs = 0;
@@ -189,7 +193,7 @@ namespace Kub3::HAL::Act
     {
         QMetaObject::invokeMethod(
             this,
-            [&]() {
+            [this, offsetMm]() {
                 const double topsPerMm    = m_hwConfig.encoderTopsPerRev / m_hwConfig.screwPitchMm;
                 const int32_t encoderTops = std::round(offsetMm * topsPerMm);
                 const uint8_t payload[]   = {
@@ -214,7 +218,7 @@ namespace Kub3::HAL::Act
     {
         const int32_t encoderValue = m_encoderValueGetter ? m_encoderValueGetter() : 0;
 
-        return static_cast<double>(encoderValue) * (static_cast<double>(m_hwConfig.encoderTopsPerRev) / m_hwConfig.screwPitchMm);
+        return static_cast<double>(encoderValue) * (m_hwConfig.screwPitchMm / static_cast<double>(m_hwConfig.encoderTopsPerRev));
     }
 
     void StepperMotor::onControlTick(void)
@@ -224,7 +228,13 @@ namespace Kub3::HAL::Act
 
         m_lastTickNsecs = currentNsecs;
 
-        const kinematic_state_t state = m_kinematicEngine->calculateNext(dt);
+        const kinematic_state_t state = m_kinematicEngine->computeNext(dt, getEncoderPositionMm());
+
+#if defined(BUILD_DEBUG)
+        qDebug() << "===============================";
+        qDebug() << "Computed position (mm):" << state.position;
+        qDebug() << "Computed velocity (mm/s):" << state.velocity;
+#endif
 
         if (state.isFinished) // Shutdown if complete
         {
@@ -260,12 +270,23 @@ namespace Kub3::HAL::Act
         }
     }
 
+    double StepperMotor::computePrecisionMm(const Config::kinematic_profile_t &profile)
+    {
+        uint8_t stepFrac = 1; // Default to full step
+
+        if (auto *p = std::get_if<Config::stepper_kinematics_params_t>(&profile.params))
+            stepFrac = p->stepFraction;
+
+        qInfo() << "[StepperMotor] Computed precision (mm):" << (m_hwConfig.screwPitchMm / (m_hwConfig.stepsPerRev * stepFrac));
+        return (m_hwConfig.screwPitchMm / (m_hwConfig.stepsPerRev * stepFrac));
+    }
+
     uint16_t StepperMotor::computeFrequencyHz(double velocityMmS, uint8_t stepFraction) const
     {
         const double stepsPerMm = (static_cast<double>(m_hwConfig.stepsPerRev) * stepFraction) / m_hwConfig.screwPitchMm;
         const double roundedHz  = std::round(velocityMmS * stepsPerMm);
 
-        return static_cast<uint16_t>(std::clamp(roundedHz, 0.0, static_cast<double> UINT16_MAX));
+        return static_cast<uint16_t>(std::clamp(roundedHz, 0.0, static_cast<double>(UINT16_MAX)));
     }
 
 } // namespace Kub3::HAL::Act

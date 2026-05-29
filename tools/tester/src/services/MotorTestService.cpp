@@ -1,9 +1,9 @@
 #include <cmath>
 
 #include <HAL/MachineStatus/utils.h>
-#include <MotorTestService.h>
+#include <services/MotorTestService.h>
 
-namespace Kub3::Tools::MotorTester
+namespace Kub3::Tools::Tester
 {
 
     MotorTestService::MotorTestService(Shared<HAL::Act::ActuatorRegistry> actuatorRegistry,
@@ -135,7 +135,6 @@ namespace Kub3::Tools::MotorTester
             if (auto motor = m_actuatorRegistry->get<HAL::Act::IMotor>(id); motor)
                 motor->emergencyStop();
         }
-        m_selectedMotor = std::nullopt;
     }
 
-} // namespace Kub3::Tools::MotorTester
+} // namespace Kub3::Tools::Tester

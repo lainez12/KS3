@@ -3,6 +3,7 @@
 #include <string>
 #include <variant>
 
+#include <Common/Enums.h>
 #include <HAL/Vision/identifiers.h>
 #include <Services/Alignment/IAlignmentService.h>
 #include <Services/Contact/IContactService.h>
@@ -54,7 +55,7 @@ namespace Kub3::MFSM
         EJECT
     };
     struct CmdOperateDrawer {
-        Services::DrawerTarget target;
+        DrawerTarget target;
         DrawerOperation operation;
     };
     struct CmdOperateStowage {

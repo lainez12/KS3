@@ -12,7 +12,7 @@
 #include <Services/IService.h>
 #include <utils.h>
 
-namespace Kub3::Tools::MotorTester
+namespace Kub3::Tools::Tester
 {
     // Pure C++ structure to hold polled telemetry
     struct MotorTelemetry {
@@ -55,6 +55,12 @@ namespace Kub3::Tools::MotorTester
         {
             return m_telemetry;
         }
+        [[nodiscard]] std::string_view getCurrentEncoderId(void) const
+        {
+            if (!m_selectedMotor.has_value())
+                return "";
+            return m_selectedMotor.value()->getEncoderId();
+        }
 
     private:
         Shared<HAL::Act::ActuatorRegistry> m_actuatorRegistry;
@@ -74,4 +80,4 @@ namespace Kub3::Tools::MotorTester
         MotorTelemetry m_telemetry;
     };
 
-} // namespace Kub3::Tools::MotorTester
+} // namespace Kub3::Tools::Tester

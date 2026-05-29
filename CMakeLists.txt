@@ -27,7 +27,7 @@ set(CMAKE_AUTOUIC_SEARCH_PATHS
     # Configurator tool
     "tools/configurator/gui"
     # Motor tester tool
-    "tools/motor_tester/gui"
+    "tools/tester/gui"
 )
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
@@ -57,6 +57,11 @@ qt_add_library(Kub3Core STATIC
     src/utils.cpp
     src/Config/ConfigLoader.cpp
     src/Config/ConfigSaver.cpp
+
+    ## Views / View Models Boilerplate
+    src/ViewModels/BaseViewModel.cpp
+    src/Views/ViewBase.cpp
+
     ## Master FSM
     src/MFSM/MasterFSM.actions.cpp
     src/MFSM/MasterFSM.core.cpp
@@ -124,14 +129,20 @@ qt_add_library(Kub3Core STATIC
     # Headers
     # ===============
 
-    ## Utils & miscellaneous
+    ## Utils, Config & miscellaneous
     include/utils.h
+    include/Common/Enums.h
     include/Config/ConfigLoader.h
     include/Config/ConfigSaver.h
     include/Config/kinematics.h
     include/Config/machine_config.h
     include/Config/keys/hardware.h
     include/Config/keys/process.h
+
+    ## Views / View Models Boilerplate
+    include/ViewModels/BaseViewModel.h
+    include/Views/ViewBase.h
+
     ## Master FSM
     include/MFSM/events.h
     include/MFSM/interlocks.h
@@ -234,6 +245,7 @@ target_link_libraries(Kub3Core PUBLIC
     Qt6::Core
     Qt6::SerialPort
     Qt6::Gui
+    Qt6::Widgets
 )
 
 if(MVS_LIBRARY)
@@ -268,11 +280,9 @@ qt_add_executable(Kub3Software
     src/main.cpp
     src/Logger.h
     src/ApplicationBuilder.cpp
-    src/ViewModels/BaseViewModel.cpp
     src/ViewModels/BaseVisionViewModel.cpp
     src/ViewModels/MachineStatusViewModel.cpp
     src/Views/MainWindow.cpp
-    src/Views/ViewBase.cpp
     src/Views/DebugView.cpp
     src/Views/HomeView.cpp
     src/Views/MachineStatusView.cpp
@@ -284,11 +294,9 @@ qt_add_executable(Kub3Software
     src/Views/Components/DoubleRatioSlider.cpp
     # Headers
     include/ApplicationBuilder.h
-    include/ViewModels/BaseViewModel.h
     include/ViewModels/BaseVisionViewModel.h
     include/ViewModels/MachineStatusViewModel.h
     include/Views/MainWindow.h
-    include/Views/ViewBase.h
     include/Views/DebugView.h
     include/Views/HomeView.h
     include/Views/MachineStatusView.h
@@ -319,7 +327,7 @@ target_link_libraries(Kub3Software PRIVATE
 # 6. STANDALONE TOOLS
 # ==============================================================================
 add_subdirectory(tools/configurator)
-add_subdirectory(tools/motor_tester)
+add_subdirectory(tools/tester)
 
 # ==============================================================================
 # 7. TESTS

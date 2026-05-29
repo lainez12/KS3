@@ -6,23 +6,26 @@
 #include <memory>
 #include <string>
 
-#include "MotorTestService.h"
 #include <HAL/Actuators/Motors/IMotor.h>
+#include <services/MotorTestService.h>
 #include <utils.h>
 
-namespace Kub3::Tools::MotorTester
+namespace Kub3::Tools::Tester
 {
 
     class MotorTestController : public QObject
     {
         Q_OBJECT
+
     public:
-        explicit MotorTestController(Unique<MotorTestService> service, QObject *parent = nullptr);
+        explicit MotorTestController(Shared<HAL::Act::ActuatorRegistry> actuatorRegistry,
+                                     std::vector<std::string> knownMotorsIds,
+                                     QObject *parent = nullptr);
         ~MotorTestController() override;
 
         MotorTestService *getMotorTestService(void)
         {
-            return m_service.get();
+            return m_motorTestService.get();
         }
 
     public slots:
@@ -30,15 +33,13 @@ namespace Kub3::Tools::MotorTester
         void start();
         void stop();
 
-        // Commands from UI (Via QueuedConnection)
+        // Commands from UI
         void ps_selectMotor(const QString &motorId);
         void ps_startJog(int direction, Kub3::Config::kinematic_profile_t profile);
         void ps_stopJog();
         void ps_moveToAbsolute(double positionMm, Kub3::Config::kinematic_profile_t profile);
         void ps_emergencyStopAll();
-
-    private slots:
-        void onTick();
+        void ps_onMachineStatusUpdate(const std::string &key);
 
     signals:
         // Pushed to ViewModel
@@ -47,8 +48,10 @@ namespace Kub3::Tools::MotorTester
         void s_motorSelectionChanged(bool isValid);
 
     private:
-        Unique<MotorTestService> m_service;
-        QTimer *m_tickTimer = nullptr;
+        Unique<MotorTestService> m_motorTestService;
+
+        Shared<HAL::Act::ActuatorRegistry> m_actuatorRegistry;
+        std::vector<std::string> m_knownMotorsIds;
     };
 
-} // namespace Kub3::Tools::MotorTester
+} // namespace Kub3::Tools::Tester

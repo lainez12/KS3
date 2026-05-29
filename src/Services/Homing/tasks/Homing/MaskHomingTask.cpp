@@ -127,7 +127,7 @@ namespace Kub3::Services
 
         if (!cm2)
         {
-            m_motor->moveDirection(HAL::Act::MotorDirection::Negative, m_fineProfile);
+            m_motor->moveDirection(HAL::Act::MotorDirection::Negative, m_contactProfile);
             m_step = Step::ContactMode;
         }
     }

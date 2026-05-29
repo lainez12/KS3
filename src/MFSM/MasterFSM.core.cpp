@@ -1,5 +1,6 @@
 #include <QDebug>
 
+#include <Common/Enums.h>
 #include <HAL/MachineStatus/sensors_labels.h>
 #include <HAL/MachineStatus/utils.h>
 #include <MFSM/MasterFSM.h>
@@ -116,7 +117,7 @@ namespace Kub3::MFSM
     void MasterFSM::ps_requestOperateDrawer(int targetInt, int operationInt)
     {
         dispatch(CmdOperateDrawer{
-            .target    = static_cast<Services::DrawerTarget>(targetInt),
+            .target    = static_cast<DrawerTarget>(targetInt),
             .operation = static_cast<DrawerOperation>(operationInt),
         });
     }
