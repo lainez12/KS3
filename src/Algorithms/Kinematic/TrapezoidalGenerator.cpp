@@ -1,4 +1,6 @@
+#if defined(BUILD_DEBUG)
 #include <QDebug>
+#endif
 #include <algorithm>
 
 #include "Algorithms/Kinematic/TrapezoidalGenerator.h"
