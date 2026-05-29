@@ -1,9 +1,9 @@
 #include <cmath>
 
 #include <HAL/MachineStatus/utils.h>
-#include <MotorTestService.h>
+#include <services/MotorTestService.h>
 
-namespace Kub3::Tools::MotorTester
+namespace Kub3::Tools::Tester
 {
 
     MotorTestService::MotorTestService(Shared<HAL::Act::ActuatorRegistry> actuatorRegistry,
@@ -137,4 +137,4 @@ namespace Kub3::Tools::MotorTester
         }
     }
 
-} // namespace Kub3::Tools::MotorTester
+} // namespace Kub3::Tools::Tester

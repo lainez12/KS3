@@ -230,9 +230,11 @@ namespace Kub3::HAL::Act
 
         const kinematic_state_t state = m_kinematicEngine->computeNext(dt, getEncoderPositionMm());
 
-        // qDebug() << "===============================";
-        // qDebug() << "Computed position (mm):" << state.position;
-        // qDebug() << "Computed velocity (mm/s):" << state.velocity;
+#if defined(BUILD_DEBUG)
+        qDebug() << "===============================";
+        qDebug() << "Computed position (mm):" << state.position;
+        qDebug() << "Computed velocity (mm/s):" << state.velocity;
+#endif
 
         if (state.isFinished) // Shutdown if complete
         {
@@ -265,7 +267,6 @@ namespace Kub3::HAL::Act
 
             sendPayload(payload, sizeof(payload));
             m_lastSentHz = hz;
-            // qDebug() << "Sent frequency (Hz):" << hz;
         }
     }
 
@@ -275,7 +276,8 @@ namespace Kub3::HAL::Act
 
         if (auto *p = std::get_if<Config::stepper_kinematics_params_t>(&profile.params))
             stepFrac = p->stepFraction;
-        qDebug() << "[StepperMotor] Computed precision (mm):" << (m_hwConfig.screwPitchMm / (m_hwConfig.stepsPerRev * stepFrac));
+
+        qInfo() << "[StepperMotor] Computed precision (mm):" << (m_hwConfig.screwPitchMm / (m_hwConfig.stepsPerRev * stepFrac));
         return (m_hwConfig.screwPitchMm / (m_hwConfig.stepsPerRev * stepFrac));
     }
 

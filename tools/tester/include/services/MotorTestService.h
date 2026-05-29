@@ -12,7 +12,7 @@
 #include <Services/IService.h>
 #include <utils.h>
 
-namespace Kub3::Tools::MotorTester
+namespace Kub3::Tools::Tester
 {
     // Pure C++ structure to hold polled telemetry
     struct MotorTelemetry {
@@ -80,4 +80,4 @@ namespace Kub3::Tools::MotorTester
         MotorTelemetry m_telemetry;
     };
 
-} // namespace Kub3::Tools::MotorTester
+} // namespace Kub3::Tools::Tester

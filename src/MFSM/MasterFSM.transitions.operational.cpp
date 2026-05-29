@@ -1,5 +1,6 @@
 #include <QDebug>
 
+#include <Common/Enums.h>
 #include <MFSM/MasterFSM.h>
 #include <MFSM/interlocks.h>
 #include <Services/Stowage/StowageService.h>
@@ -30,9 +31,9 @@ namespace Kub3::MFSM
                 }
 
                 ExpectedSystemPosture expected{};
-                if (cmd.target == Services::DrawerTarget::Mask || cmd.target == Services::DrawerTarget::Both)
+                if (cmd.target == DrawerTarget::Mask || cmd.target == DrawerTarget::Both)
                     expected.newMaskPosture = isEject ? MaskPosture::Ejected : MaskPosture::Homed;
-                if (cmd.target == Services::DrawerTarget::Wafer || cmd.target == Services::DrawerTarget::Both)
+                if (cmd.target == DrawerTarget::Wafer || cmd.target == DrawerTarget::Both)
                     expected.newWaferPosture = isEject ? WaferPosture::Ejected : WaferPosture::Homed;
 
                 return StateDrawerOp{.kind = cmd.operation, .target = cmd.target, .expectedSuccess = expected};

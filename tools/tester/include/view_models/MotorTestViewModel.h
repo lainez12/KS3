@@ -6,18 +6,14 @@
 #include <QStringList>
 
 #include <Config/kinematics.h>
+#include <ViewModels/BaseViewModel.h>
 
-namespace Kub3::Tools::MotorTester
+namespace Kub3::Tools::Tester
 {
 
-    class MotorTestViewModel : public QObject
+    class MotorTestViewModel : public QObject, public UI::ViewModels::BaseViewModel
     {
         Q_OBJECT
-        // Q_PROPERTY(double position READ position NOTIFY s_telemetryChanged)
-        // Q_PROPERTY(double speed READ speed NOTIFY s_telemetryChanged)
-        // Q_PROPERTY(double acceleration READ acceleration NOTIFY s_telemetryChanged)
-        // Q_PROPERTY(bool hasValidMotor READ hasValidMotor NOTIFY s_hasValidMotorChanged)
-        // Q_PROPERTY(bool isStepper READ isStepper NOTIFY s_isStepperChanged)
 
     public:
         explicit MotorTestViewModel(QObject *parent = nullptr);
@@ -84,4 +80,4 @@ namespace Kub3::Tools::MotorTester
         QList<QPair<QString, bool>> m_motorCatalog; // <MotorID, isStepper>
     };
 
-} // namespace Kub3::Tools::MotorTester
+} // namespace Kub3::Tools::Tester

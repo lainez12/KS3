@@ -1,4 +1,4 @@
-#include "RealTimeCurveWidget.h"
+#include <views/components/RealTimeCurveWidget.h>
 
 #include <QDateTime>
 #include <QPainter>
@@ -6,7 +6,7 @@
 #include <QPen>
 #include <algorithm>
 
-namespace Kub3::Tools::MotorTester
+namespace Kub3::Tools::Tester
 {
 
     RealTimeCurveWidget::RealTimeCurveWidget(QWidget *parent) : QWidget(parent)
@@ -238,4 +238,4 @@ namespace Kub3::Tools::MotorTester
         }
     }
 
-} // namespace Kub3::Tools::MotorTester
+} // namespace Kub3::Tools::Tester

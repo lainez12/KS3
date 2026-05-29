@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Common/Enums.h>
 #include <MFSM/posture.h>
 #include <Services/Drawers/IDrawerService.h>
 #include <Services/Stowage/IStowageService.h>
@@ -25,7 +26,7 @@ namespace Kub3::Interlocks
     };
 
     // --- Drawer Interlocks ---
-    Result canOperateDrawer(const MFSM::SystemPosture &p, Services::DrawerTarget target, bool isEject);
+    Result canOperateDrawer(const MFSM::SystemPosture &p, DrawerTarget target, bool isEject);
 
     // --- Stowage Interlocks ---
     Result canOperateStowage(const MFSM::SystemPosture &p, Services::StowageTarget target);

@@ -7,7 +7,7 @@
 #include <QWidget>
 #include <deque>
 
-namespace Kub3::Tools::MotorTester
+namespace Kub3::Tools::Tester
 {
 
     struct TimePoint {
@@ -66,4 +66,4 @@ namespace Kub3::Tools::MotorTester
         QTimer m_scrollTimer; // Drives the visual scrolling independent of data events
     };
 
-} // namespace Kub3::Tools::MotorTester
+} // namespace Kub3::Tools::Tester

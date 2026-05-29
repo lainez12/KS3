@@ -133,8 +133,10 @@ namespace Kub3::Algorithms::Kinematic
         // - This guarantees to not overshoot the deceleration curve.
         const double lookaheadStoppingDistance = stoppingDistance + (absVel * dt);
 
+#if defined(BUILD_DEBUG)
         qDebug() << "Distance to go (mm):" << distanceToGo;
         qDebug() << "Look ahead stopping distance (mm):" << lookaheadStoppingDistance;
+#endif
 
         if (m_stopRequested || absDistanceToGo <= lookaheadStoppingDistance)
         {
@@ -142,8 +144,6 @@ namespace Kub3::Algorithms::Kinematic
             const double a_req = (absVel * absVel) / (2.0 * absDistanceToGo);
             // Calculate the physical time remaining until we hit zero speed
             const double t_stop = (2.0 * absDistanceToGo) / absVel;
-
-            qDebug() << "Rectified acceleration (mm/s²):" << a_req;
 
             if (t_stop <= dt)
             {

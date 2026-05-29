@@ -2,19 +2,13 @@
 
 #include <string>
 
+#include <Common/Enums.h>
 #include <Services/IService.h>
 
 #define DRAWER_PROCEDURE_TIMEOUT_MS 30000
 
 namespace Kub3::Services
 {
-
-    enum class DrawerTarget
-    {
-        Wafer,
-        Mask,
-        Both
-    };
 
     class IDrawerService : public IService
     {

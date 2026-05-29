@@ -17,7 +17,7 @@ int main(int argc, char **argv)
     qInfo() << "  Process Config Path:" << KUB3_PROCESS_CONFIG_PATH;
     qInfo() << "========================================";
 
-    Kub3::Tools::MotorTester::ApplicationBuilder builder;
+    Kub3::Tools::Tester::ApplicationBuilder builder;
 
     // Path resolution matching your CMake definitions
     builder.loadConfigurations(KUB3_HARDWARE_CONFIG_PATH, KUB3_PROCESS_CONFIG_PATH);
