@@ -13,7 +13,7 @@ namespace Ui {
 
 namespace Kub3::UI::Views::ViewsSettings {
     class UpdateSoftwareView final : public SettingsViewBase {
-        using UpdateSoftwareViewModel = Kub3::UI::ViewModels::ViewsModelSettings::UpdateSoftwareViewModel;
+        using UpdateSoftwareViewModel = Kub3::UI::ViewModels::ViewModelsSettings::UpdateSoftwareViewModel;
 
         Q_OBJECT
 

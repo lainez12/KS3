@@ -13,7 +13,7 @@ namespace Ui {
 
 namespace Kub3::UI::Views::ViewsSettings {
     class VersionView final : public SettingsViewBase {
-        using VersionViewModel = Kub3::UI::ViewModels::ViewsModelSettings::VersionViewModel;
+        using VersionViewModel = Kub3::UI::ViewModels::ViewModelsSettings::VersionViewModel;
 
         Q_OBJECT
 

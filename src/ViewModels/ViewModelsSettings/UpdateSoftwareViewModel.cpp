@@ -1,6 +1,6 @@
 #include <ViewModels/ViewModelsSettings/UpdateSoftwareViewModel.h>
 
-namespace Kub3::UI::ViewModels::ViewsModelSettings {
+namespace Kub3::UI::ViewModels::ViewModelsSettings {
     UpdateSoftwareViewModel::UpdateSoftwareViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent) :
         QObject(parent),
         m_repo(repo) {
@@ -14,4 +14,4 @@ namespace Kub3::UI::ViewModels::ViewsModelSettings {
     void UpdateSoftwareViewModel::unloadConnections(void) {
     }
 
-} // namespace Kub3::UI::ViewModels::ViewsModelSettings
+} // namespace Kub3::UI::ViewModels::ViewModelsSettings

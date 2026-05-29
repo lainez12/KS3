@@ -13,7 +13,7 @@ namespace Ui {
 
 namespace Kub3::UI::Views::ViewsSettings {
     class LedTestView final : public SettingsViewBase {
-        using LedTestViewModel = Kub3::UI::ViewModels::ViewsModelSettings::LedTestViewModel;
+        using LedTestViewModel = Kub3::UI::ViewModels::ViewModelsSettings::LedTestViewModel;
 
         Q_OBJECT
 

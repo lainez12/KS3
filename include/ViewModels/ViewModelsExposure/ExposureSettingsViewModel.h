@@ -5,7 +5,7 @@
 #include <QObject>
 #include <ViewModels/IViewModel.h>
 
-namespace Kub3::UI::ViewModels::ViewsModelsExposure {
+namespace Kub3::UI::ViewModels::ViewModelsExposure {
     class ExposureSettingsViewModel final : public QObject, public IViewModel {
         Q_OBJECT
     public:
@@ -19,6 +19,6 @@ namespace Kub3::UI::ViewModels::ViewsModelsExposure {
         Shared<HAL::MS::IMachineStatusRepo> m_repo;
     };
 
-} // namespace Kub3::UI::ViewModels::ViewsModelsExposure
+} // namespace Kub3::UI::ViewModels::ViewModelsExposure
 
 #endif

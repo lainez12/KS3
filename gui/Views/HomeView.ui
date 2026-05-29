@@ -112,9 +112,6 @@
       </widget>
      </item>
      <item>
-      <widget class="ActionBox" name="maskExpBtn" native="true"/>
-     </item>
-     <item>
       <widget class="ActionBox" name="maskAlignBtn" native="true"/>
      </item>
      <item>

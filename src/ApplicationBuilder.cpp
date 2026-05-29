@@ -69,17 +69,18 @@ namespace Kub3 {
             auto machineStatusViewModel            = std::make_unique<UI::ViewModels::MachineStatusViewModel>(m_repo);
             auto homeViewModel                     = std::make_unique<UI::ViewModels::HomeViewModel>(m_repo);
             auto settingsViewModel                 = std::make_unique<UI::ViewModels::SettingsViewModel>(m_repo);
-            auto exposureSettingsViewModel         = std::make_unique<UI::ViewModels::ViewsModelsExposure::ExposureSettingsViewModel>(m_repo);
-            auto favoriteExposureSettingsViewModel = std::make_unique<UI::ViewModels::ViewsModelsExposure::FavoriteExposureSettingsViewModel>(m_repo);
-            auto recapExposureSettingsViewModel    = std::make_unique<UI::ViewModels::ViewsModelsExposure::RecapExposureSettingsViewModel>(m_repo);
-            auto progressExposureViewModel         = std::make_unique<UI::ViewModels::ViewsModelsExposure::ProgressExposureViewModel>(m_repo);
-            auto completeExposureViewModel         = std::make_unique<UI::ViewModels::ViewsModelsExposure::CompleteExposureViewModel>(m_repo);
-            auto versionViewModel                  = std::make_unique<UI::ViewModels::ViewsModelSettings::VersionViewModel>(m_repo);
-            auto temperatureViewModel              = std::make_unique<UI::ViewModels::ViewsModelSettings::TemperatureViewModel>(m_repo);
-            auto operatingTimeViewModel            = std::make_unique<UI::ViewModels::ViewsModelSettings::OperatingTimesViewModel>(m_repo);
-            auto screenshotViewModel               = std::make_unique<UI::ViewModels::ViewsModelSettings::ScreenshotExportViewModel>(m_repo);
-            auto ledTestViewModel                  = std::make_unique<UI::ViewModels::ViewsModelSettings::LedTestViewModel>(m_repo);
-            auto updateSoftwareViewModel           = std::make_unique<UI::ViewModels::ViewsModelSettings::UpdateSoftwareViewModel>(m_repo);
+            auto saveExposureSettingsViewModel     = std::make_unique<UI::ViewModels::ViewModelsExposure::SaveExposureSettingsViewModel>(m_repo);
+            auto exposureSettingsViewModel         = std::make_unique<UI::ViewModels::ViewModelsExposure::ExposureSettingsViewModel>(m_repo);
+            auto favoriteExposureSettingsViewModel = std::make_unique<UI::ViewModels::ViewModelsExposure::FavoriteExposureSettingsViewModel>(m_repo);
+            auto recapExposureSettingsViewModel    = std::make_unique<UI::ViewModels::ViewModelsExposure::RecapExposureSettingsViewModel>(m_repo);
+            auto progressExposureViewModel         = std::make_unique<UI::ViewModels::ViewModelsExposure::ProgressExposureViewModel>(m_repo);
+            auto completeExposureViewModel         = std::make_unique<UI::ViewModels::ViewModelsExposure::CompleteExposureViewModel>(m_repo);
+            auto versionViewModel                  = std::make_unique<UI::ViewModels::ViewModelsSettings::VersionViewModel>(m_repo);
+            auto temperatureViewModel              = std::make_unique<UI::ViewModels::ViewModelsSettings::TemperatureViewModel>(m_repo);
+            auto operatingTimeViewModel            = std::make_unique<UI::ViewModels::ViewModelsSettings::OperatingTimesViewModel>(m_repo);
+            auto screenshotViewModel               = std::make_unique<UI::ViewModels::ViewModelsSettings::ScreenshotExportViewModel>(m_repo);
+            auto ledTestViewModel                  = std::make_unique<UI::ViewModels::ViewModelsSettings::LedTestViewModel>(m_repo);
+            auto updateSoftwareViewModel           = std::make_unique<UI::ViewModels::ViewModelsSettings::UpdateSoftwareViewModel>(m_repo);
             auto *settingsView                     = new SettingsView(std::move(settingsViewModel), m_mainWindow.get());
             auto *exposureSettingsView             = new ExposureSettingsView(std::move(exposureSettingsViewModel), m_mainWindow.get());
             auto *favoriteExposureSettingsView     = new FavoriteExposureSettingsView(std::move(favoriteExposureSettingsViewModel), m_mainWindow.get());
@@ -92,6 +93,7 @@ namespace Kub3 {
             auto *screenshotView                   = new ScreenshotExportView(std::move(screenshotViewModel), m_mainWindow.get());
             auto *ledTestView                      = new LedTestView(std::move(ledTestViewModel), m_mainWindow.get());
             auto *machineStatusView                = new MachineStatusView(std::move(machineStatusViewModel), m_mainWindow.get());
+            auto *saveExposureSettingsView         = new SaveExposureSettingsView(std::move(saveExposureSettingsViewModel), m_mainWindow.get());
             auto *updateSoftwareView               = new UpdateSoftwareView(std::move(updateSoftwareViewModel), m_mainWindow.get());
             auto *homeView                         = new HomeView(std::move(homeViewModel), m_mainWindow.get());
             m_mainWindow->addView(Kub3::UI::ViewId::HOME_VIEW, homeView);
@@ -108,6 +110,7 @@ namespace Kub3 {
             m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_SCREENSHOT_EXPORT_VIEW, screenshotView);
             m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_LED_TEST_VIEW, ledTestView);
             m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_UPDATE_SOFTWARE_VIEW, updateSoftwareView);
+            m_mainWindow->addView(Kub3::UI::ViewId::SAVE_EXPOSURE_SETTINGS_VIEW, saveExposureSettingsView);
         }
 
         if (m_masterFSM) {

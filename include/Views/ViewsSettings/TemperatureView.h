@@ -13,7 +13,7 @@ namespace Ui {
 
 namespace Kub3::UI::Views::ViewsSettings {
     class TemperatureView final : public SettingsViewBase {
-        using TemperatureViewModel = Kub3::UI::ViewModels::ViewsModelSettings::TemperatureViewModel;
+        using TemperatureViewModel = Kub3::UI::ViewModels::ViewModelsSettings::TemperatureViewModel;
 
         Q_OBJECT
 

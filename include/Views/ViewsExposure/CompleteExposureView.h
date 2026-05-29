@@ -12,7 +12,7 @@ namespace Ui {
 
 namespace Kub3::UI::Views::ViewsExposure {
     class CompleteExposureView final : public ExposureViewBase {
-        using CompleteExposureViewModel = Kub3::UI::ViewModels::ViewsModelsExposure::CompleteExposureViewModel;
+        using CompleteExposureViewModel = Kub3::UI::ViewModels::ViewModelsExposure::CompleteExposureViewModel;
 
         Q_OBJECT
 

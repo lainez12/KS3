@@ -14,8 +14,8 @@ HomeView::HomeView(Unique<HomeViewModel> viewModel, QWidget *parent) :
     m_showCentralLogo = true;
     configTitleBar();
 
-    ui->floodBtn->setup("Flood Exposure", "#8a2be2", ":/icons/flood_icon.svg");              // Purple
-    ui->maskExpBtn->setup("Mask Exposure", "#0000cd", ":/icons/mask-exposure_icon.svg");     // Blue
+    ui->floodBtn->setup("Flood Exposure", "#8a2be2", ":/icons/flood_icon.svg"); // Purple
+    // ui->maskExpBtn->setup("Mask Exposure", "#0000cd", ":/icons/mask-exposure_icon.svg");     // Blue
     ui->maskAlignBtn->setup("Mask Alignment", "#00ced1", ":/icons/mask-alignment_icon.svg"); // Cyan
 
     connect(ui->floodBtn, &ActionBox::clicked, this, &HomeView::onFloodExposureClicked);

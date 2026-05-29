@@ -12,7 +12,7 @@ namespace Ui {
 
 namespace Kub3::UI::Views::ViewsExposure {
     class RecapExposureSettingsView final : public ExposureViewBase {
-        using RecapExposureSettingsViewModel = Kub3::UI::ViewModels::ViewsModelsExposure::RecapExposureSettingsViewModel;
+        using RecapExposureSettingsViewModel = Kub3::UI::ViewModels::ViewModelsExposure::RecapExposureSettingsViewModel;
 
         Q_OBJECT
 

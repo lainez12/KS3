@@ -18,6 +18,7 @@
 // --- UI
 #include <ViewModels/HomeViewModel.h>
 #include <ViewModels/SettingsViewModel.h>
+#include <ViewModels/ViewModelsExposure/SaveExposureSettingsViewModel.h>
 #include <ViewModels/ViewModelsSettings/MachineStatusViewModel.h>
 #include <Views/MainWindow.h>
 

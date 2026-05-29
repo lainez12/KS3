@@ -196,6 +196,7 @@ qt_add_executable(Kub3Software
     src/ViewModels/ViewModelsExposure/RecapExposureSettingsViewModel.cpp
     src/ViewModels/ViewModelsExposure/CompleteExposureViewModel.cpp
     src/ViewModels/ViewModelsExposure/ProgressExposureViewModel.cpp
+    src/ViewModels/ViewModelsExposure/SaveExposureSettingsViewModel.cpp
     src/ViewModels/ViewModelsSettings/VersionViewModel.cpp
     src/ViewModels/ViewModelsSettings/TemperatureViewModel.cpp
     src/ViewModels/ViewModelsSettings/UpdateSoftwareViewModel.cpp
@@ -207,6 +208,7 @@ qt_add_executable(Kub3Software
     src/Views/ViewsExposure/RecapExposureSettingsView.cpp
     src/Views/ViewsExposure/CompleteExposureView.cpp
     src/Views/ViewsExposure/ProgressExposureView.cpp
+    src/Views/ViewsExposure/SaveExposureSettingsView.cpp
     src/Views/MainWindow.cpp
     src/Views/ViewBase.cpp
     src/Views/SettingsViewBase.cpp
@@ -238,6 +240,7 @@ qt_add_executable(Kub3Software
     include/ViewModels/ViewModelsExposure/RecapExposureSettingsViewModel.h
     include/ViewModels/ViewModelsExposure/CompleteExposureViewModel.h
     include/ViewModels/ViewModelsExposure/ProgressExposureViewModel.h
+    include/ViewModels/ViewModelsExposure/SaveExposureSettingsViewModel.h
     include/ViewModels/ViewModelsSettings/VersionViewModel.h
     include/ViewModels/ViewModelsSettings/TemperatureViewModel.h
     include/ViewModels/ViewModelsSettings/UpdateSoftwareViewModel.h
@@ -249,6 +252,7 @@ qt_add_executable(Kub3Software
     include/Views/ViewsExposure/RecapExposureSettingsView.h
     include/Views/ViewsExposure/CompleteExposureView.h
     include/Views/ViewsExposure/ProgressExposureView.h
+    include/Views/ViewsExposure/SaveExposureSettingsView.h
     include/Views/MainWindow.h
     include/Views/ViewBase.h
     include/Views/SettingsViewBase.h

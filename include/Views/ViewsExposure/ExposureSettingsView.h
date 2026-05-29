@@ -12,7 +12,7 @@ namespace Ui {
 
 namespace Kub3::UI::Views::ViewsExposure {
     class ExposureSettingsView final : public ExposureViewBase {
-        using ExposureSettingsViewModel = Kub3::UI::ViewModels::ViewsModelsExposure::ExposureSettingsViewModel;
+        using ExposureSettingsViewModel = Kub3::UI::ViewModels::ViewModelsExposure::ExposureSettingsViewModel;
 
         Q_OBJECT
 

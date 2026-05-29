@@ -12,7 +12,7 @@ namespace Ui {
 
 namespace Kub3::UI::Views::ViewsExposure {
     class ProgressExposureView final : public ExposureViewBase {
-        using ProgressExposureViewModel = Kub3::UI::ViewModels::ViewsModelsExposure::ProgressExposureViewModel;
+        using ProgressExposureViewModel = Kub3::UI::ViewModels::ViewModelsExposure::ProgressExposureViewModel;
 
         Q_OBJECT
 

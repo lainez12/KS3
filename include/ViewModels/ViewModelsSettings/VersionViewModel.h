@@ -5,7 +5,7 @@
 #include <QObject>
 #include <ViewModels/IViewModel.h>
 
-namespace Kub3::UI::ViewModels::ViewsModelSettings {
+namespace Kub3::UI::ViewModels::ViewModelsSettings {
     class VersionViewModel final : public QObject, public IViewModel {
         Q_OBJECT
     public:
@@ -19,6 +19,6 @@ namespace Kub3::UI::ViewModels::ViewsModelSettings {
         Shared<HAL::MS::IMachineStatusRepo> m_repo;
     };
 
-} // namespace Kub3::UI::ViewModels::ViewsModelSettings
+} // namespace Kub3::UI::ViewModels::ViewModelsSettings
 
 #endif

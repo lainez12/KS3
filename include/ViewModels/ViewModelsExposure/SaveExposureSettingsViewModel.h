@@ -1,16 +1,16 @@
-#ifndef RECAPEXPOSURESETTINGSVIEWMODEL_H
-#define RECAPEXPOSURESETTINGSVIEWMODEL_H
+#ifndef SAVEEXPOSURESETTINGSVIEWMODEL_H
+#define SAVEEXPOSURESETTINGSVIEWMODEL_H
 
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
 #include <QObject>
 #include <ViewModels/IViewModel.h>
 
 namespace Kub3::UI::ViewModels::ViewModelsExposure {
-    class RecapExposureSettingsViewModel final : public QObject, public IViewModel {
+    class SaveExposureSettingsViewModel final : public QObject, public IViewModel {
         Q_OBJECT
     public:
-        explicit RecapExposureSettingsViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent = nullptr);
-        ~RecapExposureSettingsViewModel() override;
+        explicit SaveExposureSettingsViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent = nullptr);
+        ~SaveExposureSettingsViewModel() override;
 
         void loadConnections(void) override;
         void unloadConnections(void) override;

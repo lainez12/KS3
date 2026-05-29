@@ -13,7 +13,7 @@ namespace Ui {
 
 namespace Kub3::UI::Views::ViewsSettings {
     class OperatingTimesView final : public SettingsViewBase {
-        using OperatingTimesViewModel = Kub3::UI::ViewModels::ViewsModelSettings::OperatingTimesViewModel;
+        using OperatingTimesViewModel = Kub3::UI::ViewModels::ViewModelsSettings::OperatingTimesViewModel;
 
         Q_OBJECT
 

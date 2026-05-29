@@ -5,7 +5,7 @@
 #include <QObject>
 #include <ViewModels/IViewModel.h>
 
-namespace Kub3::UI::ViewModels::ViewsModelsExposure {
+namespace Kub3::UI::ViewModels::ViewModelsExposure {
     class ProgressExposureViewModel final : public QObject, public IViewModel {
         Q_OBJECT
     public:

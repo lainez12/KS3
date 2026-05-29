@@ -13,7 +13,7 @@ namespace Ui {
 
 namespace Kub3::UI::Views::ViewsSettings {
     class ScreenshotExportView final : public SettingsViewBase {
-        using ScreenshotExportViewModel = Kub3::UI::ViewModels::ViewsModelSettings::ScreenshotExportViewModel;
+        using ScreenshotExportViewModel = Kub3::UI::ViewModels::ViewModelsSettings::ScreenshotExportViewModel;
 
         Q_OBJECT
 

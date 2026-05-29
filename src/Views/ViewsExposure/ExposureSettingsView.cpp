@@ -81,7 +81,7 @@ void ExposureSettingsView::onBackButtonClicked(const QString &buttonId) {
 }
 
 void ExposureSettingsView::onSaveButtonClicked(const QString &buttonId) {
-    // emit s_openView(Kub3::UI::ViewId::SAVE_VIEW);
+    emit s_openView(Kub3::UI::ViewId::SAVE_EXPOSURE_SETTINGS_VIEW);
 }
 
 void ExposureSettingsView::onValidateButtonClicked(const QString &buttonId) {

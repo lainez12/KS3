@@ -19,6 +19,7 @@
 #include "Views/ViewsExposure/FavoriteExposureSettingsView.h"
 #include "Views/ViewsExposure/ProgressExposureView.h"
 #include "Views/ViewsExposure/RecapExposureSettingsView.h"
+#include "Views/ViewsExposure/SaveExposureSettingsView.h"
 #include "Views/ViewsSettings/LedTestView.h"
 #include "Views/ViewsSettings/MachineStatusView.h"
 #include "Views/ViewsSettings/OperatingTimesView.h"
