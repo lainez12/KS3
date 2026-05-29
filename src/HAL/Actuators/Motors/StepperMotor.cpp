@@ -42,18 +42,13 @@ namespace Kub3::HAL::Act
         connect(&m_controlTimer, &QTimer::timeout, this, &StepperMotor::onControlTick);
     }
 
-    void StepperMotor::sendPayload(const uint8_t *payload, uint32_t size) const
+    void StepperMotor::sendPayload(const uint8_t *data, uint32_t size) const
     {
-        auto sizedPayload = QByteArray(reinterpret_cast<const char *>(payload), size);
+        QByteArray payload = QByteArray(reinterpret_cast<const char *>(data), size);
 
-        sizedPayload.push_front(static_cast<uint8_t>(size));
         if (auto driver = m_driver.lock())
         {
-            QMetaObject::invokeMethod(
-                driver.get(),
-                &MCUDriver::ps_sendCommand,
-                Qt::QueuedConnection,
-                sizedPayload);
+            driver->sendCommand(payload);
         }
         else
         {

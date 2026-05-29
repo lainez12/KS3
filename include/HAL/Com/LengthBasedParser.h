@@ -5,12 +5,13 @@
 namespace Kub3::HAL::Com
 {
 
-    class LengthBasedParser : public IProtocolParser
+    class LengthBasedParser final : public IProtocolParser
     {
     public:
-        void feedBytes(const QByteArray &rawData) override final;
-        [[nodiscard]] Optional<packet_t> tryExtractPacket(void) override final;
-        void reset(void) override final;
+        void feedBytes(const QByteArray &rawData) override;
+        void reset(void) override;
+        [[nodiscard]] Optional<packet_t> tryExtractPacket(void) override;
+        QByteArray buildPacket(const QByteArray &data) override;
 
     private:
         QByteArray m_buffer;

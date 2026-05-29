@@ -13,12 +13,7 @@ namespace Kub3::HAL::Act
     {
         if (auto driver = m_driver.lock())
         {
-            QMetaObject::invokeMethod(
-                driver.get(),
-                &MCUDriver::ps_sendCommand,
-                Qt::QueuedConnection,
-                m_openCmd);
-
+            driver->sendCommand(m_openCmd);
             m_isOpen = true;
         }
         else
@@ -31,12 +26,7 @@ namespace Kub3::HAL::Act
     {
         if (auto driver = m_driver.lock())
         {
-            QMetaObject::invokeMethod(
-                driver.get(),
-                &MCUDriver::ps_sendCommand,
-                Qt::QueuedConnection,
-                m_closeCmd);
-
+            driver->sendCommand(m_closeCmd);
             m_isOpen = false;
         }
         else

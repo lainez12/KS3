@@ -195,10 +195,7 @@ namespace Kub3::HAL
     {
         if (auto it = m_subsystems.find(MCU_ARDUINO2_ID); it != m_subsystems.end())
         {
-            MCUSubsystemNode &node = it->second;
-            QByteArray payload(1, 'E');
-
-            QMetaObject::invokeMethod(node.driver.get(), &MCUDriver::ps_sendCommand, Qt::BlockingQueuedConnection, payload);
+            it->second.driver->sendCommand(QByteArray(1, 'E'), Qt::BlockingQueuedConnection);
             emit s_hardwarePowerOffSent(); // Triggers device power off
         }
         else

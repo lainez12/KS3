@@ -1,4 +1,6 @@
 #include <QDebug>
+#include <QPointer>
+#include <QThread>
 
 #include "HAL/MCUDriver.h"
 
@@ -61,8 +63,19 @@ namespace Kub3::HAL
         }
     }
 
-    void MCUDriver::ps_sendCommand(QByteArray payload)
+    void MCUDriver::sendCommand(QByteArray payload, Qt::ConnectionType connType)
     {
-        m_comm->send(std::move(payload));
+        QPointer<MCUDriver> weakThis(this); // To be able to check `this` validity from the lambda
+
+        QMetaObject::invokeMethod(
+            this,
+            [weakThis, payload]() {
+                if (weakThis)
+                {
+                    auto packet = weakThis->m_parser->buildPacket(payload);
+                    weakThis->m_comm->send(std::move(packet));
+                }
+            },
+            connType);
     }
 }

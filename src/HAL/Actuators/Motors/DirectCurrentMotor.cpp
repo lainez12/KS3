@@ -45,11 +45,7 @@ namespace Kub3::HAL::Act
     {
         if (auto driver = m_driver.lock())
         {
-            QMetaObject::invokeMethod(
-                driver.get(),
-                &MCUDriver::ps_sendCommand,
-                Qt::QueuedConnection,
-                payload);
+            driver->sendCommand(payload);
         }
         else
         {

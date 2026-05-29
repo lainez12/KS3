@@ -36,4 +36,14 @@ namespace Kub3::HAL::Com
         };
     }
 
+    QByteArray LengthBasedParser::buildPacket(const QByteArray &data)
+    {
+        QByteArray packet;
+
+        packet.reserve(sizeof(uint8_t) + data.length());
+        packet.append(static_cast<uint8_t>(data.length()));
+        packet.append(data);
+        return packet;
+    }
+
 } // namespace Kub3::HAL::Com
