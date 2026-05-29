@@ -120,6 +120,7 @@ qt_add_library(Kub3Core STATIC
     src/HAL/Actuators/Motors/StepperMotor.cpp
     src/HAL/Actuators/Motors/DirectCurrentMotor.cpp
     src/HAL/Actuators/Valves/SolenoidValve.cpp
+    src/HAL/Actuators/Focal/Focal.cpp
     ## Algorithms
     src/Algorithms/Kinematic/utils.cpp
     src/Algorithms/Kinematic/TrapezoidalGenerator.cpp
@@ -227,6 +228,8 @@ qt_add_library(Kub3Core STATIC
     include/HAL/Actuators/Motors/DirectCurrentMotor.h
     include/HAL/Actuators/Valves/IValve.h
     include/HAL/Actuators/Valves/SolenoidValve.h
+    include/HAL/Actuators/Focal/IFocal.h
+    include/HAL/Actuators/Focal/Focal.h
 
     ## Algorithms
     include/Algorithms/Kinematic/utils.h

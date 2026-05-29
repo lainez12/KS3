@@ -2,6 +2,7 @@
 #include <QRect>
 
 #include <Algorithms/Kinematic/IKinematicGenerator.h>
+#include <HAL/Actuators/Focal/Focal.h>
 #include <HAL/Actuators/Lights/UVExposureHead.h>
 #include <HAL/Actuators/Valves/SolenoidValve.h>
 #include <HAL/Com/LengthBasedParser.h>
@@ -323,6 +324,9 @@ namespace Kub3::HAL
         auto xStageMotor       = createStepperMotor(config, X_STAGE_MOTOR, '5', Kinematics::TRAPEZOIDAL, driver, X_STAGE_ENCODER);
         auto yStageMotor       = createStepperMotor(config, Y_STAGE_MOTOR, '6', Kinematics::TRAPEZOIDAL, driver, Y_STAGE_ENCODER);
         auto thetaStageMotor   = createStepperMotor(config, THETA_STAGE_MOTOR, '7', Kinematics::TRAPEZOIDAL, driver, THETA_STAGE_ENCODER);
+        /// --- Focals
+        auto leftCameraFocal  = std::make_shared<Act::Focal>(LEFT_CAMERA_FOCAL, 'L', driver);
+        auto rightCameraFocal = std::make_shared<Act::Focal>(RIGHT_CAMERA_FOCAL, 'R', driver);
 
         /// --- Motors
         m_actuatorRegistry->registerActuator(std::move(leftCameraXMotor));
@@ -332,6 +336,9 @@ namespace Kub3::HAL
         m_actuatorRegistry->registerActuator(std::move(xStageMotor));
         m_actuatorRegistry->registerActuator(std::move(yStageMotor));
         m_actuatorRegistry->registerActuator(std::move(thetaStageMotor));
+        /// --- Focals
+        m_actuatorRegistry->registerActuator(std::move(leftCameraFocal));
+        m_actuatorRegistry->registerActuator(std::move(rightCameraFocal));
     }
 
     // --- Arduino 2 HAL instanciation helpers
