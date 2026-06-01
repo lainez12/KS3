@@ -230,7 +230,7 @@ namespace Kub3::HAL
 
         // Instanciate sensors and actuators software representations
         this->createArduino1Sensors(router.get());
-        this->createArduino1Actuators(config, arduino1Driver);
+        this->createArduino1Actuators(config, arduino1Driver, router.get());
 
         // Move MCUDriver to its own thread
         arduino1Driver->moveToThread(thread.get());
@@ -308,13 +308,13 @@ namespace Kub3::HAL
         this->registerSensor(router, "7"s, std::move(thetaStageEncoder));
     }
 
-    void HardwareManager::createArduino1Actuators(const Config::hardware_config_t &config, const std::shared_ptr<MCUDriver> &driver)
+    void HardwareManager::createArduino1Actuators(const Config::hardware_config_t &config, const std::shared_ptr<MCUDriver> &driver, Com::PacketRouter *router)
     {
-        using Kinematics = Algorithms::Kinematic::KinematicGeneratorKind;
-
         // ===========================================
         // DOWNWARD PIPELINE (Software --> Hardware)
         // ===========================================
+
+        using Kinematics = Algorithms::Kinematic::KinematicGeneratorKind;
 
         /// --- Motors
         auto leftCameraXMotor  = createStepperMotor(config, LEFT_CAMERA_X_MOTOR, '1', Kinematics::TRAPEZOIDAL, driver, LEFT_CAMERA_X_ENCODER);
@@ -327,6 +327,15 @@ namespace Kub3::HAL
         /// --- Focals
         auto leftCameraFocal  = std::make_shared<Act::Focal>(LEFT_CAMERA_FOCAL, 'L', driver);
         auto rightCameraFocal = std::make_shared<Act::Focal>(RIGHT_CAMERA_FOCAL, 'R', driver);
+
+        /* FEEDBACK HANDLING */
+        router->registerRoute("SS\x00"s, Act::StepperMotor::createFeedbackHandler(leftCameraXMotor));
+        router->registerRoute("SS\x01"s, Act::StepperMotor::createFeedbackHandler(leftCameraYMotor));
+        router->registerRoute("SS\x02"s, Act::StepperMotor::createFeedbackHandler(rightCameraXMotor));
+        router->registerRoute("SS\x03"s, Act::StepperMotor::createFeedbackHandler(rightCameraYMotor));
+        router->registerRoute("SS\x04"s, Act::StepperMotor::createFeedbackHandler(xStageMotor));
+        router->registerRoute("SS\x05"s, Act::StepperMotor::createFeedbackHandler(yStageMotor));
+        router->registerRoute("SS\x07"s, Act::StepperMotor::createFeedbackHandler(thetaStageMotor));
 
         /// --- Motors
         m_actuatorRegistry->registerActuator(std::move(leftCameraXMotor));
@@ -362,7 +371,7 @@ namespace Kub3::HAL
 
         // Instanciate sensors and actuators software representations
         this->createArduino2Sensors(router.get());
-        this->createArduino2Actuators(config, arduino2Driver);
+        this->createArduino2Actuators(config, arduino2Driver, router.get());
 
         // Move MCUDriver to its own thread
         arduino2Driver->moveToThread(thread.get());
@@ -442,7 +451,7 @@ namespace Kub3::HAL
         // TODO: register deck's encoder when communication pattern is defined
     }
 
-    void HardwareManager::createArduino2Actuators(const Config::hardware_config_t &config, const std::shared_ptr<MCUDriver> &driver)
+    void HardwareManager::createArduino2Actuators(const Config::hardware_config_t &config, const std::shared_ptr<MCUDriver> &driver, Com::PacketRouter *router)
     {
         using Kinematics = Algorithms::Kinematic::KinematicGeneratorKind;
 
@@ -458,6 +467,8 @@ namespace Kub3::HAL
         auto waferCompressedAirValve = std::make_shared<Act::SolenoidValve>(WAFER_COMPRESSED_AIR_VALVE, "AC1", "AC0", driver);
         /// --- Exposure head
         auto exposureHead = std::make_shared<Act::UVExposureHead>(UV_EXPOSURE_HEAD, driver);
+
+        // TODO: Add feedback handlers for deck motor, etc...
 
         /// --- Motors
         m_actuatorRegistry->registerActuator(std::move(camerasDeckMotor));
@@ -486,7 +497,7 @@ namespace Kub3::HAL
 
         // Instanciate sensors and actuators software representations
         this->createArduino3Sensors(router.get());
-        this->createArduino3Actuators(config, arduino3Driver);
+        this->createArduino3Actuators(config, arduino3Driver, router.get());
 
         // Move MCUDriver to its own thread
         arduino3Driver->moveToThread(thread.get());
@@ -578,7 +589,7 @@ namespace Kub3::HAL
         this->registerSensor(router, "F3"s, std::move(backForce));
     }
 
-    void HardwareManager::createArduino3Actuators(const Config::hardware_config_t &config, const std::shared_ptr<MCUDriver> &driver)
+    void HardwareManager::createArduino3Actuators(const Config::hardware_config_t &config, const std::shared_ptr<MCUDriver> &driver, Com::PacketRouter *router)
     {
         using Kinematics = Algorithms::Kinematic::KinematicGeneratorKind;
 
@@ -592,6 +603,12 @@ namespace Kub3::HAL
         auto zBackMotor  = createStepperMotor(config, Z_BACK_MOTOR, '3', Kinematics::TRAPEZOIDAL, driver, Z_BACK_ENCODER);
         auto maskMotor   = createStepperMotor(config, MASK_DRAWER_MOTOR, '4', Kinematics::TRAPEZOIDAL, driver, MASK_ENCODER);
         auto waferMotor  = createStepperMotor(config, WAFER_DRAWER_MOTOR, '5', Kinematics::TRAPEZOIDAL, driver, WAFER_ENCODER);
+
+        router->registerRoute("SS\x00"s, Act::StepperMotor::createFeedbackHandler(zLeftMotor));
+        router->registerRoute("SS\x01"s, Act::StepperMotor::createFeedbackHandler(zRightMotor));
+        router->registerRoute("SS\x02"s, Act::StepperMotor::createFeedbackHandler(zBackMotor));
+        router->registerRoute("SS\x03"s, Act::StepperMotor::createFeedbackHandler(maskMotor));
+        router->registerRoute("SS\x04"s, Act::StepperMotor::createFeedbackHandler(waferMotor));
 
         m_actuatorRegistry->registerActuator(std::move(zLeftMotor));
         m_actuatorRegistry->registerActuator(std::move(zRightMotor));
@@ -637,8 +654,15 @@ namespace Kub3::HAL
 
     void HardwareManager::registerSensor(Com::PacketRouter *router, std::string &&route, Shared<Kub3::HAL::Sensors::ISensor> sensor)
     {
+        auto handler = [weakSensor = std::weak_ptr<HAL::Sensors::ISensor>(sensor)](const QByteArray &data) {
+            if (auto safeSensor = weakSensor.lock())
+            {
+                safeSensor->processData(data);
+            }
+        };
+
         // Map the route in the router
-        router->registerRoute(route, sensor);
+        router->registerRoute(route, handler);
         // Store sensor to member vector
         m_sensors.push_back(std::move(sensor));
     }

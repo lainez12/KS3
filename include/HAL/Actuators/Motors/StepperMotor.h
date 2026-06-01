@@ -53,6 +53,9 @@ namespace Kub3::HAL::Act
         };
         [[nodiscard]] double getEncoderPositionMm(void) const override;
 
+    public:
+        static std::function<void(const QByteArray &)> createFeedbackHandler(Shared<StepperMotor> motor);
+
     private slots:
         void onControlTick(void);
 
@@ -60,6 +63,7 @@ namespace Kub3::HAL::Act
         double computePrecisionMm(const Config::kinematic_profile_t &profile) override;
         uint16_t computeFrequencyHz(double velocityMmS, uint8_t stepFraction) const;
         void sendPayload(const uint8_t *payload, uint32_t size) const;
+        void resetInternalState(void);
 
     private:
         const std::string m_id;

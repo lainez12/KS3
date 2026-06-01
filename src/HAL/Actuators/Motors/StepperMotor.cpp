@@ -42,20 +42,6 @@ namespace Kub3::HAL::Act
         connect(&m_controlTimer, &QTimer::timeout, this, &StepperMotor::onControlTick);
     }
 
-    void StepperMotor::sendPayload(const uint8_t *data, uint32_t size) const
-    {
-        QByteArray payload = QByteArray(reinterpret_cast<const char *>(data), size);
-
-        if (auto driver = m_driver.lock())
-        {
-            driver->sendCommand(payload);
-        }
-        else
-        {
-            throw std::runtime_error("Attempted to send command, but MCUDriver is dead. Actuator: " + m_id);
-        }
-    }
-
     void StepperMotor::moveAbsolute(double position_mm, Config::kinematic_profile_t profile)
     {
         QMetaObject::invokeMethod(
@@ -174,9 +160,7 @@ namespace Kub3::HAL::Act
         QMetaObject::invokeMethod(
             this,
             [this]() {
-                m_controlTimer.stop();
-                m_lastSentHz.reset();
-                m_lastTickNsecs = 0;
+                this->resetInternalState();
 
                 const uint8_t payload[] = {'1', m_byteId};
                 sendPayload(payload, sizeof(payload));
@@ -214,6 +198,26 @@ namespace Kub3::HAL::Act
         const int32_t encoderValue = m_encoderValueGetter ? m_encoderValueGetter() : 0;
 
         return static_cast<double>(encoderValue) * (m_hwConfig.screwPitchMm / static_cast<double>(m_hwConfig.encoderTopsPerRev));
+    }
+
+    std::function<void(const QByteArray &)> StepperMotor::createFeedbackHandler(Shared<StepperMotor> motor)
+    {
+        // TODO:
+        // - Currently no way to know the message kind using the current communication protocol
+        // - Thankfully for now only one exists: motor stopped
+
+        return [weakMotor = Weak<StepperMotor>(motor)](const QByteArray &payload) {
+            if (auto safeMotor = weakMotor.lock())
+            {
+                if (!payload.isEmpty())
+                {
+#if defined(BUILD_DEBUG)
+                    qDebug().nospace() << "[StepperMotor](" << safeMotor->m_id << ") Received feedback: Stopped with code " << payload.toHex(' ');
+#endif
+                    QMetaObject::invokeMethod(safeMotor.get(), [m = safeMotor]() { m->resetInternalState(); }, Qt::AutoConnection);
+                }
+            }
+        };
     }
 
     void StepperMotor::onControlTick(void)
@@ -282,6 +286,27 @@ namespace Kub3::HAL::Act
         const double roundedHz  = std::round(velocityMmS * stepsPerMm);
 
         return static_cast<uint16_t>(std::clamp(roundedHz, 0.0, static_cast<double>(UINT16_MAX)));
+    }
+
+    void StepperMotor::sendPayload(const uint8_t *data, uint32_t size) const
+    {
+        QByteArray payload = QByteArray(reinterpret_cast<const char *>(data), size);
+
+        if (auto driver = m_driver.lock())
+        {
+            driver->sendCommand(payload);
+        }
+        else
+        {
+            throw std::runtime_error("Attempted to send command, but MCUDriver is dead. Actuator: " + m_id);
+        }
+    }
+
+    void StepperMotor::resetInternalState(void)
+    {
+        m_controlTimer.stop();
+        m_lastSentHz.reset();
+        m_lastTickNsecs = 0;
     }
 
 } // namespace Kub3::HAL::Act

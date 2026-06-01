@@ -29,7 +29,7 @@ namespace Kub3::HAL::MS
         [[nodiscard]] virtual std::vector<std::string> getRegisteredKeys() const               = 0;
 
         template <typename T>
-        void setSensor(const std::string &key, T value) // TODO: check type safety
+        void setSensor(const std::string &key, T value)
         {
             setSensorRaw(key, SensorValue(value));
         }

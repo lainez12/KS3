@@ -7,7 +7,7 @@ namespace Kub3::HAL::Sensors
 {
 
     template <typename T>
-    class Sensor : public ISensor
+    class Sensor final : public ISensor
     {
     public:
         using Mapper = std::function<T(const QByteArray &)>;
@@ -24,7 +24,7 @@ namespace Kub3::HAL::Sensors
         }
 
         // The implementation of the base interface
-        void processData(const QByteArray &data)
+        void processData(const QByteArray &data) override
         {
             if (!m_mapper)
             {

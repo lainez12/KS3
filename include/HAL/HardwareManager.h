@@ -67,17 +67,17 @@ namespace Kub3::HAL
         // Arduino1 subsystem
         void setupArduino1Subsystem(const Config::hardware_config_t &config);
         void createArduino1Sensors(Com::PacketRouter *router);
-        void createArduino1Actuators(const Config::hardware_config_t &config, const std::shared_ptr<MCUDriver> &driver);
+        void createArduino1Actuators(const Config::hardware_config_t &config, const std::shared_ptr<MCUDriver> &driver, Com::PacketRouter *router);
 
         // Arduino2 subsystem
         void setupArduino2Subsystem(const Config::hardware_config_t &config);
         void createArduino2Sensors(Com::PacketRouter *router);
-        void createArduino2Actuators(const Config::hardware_config_t &config, const std::shared_ptr<MCUDriver> &driver);
+        void createArduino2Actuators(const Config::hardware_config_t &config, const std::shared_ptr<MCUDriver> &driver, Com::PacketRouter *router);
 
         // Arduino3 subsystem
         void setupArduino3Subsystem(const Config::hardware_config_t &config);
         void createArduino3Sensors(Com::PacketRouter *router);
-        void createArduino3Actuators(const Config::hardware_config_t &config, const std::shared_ptr<MCUDriver> &driver);
+        void createArduino3Actuators(const Config::hardware_config_t &config, const std::shared_ptr<MCUDriver> &driver, Com::PacketRouter *router);
 
         // Cameras subsystem
         void setupCamerasSubsystem(const Config::hardware_config_t &config);
