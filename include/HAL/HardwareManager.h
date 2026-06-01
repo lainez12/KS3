@@ -43,6 +43,14 @@ namespace Kub3::HAL
         {
             return m_actuatorRegistry;
         }
+        [[nodiscard]] const std::vector<std::string> &getRegisteredMotorIds() const
+        {
+            return m_registeredMotorIds;
+        }
+        [[nodiscard]] const std::vector<std::string> &getRegisteredFocalIds() const
+        {
+            return m_registeredFocalIds;
+        }
 
     signals:
         void s_hardwarePowerOffSent(void);
@@ -91,6 +99,10 @@ namespace Kub3::HAL
         std::unordered_map<QString, MCUSubsystemNode> m_subsystems;
         std::unordered_map<QString, CameraSubsystemNode> m_cameras;
         std::vector<Shared<Sensors::ISensor>> m_sensors; // TODO: What for ?
+
+        // Registered actuators ids
+        std::vector<std::string> m_registeredMotorIds;
+        std::vector<std::string> m_registeredFocalIds;
     };
 
 }

@@ -4,28 +4,38 @@
 qt_add_executable(Kub3Tester
     MANUAL_FINALIZATION
     # Sources
+    src/main.cpp
     src/controllers/ProcedureTestController.cpp
     src/controllers/MotorTestController.cpp
+    src/controllers/FocalTestController.cpp
     src/ApplicationBuilder.cpp
     src/services/MotorTestService.cpp
-    src/views/ProcedureTestView.cpp
-    src/views/components/RealTimeCurveWidget.cpp
+    src/services/FocalTestService.cpp
     src/views/MotorTestView.cpp
-    src/main.cpp
+    src/views/ProcedureTestView.cpp
+    src/views/FocalTestView.cpp
+    src/views/components/RealTimeCurveWidget.cpp
+    src/views/components/FocalTestModule.cpp
     src/TesterMainWindow.cpp
     src/view_models/ProcedureTestViewModel.cpp
     src/view_models/MotorTestViewModel.cpp
+    src/view_models/FocalTestViewModel.cpp
     # Headers
     include/controllers/MotorTestController.h
     include/controllers/ProcedureTestController.h
+    include/controllers/FocalTestController.h
     include/TesterMainWindow.h
     include/ApplicationBuilder.h
     include/services/MotorTestService.h
+    include/services/FocalTestService.h
     include/views/MotorTestView.h
-    include/views/components/RealTimeCurveWidget.h
     include/views/ProcedureTestView.h
+    include/views/FocalTestView.h
+    include/views/components/RealTimeCurveWidget.h
+    include/views/components/FocalTestModule.h
     include/view_models/ProcedureTestViewModel.h
     include/view_models/MotorTestViewModel.h
+    include/view_models/FocalTestViewModel.h
     # UI
     gui/resources.qrc
     gui/TesterMainWindow.ui

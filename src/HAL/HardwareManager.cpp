@@ -339,6 +339,8 @@ namespace Kub3::HAL
         /// --- Focals
         m_actuatorRegistry->registerActuator(std::move(leftCameraFocal));
         m_actuatorRegistry->registerActuator(std::move(rightCameraFocal));
+        m_registeredFocalIds.push_back(LEFT_CAMERA_FOCAL);
+        m_registeredFocalIds.push_back(RIGHT_CAMERA_FOCAL);
     }
 
     // --- Arduino 2 HAL instanciation helpers
@@ -654,14 +656,13 @@ namespace Kub3::HAL
         auto it = config.motors.find(motorId);
         if (it == config.motors.end())
             throw std::runtime_error(std::format("Hardware configuration not found for key: '{}'", motorId.toStdString()));
-
         auto *hwProps = std::get_if<Config::stepper_hw_properties_t>(&it->second.hwProperties);
         if (!hwProps)
             throw std::runtime_error(std::format("'{}' configuration doesn't match expected type (stepper)", motorId.toStdString()));
-
         auto kinematicEngine = Algorithms::Kinematic::buildKinematicGenerator(kineGenKind);
         auto encoderGetter   = [repo = m_repo, encoderId]() { return HAL::MS::readInt32(repo, encoderId); };
 
+        m_registeredMotorIds.push_back(motorId.toStdString());
         return std::make_shared<Act::StepperMotor>(
             it->second.id, byteId, driver, *hwProps,
             std::move(encoderGetter), encoderId,

@@ -1,3 +1,7 @@
+#if defined(BUILD_DEBUG)
+#include <QDebug>
+#endif
+
 #include <HAL/Actuators/Focal/Focal.h>
 
 namespace Kub3::HAL::Act
@@ -40,17 +44,17 @@ namespace Kub3::HAL::Act
             throw std::runtime_error(std::format("Attempted to send command, but MCUDriver is dead. Actuator: '{}'", m_id));
         }
 
-        const uint8_t enableByte = (m_enabled ? '1' : '0');
-        const uint8_t data[]     = {
-            '4',
-            m_byteId,
-            'F',
-            enableByte,
-            static_cast<uint8_t>((m_value >> 8) & 0xFF),
-            static_cast<uint8_t>(m_value & 0xFF),
-        };
-        QByteArray command(reinterpret_cast<const char *>(data), sizeof(data));
+        const char enableByte = (m_enabled ? '1' : '0');
+        QByteArray command;
 
+        command.append('4');
+        command.append(m_byteId);
+        command.append('F');
+        command.append(enableByte);
+        command.append(QByteArray::number(m_value));
+
+#if defined(BUILD_DEBUG)
+        qDebug() << "Focal sending (Hex):" << command.toHex(' ') << "| (ASCII):" << command;
+#endif
         driver->sendCommand(command);
     }
-}
