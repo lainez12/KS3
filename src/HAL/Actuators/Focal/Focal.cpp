@@ -58,3 +58,4 @@ namespace Kub3::HAL::Act
 #endif
         driver->sendCommand(command);
     }
+}
