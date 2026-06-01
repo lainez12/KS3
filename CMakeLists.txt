@@ -20,7 +20,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-set(CMAKE_AUTOUIC_SEARCH_PATHS "gui;gui/Views;gui/Components;gui/Views/ViewsSettings;gui/Views/ViewsExposure;tools/configurator/gui")
+set(CMAKE_AUTOUIC_SEARCH_PATHS "gui;gui/Views;gui/Components;gui/Views/ViewsSettings;gui/Views/ViewsExposure;gui/Views/ViewsAlignment;tools/configurator/gui")
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -221,14 +221,18 @@ qt_add_executable(Kub3Software
     src/Views/Components/NavButtonManager.cpp
     src/Views/DebugView.cpp
     src/Views/HomeView.cpp
-    src/Views/ViewsSettings/MachineStatusView.cpp
     src/Views/SettingsView.cpp
+    src/Views/ViewsSettings/MachineStatusView.cpp
     src/Views/ViewsSettings/VersionView.cpp
     src/Views/ViewsSettings/TemperatureView.cpp
     src/Views/ViewsSettings/UpdateSoftwareView.cpp
     src/Views/ViewsSettings/ScreenshotExportView.cpp
     src/Views/ViewsSettings/LedTestView.cpp
     src/Views/ViewsSettings/OperatingTimesView.cpp
+    src/Views/ViewsAlignment/LoadParametersView.cpp
+    src/Views/ViewsAlignment/SaveParametersView.cpp
+    src/Views/ViewsAlignment/VisualisationView.cpp
+    src/Views/ViewsAlignment/DistanceView.cpp
     src/Views/Components/FavoriteExposureSettingButton.cpp
     src/Views/Components/NavButton.cpp
     src/Views/Components/UpBar.cpp
@@ -270,14 +274,18 @@ qt_add_executable(Kub3Software
     include/Views/Components/NavButtonManager.h
     include/Views/DebugView.h
     include/Views/HomeView.h
-    include/Views/ViewsSettings/MachineStatusView.h
     include/Views/SettingsView.h
+    include/Views/ViewsSettings/MachineStatusView.h
     include/Views/ViewsSettings/TemperatureView.h
     include/Views/ViewsSettings/VersionView.h
     include/Views/ViewsSettings/UpdateSoftwareView.h
     include/Views/ViewsSettings/ScreenshotExportView.h
     include/Views/ViewsSettings/LedTestView.h
     include/Views/ViewsSettings/OperatingTimesView.h
+    include/Views/ViewsAlignment/LoadParametersView.h
+    include/Views/ViewsAlignment/SaveParametersView.h
+    include/Views/ViewsAlignment/VisualisationView.h
+    include/Views/ViewsAlignment/DistanceView.h
     include/Views/Components/FavoriteExposureSettingButton.h
     include/Views/Components/NavButton.h
     include/Views/Components/UpBar.h
@@ -293,14 +301,18 @@ qt_add_executable(Kub3Software
     gui/Views/ViewsExposure/CompleteExposureView.ui
     gui/Views/ViewsExposure/ProgressExposureView.ui
     gui/Views/HomeView.ui
-    gui/Views/ViewsSettings/MachineStatusView.ui
     gui/Views/SettingsView.ui
+    gui/Views/ViewsSettings/MachineStatusView.ui
     gui/Views/ViewsSettings/VersionView.ui
     gui/Views/ViewsSettings/TemperatureView.ui
     gui/Views/ViewsSettings/UpdateSoftwareView.ui
     gui/Views/ViewsSettings/ScreenshotExportView.ui
     gui/Views/ViewsSettings/LedTestView.ui
     gui/Views/ViewsSettings/OperatingTimesView.ui
+    gui/Views/ViewsAlignment/LoadParametersView.ui
+    gui/Views/ViewsAlignment/SaveParametersView.ui
+    gui/Views/ViewsAlignment/VisualisationView.ui
+    gui/Views/ViewsAlignment/DistanceView.ui
 )
 
 qt_finalize_target(Kub3Software)
