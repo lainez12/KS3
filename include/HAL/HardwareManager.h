@@ -98,7 +98,7 @@ namespace Kub3::HAL
 
         std::unordered_map<QString, MCUSubsystemNode> m_subsystems;
         std::unordered_map<QString, CameraSubsystemNode> m_cameras;
-        std::vector<Shared<Sensors::ISensor>> m_sensors; // TODO: What for ?
+        std::vector<Shared<Sensors::ISensor>> m_sensors; // Retain ownership of all the sensors instances to keep them alive
 
         // Registered actuators ids
         std::vector<std::string> m_registeredMotorIds;

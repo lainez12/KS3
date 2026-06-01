@@ -1,5 +1,7 @@
 #pragma once
 
+#include <atomic>
+
 #include <HAL/MCUDriver.h>
 #include <utils.h>
 
@@ -39,8 +41,8 @@ namespace Kub3::HAL::Act
         const uint8_t m_byteId;
         Weak<MCUDriver> m_driver;
         // State vars
-        bool m_enabled   = false;
-        uint16_t m_value = 0;
+        std::atomic<bool> m_enabled   = false;
+        std::atomic<uint16_t> m_value = 0;
     };
 
 }

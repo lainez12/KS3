@@ -39,15 +39,6 @@ namespace Kub3::Tools::Tester
         m_tickTimer.setTimerType(Qt::PreciseTimer);
 
         connect(&m_tickTimer, &QTimer::timeout, this, &ProcedureTestController::onTick);
-
-        m_allServices = {
-            m_homingService.get(),
-            m_drawerService.get(),
-            m_stowageService.get(),
-            m_alignmentService.get(),
-            m_visionService.get(),
-            m_contactService.get(),
-            m_exposureService.get()};
     }
 
     ProcedureTestController::~ProcedureTestController()
@@ -57,7 +48,7 @@ namespace Kub3::Tools::Tester
 
     void ProcedureTestController::start()
     {
-        // Create services so they are in the same thread
+        // Create services so they are in the same thread as the controller
         m_homingService    = std::make_shared<Services::HomingService>(m_registry, m_repo, m_processConfig);
         m_drawerService    = std::make_shared<ConveyorDrawerService>(m_registry, m_repo, m_processConfig);
         m_stowageService   = std::make_shared<Services::StowageService>(m_registry, m_repo, m_processConfig);
@@ -65,6 +56,15 @@ namespace Kub3::Tools::Tester
         m_visionService    = std::make_shared<Services::VisionService>(m_registry, m_repo, m_processConfig);
         m_contactService   = std::make_shared<Services::ContactService>(m_registry, m_repo, m_processConfig, m_hwConfig);
         m_exposureService  = std::make_shared<Services::ExposureService>(m_registry);
+
+        m_allServices = {
+            m_homingService.get(),
+            m_drawerService.get(),
+            m_stowageService.get(),
+            m_alignmentService.get(),
+            m_visionService.get(),
+            m_contactService.get(),
+            m_exposureService.get()};
     }
 
     void ProcedureTestController::stop()

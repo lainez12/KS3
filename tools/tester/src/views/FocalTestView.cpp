@@ -39,7 +39,10 @@ namespace Kub3::Tools::Tester
         QLayoutItem *child;
         while ((child = m_modulesLayout->takeAt(0)) != nullptr)
         {
-            delete child->widget();
+            if (auto *widget = child->widget())
+            {
+                widget->deleteLater();
+            }
             delete child;
         }
 
