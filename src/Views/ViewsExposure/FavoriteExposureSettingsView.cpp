@@ -45,7 +45,7 @@ void FavoriteExposureSettingsView::setNewNavButtonsConfigs() {
 }
 
 void FavoriteExposureSettingsView::onBackButtonClicked(const QString &buttonId) {
-    // emit s_openView(Kub3::UI::ViewId::BACK_VIEW);
+    emit s_openView(Kub3::UI::ViewId::EXPOSURE_SETTINGS_VIEW);
 }
 
 void FavoriteExposureSettingsView::onValidateButtonClicked(const QString &buttonId) {

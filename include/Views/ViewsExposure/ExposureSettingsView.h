@@ -24,7 +24,6 @@ namespace Kub3::UI::Views::ViewsExposure {
         void resizeEvent(QResizeEvent *event) override;
 
     private:
-        void setNewNavButtonsConfigs();
         void onBackButtonClicked(const QString &buttonId);
         void onSaveButtonClicked(const QString &buttonId);
         void onValidateButtonClicked(const QString &buttonId) override;

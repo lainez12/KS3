@@ -3,8 +3,8 @@
 #include "ui_RecapExposureSettingsView.h"
 #include <QString>
 
-#define ID_BTN_BACK "B"
-#define ID_BTN_SAVE "S"
+#define ID_BTN_BACK     "B"
+#define ID_BTN_SAVE     "S"
 #define ID_BTN_VALIDATE "V"
 
 RecapExposureSettingsView::RecapExposureSettingsView(Unique<RecapExposureSettingsViewModel> viewModel, QWidget *parent) :
@@ -37,7 +37,7 @@ void RecapExposureSettingsView::setNewNavButtonsConfigs() {
 }
 
 void RecapExposureSettingsView::onBackButtonClicked(const QString &buttonId) {
-    // emit s_openView(Kub3::UI::ViewId::BACK_VIEW);
+    emit s_openView(Kub3::UI::ViewId::EXPOSURE_SETTINGS_VIEW);
 }
 
 void RecapExposureSettingsView::onValidateButtonClicked(const QString &buttonId) {

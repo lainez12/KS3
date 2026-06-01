@@ -18,8 +18,25 @@ ExposureSettingsView::ExposureSettingsView(Unique<ExposureSettingsViewModel> vie
 
     ui->inputsStack->setCurrentWidget(ui->pageContinuous);
 
-    setNewNavButtonsConfigs();
+    NavButtonConfig saveBtn(
+        "Save",
+        QColor(BLUE_COLOR),
+        QColor(BLUE_COLOR_SHADOW),
+        ":/icons/save.svg",
+        ID_BTN_SAVE,
+        std::bind(&ExposureSettingsView::onSaveButtonClicked, this, std::placeholders::_1));
+    addNavButton("right", saveBtn);
+
     createNavButtonsConfigs();
+
+    NavButtonConfig backBtn(
+        "Back",
+        QColor(BLUE_COLOR),
+        QColor(BLUE_COLOR_SHADOW),
+        ":/icons/back.svg",
+        ID_BTN_BACK,
+        std::bind(&ExposureSettingsView::onBackButtonClicked, this, std::placeholders::_1));
+    addNavButton("left", backBtn);
     setDefaultTitleBar("Exposure Settings");
 
     setUpShawedBoxStyle(ui->minContinuouspinBox);
@@ -53,27 +70,6 @@ ExposureSettingsView::~ExposureSettingsView() {
 
 void ExposureSettingsView::resizeEvent(QResizeEvent *ev) {
     QWidget::resizeEvent(ev);
-}
-
-void ExposureSettingsView::setNewNavButtonsConfigs() {
-
-    NavButtonConfig backBtn(
-        "Back",
-        QColor(BLUE_COLOR),
-        QColor(BLUE_COLOR_SHADOW),
-        ":/icons/back.svg",
-        ID_BTN_BACK,
-        std::bind(&ExposureSettingsView::onBackButtonClicked, this, std::placeholders::_1));
-    addNavButton("left", backBtn);
-
-    NavButtonConfig saveBtn(
-        "Save",
-        QColor(BLUE_COLOR),
-        QColor(BLUE_COLOR_SHADOW),
-        ":/icons/save.svg",
-        ID_BTN_SAVE,
-        std::bind(&ExposureSettingsView::onSaveButtonClicked, this, std::placeholders::_1));
-    addNavButton("right", saveBtn);
 }
 
 void ExposureSettingsView::onBackButtonClicked(const QString &buttonId) {
