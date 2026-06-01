@@ -189,7 +189,6 @@ qt_add_executable(Kub3Software
     src/ApplicationBuilder.cpp
     src/ViewModels/HomeViewModel.cpp
     src/ViewModels/DebugViewModel.cpp
-    src/ViewModels/ViewModelsSettings/MachineStatusViewModel.cpp
     src/ViewModels/SettingsViewModel.cpp
     src/ViewModels/ViewModelsExposure/ExposureSettingsViewModel.cpp
     src/ViewModels/ViewModelsExposure/FavoriteExposureSettingsViewModel.cpp
@@ -197,12 +196,17 @@ qt_add_executable(Kub3Software
     src/ViewModels/ViewModelsExposure/CompleteExposureViewModel.cpp
     src/ViewModels/ViewModelsExposure/ProgressExposureViewModel.cpp
     src/ViewModels/ViewModelsExposure/SaveExposureSettingsViewModel.cpp
+    src/ViewModels/ViewModelsSettings/MachineStatusViewModel.cpp
     src/ViewModels/ViewModelsSettings/VersionViewModel.cpp
     src/ViewModels/ViewModelsSettings/TemperatureViewModel.cpp
     src/ViewModels/ViewModelsSettings/UpdateSoftwareViewModel.cpp
     src/ViewModels/ViewModelsSettings/ScreenshotExportViewModel.cpp
     src/ViewModels/ViewModelsSettings/LedTestViewModel.cpp
     src/ViewModels/ViewModelsSettings/OperatingTimesViewModel.cpp
+    src/ViewModels/ViewModelsAlignment/LoadParametersViewModel.cpp
+    src/ViewModels/ViewModelsAlignment/SaveParametersViewModel.cpp
+    src/ViewModels/ViewModelsAlignment/VisualisationViewModel.cpp
+    src/ViewModels/ViewModelsAlignment/DistanceViewModel.cpp
     src/Views/ViewsExposure/ExposureSettingsView.cpp
     src/Views/ViewsExposure/FavoriteExposureSettingsView.cpp
     src/Views/ViewsExposure/RecapExposureSettingsView.cpp
@@ -211,6 +215,7 @@ qt_add_executable(Kub3Software
     src/Views/ViewsExposure/SaveExposureSettingsView.cpp
     src/Views/MainWindow.cpp
     src/Views/ViewBase.cpp
+    src/Views/AlignmentViewBase.cpp
     src/Views/SettingsViewBase.cpp
     src/Views/ExposureViewBase.cpp
     src/Views/Components/NavButtonManager.cpp
@@ -233,7 +238,6 @@ qt_add_executable(Kub3Software
     include/ApplicationBuilder.h
     include/ViewModels/HomeViewModel.h
     include/ViewModels/DebugViewModel.h
-    include/ViewModels/ViewModelsSettings/MachineStatusViewModel.h
     include/ViewModels/SettingsViewModel.h
     include/ViewModels/ViewModelsExposure/ExposureSettingsViewModel.h
     include/ViewModels/ViewModelsExposure/FavoriteExposureSettingsViewModel.h
@@ -241,12 +245,17 @@ qt_add_executable(Kub3Software
     include/ViewModels/ViewModelsExposure/CompleteExposureViewModel.h
     include/ViewModels/ViewModelsExposure/ProgressExposureViewModel.h
     include/ViewModels/ViewModelsExposure/SaveExposureSettingsViewModel.h
+    include/ViewModels/ViewModelsSettings/MachineStatusViewModel.h
     include/ViewModels/ViewModelsSettings/VersionViewModel.h
     include/ViewModels/ViewModelsSettings/TemperatureViewModel.h
     include/ViewModels/ViewModelsSettings/UpdateSoftwareViewModel.h
     include/ViewModels/ViewModelsSettings/ScreenshotExportViewModel.h
     include/ViewModels/ViewModelsSettings/LedTestViewModel.h
     include/ViewModels/ViewModelsSettings/OperatingTimesViewModel.h
+    include/ViewModels/ViewModelsAlignment/LoadParametersViewModel.h
+    include/ViewModels/ViewModelsAlignment/SaveParametersViewModel.h
+    include/ViewModels/ViewModelsAlignment/VisualisationViewModel.h
+    include/ViewModels/ViewModelsAlignment/DistanceViewModel.h
     include/Views/ViewsExposure/ExposureSettingsView.h
     include/Views/ViewsExposure/FavoriteExposureSettingsView.h
     include/Views/ViewsExposure/RecapExposureSettingsView.h
@@ -255,6 +264,7 @@ qt_add_executable(Kub3Software
     include/Views/ViewsExposure/SaveExposureSettingsView.h
     include/Views/MainWindow.h
     include/Views/ViewBase.h
+    include/Views/AlignmentViewBase.h
     include/Views/SettingsViewBase.h
     include/Views/ExposureViewBase.h
     include/Views/Components/NavButtonManager.h
