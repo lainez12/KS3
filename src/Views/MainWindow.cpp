@@ -214,4 +214,7 @@ void MainWindow::paintEvent(QPaintEvent *event) {
     painter.setRenderHint(QPainter::SmoothPixmapTransform);
     painter.fillRect(this->rect(), Qt::white); // Draw the base white background for the whole window
     painter.drawPixmap(x, y, scaled);          // Draw the background image scaled pixmap
+
+    int margin = this->width() * 0.05;                       // 5% margin on the left and right
+    ui->bottomBar->setContentsMargins(margin, 0, margin, 0); // Apply the margin to the bottom bar
 }

@@ -19,3 +19,12 @@ LoadParametersView::~LoadParametersView() {
 void LoadParametersView::resizeEvent(QResizeEvent *ev) {
     QWidget::resizeEvent(ev);
 }
+
+void LoadParametersView::setNewNavButtonsConfigs() {
+}
+
+void LoadParametersView::onBackButtonClicked(const QString &buttonId) {
+}
+
+void LoadParametersView::onValidateButtonClicked(const QString &buttonId) {
+}

@@ -20,7 +20,7 @@ HomeView::HomeView(Unique<HomeViewModel> viewModel, QWidget *parent) :
 
     connect(ui->floodBtn, &ActionBox::clicked, this, &HomeView::onFloodExposureClicked);
     // connect(ui->maskExpBtn, &ActionBox::clicked, this, &HomeView::onMaskExposureClicked);
-    // connect(ui->maskAlignBtn, &ActionBox::clicked, this, &HomeView::onMaskAlignmentClicked);
+    connect(ui->maskAlignBtn, &ActionBox::clicked, this, &HomeView::onMaskAlignmentClicked);
 
     this->updateMachineLogo(this->height());
 }
@@ -106,4 +106,8 @@ void HomeView::onCloseButtonCliked(const QString &buttonId) {
 
 void HomeView::onFloodExposureClicked() {
     emit s_openView(Kub3::UI::ViewId::EXPOSURE_SETTINGS_VIEW);
+}
+
+void HomeView::onMaskAlignmentClicked() {
+    emit s_openView(Kub3::UI::ViewId::ALIGNMENT_DISTANCE_VIEW);
 }

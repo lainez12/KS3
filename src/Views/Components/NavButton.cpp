@@ -40,6 +40,7 @@ void NavButton::setup(const QString &text, const QColor &colorEnabled, const QCo
     this->colorEnabled  = colorEnabled;
     this->colorDisabled = colorDisabled;
 
+    m_text->setStyleSheet(QString("color: %1; font-size: 12px;").arg(colorEnabled.name()));
     if (!iconPath.isEmpty())
         this->setIcon(iconPath);
 }

@@ -81,6 +81,10 @@ namespace Kub3 {
             auto screenshotViewModel               = std::make_unique<UI::ViewModels::ViewModelsSettings::ScreenshotExportViewModel>(m_repo);
             auto ledTestViewModel                  = std::make_unique<UI::ViewModels::ViewModelsSettings::LedTestViewModel>(m_repo);
             auto updateSoftwareViewModel           = std::make_unique<UI::ViewModels::ViewModelsSettings::UpdateSoftwareViewModel>(m_repo);
+            auto distanceViewModel                 = std::make_unique<UI::ViewModels::ViewModelsAlignment::DistanceViewModel>(m_repo);
+            auto visualisationViewModel            = std::make_unique<UI::ViewModels::ViewModelsAlignment::VisualisationViewModel>(m_repo);
+            auto loadParametersViewModel           = std::make_unique<UI::ViewModels::ViewModelsAlignment::LoadParametersViewModel>(m_repo);
+            auto saveParametersViewModel           = std::make_unique<UI::ViewModels::ViewModelsAlignment::SaveParametersViewModel>(m_repo);
             auto *settingsView                     = new SettingsView(std::move(settingsViewModel), m_mainWindow.get());
             auto *exposureSettingsView             = new ExposureSettingsView(std::move(exposureSettingsViewModel), m_mainWindow.get());
             auto *favoriteExposureSettingsView     = new FavoriteExposureSettingsView(std::move(favoriteExposureSettingsViewModel), m_mainWindow.get());
@@ -95,6 +99,10 @@ namespace Kub3 {
             auto *machineStatusView                = new MachineStatusView(std::move(machineStatusViewModel), m_mainWindow.get());
             auto *saveExposureSettingsView         = new SaveExposureSettingsView(std::move(saveExposureSettingsViewModel), m_mainWindow.get());
             auto *updateSoftwareView               = new UpdateSoftwareView(std::move(updateSoftwareViewModel), m_mainWindow.get());
+            auto *distanceView                     = new DistanceView(std::move(distanceViewModel), m_mainWindow.get());
+            auto *visualisationView                = new VisualisationView(std::move(visualisationViewModel), m_mainWindow.get());
+            auto *loadParametersView               = new LoadParametersView(std::move(loadParametersViewModel), m_mainWindow.get());
+            auto *saveParametersView               = new SaveParametersView(std::move(saveParametersViewModel), m_mainWindow.get());
             auto *homeView                         = new HomeView(std::move(homeViewModel), m_mainWindow.get());
             m_mainWindow->addView(Kub3::UI::ViewId::HOME_VIEW, homeView);
             m_mainWindow->addView(Kub3::UI::ViewId::MACHINE_STATUS_VIEW, machineStatusView);
@@ -111,6 +119,10 @@ namespace Kub3 {
             m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_LED_TEST_VIEW, ledTestView);
             m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_UPDATE_SOFTWARE_VIEW, updateSoftwareView);
             m_mainWindow->addView(Kub3::UI::ViewId::SAVE_EXPOSURE_SETTINGS_VIEW, saveExposureSettingsView);
+            m_mainWindow->addView(Kub3::UI::ViewId::ALIGNMENT_DISTANCE_VIEW, distanceView);
+            m_mainWindow->addView(Kub3::UI::ViewId::ALIGNMENT_VISUALISATION_VIEW, visualisationView);
+            m_mainWindow->addView(Kub3::UI::ViewId::ALIGNMENT_LOAD_PARAMETERS_VIEW, loadParametersView);
+            m_mainWindow->addView(Kub3::UI::ViewId::ALIGNMENT_SAVE_PARAMETERS_VIEW, saveParametersView);
         }
 
         if (m_masterFSM) {

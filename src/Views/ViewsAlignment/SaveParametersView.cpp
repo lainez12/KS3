@@ -19,3 +19,12 @@ SaveParametersView::~SaveParametersView() {
 void SaveParametersView::resizeEvent(QResizeEvent *ev) {
     QWidget::resizeEvent(ev);
 }
+
+void SaveParametersView::setNewNavButtonsConfigs() {
+}
+
+void SaveParametersView::onBackButtonClicked(const QString &buttonId) {
+}
+
+void SaveParametersView::onValidateButtonClicked(const QString &buttonId) {
+}

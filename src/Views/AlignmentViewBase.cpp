@@ -3,6 +3,7 @@
 
 #define ID_BTN_VALIDATE "V"
 #define ID_BTN_HOME     "H"
+#define ID_BTN_BACK     "B"
 
 namespace Kub3::UI::Views {
 
@@ -15,12 +16,17 @@ namespace Kub3::UI::Views {
     void AlignmentViewBase::createNavButtonsConfigs() {
         NavButtonConfig homeBtn(
             "Home",
-            QColor(BLUE_COLOR),
-            QColor(BLUE_COLOR_SHADOW),
             ":/icons/home.svg",
             "H",
             std::bind(&AlignmentViewBase::onHomeButtonClicked, this, std::placeholders::_1));
         addNavButton("left", homeBtn);
+
+        NavButtonConfig backBtn(
+            "Back",
+            ":/icons/back.svg",
+            "B",
+            std::bind(&AlignmentViewBase::onBackButtonClicked, this, std::placeholders::_1));
+        addNavButton("left", backBtn);
 
         NavButtonConfig validateBtn(
             "Validate",
@@ -44,7 +50,7 @@ namespace Kub3::UI::Views {
             QColor("#FFF"),
             QColor(TURQUOISE_COLOR),
             ":/icons/flood_icon.svg",
-            "Mask-to-substrate distance",
+            "Mask Alignment",
             true,
             true);
     }

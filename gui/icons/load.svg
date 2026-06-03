@@ -4,10 +4,11 @@
 <svg
    version="1.1"
    id="svg2"
-   width="72.847992"
-   height="96.978577"
-   viewBox="0 0 72.847991 96.978575"
-   sodipodi:docname="load-enabled-checked.ai"
+   width="97"
+   height="97"
+   viewBox="0 0 96.999999 96.999998"
+   sodipodi:docname="load.svg"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -35,7 +36,16 @@
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
-     showgrid="false" />
+     showgrid="false"
+     inkscape:zoom="4.2638283"
+     inkscape:cx="6.8013996"
+     inkscape:cy="69.772978"
+     inkscape:window-width="1920"
+     inkscape:window-height="1008"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g10" />
   <g
      id="g10"
      inkscape:groupmode="layer"
@@ -43,7 +53,7 @@
      transform="matrix(1.3333333,0,0,-1.3333333,-382.41626,755.92118)">
     <g
        id="g30"
-       transform="translate(341.4482,564.9929)"
+       transform="translate(350.4482,564.9929)"
        clip-path="url(#clipPath261)">
       <path
          d="m 0,0 c 0,1.071 -0.877,1.948 -1.948,1.948 h -2.867 -3.896 -43.977 c -1.071,0 -1.948,-0.473 -1.948,-1.051 v -2.998 -59.248 c 0,-1.071 0.861,-2.112 1.913,-2.312 l 37.21,-7.091 c 1.053,-0.201 1.913,0.512 1.913,1.583 V -7.82 c 0,1.071 -0.86,2.112 -1.913,2.312 l -26.184,4.99 c -1.052,0.201 -1.037,0.365 0.035,0.365 h 30.763 c 1.071,0 1.948,-0.877 1.948,-1.948 v -59.248 c 0,-1.071 0.492,-1.948 1.094,-1.948 0.601,0 1.093,0.877 1.093,1.948 v 38.606 c 0,1.072 0.877,1.948 1.949,1.948 h 2.867 c 1.071,0 1.948,0.877 1.948,1.948 z"

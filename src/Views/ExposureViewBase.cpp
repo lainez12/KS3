@@ -15,8 +15,6 @@ namespace Kub3::UI::Views {
     void ExposureViewBase::createNavButtonsConfigs() {
         NavButtonConfig homeBtn(
             "Home",
-            QColor(BLUE_COLOR),
-            QColor(BLUE_COLOR_SHADOW),
             ":/icons/home.svg",
             "H",
             std::bind(&ExposureViewBase::onHomeButtonClicked, this, std::placeholders::_1));

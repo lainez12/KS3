@@ -4,10 +4,11 @@
 <svg
    version="1.1"
    id="svg2"
-   width="231.46765"
-   height="181.892"
-   viewBox="0 0 231.46766 181.892"
-   sodipodi:docname="mask-alignment-enabled.ai"
+   width="232"
+   height="232"
+   viewBox="0 0 232.00001 232"
+   sodipodi:docname="mask-alignment_icon.svg"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -31,14 +32,24 @@
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
-     showgrid="false" />
+     showgrid="false"
+     inkscape:zoom="2.2733271"
+     inkscape:cx="0.43988391"
+     inkscape:cy="149.78047"
+     inkscape:window-width="1920"
+     inkscape:window-height="1052"
+     inkscape:window-x="1920"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g12" />
   <g
      id="g10"
      inkscape:groupmode="layer"
      inkscape:label="Page 1"
      transform="matrix(1.3333333,0,0,-1.3333333,-862.91233,739.15466)">
     <g
-       id="g12">
+       id="g12"
+       transform="translate(0,-14.51617)">
       <g
          id="g14"
          clip-path="url(#clipPath18)">

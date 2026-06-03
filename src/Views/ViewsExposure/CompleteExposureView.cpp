@@ -24,8 +24,6 @@ void CompleteExposureView::resizeEvent(QResizeEvent *ev) {
 void CompleteExposureView::setNewNavButtonsConfigs() {
     NavButtonConfig homeBtn(
         "Home",
-        QColor(BLUE_COLOR),
-        QColor(BLUE_COLOR_SHADOW),
         ":/icons/home.svg",
         "H",
         std::bind(&CompleteExposureView::onHomeButtonClicked, this, std::placeholders::_1));

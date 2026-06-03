@@ -3,19 +3,32 @@
 #include "ui_DistanceView.h"
 #include <QString>
 
-#define ID_BTN_BACK "B"
-#define ID_BTN_SAVE "S"
-#define ID_BTN_HOME "H"
+#define ID_BTN_BACK     "B"
+#define ID_BTN_SAVE     "S"
+#define ID_BTN_HOME     "H"
+#define ID_BTN_VALIDATE "V"
 
 DistanceView::DistanceView(Unique<DistanceViewModel> viewModel, QWidget *parent) :
     AlignmentViewBase(std::move(viewModel), parent),
     ui(new Ui::DistanceView) {
     ui->setupUi(this);
-    setDefaultTitleBar("Exposure Settings");
+    setDefaultTitleBar("Mask-to-substrate distance");
+    createNavButtonsConfigs();
+    setNavButtonEnabled(ID_BTN_VALIDATE, true);
 }
 DistanceView::~DistanceView() {
 }
 
 void DistanceView::resizeEvent(QResizeEvent *ev) {
     QWidget::resizeEvent(ev);
+}
+
+void DistanceView::setNewNavButtonsConfigs() {
+}
+
+void DistanceView::onBackButtonClicked(const QString &buttonId) {
+}
+
+void DistanceView::onValidateButtonClicked(const QString &buttonId) {
+    emit s_openView(Kub3::UI::ViewId::ALIGNMENT_VISUALISATION_VIEW);
 }

@@ -20,8 +20,6 @@ ExposureSettingsView::ExposureSettingsView(Unique<ExposureSettingsViewModel> vie
 
     NavButtonConfig saveBtn(
         "Save",
-        QColor(BLUE_COLOR),
-        QColor(BLUE_COLOR_SHADOW),
         ":/icons/save.svg",
         ID_BTN_SAVE,
         std::bind(&ExposureSettingsView::onSaveButtonClicked, this, std::placeholders::_1));
@@ -31,8 +29,6 @@ ExposureSettingsView::ExposureSettingsView(Unique<ExposureSettingsViewModel> vie
 
     NavButtonConfig backBtn(
         "Back",
-        QColor(BLUE_COLOR),
-        QColor(BLUE_COLOR_SHADOW),
         ":/icons/back.svg",
         ID_BTN_BACK,
         std::bind(&ExposureSettingsView::onBackButtonClicked, this, std::placeholders::_1));

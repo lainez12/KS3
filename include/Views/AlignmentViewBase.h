@@ -22,6 +22,7 @@ namespace Kub3::UI::Views {
         void onHomeButtonClicked(const QString &buttonId);
         void createNavButtonsConfigs() final override;
         virtual void onValidateButtonClicked(const QString &buttonId) = 0;
+        virtual void onBackButtonClicked(const QString &buttonId)     = 0;
     };
 
 } // namespace Kub3::UI::Views

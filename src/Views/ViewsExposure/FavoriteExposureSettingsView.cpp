@@ -36,8 +36,6 @@ void FavoriteExposureSettingsView::setNewNavButtonsConfigs() {
 
     NavButtonConfig backBtn(
         "Back",
-        QColor(BLUE_COLOR),
-        QColor(BLUE_COLOR_SHADOW),
         ":/icons/back.svg",
         ID_BTN_BACK,
         std::bind(&FavoriteExposureSettingsView::onBackButtonClicked, this, std::placeholders::_1));

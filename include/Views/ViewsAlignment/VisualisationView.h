@@ -25,6 +25,20 @@ namespace Kub3::UI::Views::ViewsAlignment {
         void resizeEvent(QResizeEvent *event) override;
 
     private:
+        void setNewNavButtonsConfigs();
+        void onValidateButtonClicked(const QString &buttonId) override;
+        void onBackButtonClicked(const QString &buttonId) override;
+        void onSaveButtonClicked(const QString &buttonId);
+        void onLoadButtonClicked(const QString &buttonId);
+        void onScreenshotButtonClicked(const QString &buttonId);
+        void onHardForceContButtonClicked(const QString &buttonId);
+        void onSpeedMotorSubstButtonClicked(const QString &buttonId);
+        void onMaskingDistanceButtonClicked(const QString &buttonId);
+        void onAntiCollisionButtonClicked(const QString &buttonId);
+        void onVisualMarkButtonClicked(const QString &buttonId);
+        void onMeasurementButtonClicked(const QString &buttonId);
+
+    private:
         Ui::VisualisationView *ui;
     };
 

@@ -4,14 +4,15 @@
 #include <QMap>
 #include <QString>
 #include <QVector>
+#include <Views/Components/Colors.h>
 #include <functional>
 
 namespace Kub3::UI::Views {
 
     struct NavButtonConfig {
         QString text;
-        QColor colorEnabled;
-        QColor colorDisabled;
+        QColor colorEnabled  = QColor(BLUE_COLOR);
+        QColor colorDisabled = QColor(BLUE_COLOR_SHADOW);
         QString iconPath;
         QString buttonId;
         std::function<void(const QString &)> callback;
@@ -21,6 +22,9 @@ namespace Kub3::UI::Views {
         NavButtonConfig() = default;
 
         NavButtonConfig(const QString &t, const QColor &cE, const QColor &cD, const QString &i, const QString &id, std::function<void(const QString &)> cb) : text(t), colorEnabled(cE), colorDisabled(cD), iconPath(i), buttonId(id), callback(cb) {
+        }
+
+        NavButtonConfig(const QString &t, const QString &i, const QString &id, std::function<void(const QString &)> cb) : text(t), iconPath(i), buttonId(id), callback(cb) {
         }
     };
 

@@ -49,11 +49,13 @@
         <file>icons/measurement.svg</file>
         <file>icons/micron.svg</file>
         <file>icons/moins-wafer.svg</file>
+        <file>icons/moins-wafer-circle.svg</file>
         <file>icons/move-cam.svg</file>
         <file>icons/newton.svg</file>
         <file>icons/operating-times.svg</file>
         <file>icons/pick-up-xy.svg</file>
         <file>icons/plus-wafer.svg</file>
+        <file>icons/plus-wafer-circle.svg</file>
         <file>icons/question.svg</file>
         <file>icons/redo.svg</file>
         <file>icons/rouge.svg</file>

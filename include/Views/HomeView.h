@@ -26,6 +26,7 @@ namespace Kub3::UI::Views {
 
     public slots:
         void onFloodExposureClicked();
+        void onMaskAlignmentClicked();
     private slots:
 
     protected:

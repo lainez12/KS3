@@ -27,6 +27,10 @@
 #include "Views/ViewsSettings/TemperatureView.h"
 #include "Views/ViewsSettings/UpdateSoftwareView.h"
 #include "Views/ViewsSettings/VersionView.h"
+#include "Views/ViewsAlignment/DistanceView.h"
+#include "Views/ViewsAlignment/VisualisationView.h"
+#include "Views/ViewsAlignment/LoadParametersView.h"
+#include "Views/ViewsAlignment/SaveParametersView.h"
 
 namespace Ui {
     class MainWindow;

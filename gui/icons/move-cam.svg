@@ -4,10 +4,11 @@
 <svg
    version="1.1"
    id="svg2"
-   width="104.5864"
-   height="79.196533"
-   viewBox="0 0 104.58639 79.196532"
-   sodipodi:docname="move-cam-enabled-checked.ai"
+   width="105"
+   height="105"
+   viewBox="0 0 104.99999 105"
+   sodipodi:docname="move-cam.svg"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -31,14 +32,24 @@
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
-     showgrid="false" />
+     showgrid="false"
+     inkscape:zoom="2.8284271"
+     inkscape:cx="24.04163"
+     inkscape:cy="42.24963"
+     inkscape:window-width="1920"
+     inkscape:window-height="1008"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g10" />
   <g
      id="g10"
      inkscape:groupmode="layer"
      inkscape:label="Page 1"
      transform="matrix(1.3333333,0,0,-1.3333333,-364.49826,525.12918)">
     <g
-       id="g18">
+       id="g18"
+       transform="translate(0.04394531,-7.5)">
       <g
          id="g20"
          clip-path="url(#clipPath24)">

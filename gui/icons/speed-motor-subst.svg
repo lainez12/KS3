@@ -4,10 +4,11 @@
 <svg
    version="1.1"
    id="svg570"
-   width="114.75732"
-   height="104.86826"
-   viewBox="0 0 114.75732 104.86825"
-   sodipodi:docname="speedometer-enabled.ai"
+   width="115"
+   height="115"
+   viewBox="0 0 115 114.99999"
+   sodipodi:docname="speed-motor-subst.svg"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -31,14 +32,24 @@
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
-     showgrid="false" />
+     showgrid="false"
+     inkscape:zoom="2.788152"
+     inkscape:cx="73.525404"
+     inkscape:cy="43.935912"
+     inkscape:window-width="1920"
+     inkscape:window-height="1008"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g578" />
   <g
      id="g578"
      inkscape:groupmode="layer"
      inkscape:label="Page 1"
      transform="matrix(1.3333333,0,0,-1.3333333,-365.8624,769.09757)">
     <g
-       id="g586">
+       id="g586"
+       transform="matrix(0.99980466,0,0,0.99980466,0.07041189,-4.2528278)">
       <g
          id="g588"
          clip-path="url(#clipPath592)">
