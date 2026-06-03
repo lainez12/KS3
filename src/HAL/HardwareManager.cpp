@@ -236,8 +236,8 @@ namespace Kub3::HAL
         arduino1Driver->moveToThread(thread.get());
 
         // Wire MCUDriver connection status signals -> Machine Status Repo value update
-        QObject::connect(arduino1Driver.get(), &MCUDriver::s_connected, [&]() { m_repo->setSensorRaw(MCU_ARDUINO1_READY, true); });
-        QObject::connect(arduino1Driver.get(), &MCUDriver::s_connectionLost, [&]() { m_repo->setSensorRaw(MCU_ARDUINO1_READY, false); });
+        QObject::connect(arduino1Driver.get(), &MCUDriver::s_connected, [&]() { m_repo->setValueRaw(MCU_ARDUINO1_READY, true); });
+        QObject::connect(arduino1Driver.get(), &MCUDriver::s_connectionLost, [&]() { m_repo->setValueRaw(MCU_ARDUINO1_READY, false); });
         // Wire MCUDriver -> Router
         QObject::connect(arduino1Driver.get(), &MCUDriver::s_packetReady, router.get(), &Com::PacketRouter::ps_routePacket);
 
@@ -377,8 +377,8 @@ namespace Kub3::HAL
         arduino2Driver->moveToThread(thread.get());
 
         // Wire MCUDriver connection status signals -> Machine Status Repo value update
-        QObject::connect(arduino2Driver.get(), &MCUDriver::s_connected, [&]() { m_repo->setSensorRaw(MCU_ARDUINO2_READY, true); });
-        QObject::connect(arduino2Driver.get(), &MCUDriver::s_connectionLost, [&]() { m_repo->setSensorRaw(MCU_ARDUINO2_READY, false); });
+        QObject::connect(arduino2Driver.get(), &MCUDriver::s_connected, [&]() { m_repo->setValueRaw(MCU_ARDUINO2_READY, true); });
+        QObject::connect(arduino2Driver.get(), &MCUDriver::s_connectionLost, [&]() { m_repo->setValueRaw(MCU_ARDUINO2_READY, false); });
         // Wire MCUDriver -> Router
         QObject::connect(arduino2Driver.get(), &MCUDriver::s_packetReady, router.get(), &Com::PacketRouter::ps_routePacket);
 
@@ -503,8 +503,8 @@ namespace Kub3::HAL
         arduino3Driver->moveToThread(thread.get());
 
         // Wire MCUDriver connection status signals -> Machine Status Repo value update
-        QObject::connect(arduino3Driver.get(), &MCUDriver::s_connected, [&]() { m_repo->setSensorRaw(MCU_ARDUINO3_READY, true); });
-        QObject::connect(arduino3Driver.get(), &MCUDriver::s_connectionLost, [&]() { m_repo->setSensorRaw(MCU_ARDUINO3_READY, false); });
+        QObject::connect(arduino3Driver.get(), &MCUDriver::s_connected, [&]() { m_repo->setValueRaw(MCU_ARDUINO3_READY, true); });
+        QObject::connect(arduino3Driver.get(), &MCUDriver::s_connectionLost, [&]() { m_repo->setValueRaw(MCU_ARDUINO3_READY, false); });
         // Wire MCUDriver -> Router
         QObject::connect(arduino3Driver.get(), &MCUDriver::s_packetReady, router.get(), &Com::PacketRouter::ps_routePacket);
 

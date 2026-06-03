@@ -11,8 +11,8 @@
 namespace Kub3::HAL::MS
 {
 
-    // Define all allowed types for our sensors.
-    using SensorValue = std::variant<bool, int32_t, uint16_t, uint32_t>;
+    // Define all allowed types for our sensors and other machine values...
+    using MachineValue = std::variant<bool, int32_t, uint16_t, uint32_t>;
 
     class IMachineStatusRepo : public QObject
     {
@@ -24,20 +24,20 @@ namespace Kub3::HAL::MS
         virtual ~IMachineStatusRepo() = default;
 
         // Core virtual interface
-        virtual void setSensorRaw(const std::string &key, const SensorValue &value)            = 0;
-        [[nodiscard]] virtual Optional<SensorValue> getSensorRaw(const std::string &key) const = 0;
+        virtual void setValueRaw(const std::string &key, const MachineValue &value)            = 0;
+        [[nodiscard]] virtual Optional<MachineValue> getValueRaw(const std::string &key) const = 0;
         [[nodiscard]] virtual std::vector<std::string> getRegisteredKeys() const               = 0;
 
         template <typename T>
-        void setSensor(const std::string &key, T value)
+        void setValue(const std::string &key, T value)
         {
-            setSensorRaw(key, SensorValue(value));
+            setValueRaw(key, MachineValue(value));
         }
 
         template <typename T>
-        [[nodiscard]] Optional<T> getSensor(const std::string &key) const
+        [[nodiscard]] Optional<T> getValue(const std::string &key) const
         {
-            auto optVal = getSensorRaw(key);
+            auto optVal = getValueRaw(key);
 
             if (!optVal)
             {
@@ -52,7 +52,7 @@ namespace Kub3::HAL::MS
         }
 
     signals:
-        void s_sensorValueChanged(const std::string &key);
+        void s_machineValueChanged(const std::string &key);
     };
 
 } // namespace Kub3::HAL::MS

@@ -2,7 +2,11 @@
 #include <HAL/MachineStatus/actuators_labels.h>
 #include <HAL/MachineStatus/sensors_labels.h>
 #include <HAL/MachineStatus/utils.h>
+#include <HAL/MachineStatus/virtual_labels.h>
+
 #include <Services/Contact/ContactService.h>
+#include <Services/Contact/tasks/AdmittanceControlTask.h>
+#include <Services/Contact/tasks/FastApproachTask.h>
 
 namespace Kub3::Services
 {
@@ -20,6 +24,9 @@ namespace Kub3::Services
         m_registry(std::move(registry)),
         m_repo(std::move(repo))
     {
+        this->initializeMachineValues();
+
+        // Motors
         m_zMotors = {
             m_registry->get<HAL::Act::IMotor>(Z_LEFT_MOTOR),
             m_registry->get<HAL::Act::IMotor>(Z_RIGHT_MOTOR),
@@ -29,15 +36,19 @@ namespace Kub3::Services
         m_maxProcessForceGF   = processConfig.max_force_gf;            // Get absolute max force allowed to be requested
         m_hwCrashLimitForceGF = processConfig.hw_crash_force_limit_gf; // Get absolute max physical force allowed (hardware protection)
         m_contactThresholdGF  = processConfig.contact_threshold_gf;
+        m_autolevelForceGF    = processConfig.autolevel_force_gf;
+
         // Conversions factors
         if (auto it = hwConfig.adc_to_gf_factors.find(FORCE_LEFT); it != hwConfig.adc_to_gf_factors.end())
             m_adcToGFLeftFactor = it->second;
         else
             throw std::runtime_error("ContactService: Missing left sensor ADC to gram-force conversion factor in hardware configuration.");
+
         if (auto it = hwConfig.adc_to_gf_factors.find(FORCE_RIGHT); it != hwConfig.adc_to_gf_factors.end())
             m_adcToGFRightFactor = it->second;
         else
             throw std::runtime_error("ContactService: Missing right sensor ADC to gram-force conversion factor in hardware configuration.");
+
         if (auto it = hwConfig.adc_to_gf_factors.find(FORCE_BACK); it != hwConfig.adc_to_gf_factors.end())
             m_adcToGFBackFactor = it->second;
         else
@@ -46,6 +57,29 @@ namespace Kub3::Services
 
     void ContactService::tick(void)
     {
+        // Ensure no two Z-motors stray too far mechanically from each other.
+        if (m_zMotors[0] && m_zMotors[1] && m_zMotors[2])
+        {
+            double zL = m_zMotors[0]->getEncoderPositionMm();
+            double zR = m_zMotors[1]->getEncoderPositionMm();
+            double zB = m_zMotors[2]->getEncoderPositionMm();
+
+            // TODO: get max distance between motors from config
+            constexpr double MAX_RELATIVE_Z_DIFF_MM = 0.50; // 500 microns absolute kinematic limit
+
+            if (std::abs(zL - zR) > MAX_RELATIVE_Z_DIFF_MM ||
+                std::abs(zR - zB) > MAX_RELATIVE_Z_DIFF_MM ||
+                std::abs(zL - zB) > MAX_RELATIVE_Z_DIFF_MM)
+            {
+                this->stop();
+                if (this->getStatus() == ServiceStatus::Running)
+                    abortSequence("CRITICAL: Z-Motors relative distance exceeded max limit. Binding protection triggered.");
+
+                qCritical() << "CRITICAL: Z-Motors binding protection triggered. Motors emergency stopped.";
+                return;
+            }
+        }
+
         // UNCONDITIONAL HARDWARE CRASH PROTECTION
         if (isHardwareCrashLimitExceeded())
         {
@@ -161,12 +195,79 @@ namespace Kub3::Services
 
     void ContactService::buildAutolevelingLanes(void)
     {
-        // TODO: build lanes
+        auto abortCb        = [this](const std::string &reason) { this->abortSequence(reason); };
+        auto maxForceGetter = [this]() -> double { return this->getMaxCurrentForceGF(); };
+        auto forceGetter    = [this]() -> ForceReadings {
+            const double fL = static_cast<double>(HAL::MS::readUInt16(m_repo, FORCE_LEFT)) * m_adcToGFLeftFactor;
+            const double fR = static_cast<double>(HAL::MS::readUInt16(m_repo, FORCE_RIGHT)) * m_adcToGFRightFactor;
+            const double fB = static_cast<double>(HAL::MS::readUInt16(m_repo, FORCE_BACK)) * m_adcToGFBackFactor;
+
+            return {fL, fR, fB, std::max({fL, fR, fB})};
+        };
+
+        // Approach until contact threshold is touched.
+        this->enqueueTask<FastApproachTask>(m_zMotors, maxForceGetter, m_contactThresholdGF, m_freeProfile);
+        // Climb and planarize at the target point
+        this->enqueueTask<AdmittanceControlTask>(m_zMotors, forceGetter, abortCb,
+                                                 buildAdmittanceConfig(m_autolevelForceGF),
+                                                 AdmittanceControlTask::Mode::Autoleveling,
+                                                 m_contactProfile);
     }
 
     void ContactService::buildBasicContactLanes(double forceGF)
     {
-        // TODO: build lanes
+        auto maxForceGetter = [this]() -> double {
+            return this->getMaxCurrentForceGF();
+        };
+
+        auto forceGetter = [this]() -> ForceReadings {
+            const double fL = static_cast<double>(HAL::MS::readUInt16(m_repo, FORCE_LEFT)) * m_adcToGFLeftFactor;
+            const double fR = static_cast<double>(HAL::MS::readUInt16(m_repo, FORCE_RIGHT)) * m_adcToGFRightFactor;
+            const double fB = static_cast<double>(HAL::MS::readUInt16(m_repo, FORCE_BACK)) * m_adcToGFBackFactor;
+            return {fL, fR, fB, std::max({fL, fR, fB})};
+        };
+
+        auto abortCb = [this](const std::string &reason) {
+            this->abortSequence(reason);
+        };
+
+        // Approach until contact threshold is touched.
+        this->enqueueTask<FastApproachTask>(m_zMotors, maxForceGetter, m_contactThresholdGF, m_freeProfile);
+        // Synchronous movement up to target force.
+        this->enqueueTask<AdmittanceControlTask>(m_zMotors, forceGetter, abortCb,
+                                                 buildAdmittanceConfig(forceGF),
+                                                 AdmittanceControlTask::Mode::BasicContact,
+                                                 m_contactProfile);
+    }
+
+    Algorithms::Control::admittance_config_t ContactService::buildAdmittanceConfig(double targetForceGF) const
+    {
+        return Algorithms::Control::admittance_config_t{
+            // Targets and Limits
+            .target_force_gf      = targetForceGF,
+            .force_tolerance_gf   = 5.0, // TODO: Get value from processConfig; +/- 5 grams convergence band
+            .max_process_force_gf = m_maxProcessForceGF,
+
+            // Gain Scheduling (Compliance: mm/s per GF)
+            // TODO: Get values from processConfig. These are defined by the physical machine stiffness.
+            .k_mean_max = 0.005, // Fast approach (Air/Soft)
+            .k_mean_min = 0.001, // Slow approach (Stiff/Contact)
+            .k_tilt_max = 0.010, // WEC twist fast
+            .k_tilt_min = 0.002, // WEC twist slow
+
+            // Safety Limits & Hardware capabilities
+            // TODO: Get values from processConfig
+            .max_step_mm_per_tick   = 0.025,                               // 25 microns max blind travel per tick
+            .max_profile_speed_mm_s = m_contactProfile.targetVelocityMmS,  // Max allowed continuous speed
+            .min_profile_speed_mm_s = m_contactProfile.initialVelocityMmS, // Hardware deadband limit (to prevent stuttering)
+        };
+    }
+
+    void ContactService::initializeMachineValues(void)
+    {
+        m_repo->setValueRaw(V_LEFT_Z_HORIZONTALITY_DELTA, 0);
+        m_repo->setValueRaw(V_RIGHT_Z_HORIZONTALITY_DELTA, 0);
+        m_repo->setValueRaw(V_BACK_Z_HORIZONTALITY_DELTA, 0);
     }
 
     // ==========================================
@@ -203,4 +304,4 @@ namespace Kub3::Services
         return dir == ZDirection::Up;
     }
 
-}
+} // namespace Kub3::Services

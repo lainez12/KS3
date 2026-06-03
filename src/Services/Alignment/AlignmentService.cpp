@@ -20,7 +20,7 @@ namespace
         {/* --------- [0] = POSITIVE LIMIT, [1] = NEGATIVE LIMIT */
          /* X --- */ {X_STAGE_RIGHT_LIMIT, X_STAGE_LEFT_LIMIT},
          /* Y --- */ {Y_STAGE_FRONT_LIMIT, Y_STAGE_BACK_LIMIT},
-         /* THETA */ {THETA_STAGE_CLOCKWISE_LIMIT, THETA_STAGE_ANTI_CLOCKWISE_LIMIT}}};
+         /* THETA */ {THETA_STAGE_ANTI_CLOCKWISE_LIMIT, THETA_STAGE_CLOCKWISE_LIMIT}}};
 
     constexpr const char *stopId(AlignmentStage s, AlignmentDirection d) noexcept
     {
@@ -37,7 +37,7 @@ namespace Kub3::Services
                                        const Config::process_config_t &processConfig) :
         m_repo(std::move(repo))
     {
-        loadConfigurations(registry, processConfig);
+        this->loadConfigurations(registry, processConfig);
     }
 
     void AlignmentService::tick(void)

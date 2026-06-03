@@ -98,6 +98,7 @@ namespace Kub3::Config
         double hw_crash_force_limit_gf = 0.0;
         double max_force_gf            = 0.0;
         double contact_threshold_gf    = 0.0;
+        double autolevel_force_gf      = 0.0;
 
         [[nodiscard]] kinematic_profile_t getKinematicProfile(const std::string &motorId, const std::string &profileName) const
         {

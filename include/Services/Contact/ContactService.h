@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Algorithms/Admittance/AdmittanceController.h>
 #include <Config/machine_config.h>
 #include <HAL/Actuators/ActuatorRegistry.h>
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
@@ -39,6 +40,9 @@ namespace Kub3::Services
     private:
         void buildAutolevelingLanes(void);
         void buildBasicContactLanes(double forceGF);
+        Algorithms::Control::admittance_config_t buildAdmittanceConfig(double targetForceGF) const;
+
+        void initializeMachineValues(void);
 
         // Internal helpers for contact status
         [[nodiscard]] double getMaxCurrentForceGF(void) const;
@@ -61,7 +65,8 @@ namespace Kub3::Services
         // Thresholds
         double m_contactThresholdGF  = 0.0; // Threshold exceeded when contact is achieved (gram-force)
         double m_maxProcessForceGF   = 0.0; // Max force allowed to be requested (gram-force)
-        double m_hwCrashLimitForceGF = 0.0; // Absolute critical limit not to be exceeded (grem-force)
+        double m_hwCrashLimitForceGF = 0.0; // Absolute critical limit not to be exceeded (gram-force)
+        double m_autolevelForceGF    = 0.0; // Force to be reached by each sensor when performing autoleveling (grap-force)
         // Conversion factors (ADC to gram-force)
         double m_adcToGFLeftFactor  = 1.0;
         double m_adcToGFRightFactor = 1.0;

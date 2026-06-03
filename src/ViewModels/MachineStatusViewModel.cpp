@@ -24,7 +24,7 @@ namespace Kub3::UI::ViewModels
 
     void MachineStatusViewModel::ps_handleSensorValueChanged(const std::string &key)
     {
-        Optional<HAL::MS::SensorValue> valueOpt = m_repo->getSensorRaw(key);
+        Optional<HAL::MS::MachineValue> valueOpt = m_repo->getValueRaw(key);
 
         if (!valueOpt.has_value())
             return;

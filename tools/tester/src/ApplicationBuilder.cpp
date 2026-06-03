@@ -100,7 +100,7 @@ namespace Kub3::Tools::Tester
         // ==========================================
 
         // Machine repository (HAL) -> Controller (Logic Thread)
-        QObject::connect(m_repo.get(), &HAL::MS::IMachineStatusRepo::s_sensorValueChanged,
+        QObject::connect(m_repo.get(), &HAL::MS::IMachineStatusRepo::s_machineValueChanged,
                          m_motorTestController, &Tools::Tester::MotorTestController::ps_onMachineStatusUpdate);
 
         // ViewModel (Main Thread) -> Controller (Logic Thread)
@@ -130,7 +130,7 @@ namespace Kub3::Tools::Tester
         QObject::connect(m_procedureTestController, &ProcedureTestController::s_procedureCompleted, m_procedureTestViewModel.get(), &ProcedureTestViewModel::onProcedureCompleted, Qt::QueuedConnection);
         QObject::connect(m_procedureTestController, &ProcedureTestController::s_procedureFailed, m_procedureTestViewModel.get(), &ProcedureTestViewModel::onProcedureFailed, Qt::QueuedConnection);
         // HAL -> ViewModel
-        QObject::connect(m_repo.get(), &HAL::MS::IMachineStatusRepo::s_sensorValueChanged, m_procedureTestViewModel.get(), &ProcedureTestViewModel::onHandleSensorValueChanged, Qt::QueuedConnection);
+        QObject::connect(m_repo.get(), &HAL::MS::IMachineStatusRepo::s_machineValueChanged, m_procedureTestViewModel.get(), &ProcedureTestViewModel::onHandleSensorValueChanged, Qt::QueuedConnection);
 
         // ==========================================
         // FOCAL TESTER WIRING

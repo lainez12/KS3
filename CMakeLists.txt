@@ -103,6 +103,8 @@ qt_add_library(Kub3Core STATIC
     src/Services/Vision/VisionService.cpp
     # --- Contact service & tasks
     src/Services/Contact/ContactService.cpp
+    src/Services/Contact/tasks/AdmittanceControlTask.cpp
+    src/Services/Contact/tasks/FastApproachTask.cpp
     # --- Exposure service & tasks
     src/Services/Exposure/ExposureService.cpp
 
@@ -124,6 +126,7 @@ qt_add_library(Kub3Core STATIC
     ## Algorithms
     src/Algorithms/Kinematic/utils.cpp
     src/Algorithms/Kinematic/TrapezoidalGenerator.cpp
+    src/Algorithms/Admittance/AdmittanceController.cpp
 
 
     # ===============
@@ -197,6 +200,8 @@ qt_add_library(Kub3Core STATIC
     # --- Contact service & tasks
     include/Services/Contact/IContactService.h
     include/Services/Contact/ContactService.h
+    include/Services/Contact/tasks/AdmittanceControlTask.h
+    include/Services/Contact/tasks/FastApproachTask.h
     # --- Exposure service & tasks
     include/Services/Exposure/ExposureService.h
     include/Services/Exposure/IExposureService.h
@@ -206,7 +211,9 @@ qt_add_library(Kub3Core STATIC
     include/HAL/MachineStatus/IMachineStatusRepo.h
     include/HAL/MachineStatus/MachineStatusRepo.h
     include/HAL/MachineStatus/utils.h
+    include/HAL/MachineStatus/actuators_labels.h
     include/HAL/MachineStatus/sensors_labels.h
+    include/HAL/MachineStatus/virtual_labels.h
     include/HAL/MCUDriver.h
     include/HAL/Com/ICommunicator.h
     include/HAL/Com/SerialCommunicator.h
@@ -235,6 +242,7 @@ qt_add_library(Kub3Core STATIC
     include/Algorithms/Kinematic/utils.h
     include/Algorithms/Kinematic/IKinematicGenerator.h
     include/Algorithms/Kinematic/TrapezoidalGenerator.h
+    include/Algorithms/Admittance/AdmittanceController.h
 )
 
 # PUBLIC: Everything that links to Kub3Core automatically gets these headers and macros

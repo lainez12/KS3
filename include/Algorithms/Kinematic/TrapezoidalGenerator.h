@@ -37,7 +37,9 @@ namespace Kub3::Algorithms::Kinematic
         // Gracefully ramps the velocity down to 0 at the current acceleration rate
         void commandSmoothStop(void) override;
 
+        // `dt` is the delta time since last call in seconds
         kinematic_state_t computeNext(double dt) override;
+        // `dt` is the delta time since last call in seconds
         kinematic_state_t computeNext(double dt, double realPosition) override;
 
         [[nodiscard]] kinematic_state_t getCurrentState() const noexcept override

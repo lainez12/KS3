@@ -67,12 +67,12 @@ public:
     explicit MockMachineStatusRepo(QObject *parent = nullptr) : MS::IMachineStatusRepo(parent) {}
     ~MockMachineStatusRepo() override = default;
 
-    void setSensorRaw(const std::string &key, const MS::SensorValue &value) override
+    void setValueRaw(const std::string &key, const MS::MachineValue &value) override
     {
         m_sensors[key] = value;
     }
 
-    [[nodiscard]] Optional<MS::SensorValue> getSensorRaw(const std::string &key) const override
+    [[nodiscard]] Optional<MS::MachineValue> getValueRaw(const std::string &key) const override
     {
         if (auto it = m_sensors.find(key); it != m_sensors.end())
             return it->second;
@@ -85,7 +85,7 @@ public:
     }
 
 private:
-    std::unordered_map<std::string, MS::SensorValue> m_sensors;
+    std::unordered_map<std::string, MS::MachineValue> m_sensors;
 };
 
 TEST_CASE("MaskInsertionTask Logic FSM", "[fsm][tasks]")
@@ -96,10 +96,10 @@ TEST_CASE("MaskInsertionTask Logic FSM", "[fsm][tasks]")
     kinematic_profile_t fastProf, fineProf, contactProf;
     MaskInsertionTask task(repo, mockMotor, fastProf, fineProf, contactProf);
 
-    repo->setSensorRaw(CM0, false);
-    repo->setSensorRaw(CM1, false);
-    repo->setSensorRaw(CM2, false);
-    repo->setSensorRaw(CM3, false);
+    repo->setValueRaw(CM0, false);
+    repo->setValueRaw(CM1, false);
+    repo->setValueRaw(CM2, false);
+    repo->setValueRaw(CM3, false);
 
     SECTION("Start enters FastApproach when sensors are clear")
     {
@@ -113,14 +113,14 @@ TEST_CASE("MaskInsertionTask Logic FSM", "[fsm][tasks]")
 
     SECTION("Emergency stops immediately on CM3")
     {
-        repo->setSensorRaw(CM3, false);
+        repo->setValueRaw(CM3, false);
         task.start(); // Initiates movement
 
         REQUIRE(mockMotor->moveDirectionCalls == 1);
         REQUIRE(mockMotor->emergencyStopCalls == 0);
 
         // Simulate operator interference
-        repo->setSensorRaw(CM3, true);
+        repo->setValueRaw(CM3, true);
         bool isFinished = task.tick();
 
         REQUIRE(mockMotor->emergencyStopCalls == 1);
@@ -129,11 +129,11 @@ TEST_CASE("MaskInsertionTask Logic FSM", "[fsm][tasks]")
 
     SECTION("Transitions from Fast to Slow approach on CM1")
     {
-        repo->setSensorRaw(CM1, false);
+        repo->setValueRaw(CM1, false);
         task.start(); // FastApproach
 
         // Trip the slow-down sensor
-        repo->setSensorRaw(CM1, true);
+        repo->setValueRaw(CM1, true);
         task.tick();
 
         REQUIRE(mockMotor->moveDirectionCalls == 2); // Transition triggered a new command

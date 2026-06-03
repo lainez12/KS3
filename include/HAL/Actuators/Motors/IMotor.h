@@ -10,6 +10,7 @@
 
 #define POSITIVE_INFINITE INT32_MAX
 #define NEGATIVE_INFINITE INT32_MAX
+
 namespace Kub3::HAL::Act
 {
 

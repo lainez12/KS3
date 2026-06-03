@@ -48,15 +48,15 @@ namespace Kub3
     {
         qInfo() << "Building Tier 2 (Logic)...";
 
-        auto registry = m_hwManager->getActuatorRegistry();
+        auto actReg = m_hwManager->getActuatorRegistry();
 
-        m_homingService    = std::make_shared<Services::HomingService>(registry, m_repo, m_processConfig);
-        m_drawerService    = std::make_shared<ConveyorDrawerService>(registry, m_repo, m_processConfig);
-        m_stowageService   = std::make_shared<Services::StowageService>(registry, m_repo, m_processConfig);
-        m_alignmentService = std::make_shared<Services::AlignmentService>(registry, m_repo, m_processConfig);
-        m_visionService    = std::make_shared<Services::VisionService>(registry, m_repo, m_processConfig);
-        m_contactService   = std::make_shared<Services::ContactService>(registry, m_repo, m_processConfig, m_hwConfig);
-        m_exposureService  = std::make_shared<Services::ExposureService>(registry);
+        m_homingService    = std::make_shared<Services::HomingService>(actReg, m_repo, m_processConfig);
+        m_drawerService    = std::make_shared<ConveyorDrawerService>(actReg, m_repo, m_processConfig);
+        m_stowageService   = std::make_shared<Services::StowageService>(actReg, m_repo, m_processConfig);
+        m_alignmentService = std::make_shared<Services::AlignmentService>(actReg, m_repo, m_processConfig);
+        m_visionService    = std::make_shared<Services::VisionService>(actReg, m_repo, m_processConfig);
+        m_contactService   = std::make_shared<Services::ContactService>(actReg, m_repo, m_processConfig, m_hwConfig);
+        m_exposureService  = std::make_shared<Services::ExposureService>(actReg);
 
         // Standard Qt Worker Object instantiation
         // Parented to qApp to ensure no memory leaks if run() is bypassed
@@ -129,7 +129,7 @@ namespace Kub3
         QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_stateChanged, m_mainWindow.get(), &MainWindow::ps_stateChanged);
         m_machineStatusVM->bindConnection(m_hwManager.get(), &HAL::HardwareManager::s_cameraFrameReady,
                                           msvm, &VM::BaseVisionViewModel::ps_onCameraFrameReceived);
-        m_machineStatusVM->bindConnection(m_repo.get(), &HAL::MS::IMachineStatusRepo::s_sensorValueChanged,
+        m_machineStatusVM->bindConnection(m_repo.get(), &HAL::MS::IMachineStatusRepo::s_machineValueChanged,
                                           msvm, &VM::MachineStatusViewModel::ps_handleSensorValueChanged);
 
         return *this;
@@ -163,7 +163,7 @@ namespace Kub3
     void ApplicationBuilder::powerOff(void)
     {
 #ifdef BUILD_DEBUG
-        qInfo() << "[ApplicationBuilder::powerOff] triggered (debug mode: closing app).";
+        qDebug() << "[ApplicationBuilder::powerOff] triggered (debug mode: closing app).";
         qApp->quit();
 #else
         if (std::system("sudo poweroff") != 0)

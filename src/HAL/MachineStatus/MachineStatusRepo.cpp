@@ -11,12 +11,12 @@ namespace Kub3::HAL::MS
     {
     }
 
-    void MachineStatusRepo::setSensorRaw(const std::string &key, const SensorValue &value)
+    void MachineStatusRepo::setValueRaw(const std::string &key, const MachineValue &value)
     {
         bool valueChanged = false;
 
         {
-            std::unique_lock lock(m_mutex); // scoped lock
+            std::unique_lock lock(m_mutex); // scoped UNIQUE lock for writing
             auto it = m_sensors.find(key);  // Find value if any
 
             if (it != m_sensors.end())
@@ -36,15 +36,15 @@ namespace Kub3::HAL::MS
         }
 
         // Emit the signal OUTSIDE the mutex lock.
-        // If a connected Qt Slot reacts to this signal by calling getSensor(),
+        // If a connected Qt Slot reacts to this signal by calling getValue(),
         // it would deadlock if we still held the exclusive write lock.
         if (valueChanged)
         {
-            emit s_sensorValueChanged(key);
+            emit s_machineValueChanged(key);
         }
     }
 
-    Optional<SensorValue> MachineStatusRepo::getSensorRaw(const std::string &key) const
+    Optional<MachineValue> MachineStatusRepo::getValueRaw(const std::string &key) const
     {
         // Acquire a shared lock (Read Lock, multiple readers allowed)
         std::shared_lock lock(m_mutex);

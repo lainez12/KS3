@@ -1,10 +1,13 @@
+#if defined(BUILD_DEBUG)
 #include <QDebug>
+#endif
 
 #include <HAL/Actuators/Motors/IMotor.h>
 #include <HAL/Actuators/Valves/IValve.h>
 #include <HAL/MachineStatus/actuators_labels.h>
 #include <HAL/MachineStatus/sensors_labels.h>
 #include <HAL/MachineStatus/utils.h>
+#include <HAL/MachineStatus/virtual_labels.h>
 #include <Services/Stowage/StowageService.h>
 
 #include <Services/Stowage/tasks/StowageCenterStagesTask.h>
@@ -21,31 +24,8 @@ namespace Kub3::Services
         m_repo(std::move(repo)),
         m_config(config)
     {
-        // TODO: split kinematic profiles per motor (requires re-architecturing)
-        m_zMotorsBundle = z_motors_bundle_t{
-            .leftMotor   = m_registry->get<HAL::Act::IMotor>(Z_LEFT_MOTOR),
-            .rightMotor  = m_registry->get<HAL::Act::IMotor>(Z_RIGHT_MOTOR),
-            .backMotor   = m_registry->get<HAL::Act::IMotor>(Z_BACK_MOTOR),
-            .fastProfile = config.getKinematicProfile(Z_LEFT_MOTOR, "normal"),
-            .fineProfile = config.getKinematicProfile(Z_LEFT_MOTOR, "fine"),
-        };
-
-        m_xMotorBundle = stage_motor_bundle_t{
-            .motor            = m_registry->get<HAL::Act::IMotor>(X_STAGE_MOTOR),
-            .kinematic        = config.getKinematicProfile(X_STAGE_MOTOR, "normal"),
-            .centerPositionMm = m_config.x_stage_center_pos_mm,
-        };
-        m_yMotorBundle = stage_motor_bundle_t{
-            .motor            = m_registry->get<HAL::Act::IMotor>(Y_STAGE_MOTOR),
-            .kinematic        = config.getKinematicProfile(Y_STAGE_MOTOR, "normal"),
-            .centerPositionMm = m_config.y_stage_center_pos_mm,
-        };
-        m_thetaMotorBundle = stage_motor_bundle_t{
-            .motor            = m_registry->get<HAL::Act::IMotor>(THETA_STAGE_MOTOR),
-            .kinematic        = config.getKinematicProfile(THETA_STAGE_MOTOR, "normal"),
-            .centerPositionMm = m_config.theta_stage_center_pos_mm,
-        };
-
+        this->initializeMachineValues();
+        this->initializeMotorsBundles();
         m_waferVacuumValve = m_registry->get<HAL::Act::IValve>(WAFER_VACUUM_VALVE);
     }
 
@@ -131,4 +111,41 @@ namespace Kub3::Services
                HAL::MS::readBool(m_repo, Z_RIGHT_HIGH_LIMIT) ||
                HAL::MS::readBool(m_repo, Z_BACK_HIGH_LIMIT);
     }
+
+    void StowageService::initializeMachineValues(void)
+    {
+        m_repo->setValueRaw(V_ARDKO_CONTACT_MASK_POSITION, static_cast<int32_t>(0));
+        m_repo->setValueRaw(V_TARE_FORCE_LEFT, static_cast<uint16_t>(0));
+        m_repo->setValueRaw(V_TARE_FORCE_RIGHT, static_cast<uint16_t>(0));
+        m_repo->setValueRaw(V_TARE_FORCE_BACK, static_cast<uint16_t>(0));
+    }
+
+    void StowageService::initializeMotorsBundles(void)
+    {
+        // TODO: split kinematic profiles per motor (requires re-architecturing)
+        m_zMotorsBundle = z_motors_bundle_t{
+            .leftMotor   = m_registry->get<HAL::Act::IMotor>(Z_LEFT_MOTOR),
+            .rightMotor  = m_registry->get<HAL::Act::IMotor>(Z_RIGHT_MOTOR),
+            .backMotor   = m_registry->get<HAL::Act::IMotor>(Z_BACK_MOTOR),
+            .fastProfile = m_config.getKinematicProfile(Z_LEFT_MOTOR, "normal"),
+            .fineProfile = m_config.getKinematicProfile(Z_LEFT_MOTOR, "fine"),
+        };
+
+        m_xMotorBundle = stage_motor_bundle_t{
+            .motor            = m_registry->get<HAL::Act::IMotor>(X_STAGE_MOTOR),
+            .kinematic        = m_config.getKinematicProfile(X_STAGE_MOTOR, "normal"),
+            .centerPositionMm = m_config.x_stage_center_pos_mm,
+        };
+        m_yMotorBundle = stage_motor_bundle_t{
+            .motor            = m_registry->get<HAL::Act::IMotor>(Y_STAGE_MOTOR),
+            .kinematic        = m_config.getKinematicProfile(Y_STAGE_MOTOR, "normal"),
+            .centerPositionMm = m_config.y_stage_center_pos_mm,
+        };
+        m_thetaMotorBundle = stage_motor_bundle_t{
+            .motor            = m_registry->get<HAL::Act::IMotor>(THETA_STAGE_MOTOR),
+            .kinematic        = m_config.getKinematicProfile(THETA_STAGE_MOTOR, "normal"),
+            .centerPositionMm = m_config.theta_stage_center_pos_mm,
+        };
+    }
+
 }

@@ -94,13 +94,7 @@ namespace Kub3::Tools::Tester
         if (!m_repo)
             return;
 
-        // Filter out unnecessary sensor updates (Performance Optimization)
-        if (key != CW0 && key != CW1 && key != CW2 &&
-            key != CM0 && key != CM1 && key != CM2 && key != CM3 &&
-            key != MASK_ENCODER && key != WAFER_ENCODER)
-            return;
-
-        Optional<HAL::MS::SensorValue> valueOpt = m_repo->getSensorRaw(key);
+        Optional<HAL::MS::MachineValue> valueOpt = m_repo->getValueRaw(key);
 
         if (!valueOpt.has_value())
             return;

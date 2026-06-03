@@ -5,6 +5,7 @@
 #include <HAL/Actuators/Motors/IMotor.h>
 #include <HAL/Actuators/Valves/IValve.h>
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
+#include <HAL/Sensors/ISensor.h>
 #include <Services/BaseTaskService.h>
 #include <Services/Homing/tasks/Homing/AlignmentStagesHomingTask.h>
 #include <Services/Stowage/tasks/StowageMoveZToLimitTask.h>
@@ -38,10 +39,13 @@ namespace Kub3::Services
     private:
         [[nodiscard]] bool isAbsoluteBottomLimitReached() const;
         [[nodiscard]] bool isAbsoluteTopLimitReached() const;
+        void initializeMachineValues(void);
+        void initializeMotorsBundles(void);
 
     private:
         Shared<HAL::Act::ActuatorRegistry> m_registry;
         Shared<HAL::MS::IMachineStatusRepo> m_repo;
+        Shared<HAL::Sensors::ISensor> m_notBendingPosVirtualSensor;
 
         z_motors_bundle_t m_zMotorsBundle;
         stage_motor_bundle_t m_xMotorBundle;
