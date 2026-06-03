@@ -25,7 +25,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-find_package(Qt6 6.8 REQUIRED COMPONENTS Core Gui Widgets SerialPort)
+find_package(Qt6 6.8 REQUIRED COMPONENTS Core Gui Widgets SerialPort Svg)
 
 # ==============================================================================
 # 3. EXTERNAL DEPENDENCIES (MVS Library)
@@ -161,6 +161,7 @@ target_include_directories(Kub3Core PUBLIC
 target_link_libraries(Kub3Core PUBLIC
     Qt6::Core
     Qt6::SerialPort
+    Qt6::Svg
 )
 
 if(MVS_LIBRARY)

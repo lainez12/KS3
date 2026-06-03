@@ -101,3 +101,22 @@ QLabel#sectionTitle
     font-style: italic;
     color: @blue; 
 }
+
+
+QCheckBox#configCamLeftCheck::indicator:unchecked {
+    image: url(:/icons/cam-settings-left.svg);
+    width: 200px;
+    height: 70px;
+}
+
+QCheckBox#configCamLeftCheck::indicator:checked {
+    image: url(:/icons/cam-settings-right-checked.svg);
+    width: 30px;
+    height: 70px;
+}
+
+QCheckBox {
+    width: 30px;
+    height: 50px;
+    background-color: #e85420;
+}

@@ -67,6 +67,24 @@ void NavButton::setEnabledNavButton(bool state) {
     }
 }
 
+void NavButton::getColorDisabled() {
+    m_text->setStyleSheet(QString("color: %1; font-size: 12px;").arg(colorDisabled.name()));
+    m_circle->setColor(colorDisabled);
+}
+
+void NavButton::getColorEnabled() {
+    m_text->setStyleSheet(QString("color: %1; font-size: 12px;").arg(colorEnabled.name()));
+    m_circle->setColor(colorEnabled);
+}
+
+void NavButton::switchColor(bool enabled) {
+    if (enabled) {
+        getColorEnabled();
+    } else {
+        getColorDisabled();
+    }
+}
+
 void NavButton::mouseReleaseEvent(QMouseEvent *event) {
     emit clicked();
 }

@@ -30,25 +30,23 @@ VisualisationView::VisualisationView(Unique<VisualisationViewModel> viewModel, Q
     ui->configCamLeftFrame->setVisible(false);
     ui->configCamRightFrame->setVisible(false);
 
-    QIcon camIconLeft;
-    camIconLeft.addFile(":/icons/cam-settings-left.svg", QSize(), QIcon::Normal, QIcon::Off);
-    camIconLeft.addFile(":/icons/cam-settings-righ-checked.svg", QSize(), QIcon::Normal, QIcon::On);
+    ui->moveLeftCamWidget->setVisible(false);
+    ui->moveRightCamWidget->setVisible(false);
 
-    // ESTA ES LA PRUEBA DE FUEGO:
-    if (camIconLeft.isNull()) {
-        qDebug() << "ERROR: Qt no está encontrando las imágenes SVG en esas rutas.";
-    } else {
-        qDebug() << "EXITO: El icono se cargó correctamente en memoria.";
-    }
+    QIcon camIconLeft(":/icons/cam-settings-left.svg");
+    QIcon camIconRight(":/icons/cam-settings-right.svg");
+    QIcon camIconLeftChecked(":/icons/cam-settings-left-checked.svg");
+    QIcon camIconRightChecked(":/icons/cam-settings-right-checked.svg");
 
-    ui->configCamLeftCheck->setIcon(camIconLeft);
-    ui->configCamLeftCheck->setIconSize(QSize(105, 70));
-
-    connect(ui->configCamLeftCheck, &QCheckBox::toggled, [this](bool checked) {
-        ui->configCamLeftFrame->setVisible(checked);
+    connect(ui->configCamLeftCheck, &QCheckBox::toggled, this, &VisualisationView::leftCamConfigToggled);
+    connect(ui->configCamRightCheck, &QCheckBox::toggled, this, &VisualisationView::rightCamConfigToggled);
+    connect(ui->moveCamLeft, &NavButton::clicked, [this]() {
+        ui->moveCamLeft->switchColor(ui->moveLeftCamWidget->isVisible());
+        ui->moveLeftCamWidget->setVisible(!ui->moveLeftCamWidget->isVisible());
     });
-    connect(ui->configCamRightCheck, &QCheckBox::toggled, [this](bool checked) {
-        ui->configCamRightFrame->setVisible(checked);
+    connect(ui->moveCamRight, &NavButton::clicked, [this]() {
+        ui->moveCamRight->switchColor(ui->moveRightCamWidget->isVisible());
+        ui->moveRightCamWidget->setVisible(!ui->moveRightCamWidget->isVisible());
     });
 
     setNewNavButtonsConfigs();
@@ -111,6 +109,13 @@ void VisualisationView::resizeEvent(QResizeEvent *ev) {
     // Position configCamRightFrame: top left corner of visioRight
     int configRightFrameHeight = visioRightHeight - (BUTTON_SIZE * 1.25);
     ui->configCamRightFrame->setGeometry(0, 0, CONFIG_FRAME_WIDTH, configRightFrameHeight);
+
+    // Position moveLeftCamWidget: left side of visioLeft, full height
+    ui->moveLeftCamWidget->setGeometry(0, 0, ui->moveLeftCamWidget->width(), visioLeftHeight);
+
+    // Position moveRightCamWidget: right side of visioRight, full height
+    int moveRightCamWidgetX = visioRightWidth - ui->moveRightCamWidget->width();
+    ui->moveRightCamWidget->setGeometry(moveRightCamWidgetX, 0, ui->moveRightCamWidget->width(), visioRightHeight);
 }
 
 void VisualisationView::setNewNavButtonsConfigs() {
@@ -176,6 +181,24 @@ void VisualisationView::setNewNavButtonsConfigs() {
         "R",
         std::bind(&VisualisationView::onMeasurementButtonClicked, this, std::placeholders::_1));
     addNavButton("center", measurement);
+}
+
+void VisualisationView::leftCamConfigToggled(bool checked) {
+    ui->configCamLeftFrame->setVisible(checked);
+    if (checked) {
+        ui->configCamLeftCheck->setIcon(QIcon(":/icons/cam-settings-right-checked.svg"));
+    } else {
+        ui->configCamLeftCheck->setIcon(QIcon(":/icons/cam-settings-left.svg"));
+    }
+}
+
+void VisualisationView::rightCamConfigToggled(bool checked) {
+    ui->configCamRightFrame->setVisible(checked);
+    if (checked) {
+        ui->configCamRightCheck->setIcon(QIcon(":/icons/cam-settings-left-checked.svg"));
+    } else {
+        ui->configCamRightCheck->setIcon(QIcon(":/icons/cam-settings-right.svg"));
+    }
 }
 
 void VisualisationView::onBackButtonClicked(const QString &buttonId) {

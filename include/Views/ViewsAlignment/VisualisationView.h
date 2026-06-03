@@ -24,6 +24,10 @@ namespace Kub3::UI::Views::ViewsAlignment {
     protected:
         void resizeEvent(QResizeEvent *event) override;
 
+    private slots:
+        void leftCamConfigToggled(bool checked);
+        void rightCamConfigToggled(bool checked);
+
     private:
         void setNewNavButtonsConfigs();
         void onValidateButtonClicked(const QString &buttonId) override;

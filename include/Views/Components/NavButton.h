@@ -16,6 +16,9 @@ public:
     void setText(const QString &newText);
     void setEnabledNavButton(bool state);
     void setSize(const uint sizePx);
+    void getColorDisabled();
+    void getColorEnabled();
+    void switchColor(bool enabled);
 
 signals:
     void clicked(void);

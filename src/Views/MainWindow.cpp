@@ -90,6 +90,7 @@ void MainWindow::ps_openView(Kub3::UI::ViewId viewId) {
 
     ui->stackedWidget->setCurrentWidget(view);
     m_currentView = view;
+    view->resizeEvent(nullptr);
 }
 
 void MainWindow::updateTopBar(Kub3::UI::Views::ViewBase *view) {
