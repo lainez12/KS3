@@ -28,10 +28,10 @@ namespace Kub3::Services
 
     HomingService::HomingService(Shared<HAL::Act::ActuatorRegistry> registry,
                                  Shared<HAL::MS::IMachineStatusRepo> repo,
-                                 const Config::process_config_t &processConfig) :
+                                 const Config::process_config_t &processConf) :
         m_registry(std::move(registry)),
         m_repo(std::move(repo)),
-        m_processConfig(processConfig)
+        m_processConf(processConf)
     {
     }
 
@@ -84,7 +84,7 @@ namespace Kub3::Services
             enqueueTask<MaskConveyorInitTask>(
                 m_repo, maskConvMotor,
                 m_maskConveyorFastProfile, m_maskConveyorFineProfile, m_maskConveyorContactProfile,
-                m_processConfig.cm3_reset_pos_mm);
+                m_processConf.drawers.cm3_reset_pos_mm);
             // Init wafer conveyor
             enqueueTask<WaferConveyorInitTask>(m_repo, waferConvMotor, m_waferConveyorFastProfile, m_waferConveyorFineProfile);
         }
@@ -96,7 +96,7 @@ namespace Kub3::Services
             const camera_motor_bundle_t rightCamYBundle = buildCameraMotorBundle(CameraMotorIdArg::RightY);
 
             enqueueTask<CamerasInitTask, CAMERAS_TASKS_QUEUE_LANE>(
-                m_repo, m_processConfig,
+                m_repo, m_processConf,
                 leftCamXBundle.motor, leftCamYBundle.motor, rightCamXBundle.motor, rightCamYBundle.motor,
                 m_leftCameraXKineProfile);
             enqueueTask<CamerasHomingTask, CAMERAS_TASKS_QUEUE_LANE>(
@@ -274,28 +274,28 @@ namespace Kub3::Services
     void HomingService::loadMotorsKinematicProfiles(void)
     {
         // --- Z motors
-        m_leftFastProfile  = m_processConfig.getKinematicProfile(Z_LEFT_MOTOR, "normal");
-        m_leftFineProfile  = m_processConfig.getKinematicProfile(Z_LEFT_MOTOR, "fine");
-        m_rightFastProfile = m_processConfig.getKinematicProfile(Z_RIGHT_MOTOR, "normal");
-        m_rightFineProfile = m_processConfig.getKinematicProfile(Z_RIGHT_MOTOR, "fine");
-        m_backFastProfile  = m_processConfig.getKinematicProfile(Z_BACK_MOTOR, "normal");
-        m_backFineProfile  = m_processConfig.getKinematicProfile(Z_BACK_MOTOR, "fine");
+        m_leftFastProfile  = m_processConf.getKinematicProfile(Z_LEFT_MOTOR, "normal");
+        m_leftFineProfile  = m_processConf.getKinematicProfile(Z_LEFT_MOTOR, "fine");
+        m_rightFastProfile = m_processConf.getKinematicProfile(Z_RIGHT_MOTOR, "normal");
+        m_rightFineProfile = m_processConf.getKinematicProfile(Z_RIGHT_MOTOR, "fine");
+        m_backFastProfile  = m_processConf.getKinematicProfile(Z_BACK_MOTOR, "normal");
+        m_backFineProfile  = m_processConf.getKinematicProfile(Z_BACK_MOTOR, "fine");
         // --- Alignment Stages
-        m_xStageKineProfile     = m_processConfig.getKinematicProfile(X_STAGE_MOTOR, "normal");
-        m_yStageKineProfile     = m_processConfig.getKinematicProfile(Y_STAGE_MOTOR, "normal");
-        m_thetaStageKineProfile = m_processConfig.getKinematicProfile(THETA_STAGE_MOTOR, "normal");
+        m_xStageKineProfile     = m_processConf.getKinematicProfile(X_STAGE_MOTOR, "normal");
+        m_yStageKineProfile     = m_processConf.getKinematicProfile(Y_STAGE_MOTOR, "normal");
+        m_thetaStageKineProfile = m_processConf.getKinematicProfile(THETA_STAGE_MOTOR, "normal");
         // --- Drawer conveyors
-        m_maskConveyorFastProfile    = m_processConfig.getKinematicProfile(MASK_DRAWER_MOTOR, "normal");
-        m_maskConveyorFineProfile    = m_processConfig.getKinematicProfile(MASK_DRAWER_MOTOR, "fine");
-        m_maskConveyorContactProfile = m_processConfig.getKinematicProfile(MASK_DRAWER_MOTOR, "contact");
-        m_waferConveyorFastProfile   = m_processConfig.getKinematicProfile(WAFER_DRAWER_MOTOR, "normal");
-        m_waferConveyorFineProfile   = m_processConfig.getKinematicProfile(WAFER_DRAWER_MOTOR, "fine");
+        m_maskConveyorFastProfile    = m_processConf.getKinematicProfile(MASK_DRAWER_MOTOR, "normal");
+        m_maskConveyorFineProfile    = m_processConf.getKinematicProfile(MASK_DRAWER_MOTOR, "fine");
+        m_maskConveyorContactProfile = m_processConf.getKinematicProfile(MASK_DRAWER_MOTOR, "contact");
+        m_waferConveyorFastProfile   = m_processConf.getKinematicProfile(WAFER_DRAWER_MOTOR, "normal");
+        m_waferConveyorFineProfile   = m_processConf.getKinematicProfile(WAFER_DRAWER_MOTOR, "fine");
         // --- Deck / cameras
-        m_deckKineProfile         = m_processConfig.getKinematicProfile(DECK_MOTOR, "normal");
-        m_leftCameraXKineProfile  = m_processConfig.getKinematicProfile(LEFT_CAMERA_X_MOTOR, "normal");
-        m_leftCameraYKineProfile  = m_processConfig.getKinematicProfile(LEFT_CAMERA_Y_MOTOR, "normal");
-        m_rightCameraXKineProfile = m_processConfig.getKinematicProfile(RIGHT_CAMERA_X_MOTOR, "normal");
-        m_rightCameraYKineProfile = m_processConfig.getKinematicProfile(RIGHT_CAMERA_Y_MOTOR, "normal");
+        m_deckKineProfile         = m_processConf.getKinematicProfile(DECK_MOTOR, "normal");
+        m_leftCameraXKineProfile  = m_processConf.getKinematicProfile(LEFT_CAMERA_X_MOTOR, "normal");
+        m_leftCameraYKineProfile  = m_processConf.getKinematicProfile(LEFT_CAMERA_Y_MOTOR, "normal");
+        m_rightCameraXKineProfile = m_processConf.getKinematicProfile(RIGHT_CAMERA_X_MOTOR, "normal");
+        m_rightCameraYKineProfile = m_processConf.getKinematicProfile(RIGHT_CAMERA_Y_MOTOR, "normal");
     }
 
     camera_motor_bundle_t HomingService::buildCameraMotorBundle(CameraMotorIdArg arg)
@@ -307,19 +307,19 @@ namespace Kub3::Services
         {
         case CameraMotorIdArg::LeftX:
             motorId     = LEFT_CAMERA_X_MOTOR;
-            centerPosMm = m_processConfig.left_cam_x_reset_pos_mm;
+            centerPosMm = m_processConf.vision.left_cam_x_reset_pos_mm;
             break;
         case CameraMotorIdArg::LeftY:
             motorId     = LEFT_CAMERA_Y_MOTOR;
-            centerPosMm = m_processConfig.left_cam_y_reset_pos_mm;
+            centerPosMm = m_processConf.vision.left_cam_y_reset_pos_mm;
             break;
         case CameraMotorIdArg::RightX:
             motorId     = RIGHT_CAMERA_X_MOTOR;
-            centerPosMm = m_processConfig.right_cam_x_reset_pos_mm;
+            centerPosMm = m_processConf.vision.right_cam_x_reset_pos_mm;
             break;
         case CameraMotorIdArg::RightY:
             motorId     = RIGHT_CAMERA_Y_MOTOR;
-            centerPosMm = m_processConfig.right_cam_y_reset_pos_mm;
+            centerPosMm = m_processConf.vision.right_cam_y_reset_pos_mm;
             break;
         }
 
@@ -359,20 +359,20 @@ namespace Kub3::Services
             return stage_motor_bundle_t{
                 .motor            = m_registry->get<HAL::Act::IMotor>(X_STAGE_MOTOR),
                 .kinematic        = m_xStageKineProfile,
-                .centerPositionMm = m_processConfig.x_stage_center_pos_mm};
+                .centerPositionMm = m_processConf.alignment.x_stage_center_pos_mm};
 
         if (arg == StageMotorIdArg::YStage)
             return stage_motor_bundle_t{
                 .motor            = m_registry->get<HAL::Act::IMotor>(Y_STAGE_MOTOR),
                 .kinematic        = m_yStageKineProfile,
-                .centerPositionMm = m_processConfig.y_stage_center_pos_mm,
+                .centerPositionMm = m_processConf.alignment.y_stage_center_pos_mm,
             };
 
         // if (arg == StageMotorIdArg::ThetaStage)
         return stage_motor_bundle_t{
             .motor            = m_registry->get<HAL::Act::IMotor>(THETA_STAGE_MOTOR),
             .kinematic        = m_thetaStageKineProfile,
-            .centerPositionMm = m_processConfig.theta_stage_center_pos_mm,
+            .centerPositionMm = m_processConf.alignment.theta_stage_center_pos_mm,
         };
     }
 

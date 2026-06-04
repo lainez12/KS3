@@ -11,6 +11,7 @@
 #include <pages/ForceConfigPage.h>
 #include <pages/MCUConfigPage.h>
 #include <pages/MotorConfigPage.h>
+#include <pages/ZAlgorithmicLimitsPage.h>
 #include <utils.h>
 
 #include <QDoubleSpinBox>
@@ -156,27 +157,36 @@ void ConfigWindow::populateUI()
     // -------------------------------------------------------------
     // STATIC PAGE: FORCE SETTINGS
     // -------------------------------------------------------------
-    auto *forcePage = new Kub3::Components::ForceConfigPage(m_processConfig);
+    auto *forcePage = new Kub3::Components::ForceConfigPage(m_processConfig.contact);
     int forceIndex  = addConfigPage(forcePage, [this, forcePage]() {
-        forcePage->pullDataToStruct(m_processConfig);
+        forcePage->pullDataToStruct(m_processConfig.contact);
     });
     m_categoryMap[FORCE_CATEGORY].push_back({"Process & Crash Limits", forceIndex});
 
     // -------------------------------------------------------------
+    // STATIC PAGE: Z-AXIS SETTINGS
+    // -------------------------------------------------------------
+    auto *zAxisPage = new Kub3::Components::ZAlgorithmicLimitsPage(m_processConfig);
+    int zAxisIndex  = addConfigPage(zAxisPage, [this, zAxisPage]() {
+        zAxisPage->pullDataToStruct(m_processConfig);
+    });
+    m_categoryMap[Z_CATEGORY].push_back({"Algorithmic Limits", zAxisIndex});
+
+    // -------------------------------------------------------------
     // STATIC PAGE: ALIGNMENT CALIBRATION SETTINGS
     // -------------------------------------------------------------
-    auto *alignPage = new Kub3::Components::AlignmentPositionsPage(m_processConfig);
+    auto *alignPage = new Kub3::Components::AlignmentPositionsPage(m_processConfig.alignment);
     int alignIdx    = addConfigPage(alignPage, [this, alignPage]() {
-        alignPage->pullDataToStruct(m_processConfig);
+        alignPage->pullDataToStruct(m_processConfig.alignment);
     });
     m_categoryMap[ALIGNMENT_CATEGORY].push_back({"Calibration Positions", alignIdx});
 
     // -------------------------------------------------------------
     // STATIC PAGE: CONVEYORS CALIBRATION SETTINGS
     // -------------------------------------------------------------
-    auto *drawersPage = new Kub3::Components::DrawersPositionsPage(m_processConfig);
+    auto *drawersPage = new Kub3::Components::DrawersPositionsPage(m_processConfig.drawers);
     int drawersIdx    = addConfigPage(drawersPage, [this, drawersPage]() {
-        drawersPage->pullDataToStruct(m_processConfig);
+        drawersPage->pullDataToStruct(m_processConfig.drawers);
     });
     m_categoryMap[CONVEYORS_CATEGORY].push_back({"Calibration Positions", drawersIdx});
 
@@ -187,9 +197,9 @@ void ConfigWindow::populateUI()
     // -------------------------------------------------------------
     // STATIC PAGE: CAMERAS GENERAL SETTINGS
     // -------------------------------------------------------------
-    auto *camGenPage = new Kub3::Components::CameraGeneralPage(m_processConfig);
+    auto *camGenPage = new Kub3::Components::CameraGeneralPage(m_processConfig.vision);
     int camGenIndex  = addConfigPage(camGenPage, [this, camGenPage]() {
-        camGenPage->pullDataToStruct(m_processConfig);
+        camGenPage->pullDataToStruct(m_processConfig.vision);
     });
     m_categoryMap[CAMERAS_CATEGORY].push_back({"General Settings", camGenIndex});
 

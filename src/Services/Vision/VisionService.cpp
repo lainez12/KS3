@@ -51,19 +51,19 @@ namespace Kub3::Services
 {
     VisionService::VisionService(Shared<HAL::Act::ActuatorRegistry> registry,
                                  Shared<HAL::MS::IMachineStatusRepo> repo,
-                                 const Config::process_config_t &processConfig) :
+                                 const Config::process_config_t &processConf) :
         m_registry(std::move(registry)),
         m_repo(std::move(repo))
     {
-        setupMotor(VisionMotor::UpperLeftCameraX, LEFT_CAMERA_X_MOTOR, processConfig);
-        setupMotor(VisionMotor::UpperLeftCameraY, LEFT_CAMERA_Y_MOTOR, processConfig);
-        setupMotor(VisionMotor::UpperRightCameraX, RIGHT_CAMERA_X_MOTOR, processConfig);
-        setupMotor(VisionMotor::UpperRightCameraY, RIGHT_CAMERA_Y_MOTOR, processConfig);
-        m_minCameraDistanceMm = processConfig.min_camera_distance_mm;
+        setupMotor(VisionMotor::UpperLeftCameraX, LEFT_CAMERA_X_MOTOR, processConf);
+        setupMotor(VisionMotor::UpperLeftCameraY, LEFT_CAMERA_Y_MOTOR, processConf);
+        setupMotor(VisionMotor::UpperRightCameraX, RIGHT_CAMERA_X_MOTOR, processConf);
+        setupMotor(VisionMotor::UpperRightCameraY, RIGHT_CAMERA_Y_MOTOR, processConf);
+        m_minCameraDistanceMm = processConf.vision.min_camera_distance_mm;
 
         // Initialize Deck Motor (TODO: verify label names and config variables match your actual codebase)
         m_deckMotor   = m_registry->get<HAL::Act::IMotor>(DECK_MOTOR);
-        m_deckProfile = processConfig.getKinematicProfile(DECK_MOTOR, "normal");
+        m_deckProfile = processConf.getKinematicProfile(DECK_MOTOR, "normal");
     }
 
     void VisionService::setupMotor(VisionMotor motorId, const char *motorConfId, const Config::process_config_t &conf)

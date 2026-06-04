@@ -53,7 +53,7 @@ namespace Kub3::Services
         stage_motor_bundle_t m_thetaMotorBundle;
         Shared<HAL::Act::IValve> m_waferVacuumValve;
 
-        Config::process_config_t m_config;
+        Config::process_config_t m_conf;
     };
 
 }

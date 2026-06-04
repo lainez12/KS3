@@ -10,7 +10,7 @@ namespace Kub3::Components
         return sb;
     }
 
-    ForceConfigPage::ForceConfigPage(const Kub3::Config::process_config_t &conf, QWidget *parent) : QWidget(parent)
+    ForceConfigPage::ForceConfigPage(const Config::contact_process_config_t &conf, QWidget *parent) : QWidget(parent)
     {
         setupUI();
         loadInitialData(conf);
@@ -27,11 +27,11 @@ namespace Kub3::Components
         auto *formLayout = new QFormLayout();
 
         m_hwCrashForce     = createDoubleSpinBox(20000.0); // Absolute hardware max
-        m_maxForce         = createDoubleSpinBox(20000.0);
+        m_maxProcessForce  = createDoubleSpinBox(20000.0);
         m_contactThreshold = createDoubleSpinBox(20000.0);
 
         formLayout->addRow("Hardware Crash Limit (gf):", m_hwCrashForce);
-        formLayout->addRow("Maximum Process Force (gf):", m_maxForce);
+        formLayout->addRow("Maximum Process Force (gf):", m_maxProcessForce);
         formLayout->addRow("Contact Detection Threshold (gf):", m_contactThreshold);
 
         m_layout->addLayout(formLayout);
@@ -39,27 +39,27 @@ namespace Kub3::Components
 
         // --- POKA-YOKE (Bounds Logic) ---
         // hw_crash_force >= max_force >= contact_threshold
-        connect(m_hwCrashForce, &QDoubleSpinBox::valueChanged, m_maxForce, &QDoubleSpinBox::setMaximum);
-        connect(m_maxForce, &QDoubleSpinBox::valueChanged, m_contactThreshold, &QDoubleSpinBox::setMaximum);
+        connect(m_hwCrashForce, &QDoubleSpinBox::valueChanged, m_maxProcessForce, &QDoubleSpinBox::setMaximum);
+        connect(m_maxProcessForce, &QDoubleSpinBox::valueChanged, m_contactThreshold, &QDoubleSpinBox::setMaximum);
     }
 
-    void ForceConfigPage::loadInitialData(const Kub3::Config::process_config_t &conf)
+    void ForceConfigPage::loadInitialData(const Config::contact_process_config_t &conf)
     {
         // Load top-down to prevent premature clamping
         m_hwCrashForce->setValue(conf.hw_crash_force_limit_gf);
-        m_maxForce->setMaximum(conf.hw_crash_force_limit_gf);
+        m_maxProcessForce->setMaximum(conf.hw_crash_force_limit_gf);
 
-        m_maxForce->setValue(conf.max_force_gf);
-        m_contactThreshold->setMaximum(conf.max_force_gf);
+        m_maxProcessForce->setValue(conf.max_process_force_gf);
+        m_contactThreshold->setMaximum(conf.max_process_force_gf);
 
         m_contactThreshold->setValue(conf.contact_threshold_gf);
     }
 
-    void ForceConfigPage::pullDataToStruct(Kub3::Config::process_config_t &outConf) const
+    void ForceConfigPage::pullDataToStruct(Config::contact_process_config_t &out) const
     {
-        outConf.hw_crash_force_limit_gf = m_hwCrashForce->value();
-        outConf.max_force_gf            = m_maxForce->value();
-        outConf.contact_threshold_gf    = m_contactThreshold->value();
+        out.hw_crash_force_limit_gf = m_hwCrashForce->value();
+        out.max_process_force_gf    = m_maxProcessForce->value();
+        out.contact_threshold_gf    = m_contactThreshold->value();
     }
 
 }

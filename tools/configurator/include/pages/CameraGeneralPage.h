@@ -16,8 +16,8 @@ namespace Kub3::Components
         Q_OBJECT
 
     public:
-        explicit CameraGeneralPage(const Kub3::Config::process_config_t &conf, QWidget *parent = nullptr);
-        void pullDataToStruct(Kub3::Config::process_config_t &outConf) const;
+        explicit CameraGeneralPage(const Kub3::Config::vision_process_config_t &conf, QWidget *parent = nullptr);
+        void pullDataToStruct(Kub3::Config::vision_process_config_t &out) const;
 
     private:
         QVBoxLayout *m_layout               = nullptr;

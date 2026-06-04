@@ -29,7 +29,7 @@ namespace Kub3::Services
 
     private:
         Shared<HAL::MS::IMachineStatusRepo> m_repo;
-        const Config::process_config_t &m_processConfig;
+        const Config::process_config_t &m_processConf;
 
         Shared<HAL::Act::IMotor> m_leftCamXMotor;
         Shared<HAL::Act::IMotor> m_leftCamYMotor;

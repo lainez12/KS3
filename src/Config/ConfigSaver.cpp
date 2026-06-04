@@ -158,31 +158,41 @@ namespace Kub3::Config
 
             // SAVE CAMERAS DATA
             settings.beginGroup(CONF_PROCESS_CAMERAS);
-            settings.setValue(CONF_PROCESS_MIN_CAMERA_DISTANCE_MM, config.min_camera_distance_mm);
-            settings.setValue(CONF_PROCESS_LEFT_CAM_X_RESET_POS_MM, config.left_cam_x_reset_pos_mm);
-            settings.setValue(CONF_PROCESS_LEFT_CAM_Y_RESET_POS_MM, config.left_cam_y_reset_pos_mm);
-            settings.setValue(CONF_PROCESS_RIGHT_CAM_X_RESET_POS_MM, config.right_cam_x_reset_pos_mm);
-            settings.setValue(CONF_PROCESS_RIGHT_CAM_Y_RESET_POS_MM, config.right_cam_y_reset_pos_mm);
+            settings.setValue(CONF_PROCESS_MIN_CAMERA_DISTANCE_MM, config.vision.min_camera_distance_mm);
+            settings.setValue(CONF_PROCESS_LEFT_CAM_X_RESET_POS_MM, config.vision.left_cam_x_reset_pos_mm);
+            settings.setValue(CONF_PROCESS_LEFT_CAM_Y_RESET_POS_MM, config.vision.left_cam_y_reset_pos_mm);
+            settings.setValue(CONF_PROCESS_RIGHT_CAM_X_RESET_POS_MM, config.vision.right_cam_x_reset_pos_mm);
+            settings.setValue(CONF_PROCESS_RIGHT_CAM_Y_RESET_POS_MM, config.vision.right_cam_y_reset_pos_mm);
             settings.endGroup(); // CONF_PROCESS_CAMERAS
 
             // SAVE ALIGNMENT POSITIONS
             settings.beginGroup(CONF_PROCESS_ALIGNMENT_POSITIONS);
-            settings.setValue(CONF_PROCESS_X_STAGE_CENTER_POS_MM, config.x_stage_center_pos_mm);
-            settings.setValue(CONF_PROCESS_Y_STAGE_CENTER_POS_MM, config.y_stage_center_pos_mm);
-            settings.setValue(CONF_PROCESS_THETA_STAGE_CENTER_POS_MM, config.theta_stage_center_pos_mm);
-            settings.endGroup();
+            settings.setValue(CONF_PROCESS_X_STAGE_CENTER_POS_MM, config.alignment.x_stage_center_pos_mm);
+            settings.setValue(CONF_PROCESS_Y_STAGE_CENTER_POS_MM, config.alignment.y_stage_center_pos_mm);
+            settings.setValue(CONF_PROCESS_THETA_STAGE_CENTER_POS_MM, config.alignment.theta_stage_center_pos_mm);
+            settings.endGroup(); // CONF_PROCESS_ALIGNMENT_POSITIONS
 
             // SAVE DRAWERS POSITIONS
             settings.beginGroup(CONF_PROCESS_DRAWERS_POSITIONS);
-            settings.setValue(CONF_PROCESS_CM3_RESET_POS_MM, config.cm3_reset_pos_mm);
-            settings.endGroup();
+            settings.setValue(CONF_PROCESS_CM3_RESET_POS_MM, config.drawers.cm3_reset_pos_mm);
+            settings.endGroup(); // CONF_PROCESS_DRAWERS_POSITIONS
 
             // SAVE FORCE LIMITS
             settings.beginGroup(CONF_PROCESS_FORCE_LIMITS);
-            settings.setValue(CONF_PROCESS_HW_CRASH_FORCE_LIMIT_GF, config.hw_crash_force_limit_gf);
-            settings.setValue(CONF_PROCESS_MAX_FORCE_GF, config.max_force_gf);
-            settings.setValue(CONF_PROCESS_CONTACT_THRESHOLD_GF, config.contact_threshold_gf);
+            settings.setValue(CONF_PROCESS_HW_CRASH_FORCE_LIMIT_GF, config.contact.hw_crash_force_limit_gf);
+            settings.setValue(CONF_PROCESS_MAX_FORCE_GF, config.contact.max_process_force_gf);
+            settings.setValue(CONF_PROCESS_CONTACT_THRESHOLD_GF, config.contact.contact_threshold_gf);
+            settings.setValue(CONF_PROCESS_AUTOLEVEL_FORCE_GF, config.contact.autolevel_force_gf);
             settings.endGroup(); // CONF_PROCESS_FORCE_LIMITS
+
+            // SAVE ADMITTANCE TUNING VALUES
+            settings.beginGroup(CONF_PROCESS_ADMITTANCE_TUNING);
+            settings.setValue(CONF_PROCESS_ADMITTANCE_MAX_STEP_MM_PER_TICK, config.contact.admittance.max_step_mm_per_tick);
+            settings.setValue(CONF_PROCESS_ADMITTANCE_TRANSLATION_GAIN_LOW_FORCE, config.contact.admittance.translational_gain_low_force);
+            settings.setValue(CONF_PROCESS_ADMITTANCE_TRANSLATION_GAIN_HIGH_FORCE, config.contact.admittance.translational_gain_high_force);
+            settings.setValue(CONF_PROCESS_ADMITTANCE_ROTATION_GAIN_LOW_FORCE, config.contact.admittance.rotational_gain_low_force);
+            settings.setValue(CONF_PROCESS_ADMITTANCE_ROTATION_GAIN_HIGH_FORCE, config.contact.admittance.rotational_gain_high_force);
+            settings.endGroup(); // CONF_PROCESS_ADMITTANCE_TUNING
 
             // Flush and verify write
             settings.sync();

@@ -16,19 +16,19 @@ namespace Kub3::Components
         Q_OBJECT
 
     public:
-        explicit ForceConfigPage(const Kub3::Config::process_config_t &conf, QWidget *parent = nullptr);
+        explicit ForceConfigPage(const Config::contact_process_config_t &conf, QWidget *parent = nullptr);
 
-        void pullDataToStruct(Kub3::Config::process_config_t &outConf) const;
+        void pullDataToStruct(Config::contact_process_config_t &outConf) const;
 
     private:
         void setupUI();
-        void loadInitialData(const Kub3::Config::process_config_t &conf);
+        void loadInitialData(const Config::contact_process_config_t &conf);
 
     private:
         QVBoxLayout *m_layout = nullptr;
 
         QDoubleSpinBox *m_hwCrashForce     = nullptr;
-        QDoubleSpinBox *m_maxForce         = nullptr;
+        QDoubleSpinBox *m_maxProcessForce  = nullptr;
         QDoubleSpinBox *m_contactThreshold = nullptr;
     };
 

@@ -19,7 +19,7 @@ namespace Kub3::Services
 
     ContactService::ContactService(Shared<HAL::Act::ActuatorRegistry> registry,
                                    Shared<HAL::MS::IMachineStatusRepo> repo,
-                                   const Config::process_config_t &processConfig,
+                                   const Config::process_config_t &processConf,
                                    const Config::hardware_config_t &hwConfig) :
         m_registry(std::move(registry)),
         m_repo(std::move(repo))
@@ -33,10 +33,10 @@ namespace Kub3::Services
             m_registry->get<HAL::Act::IMotor>(Z_BACK_MOTOR)};
 
         // Thresholds
-        m_maxProcessForceGF   = processConfig.max_force_gf;            // Get absolute max force allowed to be requested
-        m_hwCrashLimitForceGF = processConfig.hw_crash_force_limit_gf; // Get absolute max physical force allowed (hardware protection)
-        m_contactThresholdGF  = processConfig.contact_threshold_gf;
-        m_autolevelForceGF    = processConfig.autolevel_force_gf;
+        m_maxProcessForceGF   = processConf.contact.max_process_force_gf;    // Get absolute max force allowed to be requested
+        m_hwCrashLimitForceGF = processConf.contact.hw_crash_force_limit_gf; // Get absolute max physical force allowed (hardware protection)
+        m_contactThresholdGF  = processConf.contact.contact_threshold_gf;
+        m_autolevelForceGF    = processConf.contact.autolevel_force_gf;
 
         // Conversions factors
         if (auto it = hwConfig.adc_to_gf_factors.find(FORCE_LEFT); it != hwConfig.adc_to_gf_factors.end())
@@ -245,18 +245,18 @@ namespace Kub3::Services
         return Algorithms::Control::admittance_config_t{
             // Targets and Limits
             .target_force_gf      = targetForceGF,
-            .force_tolerance_gf   = 5.0, // TODO: Get value from processConfig; +/- 5 grams convergence band
+            .force_tolerance_gf   = 5.0, // TODO: Get value from processConf; +/- 5 grams convergence band
             .max_process_force_gf = m_maxProcessForceGF,
 
             // Gain Scheduling (Compliance: mm/s per GF)
-            // TODO: Get values from processConfig. These are defined by the physical machine stiffness.
+            // TODO: Get values from processConf. These are defined by the physical machine stiffness.
             .k_mean_max = 0.005, // Fast approach (Air/Soft)
             .k_mean_min = 0.001, // Slow approach (Stiff/Contact)
             .k_tilt_max = 0.010, // WEC twist fast
             .k_tilt_min = 0.002, // WEC twist slow
 
             // Safety Limits & Hardware capabilities
-            // TODO: Get values from processConfig
+            // TODO: Get values from processConf
             .max_step_mm_per_tick   = 0.025,                               // 25 microns max blind travel per tick
             .max_profile_speed_mm_s = m_contactProfile.targetVelocityMmS,  // Max allowed continuous speed
             .min_profile_speed_mm_s = m_contactProfile.initialVelocityMmS, // Hardware deadband limit (to prevent stuttering)

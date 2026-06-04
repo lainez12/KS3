@@ -16,13 +16,13 @@ namespace Kub3::Components
         Q_OBJECT
 
     public:
-        explicit AlignmentPositionsPage(const Kub3::Config::process_config_t &conf, QWidget *parent = nullptr);
+        explicit AlignmentPositionsPage(const Config::alignment_process_config_t &conf, QWidget *parent = nullptr);
 
-        void pullDataToStruct(Kub3::Config::process_config_t &outConf) const;
+        void pullDataToStruct(Config::alignment_process_config_t &outConf) const;
 
     private:
         void setupUI();
-        void loadInitialData(const Kub3::Config::process_config_t &conf);
+        void loadInitialData(const Config::alignment_process_config_t &conf);
 
     private:
         QVBoxLayout *m_layout = nullptr;

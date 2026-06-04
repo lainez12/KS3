@@ -4,6 +4,7 @@
 #define CONF_PROCESS_KINEMATICS          "kinematics"
 #define CONF_PROCESS_CAMERAS             "cameras"
 #define CONF_PROCESS_FORCE_LIMITS        "forceLimits"
+#define CONF_PROCESS_ADMITTANCE_TUNING   "admittance"
 #define CONF_PROCESS_ALIGNMENT_POSITIONS "alignmentPositions"
 #define CONF_PROCESS_DRAWERS_POSITIONS   "drawersPositions"
 
@@ -36,3 +37,11 @@
 #define CONF_PROCESS_HW_CRASH_FORCE_LIMIT_GF "hw_crash_force_limit_gf"
 #define CONF_PROCESS_MAX_FORCE_GF            "max_force_gf"
 #define CONF_PROCESS_CONTACT_THRESHOLD_GF    "contact_threshold_gf"
+#define CONF_PROCESS_AUTOLEVEL_FORCE_GF      "autolevel_force_gf"
+
+// CONF_PROCESS_ADMITTANCE_TUNING inner key
+#define CONF_PROCESS_ADMITTANCE_MAX_STEP_MM_PER_TICK        "max_step_mm_per_tick"
+#define CONF_PROCESS_ADMITTANCE_TRANSLATION_GAIN_LOW_FORCE  "translation_gain_low_force"
+#define CONF_PROCESS_ADMITTANCE_TRANSLATION_GAIN_HIGH_FORCE "translation_gain_high_force"
+#define CONF_PROCESS_ADMITTANCE_ROTATION_GAIN_LOW_FORCE     "rotation_gain_low_force"
+#define CONF_PROCESS_ADMITTANCE_ROTATION_GAIN_HIGH_FORCE    "rotation_gain_high_force"

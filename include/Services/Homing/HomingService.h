@@ -57,7 +57,7 @@ namespace Kub3::Services
     private:
         Shared<HAL::Act::ActuatorRegistry> m_registry;
         Shared<HAL::MS::IMachineStatusRepo> m_repo;
-        const Config::process_config_t &m_processConfig;
+        const Config::process_config_t &m_processConf;
 
         // Kinematic profiles
         // --- Z motors

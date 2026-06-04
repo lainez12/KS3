@@ -2,7 +2,17 @@
 
 namespace Kub3::Components
 {
-    CameraGeneralPage::CameraGeneralPage(const Kub3::Config::process_config_t &conf, QWidget *parent) : QWidget(parent)
+    static QDoubleSpinBox *createDoubleSpinBox(double minLimit = 0.0, double maxLimit = 10000.0, int decimals = 2)
+    {
+        auto *sb = new QDoubleSpinBox();
+
+        sb->setRange(minLimit, maxLimit);
+        sb->setDecimals(decimals);
+        sb->setSingleStep(std::min((maxLimit - minLimit) / 100.0, 1.0));
+        return sb;
+    }
+
+    CameraGeneralPage::CameraGeneralPage(const Kub3::Config::vision_process_config_t &conf, QWidget *parent) : QWidget(parent)
     {
         m_layout = new QVBoxLayout(this);
 
@@ -12,33 +22,23 @@ namespace Kub3::Components
 
         auto *formLayout = new QFormLayout();
 
-        m_minCamDist = new QDoubleSpinBox();
-        m_minCamDist->setRange(0.0, 10000.0);
-        m_minCamDist->setDecimals(2);
+        m_minCamDist = createDoubleSpinBox(0.0, 10000.0, 2);
         m_minCamDist->setValue(conf.min_camera_distance_mm);
         formLayout->addRow("Minimum Camera Distance (mm):", m_minCamDist);
 
-        m_leftCamXResetPos = new QDoubleSpinBox();
-        m_leftCamXResetPos->setRange(-100000.0, 100000.0);
-        m_leftCamXResetPos->setDecimals(2);
+        m_leftCamXResetPos = createDoubleSpinBox(-100000.0, 100000.0, 2);
         m_leftCamXResetPos->setValue(conf.left_cam_x_reset_pos_mm);
         formLayout->addRow("Left Camera X Reset Position (mm):", m_leftCamXResetPos);
 
-        m_leftCamYResetPos = new QDoubleSpinBox();
-        m_leftCamYResetPos->setRange(-100000.0, 100000.0);
-        m_leftCamYResetPos->setDecimals(2);
+        m_leftCamYResetPos = createDoubleSpinBox(-100000.0, 100000.0, 2);
         m_leftCamYResetPos->setValue(conf.left_cam_y_reset_pos_mm);
         formLayout->addRow("Left Camera Y Reset Position (mm):", m_leftCamYResetPos);
 
-        m_rightCamXResetPos = new QDoubleSpinBox();
-        m_rightCamXResetPos->setRange(-100000.0, 100000.0);
-        m_rightCamXResetPos->setDecimals(2);
+        m_rightCamXResetPos = createDoubleSpinBox(-100000.0, 100000.0, 2);
         m_rightCamXResetPos->setValue(conf.right_cam_x_reset_pos_mm);
         formLayout->addRow("Right Camera X Reset Position (mm):", m_rightCamXResetPos);
 
-        m_rightCamYResetPos = new QDoubleSpinBox();
-        m_rightCamYResetPos->setRange(-100000.0, 100000.0);
-        m_rightCamYResetPos->setDecimals(2);
+        m_rightCamYResetPos = createDoubleSpinBox(-100000.0, 100000.0, 2);
         m_rightCamYResetPos->setValue(conf.right_cam_y_reset_pos_mm);
         formLayout->addRow("Right Camera Y Reset Position (mm):", m_rightCamYResetPos);
 
@@ -46,13 +46,13 @@ namespace Kub3::Components
         m_layout->addStretch();
     }
 
-    void CameraGeneralPage::pullDataToStruct(Kub3::Config::process_config_t &outConf) const
+    void CameraGeneralPage::pullDataToStruct(Kub3::Config::vision_process_config_t &out) const
     {
-        outConf.min_camera_distance_mm   = m_minCamDist->value();
-        outConf.left_cam_x_reset_pos_mm  = m_leftCamXResetPos->value();
-        outConf.left_cam_y_reset_pos_mm  = m_leftCamYResetPos->value();
-        outConf.right_cam_x_reset_pos_mm = m_rightCamXResetPos->value();
-        outConf.right_cam_y_reset_pos_mm = m_rightCamYResetPos->value();
+        out.min_camera_distance_mm   = m_minCamDist->value();
+        out.left_cam_x_reset_pos_mm  = m_leftCamXResetPos->value();
+        out.left_cam_y_reset_pos_mm  = m_leftCamYResetPos->value();
+        out.right_cam_x_reset_pos_mm = m_rightCamXResetPos->value();
+        out.right_cam_y_reset_pos_mm = m_rightCamYResetPos->value();
     }
 
 }

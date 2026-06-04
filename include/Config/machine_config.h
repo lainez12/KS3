@@ -73,32 +73,81 @@ namespace Kub3::Config
 
     using KinematicProfiles = std::unordered_map<std::string, kinematic_profile_t>;
 
-    // Top level struct for software/process config
-    typedef struct process_config_s {
-        // Map [id] -> [map of kinematic profiles for motor]
-        std::unordered_map<std::string, KinematicProfiles> kinematic_profiles;
+    // ------------------------------------------
+    // Z-Axis Admittance / WEC Tuning
+    // ------------------------------------------
+    typedef struct admittance_tuning_config_s {
+        double max_step_mm_per_tick; // Safety limit: max blind distance per 20ms evaluation
 
-        // Reset positions (initialization)
-        // --- Cameras
+        // Translational (Elevator) Gains
+        double translational_gain_low_force;  // Mapped to k_mean_max (mm/s/gf) - Fast approach
+        double translational_gain_high_force; // Mapped to k_mean_min (mm/s/gf) - Fine pressing
+
+        // Rotational (Tilt/Suspension) Gains
+        double rotational_gain_low_force;  // Mapped to k_tilt_max (mm/s/gf) - Fast planarization
+        double rotational_gain_high_force; // Mapped to k_tilt_min (mm/s/gf) - Fine planarization
+    } admittance_tuning_config_t;
+
+    // ------------------------------------------
+    // Sub-System Process Configurations
+    // ------------------------------------------
+
+    typedef struct contact_process_config_s {
+        // Safety Limits
+        double hw_crash_force_limit_gf;
+
+        // Process Targets
+        double contact_threshold_gf;
+        double autolevel_force_gf;
+        double max_process_force_gf;
+
+        // Control Loop Tuning
+        admittance_tuning_config_t admittance;
+    } contact_process_config_t;
+
+    typedef struct elevator_process_config_s {
+        // Safety limits
+        double max_z_relative_distance_mm;
+    } elevator_process_config_t;
+
+    typedef struct vision_process_config_s {
+        // Safety limits
+        double min_camera_distance_mm = 0.0;
+
+        // Reset positions
         double left_cam_x_reset_pos_mm  = 0.0;
         double left_cam_y_reset_pos_mm  = 0.0;
         double right_cam_x_reset_pos_mm = 0.0;
         double right_cam_y_reset_pos_mm = 0.0;
-        // --- Alignment stages
+    } vision_process_config_t;
+
+    typedef struct alignment_process_config_s {
+        // Centering positions
         double x_stage_center_pos_mm     = 0.0;
         double y_stage_center_pos_mm     = 0.0;
         double theta_stage_center_pos_mm = 0.0;
-        // --- CM3 mask-conveyor initilization
+    } alignment_process_config_t;
+
+    typedef struct drawer_process_config_s {
+        // Reset positions
         double cm3_reset_pos_mm = 0.0;
+    } drawer_process_config_t;
 
-        // Cameras distances
-        double min_camera_distance_mm = 0.0;
+    // ------------------------------------------
+    // Root Process Configuration
+    // ------------------------------------------
 
-        // Force thresholds
-        double hw_crash_force_limit_gf = 0.0;
-        double max_force_gf            = 0.0;
-        double contact_threshold_gf    = 0.0;
-        double autolevel_force_gf      = 0.0;
+    // Top level struct for software/process config
+    typedef struct process_config_s {
+        // Kinematics Dictionary
+        std::unordered_map<std::string, KinematicProfiles> kinematic_profiles;
+
+        // Domain-Specific Configurations
+        drawer_process_config_t drawers;
+        elevator_process_config_t elevator;
+        alignment_process_config_t alignment;
+        contact_process_config_t contact;
+        vision_process_config_t vision;
 
         [[nodiscard]] kinematic_profile_t getKinematicProfile(const std::string &motorId, const std::string &profileName) const
         {
@@ -113,5 +162,4 @@ namespace Kub3::Config
             return profileIt->second;
         }
     } process_config_t;
-
 } // namespace Kub3::Config

@@ -16,13 +16,13 @@ namespace Kub3::Components
         Q_OBJECT
 
     public:
-        explicit DrawersPositionsPage(const Kub3::Config::process_config_t &conf, QWidget *parent = nullptr);
+        explicit DrawersPositionsPage(const Config::drawer_process_config_t &conf, QWidget *parent = nullptr);
 
-        void pullDataToStruct(Kub3::Config::process_config_t &outConf) const;
+        void pullDataToStruct(Config::drawer_process_config_t &outConf) const;
 
     private:
         void setupUI();
-        void loadInitialData(const Kub3::Config::process_config_t &conf);
+        void loadInitialData(const Config::drawer_process_config_t &conf);
 
     private:
         QVBoxLayout *m_layout = nullptr;

@@ -10,7 +10,7 @@ namespace Kub3::Components
         return sb;
     }
 
-    DrawersPositionsPage::DrawersPositionsPage(const Config::process_config_t &conf, QWidget *parent) : QWidget(parent)
+    DrawersPositionsPage::DrawersPositionsPage(const Config::drawer_process_config_t &conf, QWidget *parent) : QWidget(parent)
     {
         setupUI();
         loadInitialData(conf);
@@ -34,14 +34,14 @@ namespace Kub3::Components
         m_layout->addStretch();
     }
 
-    void DrawersPositionsPage::loadInitialData(const Config::process_config_t &conf)
+    void DrawersPositionsPage::loadInitialData(const Config::drawer_process_config_t &conf)
     {
         m_cm3Reset->setValue(conf.cm3_reset_pos_mm);
     }
 
-    void DrawersPositionsPage::pullDataToStruct(Config::process_config_t &outConf) const
+    void DrawersPositionsPage::pullDataToStruct(Config::drawer_process_config_t &out) const
     {
-        outConf.cm3_reset_pos_mm = m_cm3Reset->value();
+        out.cm3_reset_pos_mm = m_cm3Reset->value();
     }
 
 } // namespace Kub3::Components
