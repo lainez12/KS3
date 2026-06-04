@@ -172,6 +172,11 @@ namespace Kub3::Config
             settings.setValue(CONF_PROCESS_THETA_STAGE_CENTER_POS_MM, config.alignment.theta_stage_center_pos_mm);
             settings.endGroup(); // CONF_PROCESS_ALIGNMENT_POSITIONS
 
+            // SAVE Z ELEVATOR SETTINGS
+            settings.beginGroup(CONF_PROCESS_ELEVATOR_POSITIONS);
+            settings.setValue(CONF_PROCESS_MAX_Z_RELATIVE_DISTANCE_MM, config.elevator.max_z_relative_distance_mm);
+            settings.endGroup();
+
             // SAVE DRAWERS POSITIONS
             settings.beginGroup(CONF_PROCESS_DRAWERS_POSITIONS);
             settings.setValue(CONF_PROCESS_CM3_RESET_POS_MM, config.drawers.cm3_reset_pos_mm);
@@ -183,6 +188,7 @@ namespace Kub3::Config
             settings.setValue(CONF_PROCESS_MAX_FORCE_GF, config.contact.max_process_force_gf);
             settings.setValue(CONF_PROCESS_CONTACT_THRESHOLD_GF, config.contact.contact_threshold_gf);
             settings.setValue(CONF_PROCESS_AUTOLEVEL_FORCE_GF, config.contact.autolevel_force_gf);
+            settings.setValue(CONF_PROCESS_AUTOLEVEL_FORCE_TOLERANCE_GF, config.contact.autolevel_force_tolerance_gf);
             settings.endGroup(); // CONF_PROCESS_FORCE_LIMITS
 
             // SAVE ADMITTANCE TUNING VALUES

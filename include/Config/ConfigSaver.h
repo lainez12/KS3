@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "machine_config.h"
+#include "./conf.h"
 
 namespace Kub3::Config
 {

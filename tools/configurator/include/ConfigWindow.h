@@ -6,7 +6,7 @@
 #include <memory>
 #include <vector>
 
-#include <Config/machine_config.h>
+#include <Config/conf.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui

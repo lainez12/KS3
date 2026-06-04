@@ -22,7 +22,8 @@ namespace Kub3::Services
                                    const Config::process_config_t &processConf,
                                    const Config::hardware_config_t &hwConfig) :
         m_registry(std::move(registry)),
-        m_repo(std::move(repo))
+        m_repo(std::move(repo)),
+        m_conf(processConf.contact)
     {
         this->initializeMachineValues();
 
@@ -33,10 +34,10 @@ namespace Kub3::Services
             m_registry->get<HAL::Act::IMotor>(Z_BACK_MOTOR)};
 
         // Thresholds
-        m_maxProcessForceGF   = processConf.contact.max_process_force_gf;    // Get absolute max force allowed to be requested
-        m_hwCrashLimitForceGF = processConf.contact.hw_crash_force_limit_gf; // Get absolute max physical force allowed (hardware protection)
-        m_contactThresholdGF  = processConf.contact.contact_threshold_gf;
-        m_autolevelForceGF    = processConf.contact.autolevel_force_gf;
+        m_conf.max_process_force_gf;    // Get absolute max force allowed to be requested
+        m_conf.hw_crash_force_limit_gf; // Get absolute max physical force allowed (hardware protection)
+        m_conf.contact_threshold_gf;
+        m_conf.autolevel_force_gf;
 
         // Conversions factors
         if (auto it = hwConfig.adc_to_gf_factors.find(FORCE_LEFT); it != hwConfig.adc_to_gf_factors.end())
@@ -180,7 +181,7 @@ namespace Kub3::Services
         auto museum       = overloadedCallable(
             [&](const AutolevelingPayload &) { buildAutolevelingLanes(); },
             [&](const BasicContactPayload &p) {
-                if (p.forceGF > m_maxProcessForceGF) {
+                if (p.forceGF > m_conf.max_process_force_gf) {
                     abortSequence("Requested force exceeds maximum process limit.");
                     setupSuccess = false;
                     return;
@@ -206,10 +207,10 @@ namespace Kub3::Services
         };
 
         // Approach until contact threshold is touched.
-        this->enqueueTask<FastApproachTask>(m_zMotors, maxForceGetter, m_contactThresholdGF, m_freeProfile);
+        this->enqueueTask<FastApproachTask>(m_zMotors, maxForceGetter, m_conf.contact_threshold_gf, m_freeProfile);
         // Climb and planarize at the target point
         this->enqueueTask<AdmittanceControlTask>(m_zMotors, forceGetter, abortCb,
-                                                 buildAdmittanceConfig(m_autolevelForceGF),
+                                                 buildAdmittanceConfig(m_conf.autolevel_force_gf, m_conf.autolevel_force_tolerance_gf),
                                                  AdmittanceControlTask::Mode::Autoleveling,
                                                  m_contactProfile);
     }
@@ -232,34 +233,32 @@ namespace Kub3::Services
         };
 
         // Approach until contact threshold is touched.
-        this->enqueueTask<FastApproachTask>(m_zMotors, maxForceGetter, m_contactThresholdGF, m_freeProfile);
+        this->enqueueTask<FastApproachTask>(m_zMotors, maxForceGetter, m_conf.contact_threshold_gf, m_freeProfile);
         // Synchronous movement up to target force.
         this->enqueueTask<AdmittanceControlTask>(m_zMotors, forceGetter, abortCb,
-                                                 buildAdmittanceConfig(forceGF),
+                                                 buildAdmittanceConfig(forceGF, m_conf.autolevel_force_tolerance_gf), // TODO: define another tolerance threshold
                                                  AdmittanceControlTask::Mode::BasicContact,
                                                  m_contactProfile);
     }
 
-    Algorithms::Control::admittance_config_t ContactService::buildAdmittanceConfig(double targetForceGF) const
+    Algorithms::Control::admittance_config_t ContactService::buildAdmittanceConfig(double targetForceGF, double toleranceGF) const
     {
         return Algorithms::Control::admittance_config_t{
             // Targets and Limits
             .target_force_gf      = targetForceGF,
-            .force_tolerance_gf   = 5.0, // TODO: Get value from processConf; +/- 5 grams convergence band
-            .max_process_force_gf = m_maxProcessForceGF,
+            .force_tolerance_gf   = toleranceGF,
+            .max_process_force_gf = m_conf.max_process_force_gf,
 
             // Gain Scheduling (Compliance: mm/s per GF)
-            // TODO: Get values from processConf. These are defined by the physical machine stiffness.
-            .k_mean_max = 0.005, // Fast approach (Air/Soft)
-            .k_mean_min = 0.001, // Slow approach (Stiff/Contact)
-            .k_tilt_max = 0.010, // WEC twist fast
-            .k_tilt_min = 0.002, // WEC twist slow
+            .k_mean_max = m_conf.admittance.translational_gain_low_force,  // Fast approach (Soft)
+            .k_mean_min = m_conf.admittance.translational_gain_high_force, // Slow approach (Stiff/Contact)
+            .k_tilt_max = m_conf.admittance.rotational_gain_low_force,     // WEC twist fast
+            .k_tilt_min = m_conf.admittance.rotational_gain_high_force,    // WEC twist slow
 
             // Safety Limits & Hardware capabilities
-            // TODO: Get values from processConf
-            .max_step_mm_per_tick   = 0.025,                               // 25 microns max blind travel per tick
-            .max_profile_speed_mm_s = m_contactProfile.targetVelocityMmS,  // Max allowed continuous speed
-            .min_profile_speed_mm_s = m_contactProfile.initialVelocityMmS, // Hardware deadband limit (to prevent stuttering)
+            .max_step_mm_per_tick   = m_conf.admittance.max_step_mm_per_tick, // Max allowed blind travel per tick
+            .max_profile_speed_mm_s = m_contactProfile.targetVelocityMmS,     // Max allowed continuous speed
+            .min_profile_speed_mm_s = m_contactProfile.initialVelocityMmS,    // Hardware deadband limit (to prevent stuttering)
         };
     }
 
@@ -286,17 +285,17 @@ namespace Kub3::Services
 
     bool ContactService::isInContact(void) const
     {
-        return getMaxCurrentForceGF() > m_contactThresholdGF;
+        return getMaxCurrentForceGF() > m_conf.contact_threshold_gf;
     }
 
     bool ContactService::isProcessForceExceeded(void) const
     {
-        return getMaxCurrentForceGF() > m_maxProcessForceGF;
+        return getMaxCurrentForceGF() > m_conf.max_process_force_gf;
     }
 
     bool ContactService::isHardwareCrashLimitExceeded(void) const
     {
-        return getMaxCurrentForceGF() > m_hwCrashLimitForceGF;
+        return getMaxCurrentForceGF() > m_conf.hw_crash_force_limit_gf;
     }
 
     inline constexpr bool ContactService::isMovingTowardsContact(ZDirection dir) const

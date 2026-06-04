@@ -6,7 +6,7 @@
 #include <QVBoxLayout>
 #include <QWidget>
 
-#include <Config/machine_config.h>
+#include <Config/conf.h>
 
 namespace Kub3::Components
 {

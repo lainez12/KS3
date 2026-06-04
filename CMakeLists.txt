@@ -139,7 +139,8 @@ qt_add_library(Kub3Core STATIC
     include/Config/ConfigLoader.h
     include/Config/ConfigSaver.h
     include/Config/kinematics.h
-    include/Config/machine_config.h
+    include/Config/conf.h
+    include/Config/helper.h
     include/Config/keys/hardware.h
     include/Config/keys/process.h
 

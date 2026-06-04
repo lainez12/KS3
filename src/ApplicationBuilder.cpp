@@ -2,6 +2,7 @@
 
 #include <ApplicationBuilder.h>
 
+#include <Config/helper.h>
 // Services
 #include <Services/Alignment/AlignmentService.h>
 #include <Services/Contact/ContactService.h>
@@ -29,6 +30,9 @@ namespace Kub3
         qInfo() << "Loading Configurations...";
         m_hwConfig      = Config::ConfigLoader::loadHardwareConfig(hwPath);
         m_processConfig = Config::ConfigLoader::loadProcessConfig(processPath);
+
+        qInfo() << m_hwConfig;
+        qInfo() << m_processConfig;
 
         return *this;
     }

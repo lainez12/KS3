@@ -36,7 +36,6 @@ namespace Kub3::Config
 
     hardware_config_t ConfigLoader::loadHardwareConfig(const std::string &filePath)
     {
-        qInfo() << "[LOADING HARDWARE CONFIGURATION]";
         hardware_config_t config;
         QSettings settings(QString::fromStdString(filePath), QSettings::IniFormat);
 
@@ -166,7 +165,6 @@ namespace Kub3::Config
 
     process_config_t ConfigLoader::loadProcessConfig(const std::string &filePath)
     {
-        qInfo() << "[LOADING PROCESS CONFIGURATION]";
         process_config_t config;
         QSettings settings(QString::fromStdString(filePath), QSettings::IniFormat);
 
@@ -179,7 +177,6 @@ namespace Kub3::Config
         // LOAD KINEMATIC PROFILES
         // =============================
         settings.beginGroup(CONF_PROCESS_KINEMATICS);
-        qInfo() << "--- Loading kinematics config";
         for (const QString &motorGroup : settings.childGroups())
         {
             settings.beginGroup(motorGroup);
@@ -195,18 +192,12 @@ namespace Kub3::Config
                 profile.targetVelocityMmS  = getRequiredValue(settings, CONF_PROCESS_TARGET_VELOCITY_MM_S, profile.id).toDouble();
                 profile.accelerationMmS2   = getRequiredValue(settings, CONF_PROCESS_ACCELERATION_MM_S, profile.id).toDouble();
 
-                qInfo().nospace() << "------ Loading profile " << profile.id << " for motor " << motorId;
-                qInfo() << "\t> Initial velocity (mm/s):" << profile.initialVelocityMmS;
-                qInfo() << "\t> Target velocity (mm/s):" << profile.targetVelocityMmS;
-                qInfo() << "\t> Acceleration (mm/s2):" << profile.accelerationMmS2;
-
                 QString paramsType = getRequiredValue(settings, CONF_PROCESS_PARAMS_TYPE, profile.id).toString();
 
                 if (paramsType == CONF_PROCESS_PARAMS_TYPE_STEPPER)
                 {
                     profile.params = stepper_kinematics_params_t{
                         .stepFraction = (uint8_t)getRequiredValue(settings, CONF_PROCESS_STEP_FRACTION, profile.id).toUInt()};
-                    qInfo().nospace() << "\t> [Stepper] resolution: 1/" << std::get<stepper_kinematics_params_t>(profile.params).stepFraction;
                 }
                 else if (paramsType != CONF_PROCESS_PARAMS_TYPE_GENERIC)
                 {
@@ -225,6 +216,7 @@ namespace Kub3::Config
         const std::string drawersGroup(CONF_PROCESS_DRAWERS_POSITIONS);
         const std::string forceLimitsGroup(CONF_PROCESS_FORCE_LIMITS);
         const std::string admittanceGroup(CONF_PROCESS_ADMITTANCE_TUNING);
+        const std::string zElevatorGroup(CONF_PROCESS_ELEVATOR_POSITIONS);
 
         // =============================
         // LOAD CAMERAS DATA
@@ -246,6 +238,10 @@ namespace Kub3::Config
         config.alignment.theta_stage_center_pos_mm = getRequiredValue(settings, CONF_PROCESS_THETA_STAGE_CENTER_POS_MM, alignmentGroup).toDouble();
         settings.endGroup();
 
+        settings.beginGroup(zElevatorGroup);
+        config.elevator.max_z_relative_distance_mm = getRequiredValue(settings, CONF_PROCESS_MAX_Z_RELATIVE_DISTANCE_MM, zElevatorGroup).toDouble();
+        settings.endGroup();
+
         // =============================
         // SAVE DRAWERS POSITIONS
         // =============================
@@ -257,10 +253,11 @@ namespace Kub3::Config
         // FORCE LIMITS
         // =============================
         settings.beginGroup(forceLimitsGroup);
-        config.contact.hw_crash_force_limit_gf = getRequiredValue(settings, CONF_PROCESS_HW_CRASH_FORCE_LIMIT_GF, forceLimitsGroup).toDouble();
-        config.contact.max_process_force_gf    = getRequiredValue(settings, CONF_PROCESS_MAX_FORCE_GF, forceLimitsGroup).toDouble();
-        config.contact.contact_threshold_gf    = getRequiredValue(settings, CONF_PROCESS_CONTACT_THRESHOLD_GF, forceLimitsGroup).toDouble();
-        config.contact.autolevel_force_gf      = getRequiredValue(settings, CONF_PROCESS_AUTOLEVEL_FORCE_GF, forceLimitsGroup).toDouble();
+        config.contact.hw_crash_force_limit_gf      = getRequiredValue(settings, CONF_PROCESS_HW_CRASH_FORCE_LIMIT_GF, forceLimitsGroup).toDouble();
+        config.contact.max_process_force_gf         = getRequiredValue(settings, CONF_PROCESS_MAX_FORCE_GF, forceLimitsGroup).toDouble();
+        config.contact.contact_threshold_gf         = getRequiredValue(settings, CONF_PROCESS_CONTACT_THRESHOLD_GF, forceLimitsGroup).toDouble();
+        config.contact.autolevel_force_gf           = getRequiredValue(settings, CONF_PROCESS_AUTOLEVEL_FORCE_GF, forceLimitsGroup).toDouble();
+        config.contact.autolevel_force_tolerance_gf = getRequiredValue(settings, CONF_PROCESS_AUTOLEVEL_FORCE_TOLERANCE_GF, forceLimitsGroup).toDouble();
         settings.endGroup(); // forceLimitsGroup
 
         // =============================

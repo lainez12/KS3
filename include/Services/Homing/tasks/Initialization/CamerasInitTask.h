@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Config/machine_config.h>
+#include <Config/conf.h>
 #include <HAL/Actuators/Motors/IMotor.h>
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
 #include <Services/ITask.h>

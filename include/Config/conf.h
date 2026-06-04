@@ -9,7 +9,7 @@
 #include <unordered_map>
 #include <variant>
 
-#include "kinematics.h"
+#include "./kinematics.h"
 
 #define MCU_COUNT 4
 
@@ -94,12 +94,13 @@ namespace Kub3::Config
 
     typedef struct contact_process_config_s {
         // Safety Limits
-        double hw_crash_force_limit_gf;
+        double hw_crash_force_limit_gf; // Absolute critical limit not to be exceeded (gram-force)
 
         // Process Targets
-        double contact_threshold_gf;
-        double autolevel_force_gf;
-        double max_process_force_gf;
+        double contact_threshold_gf; // Threshold exceeded when contact is achieved (gram-force)
+        double autolevel_force_gf;   // Force to be reached by each sensor when performing autoleveling (grap-force)
+        double autolevel_force_tolerance_gf;
+        double max_process_force_gf; // Max force allowed to be requested (gram-force)
 
         // Control Loop Tuning
         admittance_tuning_config_t admittance;
@@ -162,4 +163,5 @@ namespace Kub3::Config
             return profileIt->second;
         }
     } process_config_t;
+
 } // namespace Kub3::Config

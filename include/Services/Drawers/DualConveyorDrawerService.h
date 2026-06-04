@@ -4,7 +4,7 @@
 #include <QElapsedTimer>
 #include <memory>
 
-#include <Config/machine_config.h>
+#include <Config/conf.h>
 #include <HAL/Actuators/ActuatorRegistry.h>
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
 #include <Services/BaseTaskService.h>

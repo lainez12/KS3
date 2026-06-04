@@ -27,13 +27,6 @@ namespace Kub3::HAL::Act
         m_kinematicEngine(std::move(kinematicEngine)),
         m_controlTimer(this)
     {
-        qInfo() << std::format("Stepper[{}] Loaded config:", m_id);
-        qInfo() << std::format("--- stepsPerRev={}", m_hwConfig.stepsPerRev);
-        qInfo() << std::format("--- screwPitchMm={}", m_hwConfig.screwPitchMm);
-        qInfo() << std::format("--- maxVelocityMmS={}", m_hwConfig.maxVelocityMmS);
-        qInfo() << std::format("--- maxAccelerationMmS2={}", m_hwConfig.maxAccelerationMmS2);
-        qInfo() << std::format("--- encoderTopsPerRev={}", m_hwConfig.encoderTopsPerRev);
-
         if (!m_kinematicEngine)
         {
             throw std::format("Stepper[{}] was provided a null kinematic engine.", m_id);

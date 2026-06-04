@@ -1,7 +1,7 @@
 #pragma once
 
+#include <Config/conf.h>
 #include <Config/kinematics.h>
-#include <Config/machine_config.h>
 #include <HAL/Actuators/ActuatorRegistry.h>
 #include <HAL/Actuators/Motors/IMotor.h>
 #include <HAL/MachineStatus/IMachineStatusRepo.h>

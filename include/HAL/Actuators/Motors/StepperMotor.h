@@ -7,7 +7,7 @@
 #include <vector>
 
 #include <Algorithms/Kinematic/IKinematicGenerator.h>
-#include <Config/machine_config.h>
+#include <Config/conf.h>
 #include <HAL/MCUDriver.h>
 #include <utils.h>
 

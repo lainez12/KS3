@@ -7,6 +7,7 @@
 #define CONF_PROCESS_ADMITTANCE_TUNING   "admittance"
 #define CONF_PROCESS_ALIGNMENT_POSITIONS "alignmentPositions"
 #define CONF_PROCESS_DRAWERS_POSITIONS   "drawersPositions"
+#define CONF_PROCESS_ELEVATOR_POSITIONS  "zElevator"
 
 // CONF_PROCESS_KINEMATICS inner keys
 #define CONF_PROCESS_INITIAL_VELOCITY_MM_S "initial_velocity_mm_s"
@@ -25,6 +26,9 @@
 #define CONF_PROCESS_RIGHT_CAM_X_RESET_POS_MM "right_cam_x_reset_pos_mm"
 #define CONF_PROCESS_RIGHT_CAM_Y_RESET_POS_MM "right_cam_y_reset_pos_mm"
 
+// CONF_PROCESS_ELEVATOR_POSITIONS inner keys
+#define CONF_PROCESS_MAX_Z_RELATIVE_DISTANCE_MM "max_z_relative_distance_mm"
+
 // CONF_PROCESS_ALIGNMENT_POSITIONS inner keys
 #define CONF_PROCESS_X_STAGE_CENTER_POS_MM     "x_stage_center_pos_mm"
 #define CONF_PROCESS_Y_STAGE_CENTER_POS_MM     "y_stage_center_pos_mm"
@@ -34,10 +38,11 @@
 #define CONF_PROCESS_CM3_RESET_POS_MM "cm3_reset_pos_mm"
 
 // CONF_PROCESS_FORCE_LIMITS inner keys
-#define CONF_PROCESS_HW_CRASH_FORCE_LIMIT_GF "hw_crash_force_limit_gf"
-#define CONF_PROCESS_MAX_FORCE_GF            "max_force_gf"
-#define CONF_PROCESS_CONTACT_THRESHOLD_GF    "contact_threshold_gf"
-#define CONF_PROCESS_AUTOLEVEL_FORCE_GF      "autolevel_force_gf"
+#define CONF_PROCESS_HW_CRASH_FORCE_LIMIT_GF      "hw_crash_force_limit_gf"
+#define CONF_PROCESS_MAX_FORCE_GF                 "max_force_gf"
+#define CONF_PROCESS_CONTACT_THRESHOLD_GF         "contact_threshold_gf"
+#define CONF_PROCESS_AUTOLEVEL_FORCE_GF           "autolevel_force_gf"
+#define CONF_PROCESS_AUTOLEVEL_FORCE_TOLERANCE_GF "autolevel_force_tolerance_gf"
 
 // CONF_PROCESS_ADMITTANCE_TUNING inner key
 #define CONF_PROCESS_ADMITTANCE_MAX_STEP_MM_PER_TICK        "max_step_mm_per_tick"

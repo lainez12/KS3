@@ -6,7 +6,7 @@
 #include <QVBoxLayout>
 #include <QWidget>
 
-#include <Config/machine_config.h>
+#include <Config/conf.h>
 
 namespace Kub3::Components
 {
@@ -27,9 +27,11 @@ namespace Kub3::Components
     private:
         QVBoxLayout *m_layout = nullptr;
 
-        QDoubleSpinBox *m_hwCrashForce     = nullptr;
-        QDoubleSpinBox *m_maxProcessForce  = nullptr;
-        QDoubleSpinBox *m_contactThreshold = nullptr;
+        QDoubleSpinBox *m_hwCrashForce            = nullptr;
+        QDoubleSpinBox *m_maxProcessForce         = nullptr;
+        QDoubleSpinBox *m_contactThreshold        = nullptr;
+        QDoubleSpinBox *m_dsbAutolevelTargetForce = nullptr;
+        QDoubleSpinBox *m_dsbAutolevelTolerance   = nullptr;
     };
 
 }

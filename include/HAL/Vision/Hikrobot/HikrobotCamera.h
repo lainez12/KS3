@@ -10,7 +10,7 @@
 #include <MvCameraControl.h>
 
 #include "../ICamera.h"
-#include <Config/machine_config.h>
+#include <Config/conf.h>
 
 namespace Kub3::HAL::Vision
 {

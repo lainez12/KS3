@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Algorithms/Admittance/AdmittanceController.h>
-#include <Config/machine_config.h>
+#include <Config/conf.h>
 #include <HAL/Actuators/ActuatorRegistry.h>
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
 #include <Services/BaseTaskService.h>
@@ -40,7 +40,7 @@ namespace Kub3::Services
     private:
         void buildAutolevelingLanes(void);
         void buildBasicContactLanes(double forceGF);
-        Algorithms::Control::admittance_config_t buildAdmittanceConfig(double targetForceGF) const;
+        Algorithms::Control::admittance_config_t buildAdmittanceConfig(double targetForceGF, double toleranceGF) const;
 
         void initializeMachineValues(void);
 
@@ -53,6 +53,7 @@ namespace Kub3::Services
     private:
         Shared<HAL::Act::ActuatorRegistry> m_registry;
         Shared<HAL::MS::IMachineStatusRepo> m_repo;
+        Config::contact_process_config_t m_conf;
 
         std::array<Shared<HAL::Act::IMotor>, 3> m_zMotors;
         uint32_t m_manualWatchdogTicks = 0;
@@ -62,11 +63,6 @@ namespace Kub3::Services
         Config::kinematic_profile_t m_contactProfile; // Kinematic profile to use when contact has been achieved
 
         double m_requestedForceGF = 0.0;
-        // Thresholds
-        double m_contactThresholdGF  = 0.0; // Threshold exceeded when contact is achieved (gram-force)
-        double m_maxProcessForceGF   = 0.0; // Max force allowed to be requested (gram-force)
-        double m_hwCrashLimitForceGF = 0.0; // Absolute critical limit not to be exceeded (gram-force)
-        double m_autolevelForceGF    = 0.0; // Force to be reached by each sensor when performing autoleveling (grap-force)
         // Conversion factors (ADC to gram-force)
         double m_adcToGFLeftFactor  = 1.0;
         double m_adcToGFRightFactor = 1.0;
