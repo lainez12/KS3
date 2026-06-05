@@ -14,6 +14,7 @@
 namespace Kub3::UI {
     enum class ViewId {
         HOME_VIEW,
+        HOME_EIGHT_VIEW,
         EXPOSURE_SETTINGS_VIEW,
         FAVORITE_EXPOSURE_SETTINGS_VIEW,
         COMPLETE_EXPOSURE_VIEW,
@@ -58,6 +59,10 @@ namespace Kub3::UI::Views {
     public:
         explicit ViewBase(Unique<ViewModels::IViewModel> viewModel, QWidget *parent = nullptr);
         virtual ~ViewBase() = default;
+
+        void resizeEventOverride(QResizeEvent *event) {
+            resizeEvent(event);
+        }
 
         // --- Display Properties ---
         QString getViewTitle() const {

@@ -21,7 +21,7 @@ namespace Kub3::UI::Views::ViewsAlignment {
         explicit SaveParametersView(Unique<SaveParametersViewModel> viewModel, QWidget *parent = nullptr);
         ~SaveParametersView();
 
-    protected:
+    public:
         void resizeEvent(QResizeEvent *event) override;
 
     private:

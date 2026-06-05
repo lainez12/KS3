@@ -20,7 +20,7 @@ namespace Kub3::UI::Views::ViewsExposure {
         explicit CompleteExposureView(Unique<CompleteExposureViewModel> viewModel, QWidget *parent = nullptr);
         ~CompleteExposureView();
 
-    protected:
+    public:
         void resizeEvent(QResizeEvent *event) override;
 
     private:

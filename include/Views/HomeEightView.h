@@ -1,5 +1,5 @@
-#ifndef HOMEVIEW_H
-#define HOMEVIEW_H
+#ifndef HOMEEIGHTVIEW_H
+#define HOMEEIGHTVIEW_H
 
 #include "Views/Components/NavButton.h"
 #include <QWidget>
@@ -8,19 +8,19 @@
 #include "ViewBase.h"
 
 namespace Ui {
-    class HomeView;
+    class HomeEightView;
 }
 
 namespace Kub3::UI::Views {
 
-    class HomeView final : public ViewBase {
+    class HomeEightView final : public ViewBase {
         using HomeViewModel = Kub3::UI::ViewModels::HomeViewModel;
 
         Q_OBJECT
 
     public:
-        explicit HomeView(Unique<HomeViewModel> viewModel, QWidget *parent = nullptr);
-        ~HomeView();
+        explicit HomeEightView(Unique<HomeViewModel> viewModel, QWidget *parent = nullptr);
+        ~HomeEightView();
 
     signals:
 
@@ -42,10 +42,10 @@ namespace Kub3::UI::Views {
         void onCloseButtonCliked(const QString &buttonId);
 
     private:
-        Ui::HomeView *ui;
+        Ui::HomeEightView *ui;
     };
 }
 
-using HomeView = Kub3::UI::Views::HomeView;
+using HomeEightView = Kub3::UI::Views::HomeEightView;
 
 #endif // HOMEVIEW_H

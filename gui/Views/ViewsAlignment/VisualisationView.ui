@@ -10,6 +10,12 @@
     <height>901</height>
    </rect>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>1920</width>
+    <height>0</height>
+   </size>
+  </property>
   <property name="styleSheet">
    <string notr="true">QCheckBox::indicator {
     width: 0px;
@@ -38,7 +44,7 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="QWidget" name="" native="true">
+    <widget class="QWidget" name="widget" native="true">
      <layout class="QGridLayout" name="gridLayout" rowstretch="8,92">
       <property name="leftMargin">
        <number>0</number>
@@ -1787,7 +1793,7 @@ height: 50px;
   <customwidget>
    <class>NavButton</class>
    <extends>QWidget</extends>
-   <header location="global">Views/Components/NavButton.h</header>
+   <header>Views/Components/NavButton.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -20,7 +20,7 @@ namespace Kub3::UI::Views::ViewsExposure {
         explicit SaveExposureSettingsView(Unique<SaveExposureSettingsViewModel> viewModel, QWidget *parent = nullptr);
         ~SaveExposureSettingsView();
 
-    protected:
+    public:
         void resizeEvent(QResizeEvent *event) override;
 
     private:

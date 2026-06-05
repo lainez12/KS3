@@ -205,6 +205,7 @@ void VisualisationView::onBackButtonClicked(const QString &buttonId) {
 }
 
 void VisualisationView::onValidateButtonClicked(const QString &buttonId) {
+    emit s_openView(Kub3::UI::ViewId::EXPOSURE_SETTINGS_VIEW);
 }
 
 void VisualisationView::onSaveButtonClicked(const QString &buttonId) {

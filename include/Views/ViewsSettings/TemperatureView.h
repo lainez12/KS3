@@ -21,7 +21,7 @@ namespace Kub3::UI::Views::ViewsSettings {
         explicit TemperatureView(Unique<TemperatureViewModel> viewModel, QWidget *parent = nullptr);
         ~TemperatureView();
 
-    protected:
+    public:
         void resizeEvent(QResizeEvent *event) override;
 
     private:

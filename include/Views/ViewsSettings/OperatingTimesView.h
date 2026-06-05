@@ -21,7 +21,7 @@ namespace Kub3::UI::Views::ViewsSettings {
         explicit OperatingTimesView(Unique<OperatingTimesViewModel> viewModel, QWidget *parent = nullptr);
         ~OperatingTimesView();
 
-    protected:
+    public:
         void resizeEvent(QResizeEvent *event) override;
 
     private:

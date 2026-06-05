@@ -222,6 +222,7 @@ qt_add_executable(Kub3Software
     src/Views/Components/NavButtonManager.cpp
     src/Views/DebugView.cpp
     src/Views/HomeView.cpp
+    src/Views/HomeEightView.cpp
     src/Views/SettingsView.cpp
     src/Views/ViewsSettings/MachineStatusView.cpp
     src/Views/ViewsSettings/VersionView.cpp
@@ -275,6 +276,7 @@ qt_add_executable(Kub3Software
     include/Views/Components/NavButtonManager.h
     include/Views/DebugView.h
     include/Views/HomeView.h
+    include/Views/HomeEightView.h
     include/Views/SettingsView.h
     include/Views/ViewsSettings/MachineStatusView.h
     include/Views/ViewsSettings/TemperatureView.h
@@ -302,6 +304,7 @@ qt_add_executable(Kub3Software
     gui/Views/ViewsExposure/CompleteExposureView.ui
     gui/Views/ViewsExposure/ProgressExposureView.ui
     gui/Views/HomeView.ui
+    gui/Views/HomeEightView.ui
     gui/Views/SettingsView.ui
     gui/Views/ViewsSettings/MachineStatusView.ui
     gui/Views/ViewsSettings/VersionView.ui

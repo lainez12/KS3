@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1922</width>
+    <width>1920</width>
     <height>916</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1920</width>
+    <height>818</height>
+   </size>
   </property>
   <property name="styleSheet">
    <string notr="true">QPushButton {
@@ -665,7 +671,7 @@ border: 1px solid #0070DB;</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>565</width>
+            <width>564</width>
             <height>599</height>
            </rect>
           </property>

@@ -6,9 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1945</width>
-    <height>916</height>
+    <width>1920</width>
+    <height>818</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1920</width>
+    <height>818</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1920</width>
+    <height>1152</height>
+   </size>
   </property>
   <property name="styleSheet">
    <string notr="true">QWidget {
@@ -35,7 +47,7 @@
     <number>0</number>
    </property>
    <item>
-    <layout class="QGridLayout" name="gridLayout" rowminimumheight="800,50">
+    <layout class="QGridLayout" name="gridLayout" rowminimumheight="1100,50" columnminimumwidth="1100,0">
      <property name="sizeConstraint">
       <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
      </property>
@@ -46,6 +58,9 @@
       <layout class="QVBoxLayout" name="verticalLayout_2" stretch="20,20,30,20">
        <property name="spacing">
         <number>10</number>
+       </property>
+       <property name="leftMargin">
+        <number>150</number>
        </property>
        <item>
         <spacer name="verticalSpacer_2">
@@ -75,7 +90,7 @@
            </property>
            <property name="styleSheet">
             <string notr="true">text-align: left;
-font: normal normal bold 25px/29px Arial;
+font: normal normal bold 29px/29px Arial;
 letter-spacing: 0px;
 color: #0070DB;
 opacity: 1;</string>
@@ -198,7 +213,7 @@ opacity: 1;</string>
            </property>
            <property name="styleSheet">
             <string notr="true">text-align: left;
-font: normal normal bold 25px/29px Arial;
+font: normal normal bold 29px/29px Arial;
 letter-spacing: 0px;
 color: #0070DB;
 opacity: 1;</string>
@@ -284,9 +299,15 @@ opacity: 1;</string>
            </item>
            <item>
             <widget class="QLabel" name="label_6">
+             <property name="minimumSize">
+              <size>
+               <width>450</width>
+               <height>0</height>
+              </size>
+             </property>
              <property name="maximumSize">
               <size>
-               <width>350</width>
+               <width>450</width>
                <height>150</height>
               </size>
              </property>

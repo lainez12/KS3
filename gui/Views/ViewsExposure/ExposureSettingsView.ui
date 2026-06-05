@@ -40,7 +40,7 @@
       <number>0</number>
      </property>
      <item row="1" column="1">
-      <layout class="QVBoxLayout" name="padEtLastCycleQVB" stretch="50,300,150,15">
+      <layout class="QVBoxLayout" name="padEtLastCycleQVB" stretch="0,300,150,15">
        <property name="spacing">
         <number>29</number>
        </property>
@@ -64,18 +64,18 @@
         </spacer>
        </item>
        <item>
-        <layout class="QGridLayout" name="gridLayout_2" columnstretch="20,0,0,0,0,0">
+        <layout class="QGridLayout" name="gridLayout_2" columnstretch="0,0,0,0">
          <property name="sizeConstraint">
           <enum>QLayout::SizeConstraint::SetFixedSize</enum>
          </property>
          <property name="leftMargin">
-          <number>50</number>
+          <number>150</number>
          </property>
          <property name="topMargin">
           <number>0</number>
          </property>
          <property name="rightMargin">
-          <number>50</number>
+          <number>150</number>
          </property>
          <property name="bottomMargin">
           <number>0</number>
@@ -86,318 +86,7 @@
          <property name="verticalSpacing">
           <number>15</number>
          </property>
-         <item row="1" column="2">
-          <widget class="QPushButton" name="pushButton_6">
-           <property name="minimumSize">
-            <size>
-             <width>60</width>
-             <height>60</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>120</width>
-             <height>120</height>
-            </size>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">border: 2px solid #0070DB;
-background-color: #ffffff;
-color: #0070DB;
-font: 20px;
-font-weight: 700;
-font-family: arial;</string>
-           </property>
-           <property name="text">
-            <string>5</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="5">
-          <spacer name="horizontalSpacer_2">
-           <property name="orientation">
-            <enum>Qt::Orientation::Horizontal</enum>
-           </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Policy::Maximum</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="0" column="2">
-          <widget class="QPushButton" name="btn8">
-           <property name="minimumSize">
-            <size>
-             <width>60</width>
-             <height>60</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>120</width>
-             <height>120</height>
-            </size>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">border: 2px solid #0070DB;
-background-color: #ffffff;
-color: #0070DB;
-font: 20px;
-font-weight: 700;
-font-family: arial;</string>
-           </property>
-           <property name="text">
-            <string>8</string>
-           </property>
-          </widget>
-         </item>
          <item row="0" column="3">
-          <widget class="QPushButton" name="pushButton_3">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>60</width>
-             <height>60</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>120</width>
-             <height>120</height>
-            </size>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">border: 2px solid #0070DB;
-background-color: #ffffff;
-color: #0070DB;
-font: 20px;
-font-weight: 700;
-font-family: arial;</string>
-           </property>
-           <property name="text">
-            <string>9</string>
-           </property>
-           <property name="flat">
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QPushButton" name="pushButton_5">
-           <property name="minimumSize">
-            <size>
-             <width>60</width>
-             <height>60</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>120</width>
-             <height>120</height>
-            </size>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">border: 2px solid #0070DB;
-background-color: #ffffff;
-color: #0070DB;
-font: 20px;
-font-weight: 700;
-font-family: arial;</string>
-           </property>
-           <property name="text">
-            <string>4</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <spacer name="horizontalSpacer">
-           <property name="orientation">
-            <enum>Qt::Orientation::Horizontal</enum>
-           </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Policy::Maximum</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="2" column="1">
-          <widget class="QPushButton" name="pushButton_9">
-           <property name="minimumSize">
-            <size>
-             <width>60</width>
-             <height>60</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>120</width>
-             <height>120</height>
-            </size>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">border: 2px solid #0070DB;
-background-color: #ffffff;
-color: #0070DB;
-font: 20px;
-font-weight: 700;
-font-family: arial;</string>
-           </property>
-           <property name="text">
-            <string>1</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="3">
-          <widget class="QPushButton" name="btnPoint">
-           <property name="minimumSize">
-            <size>
-             <width>60</width>
-             <height>60</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>120</width>
-             <height>120</height>
-            </size>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">border: 2px solid #0070DB;
-background-color: #ffffff;
-color: #0070DB;
-font: 20px;
-font-weight: 700;
-font-family: arial;</string>
-           </property>
-           <property name="text">
-            <string>.</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="4">
-          <widget class="QPushButton" name="pushButton_8">
-           <property name="minimumSize">
-            <size>
-             <width>60</width>
-             <height>60</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>120</width>
-             <height>120</height>
-            </size>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">border: 2px solid #0070DB;
-background-color: #ffffff;
-color: #0070DB;
-font: 20px;
-font-weight: 700;
-font-family: arial;</string>
-           </property>
-           <property name="text">
-            <string>Clear</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="4" rowspan="2">
-          <widget class="QPushButton" name="btnEnter">
-           <property name="minimumSize">
-            <size>
-             <width>70</width>
-             <height>155</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>120</width>
-             <height>225</height>
-            </size>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">border: 2px solid #0070DB;
-background-color: #ffffff;
-color: #0070DB;
-font: 20px;
-font-weight: 700;
-font-family: arial;</string>
-           </property>
-           <property name="text">
-            <string>Enter</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="3">
-          <widget class="QPushButton" name="btn3">
-           <property name="minimumSize">
-            <size>
-             <width>60</width>
-             <height>60</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>120</width>
-             <height>120</height>
-            </size>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">border: 2px solid #0070DB;
-background-color: #ffffff;
-color: #0070DB;
-font: 20px;
-font-weight: 700;
-font-family: arial;</string>
-           </property>
-           <property name="text">
-            <string>3</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="1" colspan="2">
-          <widget class="QPushButton" name="btn0">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>70</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>400</width>
-             <height>120</height>
-            </size>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">border: 2px solid #0070DB;
-background-color: #ffffff;
-color: #0070DB;
-font: 20px;
-font-weight: 700;
-font-family: arial;</string>
-           </property>
-           <property name="text">
-            <string>0</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="4">
           <widget class="QPushButton" name="pushButton_4">
            <property name="minimumSize">
             <size>
@@ -424,7 +113,34 @@ font-family: arial;</string>
            </property>
           </widget>
          </item>
-         <item row="1" column="3">
+         <item row="3" column="2">
+          <widget class="QPushButton" name="btnPoint">
+           <property name="minimumSize">
+            <size>
+             <width>60</width>
+             <height>60</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>120</width>
+             <height>120</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border: 2px solid #0070DB;
+background-color: #ffffff;
+color: #0070DB;
+font: 20px;
+font-weight: 700;
+font-family: arial;</string>
+           </property>
+           <property name="text">
+            <string>.</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="2">
           <widget class="QPushButton" name="pushButton_7">
            <property name="minimumSize">
             <size>
@@ -451,7 +167,7 @@ font-family: arial;</string>
            </property>
           </widget>
          </item>
-         <item row="0" column="1">
+         <item row="0" column="0">
           <widget class="QPushButton" name="btn7">
            <property name="minimumSize">
             <size>
@@ -511,7 +227,148 @@ font-family: arial;
            </property>
           </widget>
          </item>
-         <item row="2" column="2">
+         <item row="0" column="1">
+          <widget class="QPushButton" name="btn8">
+           <property name="minimumSize">
+            <size>
+             <width>60</width>
+             <height>60</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>120</width>
+             <height>120</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border: 2px solid #0070DB;
+background-color: #ffffff;
+color: #0070DB;
+font: 20px;
+font-weight: 700;
+font-family: arial;</string>
+           </property>
+           <property name="text">
+            <string>8</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QPushButton" name="pushButton_9">
+           <property name="minimumSize">
+            <size>
+             <width>60</width>
+             <height>60</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>120</width>
+             <height>120</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border: 2px solid #0070DB;
+background-color: #ffffff;
+color: #0070DB;
+font: 20px;
+font-weight: 700;
+font-family: arial;</string>
+           </property>
+           <property name="text">
+            <string>1</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QPushButton" name="pushButton_5">
+           <property name="minimumSize">
+            <size>
+             <width>60</width>
+             <height>60</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>120</width>
+             <height>120</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border: 2px solid #0070DB;
+background-color: #ffffff;
+color: #0070DB;
+font: 20px;
+font-weight: 700;
+font-family: arial;</string>
+           </property>
+           <property name="text">
+            <string>4</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QPushButton" name="pushButton_6">
+           <property name="minimumSize">
+            <size>
+             <width>60</width>
+             <height>60</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>120</width>
+             <height>120</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border: 2px solid #0070DB;
+background-color: #ffffff;
+color: #0070DB;
+font: 20px;
+font-weight: 700;
+font-family: arial;</string>
+           </property>
+           <property name="text">
+            <string>5</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QPushButton" name="pushButton_3">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>60</width>
+             <height>60</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>120</width>
+             <height>120</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border: 2px solid #0070DB;
+background-color: #ffffff;
+color: #0070DB;
+font: 20px;
+font-weight: 700;
+font-family: arial;</string>
+           </property>
+           <property name="text">
+            <string>9</string>
+           </property>
+           <property name="flat">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
           <widget class="QPushButton" name="btn2">
            <property name="minimumSize">
             <size>
@@ -538,6 +395,117 @@ font-family: arial;</string>
            </property>
           </widget>
          </item>
+         <item row="3" column="0" colspan="2">
+          <widget class="QPushButton" name="btn0">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>70</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>400</width>
+             <height>120</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border: 2px solid #0070DB;
+background-color: #ffffff;
+color: #0070DB;
+font: 20px;
+font-weight: 700;
+font-family: arial;</string>
+           </property>
+           <property name="text">
+            <string>0</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="3" rowspan="2">
+          <widget class="QPushButton" name="btnEnter">
+           <property name="minimumSize">
+            <size>
+             <width>70</width>
+             <height>155</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>120</width>
+             <height>225</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border: 2px solid #0070DB;
+background-color: #ffffff;
+color: #0070DB;
+font: 20px;
+font-weight: 700;
+font-family: arial;</string>
+           </property>
+           <property name="text">
+            <string>Enter</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="3">
+          <widget class="QPushButton" name="pushButton_8">
+           <property name="minimumSize">
+            <size>
+             <width>60</width>
+             <height>60</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>120</width>
+             <height>120</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border: 2px solid #0070DB;
+background-color: #ffffff;
+color: #0070DB;
+font: 20px;
+font-weight: 700;
+font-family: arial;</string>
+           </property>
+           <property name="text">
+            <string>Clear</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="2">
+          <widget class="QPushButton" name="btn3">
+           <property name="minimumSize">
+            <size>
+             <width>60</width>
+             <height>60</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>120</width>
+             <height>120</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border: 2px solid #0070DB;
+background-color: #ffffff;
+color: #0070DB;
+font: 20px;
+font-weight: 700;
+font-family: arial;</string>
+           </property>
+           <property name="text">
+            <string>3</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </item>
        <item>
@@ -546,8 +514,8 @@ font-family: arial;</string>
           <widget class="QWidget" name="containerLastCycle" native="true">
            <property name="minimumSize">
             <size>
-             <width>300</width>
-             <height>90</height>
+             <width>450</width>
+             <height>120</height>
             </size>
            </property>
            <property name="maximumSize">
@@ -562,10 +530,10 @@ font-family: arial;</string>
            <widget class="QLabel" name="lastCycleTextLabel">
             <property name="geometry">
              <rect>
-              <x>80</x>
-              <y>0</y>
-              <width>263</width>
-              <height>71</height>
+              <x>140</x>
+              <y>10</y>
+              <width>321</width>
+              <height>101</height>
              </rect>
             </property>
             <property name="font">
@@ -578,7 +546,7 @@ font-family: arial;</string>
             <property name="styleSheet">
              <string notr="true">background-image: &quot;&quot;;
 text-align: left;
-font: normal normal bold 15px/19px Arial;
+font: normal normal bold 19px/19px Arial;
 letter-spacing: 0px;
 color: #E85420;
 opacity: 1;</string>
@@ -611,16 +579,48 @@ Exposure power: 20%</string>
       </layout>
      </item>
      <item row="1" column="0">
-      <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,0">
+      <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,0,0">
        <property name="spacing">
-        <number>50</number>
+        <number>0</number>
        </property>
        <item>
-        <layout class="QVBoxLayout" name="verticalLayout_2" stretch="30,30,40,0">
+        <spacer name="horizontalSpacer_8">
+         <property name="orientation">
+          <enum>Qt::Orientation::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0,0,0">
+         <item>
+          <spacer name="verticalSpacer_9">
+           <property name="orientation">
+            <enum>Qt::Orientation::Vertical</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Policy::Fixed</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,0">
            <property name="spacing">
             <number>1</number>
+           </property>
+           <property name="sizeConstraint">
+            <enum>QLayout::SizeConstraint::SetFixedSize</enum>
            </property>
            <item>
             <widget class="QLabel" name="continuousCarre">
@@ -654,7 +654,7 @@ Exposure power: 20%</string>
 font-weight: 700;
 font-family: arial;
 border: 0px solid;
-font-size: 30px;</string>
+font-size: 40px;</string>
              </property>
              <property name="text">
               <string>Continuous mode</string>
@@ -690,7 +690,7 @@ font-size: 30px;</string>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_4">
              <property name="spacing">
-              <number>1</number>
+              <number>0</number>
              </property>
              <item>
               <widget class="QLabel" name="flashingCarre">
@@ -709,13 +709,22 @@ font-size: 30px;</string>
                <property name="scaledContents">
                 <bool>true</bool>
                </property>
+               <property name="alignment">
+                <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+               </property>
+               <property name="wordWrap">
+                <bool>false</bool>
+               </property>
+               <property name="openExternalLinks">
+                <bool>false</bool>
+               </property>
               </widget>
              </item>
              <item>
               <widget class="QPushButton" name="flashingModeBtn">
                <property name="maximumSize">
                 <size>
-                 <width>250</width>
+                 <width>330</width>
                  <height>16777215</height>
                 </size>
                </property>
@@ -724,7 +733,7 @@ font-size: 30px;</string>
 font-weight: 700;
 font-family: arial;
 border: 0px solid;
-font-size: 30px;</string>
+font-size: 40px;</string>
                </property>
                <property name="text">
                 <string>Flashing mode</string>
@@ -779,9 +788,22 @@ font-size: 30px;</string>
         </layout>
        </item>
        <item>
+        <spacer name="horizontalSpacer_7">
+         <property name="orientation">
+          <enum>Qt::Orientation::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
         <widget class="QStackedWidget" name="inputsStack">
          <property name="currentIndex">
-          <number>1</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="pageFlashing">
           <layout class="QGridLayout" name="gridLayout_4">
@@ -1079,7 +1101,7 @@ opacity: 1;</string>
              <property name="sizeHint" stdset="0">
               <size>
                <width>20</width>
-               <height>40</height>
+               <height>140</height>
               </size>
              </property>
             </spacer>
@@ -1391,7 +1413,7 @@ color: #E85420;</string>
              <property name="sizeHint" stdset="0">
               <size>
                <width>20</width>
-               <height>40</height>
+               <height>140</height>
               </size>
              </property>
             </spacer>
@@ -1491,22 +1513,6 @@ opacity: 1;</string>
               <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
              </property>
             </widget>
-           </item>
-           <item row="2" column="0">
-            <spacer name="horizontalSpacer_5">
-             <property name="orientation">
-              <enum>Qt::Orientation::Horizontal</enum>
-             </property>
-             <property name="sizeType">
-              <enum>QSizePolicy::Policy::Fixed</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
            </item>
            <item row="2" column="4">
             <widget class="QLabel" name="label_7">

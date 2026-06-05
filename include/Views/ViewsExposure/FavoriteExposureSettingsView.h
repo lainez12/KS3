@@ -20,7 +20,7 @@ namespace Kub3::UI::Views::ViewsExposure {
         explicit FavoriteExposureSettingsView(Unique<FavoriteExposureSettingsViewModel> viewModel, QWidget *parent = nullptr);
         ~FavoriteExposureSettingsView();
 
-    protected:
+    public:
         void resizeEvent(QResizeEvent *event) override;
 
     private:

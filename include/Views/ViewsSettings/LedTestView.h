@@ -21,7 +21,7 @@ namespace Kub3::UI::Views::ViewsSettings {
         explicit LedTestView(Unique<LedTestViewModel> viewModel, QWidget *parent = nullptr);
         ~LedTestView();
 
-    protected:
+    public:
         void resizeEvent(QResizeEvent *event) override;
 
     private:

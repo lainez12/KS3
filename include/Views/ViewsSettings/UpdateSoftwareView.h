@@ -21,7 +21,7 @@ namespace Kub3::UI::Views::ViewsSettings {
         explicit UpdateSoftwareView(Unique<UpdateSoftwareViewModel> viewModel, QWidget *parent = nullptr);
         ~UpdateSoftwareView();
 
-    protected:
+    public:
         void resizeEvent(QResizeEvent *event) override;
 
     private:

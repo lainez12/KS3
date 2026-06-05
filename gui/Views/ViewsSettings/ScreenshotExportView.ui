@@ -7,8 +7,20 @@
     <x>0</x>
     <y>0</y>
     <width>1922</width>
-    <height>916</height>
+    <height>820</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1920</width>
+    <height>818</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1922</width>
+    <height>820</height>
+   </size>
   </property>
   <property name="styleSheet">
    <string notr="true"/>
@@ -37,19 +49,33 @@
      <property name="spacing">
       <number>0</number>
      </property>
-     <item row="0" column="0" colspan="2">
-      <widget class="QLabel" name="date">
-       <property name="styleSheet">
-        <string notr="true">font: normal normal bold 40px/45px Arial;
-letter-spacing: 0px;
-color: #E85420;</string>
+     <item row="0" column="0">
+      <widget class="QScrollArea" name="scrollArea">
+       <property name="minimumSize">
+        <size>
+         <width>1920</width>
+         <height>818</height>
+        </size>
        </property>
-       <property name="text">
-        <string>Actual temperature: 22.5°C</string>
+       <property name="maximumSize">
+        <size>
+         <width>1920</width>
+         <height>16777215</height>
+        </size>
        </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignCenter</set>
+       <property name="widgetResizable">
+        <bool>true</bool>
        </property>
+       <widget class="QWidget" name="scrollAreaWidgetContents">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>1918</width>
+          <height>816</height>
+         </rect>
+        </property>
+       </widget>
       </widget>
      </item>
     </layout>

@@ -21,7 +21,7 @@ namespace Kub3::UI::Views::ViewsSettings {
         explicit VersionView(Unique<VersionViewModel> viewModel, QWidget *parent = nullptr);
         ~VersionView();
 
-    protected:
+    public:
         void resizeEvent(QResizeEvent *event) override;
 
     private:

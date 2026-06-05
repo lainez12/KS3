@@ -11,9 +11,14 @@
 #include "Views/Components/NavButton.h"
 #include "Views/Components/UpBar.h"
 #include "Views/DebugView.h"
+#include "Views/HomeEightView.h"
 #include "Views/HomeView.h"
 #include "Views/SettingsView.h"
 #include "Views/ViewBase.h"
+#include "Views/ViewsAlignment/DistanceView.h"
+#include "Views/ViewsAlignment/LoadParametersView.h"
+#include "Views/ViewsAlignment/SaveParametersView.h"
+#include "Views/ViewsAlignment/VisualisationView.h"
 #include "Views/ViewsExposure/CompleteExposureView.h"
 #include "Views/ViewsExposure/ExposureSettingsView.h"
 #include "Views/ViewsExposure/FavoriteExposureSettingsView.h"
@@ -27,10 +32,6 @@
 #include "Views/ViewsSettings/TemperatureView.h"
 #include "Views/ViewsSettings/UpdateSoftwareView.h"
 #include "Views/ViewsSettings/VersionView.h"
-#include "Views/ViewsAlignment/DistanceView.h"
-#include "Views/ViewsAlignment/VisualisationView.h"
-#include "Views/ViewsAlignment/LoadParametersView.h"
-#include "Views/ViewsAlignment/SaveParametersView.h"
 
 namespace Ui {
     class MainWindow;

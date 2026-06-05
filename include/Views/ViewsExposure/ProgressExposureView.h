@@ -20,7 +20,7 @@ namespace Kub3::UI::Views::ViewsExposure {
         explicit ProgressExposureView(Unique<ProgressExposureViewModel> viewModel, QWidget *parent = nullptr);
         ~ProgressExposureView();
 
-    protected:
+    public:
         void resizeEvent(QResizeEvent *event) override;
 
     private:

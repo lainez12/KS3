@@ -21,7 +21,7 @@ namespace Kub3::UI::Views::ViewsAlignment {
         explicit LoadParametersView(Unique<LoadParametersViewModel> viewModel, QWidget *parent = nullptr);
         ~LoadParametersView();
 
-    protected:
+    public:
         void resizeEvent(QResizeEvent *event) override;
 
     private:

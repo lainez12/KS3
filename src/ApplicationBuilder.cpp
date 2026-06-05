@@ -104,7 +104,9 @@ namespace Kub3 {
             auto *loadParametersView               = new LoadParametersView(std::move(loadParametersViewModel), m_mainWindow.get());
             auto *saveParametersView               = new SaveParametersView(std::move(saveParametersViewModel), m_mainWindow.get());
             auto *homeView                         = new HomeView(std::move(homeViewModel), m_mainWindow.get());
+            auto *homeEightView                    = new HomeEightView(std::make_unique<UI::ViewModels::HomeViewModel>(m_repo), m_mainWindow.get());
             m_mainWindow->addView(Kub3::UI::ViewId::HOME_VIEW, homeView);
+            m_mainWindow->addView(Kub3::UI::ViewId::HOME_EIGHT_VIEW, homeEightView);
             m_mainWindow->addView(Kub3::UI::ViewId::MACHINE_STATUS_VIEW, machineStatusView);
             m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_VIEW, settingsView);
             m_mainWindow->addView(Kub3::UI::ViewId::EXPOSURE_SETTINGS_VIEW, exposureSettingsView);
@@ -129,7 +131,7 @@ namespace Kub3 {
             QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_stateChanged, m_mainWindow.get(), &MainWindow::ps_stateChanged);
         }
 
-        m_mainWindow->ps_openView(Kub3::UI::ViewId::HOME_VIEW);
+        m_mainWindow->ps_openView(Kub3::UI::ViewId::HOME_EIGHT_VIEW);
 
         return *this;
     }

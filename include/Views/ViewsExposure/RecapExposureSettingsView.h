@@ -20,7 +20,7 @@ namespace Kub3::UI::Views::ViewsExposure {
         explicit RecapExposureSettingsView(Unique<RecapExposureSettingsViewModel> viewModel, QWidget *parent = nullptr);
         ~RecapExposureSettingsView();
 
-    protected:
+    public:
         void resizeEvent(QResizeEvent *event) override;
 
     private:

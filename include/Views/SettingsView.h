@@ -26,13 +26,14 @@ namespace Kub3::UI::Views {
 
     private slots:
 
-    protected:
+    public:
         void resizeEvent(QResizeEvent *event) override;
 
     private:
         void createNavButtonsConfigs();
         void configTitleBar();
         void onHomeButtonClicked(const QString &buttonId);
+
     private:
         Ui::SettingsView *ui;
     };

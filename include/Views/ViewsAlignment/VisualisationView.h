@@ -21,7 +21,7 @@ namespace Kub3::UI::Views::ViewsAlignment {
         explicit VisualisationView(Unique<VisualisationViewModel> viewModel, QWidget *parent = nullptr);
         ~VisualisationView();
 
-    protected:
+    public:
         void resizeEvent(QResizeEvent *event) override;
 
     private slots:

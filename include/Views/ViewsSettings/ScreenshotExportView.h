@@ -21,7 +21,7 @@ namespace Kub3::UI::Views::ViewsSettings {
         explicit ScreenshotExportView(Unique<ScreenshotExportViewModel> viewModel, QWidget *parent = nullptr);
         ~ScreenshotExportView();
 
-    protected:
+    public:
         void resizeEvent(QResizeEvent *event) override;
 
     private:
