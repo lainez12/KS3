@@ -1,8 +1,11 @@
+#if defined(BUILD_DEBUG)
 #include <QDebug>
+#endif
+
 #include <QMetaObject>
 #include <stdexcept>
 
-#include "HAL/Actuators/Motors/StepperMotor.h"
+#include <HAL/Actuators/Motors/StepperMotor.h>
 
 #define CONTROL_TIMER_VALUE_MS 20 // 50Hz
 
@@ -224,7 +227,8 @@ namespace Kub3::HAL::Act
 
 #if defined(BUILD_DEBUG)
         qDebug() << "===============================";
-        qDebug() << "Computed position (mm):" << state.position;
+        qDebug() << "Current position" << getEncoderPositionMm();
+        qDebug() << "Computed next position (mm):" << state.position;
         qDebug() << "Computed velocity (mm/s):" << state.velocity;
 #endif
 

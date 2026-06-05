@@ -3,7 +3,7 @@
 #endif
 #include <algorithm>
 
-#include "Algorithms/Kinematic/TrapezoidalGenerator.h"
+#include <Algorithms/Kinematic/TrapezoidalGenerator.h>
 
 namespace Kub3::Algorithms::Kinematic
 {
