@@ -8,6 +8,7 @@
 #include <memory>
 
 #include <ViewModels/IViewModel.h>
+#include <Views/Components/MessageOverlay.h>
 #include <Views/Components/NavButtonManager.h>
 #include <utils.h>
 
@@ -59,6 +60,8 @@ namespace Kub3::UI::Views {
     public:
         explicit ViewBase(Unique<ViewModels::IViewModel> viewModel, QWidget *parent = nullptr);
         virtual ~ViewBase() = default;
+
+        void showAnOverlayMessage(QString text);
 
         void resizeEventOverride(QResizeEvent *event) {
             resizeEvent(event);
@@ -136,6 +139,7 @@ namespace Kub3::UI::Views {
         Unique<ViewModels::IViewModel> m_viewModel;
         bool m_showCentralLogo;
         NavButtonManager m_buttonManager;
+        Unique<MessageOverlay> m_messages = std::make_unique<MessageOverlay>(this);
 
     private:
         virtual void createNavButtonsConfigs() = 0;

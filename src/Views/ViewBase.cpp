@@ -32,4 +32,9 @@ namespace Kub3::UI::Views {
         widget->setGraphicsEffect(shadow);
     }
 
+    void ViewBase::showAnOverlayMessage(QString text) {
+        m_messages->setText(text);
+        m_messages->show();
+    }
+
 } // namespace Kub3::UI::Views
