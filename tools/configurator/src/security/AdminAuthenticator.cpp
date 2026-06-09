@@ -78,9 +78,9 @@ namespace Kub3::Security
     QByteArray AdminAuthenticator::deriveKey(const QString &password, const QByteArray &salt)
     {
         QByteArray pepper = QByteArray::fromStdString(PEPPER_CIPHER.decrypt());
-        pepper.fill(0); // Overrite pepper in RAM (high-level paranoia)
-        QByteArray key = password.toUtf8() + salt + pepper;
+        QByteArray key    = password.toUtf8() + salt + pepper;
 
+        pepper.fill(0); // Overrite pepper in RAM (high-level paranoia)
         for (int i = 0; i < 10000; ++i)
         {
             key = QCryptographicHash::hash(key, QCryptographicHash::Sha256);
