@@ -4,6 +4,7 @@
 #include <stdexcept>
 
 #include <Config/ConfigLoader.h>
+#include <Config/keys/admin.h>
 #include <Config/keys/hardware.h>
 #include <Config/keys/process.h>
 
@@ -272,6 +273,25 @@ namespace Kub3::Config
             .rotational_gain_high_force    = getRequiredValue(settings, CONF_PROCESS_ADMITTANCE_ROTATION_GAIN_HIGH_FORCE, admittanceGroup).toDouble(),
         };
         settings.endGroup(); // admittanceGroup
+
+        return config;
+    }
+
+    admin_config_t ConfigLoader::loadAdminConfig(const std::string &filePath)
+    {
+        admin_config_t config;
+        QSettings settings(QString::fromStdString(filePath), QSettings::IniFormat);
+
+        if (settings.status() != QSettings::NoError)
+        {
+            throw std::runtime_error("CRITICAL: Failed to open or parse process config file: " + filePath);
+        }
+
+        if (!settings.contains(CONF_ADMIN_KLOE_MODE))
+        {
+            throw std::runtime_error(std::format("CRITICAL: Missing admin config key '{}'", CONF_ADMIN_KLOE_MODE));
+        }
+        config.kloe_mode = settings.value(CONF_ADMIN_KLOE_MODE).toBool();
 
         return config;
     }

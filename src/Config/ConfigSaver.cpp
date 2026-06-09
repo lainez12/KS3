@@ -7,6 +7,7 @@
 #include <variant>
 
 #include <Config/ConfigSaver.h>
+#include <Config/keys/admin.h>
 #include <Config/keys/hardware.h>
 #include <Config/keys/process.h>
 
@@ -199,6 +200,35 @@ namespace Kub3::Config
             settings.setValue(CONF_PROCESS_ADMITTANCE_ROTATION_GAIN_LOW_FORCE, config.contact.admittance.rotational_gain_low_force);
             settings.setValue(CONF_PROCESS_ADMITTANCE_ROTATION_GAIN_HIGH_FORCE, config.contact.admittance.rotational_gain_high_force);
             settings.endGroup(); // CONF_PROCESS_ADMITTANCE_TUNING
+
+            // Flush and verify write
+            settings.sync();
+            if (settings.status() != QSettings::NoError)
+            {
+                throw std::runtime_error(std::format("CRITICAL: Failed to write temp process config file: {}", tempPath));
+            }
+        } // END SCOPE
+
+        // ATOMIC SWAP
+        std::error_code ec;
+        std::filesystem::rename(tempPath, targetPath, ec);
+        if (ec)
+        {
+            std::filesystem::remove(tempPath, ec); // Cleanup orphaned tmp file
+            throw std::runtime_error(std::format("CRITICAL: Atomic process config swap failed: {}", ec.message()));
+        }
+    }
+
+    void ConfigSaver::saveAdminConfig(const admin_config_t &config, const std::string &targetPath)
+    {
+        qInfo() << "[SAVING PROCESS CONFIGURATION] to" << targetPath.c_str();
+        const std::string tempPath = targetPath + ".tmp";
+
+        {
+            // BEGIN SCOPE: Ensure QSettings flushes and releases lock
+            QSettings settings(QString::fromStdString(tempPath), QSettings::IniFormat);
+
+            settings.setValue(CONF_ADMIN_KLOE_MODE, config.kloe_mode);
 
             // Flush and verify write
             settings.sync();

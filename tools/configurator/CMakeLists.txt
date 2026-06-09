@@ -7,6 +7,8 @@ qt_add_executable(Kub3Configurator
     src/main.cpp
     src/utils.cpp
     src/ConfigWindow.cpp
+    src/security/AdminAuthenticator.cpp
+    src/pages/AdminConfigPage.cpp
     src/pages/MotorConfigPage.cpp
     src/pages/CameraConfigPage.cpp
     src/pages/CameraGeneralPage.cpp
@@ -18,6 +20,8 @@ qt_add_executable(Kub3Configurator
     # Headers
     include/utils.h
     include/ConfigWindow.h
+    include/security/AdminAuthenticator.h
+    include/pages/AdminConfigPage.h
     include/pages/MotorConfigPage.h
     include/pages/CameraConfigPage.h
     include/pages/CameraGeneralPage.h

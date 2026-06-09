@@ -141,6 +141,9 @@ qt_add_library(Kub3Core STATIC
     include/Config/ConfigSaver.h
     include/Config/kinematics.h
     include/Config/conf.h
+    include/Config/hardware.h
+    include/Config/process.h
+    include/Config/admin.h
     include/Config/helper.h
     include/Config/keys/hardware.h
     include/Config/keys/process.h
@@ -276,12 +279,16 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     target_compile_definitions(Kub3Core PUBLIC
         KUB3_HARDWARE_CONFIG_PATH="${CMAKE_SOURCE_DIR}/tests/hardware.ini"
         KUB3_PROCESS_CONFIG_PATH="${CMAKE_SOURCE_DIR}/tests/process.ini"
+        KUB3_ADMIN_CONFIG_PATH="${CMAKE_SOURCE_DIR}/tests/admin.ini"
+        KUB3_ADMIN_VAULT_PATH="${CMAKE_SOURCE_DIR}/tests/admin_vault.bin"
     )
 else()
     target_compile_definitions(Kub3Core PUBLIC BUILD_RELEASE)
     target_compile_definitions(Kub3Core PUBLIC
         KUB3_HARDWARE_CONFIG_PATH="/etc/kub3/hardware.ini"
         KUB3_PROCESS_CONFIG_PATH="/etc/kub3/process.ini"
+        KUB3_ADMIN_CONFIG_PATH="/etc/kub3/admin.ini"
+        KUB3_ADMIN_VAULT_PATH="/etc/kub3/admin_vault.bin"
     )
 endif()
 

@@ -46,11 +46,13 @@ int main(int argc, char *argv[])
     qInfo() << "  Version:" << KUB3_VERSION_STR;
     qInfo() << "  Hardware Config Path:" << KUB3_HARDWARE_CONFIG_PATH;
     qInfo() << "  Process Config Path:" << KUB3_PROCESS_CONFIG_PATH;
+    qInfo() << "  Admin Config Path:" << KUB3_ADMIN_CONFIG_PATH;
+    qInfo() << "  Admin Vault Path:" << KUB3_ADMIN_VAULT_PATH;
     qInfo() << "========================================";
 
     try
     {
-        ConfigWindow window(KUB3_HARDWARE_CONFIG_PATH, KUB3_PROCESS_CONFIG_PATH);
+        ConfigWindow window(KUB3_HARDWARE_CONFIG_PATH, KUB3_PROCESS_CONFIG_PATH, KUB3_ADMIN_CONFIG_PATH);
 
 #if defined(BUILD_DEBUG)
         window.showMaximized();

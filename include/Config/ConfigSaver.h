@@ -17,6 +17,10 @@ namespace Kub3::Config
         // Serializes and atomically saves the process configuration.
         // Throws std::runtime_error on disk or permission failures.
         static void saveProcessConfig(const process_config_t &config, const std::string &targetPath);
+
+        // Serializes and atomically saves the admin configuration.
+        // Throws std::runtime_error on disk or permission failures.
+        static void saveAdminConfig(const admin_config_t &config, const std::string &targetPath);
     };
 
 } // namespace Kub3::Config

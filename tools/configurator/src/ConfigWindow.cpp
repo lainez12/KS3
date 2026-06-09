@@ -29,10 +29,11 @@
 #define CAMERAS_CATEGORY       "Cameras"
 #define MISCELLANEOUS_CATEGORY "Miscellaneous"
 
-ConfigWindow::ConfigWindow(QString hwConfigPath, QString processConfigPath, QWidget *parent) :
+ConfigWindow::ConfigWindow(QString hwConfigPath, QString processConfigPath, QString adminConfigPath, QWidget *parent) :
     QWidget(parent),
     m_hwConfigPath(std::move(hwConfigPath)),
     m_processConfigPath(std::move(processConfigPath)),
+    m_adminConfigPath(std::move(adminConfigPath)),
     ui(new Ui::ConfigWindow)
 {
     ui->setupUi(this);
@@ -57,11 +58,12 @@ void ConfigWindow::onReloadClicked()
 {
     try
     {
-        // 1. Load from disk
+        // Load from disk
         m_hwConfig      = Kub3::Config::ConfigLoader::loadHardwareConfig(m_hwConfigPath.toStdString());
         m_processConfig = Kub3::Config::ConfigLoader::loadProcessConfig(m_processConfigPath.toStdString());
+        m_adminConfig   = Kub3::Config::ConfigLoader::loadAdminConfig(m_adminConfigPath.toStdString());
 
-        // 2. Rebuild UI
+        // Rebuild UI
         populateUI();
     }
     catch (const std::exception &e)
@@ -74,16 +76,26 @@ void ConfigWindow::onSaveClicked()
 {
     try
     {
-        // 1. Execute all registered save hooks to pull data from the StackedWidget pages into RAM
+        // Execute all registered save hooks to pull data from the StackedWidget pages into RAM
         for (const auto &hook : m_saveHooks)
         {
             if (hook)
                 hook();
         }
 
-        // 2. Serialize to disk atomically
+        // Serialize to disk atomically
         Kub3::Config::ConfigSaver::saveHardwareConfig(m_hwConfig, m_hwConfigPath.toStdString());
         Kub3::Config::ConfigSaver::saveProcessConfig(m_processConfig, m_processConfigPath.toStdString());
+        Kub3::Config::ConfigSaver::saveAdminConfig(m_adminConfig, m_adminConfigPath.toStdString());
+
+#ifndef BUILD_DEBUG
+        // SECURE THE FILE: Enforce root-only access for Admin Config in release or deploy mode
+        QFile adminFile(m_adminConfigPath);
+        if (adminFile.exists())
+        {
+            adminFile.setPermissions(QFileDevice::ReadOwner | QFileDevice::WriteOwner);
+        }
+#endif
 
         QMessageBox::information(this, "Success", "Configurations saved successfully.");
     }
@@ -146,14 +158,24 @@ void ConfigWindow::populateUI()
     ui->categoryList->blockSignals(true); // Prevent UI thrashing while building
 
     // -------------------------------------------------------------
+    // STATIC PAGE: ADMIN SETTINGS
+    // -------------------------------------------------------------
+    m_adminPage = new Kub3::Components::AdminConfigPage(this);
+    // Give the admin page the data (it caches it, but keeps the UI empty because locked at first)
+    m_adminPage->loadInitialData(m_adminConfig);
+    connect(m_adminPage, &Kub3::Components::AdminConfigPage::adminUnlocked, this, [this]() {
+        m_adminPage->loadInitialData(m_adminConfig); // When the user unlocks the page, retrigger load to display values
+    });
+    int adminIdx = addConfigPage(m_adminPage, [this]() {
+        m_adminPage->pullDataToStruct(m_adminConfig);
+    });
+    // -------------------------------------------------------------
     // STATIC PAGE: SYSTEM SETTINGS
     // -------------------------------------------------------------
     auto *mcuPage = new Kub3::Components::MCUConfigPage(m_hwConfig);
     int mcuIdx    = addConfigPage(mcuPage, [this, mcuPage]() {
         mcuPage->pullDataToStruct(m_hwConfig);
     });
-    m_categoryMap[SYSTEM_CATEGORY].push_back({"Micro-controllers", mcuIdx});
-
     // -------------------------------------------------------------
     // STATIC PAGE: FORCE SETTINGS
     // -------------------------------------------------------------
@@ -161,8 +183,6 @@ void ConfigWindow::populateUI()
     int forceIndex  = addConfigPage(forcePage, [this, forcePage]() {
         forcePage->pullDataToStruct(m_processConfig.contact);
     });
-    m_categoryMap[FORCE_CATEGORY].push_back({"Process & Crash Limits", forceIndex});
-
     // -------------------------------------------------------------
     // STATIC PAGE: Z-AXIS SETTINGS
     // -------------------------------------------------------------
@@ -170,8 +190,6 @@ void ConfigWindow::populateUI()
     int zAxisIndex  = addConfigPage(zAxisPage, [this, zAxisPage]() {
         zAxisPage->pullDataToStruct(m_processConfig);
     });
-    m_categoryMap[Z_CATEGORY].push_back({"Algorithmic Limits", zAxisIndex});
-
     // -------------------------------------------------------------
     // STATIC PAGE: ALIGNMENT CALIBRATION SETTINGS
     // -------------------------------------------------------------
@@ -179,8 +197,6 @@ void ConfigWindow::populateUI()
     int alignIdx    = addConfigPage(alignPage, [this, alignPage]() {
         alignPage->pullDataToStruct(m_processConfig.alignment);
     });
-    m_categoryMap[ALIGNMENT_CATEGORY].push_back({"Calibration Positions", alignIdx});
-
     // -------------------------------------------------------------
     // STATIC PAGE: CONVEYORS CALIBRATION SETTINGS
     // -------------------------------------------------------------
@@ -188,12 +204,9 @@ void ConfigWindow::populateUI()
     int drawersIdx    = addConfigPage(drawersPage, [this, drawersPage]() {
         drawersPage->pullDataToStruct(m_processConfig.drawers);
     });
-    m_categoryMap[CONVEYORS_CATEGORY].push_back({"Calibration Positions", drawersIdx});
-
     QStringList allMotorIds;
     for (const auto &[motorId, _] : m_hwConfig.motors)
         allMotorIds << motorId;
-
     // -------------------------------------------------------------
     // STATIC PAGE: CAMERAS GENERAL SETTINGS
     // -------------------------------------------------------------
@@ -201,6 +214,13 @@ void ConfigWindow::populateUI()
     int camGenIndex  = addConfigPage(camGenPage, [this, camGenPage]() {
         camGenPage->pullDataToStruct(m_processConfig.vision);
     });
+
+    m_categoryMap[SYSTEM_CATEGORY].push_back({"Administrator", adminIdx});
+    m_categoryMap[SYSTEM_CATEGORY].push_back({"Micro-controllers", mcuIdx});
+    m_categoryMap[FORCE_CATEGORY].push_back({"Process & Crash Limits", forceIndex});
+    m_categoryMap[Z_CATEGORY].push_back({"Algorithmic Limits", zAxisIndex});
+    m_categoryMap[ALIGNMENT_CATEGORY].push_back({"Calibration Positions", alignIdx});
+    m_categoryMap[CONVEYORS_CATEGORY].push_back({"Calibration Positions", drawersIdx});
     m_categoryMap[CAMERAS_CATEGORY].push_back({"General Settings", camGenIndex});
 
     // -------------------------------------------------------------
