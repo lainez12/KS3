@@ -21,23 +21,17 @@ namespace Kub3::Tools::Tester
     {
         qWarning() << "[FocalTestService] Emergency Stop triggered.";
 
-        try
+        for (const auto &id : m_knownFocalIds)
         {
-            for (const auto &id : m_knownFocalIds)
-            {
-                auto focal = m_registry->get<HAL::Act::IFocal>(id);
+            auto focal = m_registry->get<HAL::Act::IFocal>(id);
 
+            if (focal)
                 focal->disable();
-            }
-            m_status = Services::ServiceStatus::Success;
-            m_errorReason.clear();
+            else
+                qCritical().noquote() << "[FocalTestService] Failed to disable focal" << id;
         }
-        catch (const std::exception &e)
-        {
-            m_status      = Services::ServiceStatus::Error;
-            m_errorReason = e.what();
-            qCritical() << "[FocalTestService] Stop failed:" << e.what();
-        }
+        m_status = Services::ServiceStatus::Success;
+        m_errorReason.clear();
     }
 
     // ==========================================
@@ -47,40 +41,40 @@ namespace Kub3::Tools::Tester
     void FocalTestService::toggleFocal(const std::string &focalId, bool enabled)
     {
         qInfo() << "[FocalTestService] Toggling focal" << QString::fromStdString(focalId) << (enabled ? "ON" : "OFF");
+        auto focal = m_registry->get<HAL::Act::IFocal>(focalId);
 
-        try
+        if (!!focal)
         {
-            auto focal = m_registry->get<HAL::Act::IFocal>(focalId);
-
             if (enabled)
                 focal->enable();
             else
                 focal->disable();
             m_status = Services::ServiceStatus::Success;
         }
-        catch (const std::exception &e)
+        else
         {
             m_status      = Services::ServiceStatus::Error;
-            m_errorReason = e.what();
-            qCritical() << "[FocalTestService] Toggle failed:" << e.what();
+            m_errorReason = focal.unwrap_err();
+            qCritical() << "[FocalTestService] Toggle failed:" << m_errorReason;
         }
     }
 
     void FocalTestService::updateFocalValue(const std::string &focalId, uint16_t value)
     {
         qInfo() << "[FocalTestService] Setting focal" << QString::fromStdString(focalId) << "to" << value;
-        try
-        {
-            auto focal = m_registry->get<HAL::Act::IFocal>(focalId);
 
+        auto focal = m_registry->get<HAL::Act::IFocal>(focalId);
+
+        if (focal)
+        {
             focal->setValue(value);
             m_status = Services::ServiceStatus::Success;
         }
-        catch (const std::exception &e)
+        else
         {
             m_status      = Services::ServiceStatus::Error;
-            m_errorReason = e.what();
-            qCritical() << "[FocalTestService] Update value failed:" << e.what();
+            m_errorReason = focal.unwrap_err();
+            qCritical().noquote() << "[FocalTestService] Update value failed:" << QString::fromStdString(m_errorReason);
         }
     }
 

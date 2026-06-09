@@ -46,6 +46,7 @@ namespace Kub3::Tools::Tester
         void ps_runDrawerOperation(DrawerTarget target, bool eject);
         void ps_runStowage(int targetInt);
         void ps_runUnstowage(int targetInt);
+        void ps_runAutolevel(void);
 
     signals:
         // Pushed to ViewModel

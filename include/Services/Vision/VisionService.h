@@ -78,7 +78,7 @@ namespace Kub3::Services
 
     private:
         [[nodiscard]] bool inCollisionZone(VisionMotor motor, VisionDirection dir) const;
-        void setupMotor(VisionMotor motorId, const char *motorConfId, const Config::process_config_t &conf);
+        void setupCameraMotor(VisionMotor motorId, const char *motorConfId, const Config::process_config_t &conf);
         void applyPush(VisionMotor pushingMotor, bool fineMode);
         bool deckVisualisationLimitReached(void) const;
 

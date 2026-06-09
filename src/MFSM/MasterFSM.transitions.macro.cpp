@@ -176,7 +176,7 @@ namespace Kub3::MFSM
                     auto guard = Interlocks::canApplyContact(opState.posture);
                     if (!guard)
                     {
-                        emit s_warningOccurred(QString::fromUtf8(guard.message));
+                        emit s_warningOccurred(QString::fromUtf8(guard.unwrap_err()));
                         return;
                     }
                     alignState->phase = ContactPhase::ApplyingContact;

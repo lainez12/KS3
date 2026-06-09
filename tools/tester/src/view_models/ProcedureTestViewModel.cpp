@@ -53,6 +53,12 @@ namespace Kub3::Tools::Tester
             emit cmdRunInitialization(targetInt);
     }
 
+    void ProcedureTestViewModel::uiRequestAutolevel(void)
+    {
+        if (!m_isRunning)
+            emit cmdRunAutolevel();
+    }
+
     // ==========================================
     // CONTROLLER UPDATES -> UI STATE
     // ==========================================

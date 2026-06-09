@@ -25,7 +25,7 @@ namespace Kub3::HAL::Com
         std::string_view routeKey = m_extractor(packet);
 
 #if defined(BUILD_DEBUG)
-        qDebug() << "[PacketRouter] recv route:" << QByteArray(routeKey).toHex(' ') << " | full packet:" << packet.payload.toHex(' ');
+        // qDebug() << "[PacketRouter] recv route:" << QByteArray(routeKey).toHex(' ') << " | full packet:" << packet.payload.toHex(' ');
 #endif
         if (auto it = m_routes.find<std::string_view>(routeKey); it != m_routes.end())
         {

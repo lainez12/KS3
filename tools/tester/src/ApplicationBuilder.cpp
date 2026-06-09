@@ -1,5 +1,7 @@
+#include <QtLogging>
+
 #include <ApplicationBuilder.h>
-#include <QDebug>
+#include <Config/helper.h>
 
 // Include the Controllers and ViewModels
 #include <controllers/MotorTestController.h>
@@ -18,6 +20,9 @@ namespace Kub3::Tools::Tester
         qInfo() << "[Tester] Loading Configs...";
         m_hwConfig      = Config::ConfigLoader::loadHardwareConfig(hwPath);
         m_processConfig = Config::ConfigLoader::loadProcessConfig(processPath);
+
+        qInfo() << m_hwConfig;
+        qInfo() << m_processConfig;
     }
 
     void ApplicationBuilder::buildHardwareTier()
@@ -124,6 +129,7 @@ namespace Kub3::Tools::Tester
         QObject::connect(m_procedureTestViewModel.get(), &ProcedureTestViewModel::cmdRunDrawerOperation, m_procedureTestController, &ProcedureTestController::ps_runDrawerOperation, Qt::QueuedConnection);
         QObject::connect(m_procedureTestViewModel.get(), &ProcedureTestViewModel::cmdRunStowage, m_procedureTestController, &ProcedureTestController::ps_runStowage, Qt::QueuedConnection);
         QObject::connect(m_procedureTestViewModel.get(), &ProcedureTestViewModel::cmdRunUnstowage, m_procedureTestController, &ProcedureTestController::ps_runUnstowage, Qt::QueuedConnection);
+        QObject::connect(m_procedureTestViewModel.get(), &ProcedureTestViewModel::cmdRunAutolevel, m_procedureTestController, &ProcedureTestController::ps_runAutolevel, Qt::QueuedConnection);
 
         // Controller (Logic Thread) -> ViewModel (Main Thread)
         QObject::connect(m_procedureTestController, &ProcedureTestController::s_procedureStarted, m_procedureTestViewModel.get(), &ProcedureTestViewModel::onProcedureStarted, Qt::QueuedConnection);

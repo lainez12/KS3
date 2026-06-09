@@ -1,3 +1,9 @@
+#if defined(BUILD_DEBUG)
+#include <QDebug>
+#include <QString>
+#endif
+
+#include <Config/helper.h>
 #include <Services/Contact/tasks/FastApproachTask.h>
 
 namespace Kub3::Services
@@ -16,6 +22,10 @@ namespace Kub3::Services
 
     void FastApproachTask::start(void)
     {
+#if defined(BUILD_DEBUG)
+        qDebug() << QString("=== [FastApproachTask] Starting with target: %1 gF ===").arg(m_threshold);
+#endif
+
         // Check if already beyond threshold
         if (m_currentMaxForceGetter() >= m_threshold)
         {
@@ -44,6 +54,7 @@ namespace Kub3::Services
         {
             if (m_currentMaxForceGetter() >= m_threshold)
             {
+                qDebug() << QString("=== [FastApproachTask] Contact threshold reached with value: %1 gF ===").arg(m_currentMaxForceGetter());
                 for (auto &motor : m_motors)
                 {
                     if (motor)

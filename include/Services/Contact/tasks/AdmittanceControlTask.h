@@ -55,6 +55,7 @@ namespace Kub3::Services
         QElapsedTimer m_dtTimer;
         bool m_isFirstTick      = true;
         int64_t m_lastTickNsecs = 0;
+        QElapsedTimer m_convergenceTimer;
     };
 
 } // namespace Kub3::Services

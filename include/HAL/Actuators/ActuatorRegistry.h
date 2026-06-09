@@ -6,8 +6,9 @@
 #include <string_view>
 #include <unordered_map>
 
-#include "IActuator.h"
-#include "utils.h"
+#include "./IActuator.h"
+#include <Common/Result.h>
+#include <utils.h>
 
 namespace Kub3::HAL::Act
 {
@@ -32,7 +33,7 @@ namespace Kub3::HAL::Act
 
         // Getter for actuators by id
         template <typename T>
-        [[nodiscard]] Shared<T> get(std::string_view id) const
+        [[nodiscard]] Result<Shared<T>, std::string> get(std::string_view id) const
         {
             static_assert(std::is_base_of_v<IActuator, T>, "T must inherit from IActuator");
 
@@ -41,12 +42,11 @@ namespace Kub3::HAL::Act
                 auto ptr = std::dynamic_pointer_cast<T>(it->second);
                 if (!ptr)
                 {
-                    // TODO: Optional instead of throw ?
-                    throw std::runtime_error("Actuator type mismatch for ID: " + std::string(id));
+                    return Err("Actuator type mismatch for ID: " + std::string(id));
                 }
-                return ptr;
+                return Ok(ptr);
             }
-            throw std::out_of_range("Actuator not found: " + std::string(id));
+            return Err("Actuator not found: " + std::string(id));
         }
 
     private:

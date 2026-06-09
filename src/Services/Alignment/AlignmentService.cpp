@@ -130,18 +130,22 @@ namespace Kub3::Services
 
     void AlignmentService::loadConfigurations(Shared<HAL::Act::ActuatorRegistry> registry, const Config::process_config_t &processConfig)
     {
+        UNWRAP_OR_THROW(xMotor, registry->get<HAL::Act::IMotor>(X_STAGE_MOTOR), "[AlignmentService] Failed to load X Stage Motor: ");
+        UNWRAP_OR_THROW(yMotor, registry->get<HAL::Act::IMotor>(Y_STAGE_MOTOR), "[AlignmentService] Failed to load Y Stage Motor: ");
+        UNWRAP_OR_THROW(thetaMotor, registry->get<HAL::Act::IMotor>(THETA_STAGE_MOTOR), "[AlignmentService] Failed to load Theta Stage Motor: ");
+
         const motor_alignment_config_t xStageConfig{
-            .motor       = registry->get<HAL::Act::IMotor>(X_STAGE_MOTOR),
+            .motor       = xMotor,
             .fastProfile = processConfig.getKinematicProfile(X_STAGE_MOTOR, "normal"),
             .fineProfile = processConfig.getKinematicProfile(X_STAGE_MOTOR, "fine"),
         };
         const motor_alignment_config_t yStageConfig{
-            .motor       = registry->get<HAL::Act::IMotor>(Y_STAGE_MOTOR),
+            .motor       = yMotor,
             .fastProfile = processConfig.getKinematicProfile(Y_STAGE_MOTOR, "normal"),
             .fineProfile = processConfig.getKinematicProfile(Y_STAGE_MOTOR, "fine"),
         };
         const motor_alignment_config_t thetaStageConfig{
-            .motor       = registry->get<HAL::Act::IMotor>(THETA_STAGE_MOTOR),
+            .motor       = thetaMotor,
             .fastProfile = processConfig.getKinematicProfile(THETA_STAGE_MOTOR, "normal"),
             .fineProfile = processConfig.getKinematicProfile(THETA_STAGE_MOTOR, "fine"),
         };

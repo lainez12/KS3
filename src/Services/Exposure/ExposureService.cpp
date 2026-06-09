@@ -1,3 +1,5 @@
+#include <QDebug>
+
 #include <HAL/MachineStatus/actuators_labels.h>
 #include <Services/Exposure/ExposureService.h>
 #include <utils.h>
@@ -7,7 +9,8 @@ namespace Kub3::Services
 
     ExposureService::ExposureService(Shared<HAL::Act::ActuatorRegistry> registry)
     {
-        m_uvHead = registry->get<HAL::Act::UVExposureHead>(UV_EXPOSURE_HEAD);
+        UNWRAP_OR_THROW(uvHead, registry->get<HAL::Act::UVExposureHead>(UV_EXPOSURE_HEAD), "[ExposureService] ");
+        m_uvHead = uvHead;
     }
 
     void ExposureService::tick(void)

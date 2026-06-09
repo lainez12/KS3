@@ -85,6 +85,7 @@ namespace Kub3::Tools::Tester
         connect(ui->btnHomeWafer, &QPushButton::clicked, this, [this]() {
             // TODO: m_procedureViewModel->uiRequestHoming(...);
         });
+
         // --- Alignment Stages Operations ---
         connect(ui->btnInitXStage, &QPushButton::clicked, this, [this]() {});
         connect(ui->btnCenterXStage, &QPushButton::clicked, this, [this]() {});
@@ -94,6 +95,11 @@ namespace Kub3::Tools::Tester
         connect(ui->btnCenterThetaStage, &QPushButton::clicked, this, [this]() {});
         connect(ui->btnInitAllStages, &QPushButton::clicked, this, [this]() {});
         connect(ui->btnCenterAllStages, &QPushButton::clicked, this, [this]() {});
+
+        // --- Z Elevator ---
+        connect(ui->btnStartAutolevel, &QPushButton::clicked, this, [this]() {
+            m_procedureViewModel->uiRequestAutolevel();
+        });
 
         // =====================================
         // VIEW MODEL --> VIEW (Reactivity)

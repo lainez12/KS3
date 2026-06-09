@@ -48,6 +48,7 @@ namespace Kub3::Tools::Tester
         void uiRequestStowage(int targetInt);
         void uiRequestUnstowage(int targetInt);
         void uiRequestInitialization(int targetInt);
+        void uiRequestAutolevel(void);
 
         // Inbound Service Updates (from Logic Tier)
         void onProcedureStarted(const QString &procedureName);
@@ -69,6 +70,7 @@ namespace Kub3::Tools::Tester
         void cmdRunStowage(int targetInt);
         void cmdRunUnstowage(int targetInt);
         void cmdRunInitialization(int targetInt);
+        void cmdRunAutolevel(void);
 
     private:
         void setStatus(const QString &msg, bool isError);

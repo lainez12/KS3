@@ -1,6 +1,4 @@
-#if defined(BUILD_DEBUG)
 #include <QDebug>
-#endif
 
 #include <HAL/Actuators/Motors/IMotor.h>
 #include <HAL/Actuators/Valves/IValve.h>
@@ -14,6 +12,15 @@
 #include <Services/Stowage/tasks/StowageMoveZToLimitTask.h>
 #include <Services/tasks/ToggleValveTask.h>
 
+#define STOP_MOTOR_PTR(motor, motorId)                                                   \
+    do                                                                                   \
+    {                                                                                    \
+        if (motor)                                                                       \
+            motor->emergencyStop();                                                      \
+        else                                                                             \
+            qCritical().noquote() << "[StowageService] Failed to stop motor" << motorId; \
+    } while (0);
+
 namespace Kub3::Services
 {
 
@@ -26,7 +33,9 @@ namespace Kub3::Services
     {
         this->initializeMachineValues();
         this->initializeMotorsBundles();
-        m_waferVacuumValve = m_registry->get<HAL::Act::IValve>(WAFER_VACUUM_VALVE);
+
+        UNWRAP_OR_THROW(vacValve, m_registry->get<HAL::Act::IValve>(WAFER_VACUUM_VALVE), "[StowageService] Failed to load Wafer Vacuum Valve: ");
+        m_waferVacuumValve = vacValve;
     }
 
     void StowageService::startStowage(StowageTarget target)
@@ -45,24 +54,9 @@ namespace Kub3::Services
         this->startSequence();
     }
 
-    void StowageService::stop(void)
+    void StowageService::onStop(void)
     {
-        // Stop Z motors
-        if (m_zMotorsBundle.leftMotor)
-            m_zMotorsBundle.leftMotor->emergencyStop();
-        if (m_zMotorsBundle.rightMotor)
-            m_zMotorsBundle.rightMotor->emergencyStop();
-        if (m_zMotorsBundle.backMotor)
-            m_zMotorsBundle.backMotor->emergencyStop();
-        // Stop alignment motors
-        if (m_xMotorBundle.motor)
-            m_xMotorBundle.motor->emergencyStop();
-        if (m_yMotorBundle.motor)
-            m_yMotorBundle.motor->emergencyStop();
-        if (m_thetaMotorBundle.motor)
-            m_thetaMotorBundle.motor->emergencyStop();
-
-        BaseTaskService::stop();
+        this->stopAllMotors();
     }
 
     bool StowageService::buildMaskStowageTaskQueue(void)
@@ -98,6 +92,18 @@ namespace Kub3::Services
         return true;
     }
 
+    void StowageService::stopAllMotors(void)
+    {
+        // Stop Z motors
+        STOP_MOTOR_PTR(m_zMotorsBundle.leftMotor, Z_LEFT_MOTOR);
+        STOP_MOTOR_PTR(m_zMotorsBundle.rightMotor, Z_RIGHT_MOTOR);
+        STOP_MOTOR_PTR(m_zMotorsBundle.backMotor, Z_BACK_MOTOR);
+        // Stop alignment motors
+        STOP_MOTOR_PTR(m_xMotorBundle.motor, X_STAGE_MOTOR);
+        STOP_MOTOR_PTR(m_yMotorBundle.motor, Y_STAGE_MOTOR);
+        STOP_MOTOR_PTR(m_thetaMotorBundle.motor, THETA_STAGE_MOTOR);
+    }
+
     bool StowageService::isAbsoluteBottomLimitReached() const
     {
         return HAL::MS::readBool(m_repo, Z_LEFT_LOW_LIMIT) ||
@@ -122,27 +128,34 @@ namespace Kub3::Services
 
     void StowageService::initializeMotorsBundles(void)
     {
+        UNWRAP_OR_THROW(leftMotor, m_registry->get<HAL::Act::IMotor>(Z_LEFT_MOTOR), "[StowageService] Failed to load Z Left Motor: ");
+        UNWRAP_OR_THROW(rightMotor, m_registry->get<HAL::Act::IMotor>(Z_RIGHT_MOTOR), "[StowageService] Failed to load Z Right Motor: ");
+        UNWRAP_OR_THROW(backMotor, m_registry->get<HAL::Act::IMotor>(Z_BACK_MOTOR), "[StowageService] Failed to load Z Back Motor: ");
+        UNWRAP_OR_THROW(xMotor, m_registry->get<HAL::Act::IMotor>(X_STAGE_MOTOR), "[StowageService] Failed to load X Stage Motor: ");
+        UNWRAP_OR_THROW(yMotor, m_registry->get<HAL::Act::IMotor>(Y_STAGE_MOTOR), "[StowageService] Failed to load Y Stage Motor: ");
+        UNWRAP_OR_THROW(thetaMotor, m_registry->get<HAL::Act::IMotor>(THETA_STAGE_MOTOR), "[StowageService] Failed to load Theta Stage Motor: ");
+
         // TODO: split kinematic profiles per motor (requires re-architecturing)
         m_zMotorsBundle = z_motors_bundle_t{
-            .leftMotor   = m_registry->get<HAL::Act::IMotor>(Z_LEFT_MOTOR),
-            .rightMotor  = m_registry->get<HAL::Act::IMotor>(Z_RIGHT_MOTOR),
-            .backMotor   = m_registry->get<HAL::Act::IMotor>(Z_BACK_MOTOR),
+            .leftMotor   = leftMotor,
+            .rightMotor  = rightMotor,
+            .backMotor   = backMotor,
             .fastProfile = m_conf.getKinematicProfile(Z_LEFT_MOTOR, "normal"),
             .fineProfile = m_conf.getKinematicProfile(Z_LEFT_MOTOR, "fine"),
         };
 
         m_xMotorBundle = stage_motor_bundle_t{
-            .motor            = m_registry->get<HAL::Act::IMotor>(X_STAGE_MOTOR),
+            .motor            = xMotor,
             .kinematic        = m_conf.getKinematicProfile(X_STAGE_MOTOR, "normal"),
             .centerPositionMm = m_conf.alignment.x_stage_center_pos_mm,
         };
         m_yMotorBundle = stage_motor_bundle_t{
-            .motor            = m_registry->get<HAL::Act::IMotor>(Y_STAGE_MOTOR),
+            .motor            = yMotor,
             .kinematic        = m_conf.getKinematicProfile(Y_STAGE_MOTOR, "normal"),
             .centerPositionMm = m_conf.alignment.y_stage_center_pos_mm,
         };
         m_thetaMotorBundle = stage_motor_bundle_t{
-            .motor            = m_registry->get<HAL::Act::IMotor>(THETA_STAGE_MOTOR),
+            .motor            = thetaMotor,
             .kinematic        = m_conf.getKinematicProfile(THETA_STAGE_MOTOR, "normal"),
             .centerPositionMm = m_conf.alignment.theta_stage_center_pos_mm,
         };

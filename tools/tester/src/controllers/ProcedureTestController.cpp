@@ -169,10 +169,16 @@ namespace Kub3::Tools::Tester
 
     void ProcedureTestController::ps_runUnstowage(int targetInt)
     {
-        // Unstowage is routed via homing mechanically, as requested
+        // Unstowage is routed via homing mechanically
         auto target = static_cast<Services::HomingTarget::Type>(targetInt);
         m_homingService->home(target);
         startServiceRoutine(m_homingService.get(), "Unstowage Sequence");
+    }
+
+    void ProcedureTestController::ps_runAutolevel(void)
+    {
+        m_contactService->startContactRoutine(Services::AutolevelingPayload{});
+        startServiceRoutine(m_contactService.get(), "Autoleveling");
     }
 
 } // namespace Kub3::Tools::Tester

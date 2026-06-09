@@ -58,25 +58,39 @@ namespace Kub3::Services
         // Handle Hardware State based on Math Truth
         if (math_out.limit_exceeded_abort)
         {
-            m_abortCb("CRITICAL: Process force limit exceeded during admittance control.");
             for (auto &motor : m_motors)
             {
                 if (motor)
                     motor->emergencyStop();
             }
+            // TODO: Go down instead of abort ?
+            m_abortCb("CRITICAL: Process force limit exceeded during admittance control.");
             return true;
         }
 
         // Finish condition met, stop motors and exit
         if (math_out.is_converged)
         {
-            for (auto &motor : m_motors)
+            // Start convergence confirmation timer
+            if (!m_convergenceTimer.isValid())
             {
-                if (motor)
-                    motor->emergencyStop();
+                m_convergenceTimer.start();
             }
-            return true; // Exit
+
+            // Wait for 1 second to confirm planeity reached
+            if (m_convergenceTimer.elapsed() > 1000) // in milliseconds
+            {
+                for (auto &motor : m_motors)
+                {
+                    if (motor)
+                        motor->emergencyStop();
+                }
+                return true; // Exit
+            }
+
+            return false;
         }
+        m_convergenceTimer.invalidate();
 
         // Command Continuous Velocities to HAL layer
         auto applyVelocity = [this](Shared<HAL::Act::IMotor> &motor, double velocity) {

@@ -274,13 +274,13 @@ namespace Kub3::HAL
         auto thetaStageClockwiseLimit     = std::make_shared<Sensor<bool>>(m_repo, THETA_STAGE_CLOCKWISE_LIMIT, false, &limitSwitchParser);
         auto thetaStageAntiClockwiseLimit = std::make_shared<Sensor<bool>>(m_repo, THETA_STAGE_ANTI_CLOCKWISE_LIMIT, false, &limitSwitchParser);
         // --- Encoders
-        auto leftCameraXEncoder  = std::make_shared<Sensor<int32_t>>(m_repo, LEFT_CAMERA_X_ENCODER, INT32_MIN, &encoderValueParser);
-        auto leftCameraYEncoder  = std::make_shared<Sensor<int32_t>>(m_repo, LEFT_CAMERA_Y_ENCODER, INT32_MIN, &encoderValueParser);
-        auto rightCameraXEncoder = std::make_shared<Sensor<int32_t>>(m_repo, RIGHT_CAMERA_X_ENCODER, INT32_MIN, &encoderValueParser);
-        auto rightCameraYEncoder = std::make_shared<Sensor<int32_t>>(m_repo, RIGHT_CAMERA_Y_ENCODER, INT32_MIN, &encoderValueParser);
-        auto xStageEncoder       = std::make_shared<Sensor<int32_t>>(m_repo, X_STAGE_ENCODER, INT32_MIN, &encoderValueParser);
-        auto yStageEncoder       = std::make_shared<Sensor<int32_t>>(m_repo, Y_STAGE_ENCODER, INT32_MIN, &encoderValueParser);
-        auto thetaStageEncoder   = std::make_shared<Sensor<int32_t>>(m_repo, THETA_STAGE_ENCODER, INT32_MIN, &encoderValueParser);
+        auto leftCameraXEncoder  = std::make_shared<Sensor<int32_t>>(m_repo, LEFT_CAMERA_X_ENCODER, static_cast<int32_t>(0), &encoderValueParser);
+        auto leftCameraYEncoder  = std::make_shared<Sensor<int32_t>>(m_repo, LEFT_CAMERA_Y_ENCODER, static_cast<int32_t>(0), &encoderValueParser);
+        auto rightCameraXEncoder = std::make_shared<Sensor<int32_t>>(m_repo, RIGHT_CAMERA_X_ENCODER, static_cast<int32_t>(0), &encoderValueParser);
+        auto rightCameraYEncoder = std::make_shared<Sensor<int32_t>>(m_repo, RIGHT_CAMERA_Y_ENCODER, static_cast<int32_t>(0), &encoderValueParser);
+        auto xStageEncoder       = std::make_shared<Sensor<int32_t>>(m_repo, X_STAGE_ENCODER, static_cast<int32_t>(0), &encoderValueParser);
+        auto yStageEncoder       = std::make_shared<Sensor<int32_t>>(m_repo, Y_STAGE_ENCODER, static_cast<int32_t>(0), &encoderValueParser);
+        auto thetaStageEncoder   = std::make_shared<Sensor<int32_t>>(m_repo, THETA_STAGE_ENCODER, static_cast<int32_t>(0), &encoderValueParser);
 
         // Register sensors
         // --- Limit switches
@@ -421,7 +421,7 @@ namespace Kub3::HAL
         auto internalTemperature = std::make_shared<Sensor<int32_t>>(m_repo, INTERNAL_TEMPERATURE, INT32_MIN, &temperatureParser);
         auto externalTemperature = std::make_shared<Sensor<int32_t>>(m_repo, EXTERNAL_TEMPERATURE, INT32_MIN, &temperatureParser);
         // --- Encoders
-        auto camerasDeckEncoder = std::make_shared<Sensor<int32_t>>(m_repo, DECK_MOTOR_ENCODER, INT32_MIN, &encoderValueParser);
+        auto camerasDeckEncoder = std::make_shared<Sensor<int32_t>>(m_repo, DECK_MOTOR_ENCODER, static_cast<int32_t>(0), &encoderValueParser);
 
         // TODO: add "Fans voltage" & "LEDs voltages"
 
@@ -526,11 +526,11 @@ namespace Kub3::HAL
 
         // Create Sensors
         // --- Encoders
-        auto zLeftEncoder  = std::make_shared<Sensor<int32_t>>(m_repo, Z_LEFT_ENCODER, INT32_MIN, &encoderValueParser);
-        auto zRightEncoder = std::make_shared<Sensor<int32_t>>(m_repo, Z_RIGHT_ENCODER, INT32_MIN, &encoderValueParser);
-        auto zBackEncoder  = std::make_shared<Sensor<int32_t>>(m_repo, Z_BACK_ENCODER, INT32_MIN, &encoderValueParser);
-        auto maskEncoder   = std::make_shared<Sensor<int32_t>>(m_repo, MASK_ENCODER, INT32_MIN, &encoderValueParser);
-        auto waferEncoder  = std::make_shared<Sensor<int32_t>>(m_repo, WAFER_ENCODER, INT32_MIN, &encoderValueParser);
+        auto zLeftEncoder  = std::make_shared<Sensor<int32_t>>(m_repo, Z_LEFT_ENCODER, static_cast<int32_t>(0), &encoderValueParser);
+        auto zRightEncoder = std::make_shared<Sensor<int32_t>>(m_repo, Z_RIGHT_ENCODER, static_cast<int32_t>(0), &encoderValueParser);
+        auto zBackEncoder  = std::make_shared<Sensor<int32_t>>(m_repo, Z_BACK_ENCODER, static_cast<int32_t>(0), &encoderValueParser);
+        auto maskEncoder   = std::make_shared<Sensor<int32_t>>(m_repo, MASK_ENCODER, static_cast<int32_t>(0), &encoderValueParser);
+        auto waferEncoder  = std::make_shared<Sensor<int32_t>>(m_repo, WAFER_ENCODER, static_cast<int32_t>(0), &encoderValueParser);
         // --- Limit switches
         auto zLeftHighLimit  = std::make_shared<Sensor<bool>>(m_repo, Z_LEFT_HIGH_LIMIT, false, &limitSwitchParser);
         auto zLeftLowLimit   = std::make_shared<Sensor<bool>>(m_repo, Z_LEFT_LOW_LIMIT, false, &limitSwitchParser);

@@ -35,7 +35,7 @@ namespace Kub3::Services
 
         // BaseTaskService overrides
         void tick(void) override;
-        void stop(void) override;
+        void onStop(void) override;
 
     private:
         void buildAutolevelingLanes(void);
@@ -62,6 +62,9 @@ namespace Kub3::Services
         Config::kinematic_profile_t m_freeProfile;    // Kinematic profile to use when not in contact
         Config::kinematic_profile_t m_contactProfile; // Kinematic profile to use when contact has been achieved
 
+        std::string m_taskAbortReason;
+
+        double m_maxMotorsDeltaMm = 0.5;
         double m_requestedForceGF = 0.0;
         // Conversion factors (ADC to gram-force)
         double m_adcToGFLeftFactor  = 1.0;

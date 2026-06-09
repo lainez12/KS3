@@ -26,7 +26,7 @@ namespace Kub3::MFSM
 
                 if (!guard)
                 {
-                    emit s_warningOccurred(QString::fromUtf8(guard.message));
+                    emit s_warningOccurred(QString::fromUtf8(guard.unwrap_err()));
                     return s; // Reject transition
                 }
 
@@ -44,7 +44,7 @@ namespace Kub3::MFSM
 
                 if (!guard)
                 {
-                    emit s_warningOccurred(QString::fromUtf8(guard.message));
+                    emit s_warningOccurred(QString::fromUtf8(guard.unwrap_err()));
                     return s;
                 }
 
@@ -61,7 +61,7 @@ namespace Kub3::MFSM
                 auto guard = Interlocks::canOperateUnstowage(opState.posture, cmd.target);
                 if (!guard)
                 {
-                    emit s_warningOccurred(QString::fromUtf8(guard.message));
+                    emit s_warningOccurred(QString::fromUtf8(guard.unwrap_err()));
                     return s;
                 }
 
@@ -81,7 +81,7 @@ namespace Kub3::MFSM
 
                 if (!guard)
                 {
-                    emit s_warningOccurred(QString::fromUtf8(guard.message));
+                    emit s_warningOccurred(QString::fromUtf8(guard.unwrap_err()));
                     return s;
                 }
                 return StatePreparingAlignment{
@@ -146,7 +146,7 @@ namespace Kub3::MFSM
                 // Check posture requirements before firing UV
                 if (auto guard = Interlocks::canStartExposure(opState.posture); !guard)
                 {
-                    emit s_warningOccurred(QString::fromUtf8(guard.message));
+                    emit s_warningOccurred(QString::fromUtf8(guard.unwrap_err()));
                     return s;
                 }
                 return StateExposing{.savedContactPhase = s.savedContactPhase, .payload = cmd.payload}; // Start exposing using provided payload.

@@ -25,7 +25,9 @@ namespace Kub3::Services
 
         void insert(DrawerTarget target) override;
         void eject(DrawerTarget target) override;
-        void stop(void) override;
+
+    protected:
+        void onStop(void) override;
 
     private:
         bool isWaferEjected(void);

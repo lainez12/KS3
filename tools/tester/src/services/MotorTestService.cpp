@@ -73,9 +73,10 @@ namespace Kub3::Tools::Tester
     std::vector<std::string> MotorTestService::getAvailableMotors() const
     {
         std::vector<std::string> motors;
+
         for (const auto &id : m_knownMotorIds)
         {
-            if (m_actuatorRegistry->get<HAL::Act::IMotor>(id) != nullptr)
+            if (m_actuatorRegistry->get<HAL::Act::IMotor>(id).is_ok())
             {
                 motors.push_back(id);
             }
@@ -87,9 +88,9 @@ namespace Kub3::Tools::Tester
     {
         auto motor = m_actuatorRegistry->get<HAL::Act::IMotor>(motorId);
 
-        if (motor)
+        if (motor.is_ok())
         {
-            m_selectedMotor = motor;
+            m_selectedMotor = motor.unwrap();
 
             // Reset kinematic history
             m_lastTickTime = std::chrono::steady_clock::now();
@@ -100,6 +101,7 @@ namespace Kub3::Tools::Tester
             return true;
         }
 
+        qCritical().noquote().nospace() << "[MotorTestService] Failed to select motor " << motorId << ": " << motor.unwrap_err();
         m_selectedMotor = std::nullopt;
         return false;
     }

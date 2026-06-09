@@ -30,13 +30,15 @@ namespace Kub3::Services
                        const Config::process_config_t &config);
 
         void startStowage(StowageTarget target) override;
-        void stop(void) override;
+
+    protected:
+        void onStop(void) override;
 
     private:
         bool buildMaskStowageTaskQueue(void);
         bool buildWaferStowageTaskQueue(void);
 
-    private:
+        void stopAllMotors(void);
         [[nodiscard]] bool isAbsoluteBottomLimitReached() const;
         [[nodiscard]] bool isAbsoluteTopLimitReached() const;
         void initializeMachineValues(void);

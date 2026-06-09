@@ -97,6 +97,7 @@ namespace Kub3::Services
          */
         void stop(void) override
         {
+            this->onStop();
             clearTasks();
             m_status = ServiceStatus::Idle;
         }
@@ -192,6 +193,12 @@ namespace Kub3::Services
         }
 
         /**
+         * @brief Optional hardware safety shutdown hook for derived classes.
+         * Override this to stop motors, turn off valves, etc.
+         */
+        virtual void onStop(void) {}
+
+        /**
          * @brief Aborts the current execution sequence.
          *
          * Clears all tasks in all lanes, updates the service status to Error,
@@ -202,14 +209,12 @@ namespace Kub3::Services
          *
          * @param reason Human-readable string explaining why the sequence was aborted.
          */
-        void abortSequence(const std::string &reason)
+        virtual void abortSequence(const std::string &reason)
         {
+            this->onStop();
             clearTasks();
             m_status      = ServiceStatus::Error;
             m_errorReason = reason;
-
-            // @note: Specific services should override stop() if they need to send
-            // emergencyStop() to motors, then call BaseTaskService::stop().
         }
 
         /**

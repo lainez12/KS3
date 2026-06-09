@@ -2,6 +2,11 @@
 #include <algorithm>
 #include <cmath>
 
+#if defined(BUILD_DEBUG)
+#include <QDebug>
+#include <QString>
+#endif
+
 #include <Algorithms/Admittance/AdmittanceController.h>
 
 namespace Kub3::Algorithms::Control
@@ -64,11 +69,14 @@ namespace Kub3::Algorithms::Control
         }
 
         // Compute mean and errors
-        const double mean_f = (input.forces_gf[0] + input.forces_gf[1] + input.forces_gf[2]) / 3.0; // Mean applied force
-        const double e_mean = config.target_force_gf - mean_f;                                      // Mean error
-        const double e_L    = mean_f - input.forces_gf[0];                                          // Left error
-        const double e_R    = mean_f - input.forces_gf[1];                                          // Right error
-        const double e_B    = mean_f - input.forces_gf[2];                                          // Back error
+        const double mean_f     = (input.forces_gf[0] + input.forces_gf[1] + input.forces_gf[2]) / 3.0; // Mean applied force
+        const double e_mean     = config.target_force_gf - mean_f;                                      // Mean error
+        const double e_LRelMean = mean_f - input.forces_gf[0];                                          // Left error relative to mean
+        const double e_RRelMean = mean_f - input.forces_gf[1];                                          // Right error relative to mean
+        const double e_BRelMean = mean_f - input.forces_gf[2];                                          // Back error relative to mean
+        const double e_L        = config.target_force_gf - input.forces_gf[0];                          // Left error relative to target
+        const double e_R        = config.target_force_gf - input.forces_gf[1];                          // Right error relative to target
+        const double e_B        = config.target_force_gf - input.forces_gf[2];                          // Back error relative to target
 
         // Detect convergence
         const bool mean_converged = std::abs(e_mean) <= config.force_tolerance_gf;
@@ -76,8 +84,30 @@ namespace Kub3::Algorithms::Control
                                      std::abs(e_R) <= config.force_tolerance_gf &&
                                      std::abs(e_B) <= config.force_tolerance_gf);
 
+#if defined(BUILD_DEBUG)
+        qDebug().noquote()
+            << QString("[AdmittanceController] Target: %1gF (tolerance: %7gF);"
+                       "\n\tMean force: %2gF;"
+                       "\n\tMean Err: %3gF (Error to mean=[L: %4, R: %5, B: %6]);"
+                       "\n\tSingle sensor Err: [L: %8, R: %9, B: %10]")
+                   .arg(config.target_force_gf)
+                   .arg(mean_f)
+                   .arg(e_mean)
+                   .arg(e_LRelMean)
+                   .arg(e_RRelMean)
+                   .arg(e_BRelMean)
+                   .arg(config.force_tolerance_gf)
+                   .arg(e_L)
+                   .arg(e_R)
+                   .arg(e_B);
+#endif
+
         if (mean_converged && tilt_converged)
         {
+#if defined(BUILD_DEBUG)
+            qDebug() << "[AdmittanceController] convergence reached";
+#endif
+
             out.is_converged = true;
             return out;
         }
@@ -89,9 +119,13 @@ namespace Kub3::Algorithms::Control
 
         // Compute MIMO Velocities
         // If e_mean is negative (overshot), this yields negative velocities (move down)
-        out.velocities_mm_s[0] = clampVelocity((k_mean_active * e_mean) + (k_tilt_active * e_L), input.dt_seconds, config);
-        out.velocities_mm_s[1] = clampVelocity((k_mean_active * e_mean) + (k_tilt_active * e_R), input.dt_seconds, config);
-        out.velocities_mm_s[2] = clampVelocity((k_mean_active * e_mean) + (k_tilt_active * e_B), input.dt_seconds, config);
+        out.velocities_mm_s[0] = clampVelocity((k_mean_active * e_mean) + (k_tilt_active * e_LRelMean), input.dt_seconds, config);
+        out.velocities_mm_s[1] = clampVelocity((k_mean_active * e_mean) + (k_tilt_active * e_RRelMean), input.dt_seconds, config);
+        out.velocities_mm_s[2] = clampVelocity((k_mean_active * e_mean) + (k_tilt_active * e_BRelMean), input.dt_seconds, config);
+
+#if defined(BUILD_DEBUG)
+        qDebug().noquote() << QString("\t--- Stiffness ratio: %3; k_mean_active: %1 ; k_tilt_active: %2").arg(k_mean_active).arg(k_tilt_active).arg(ratio);
+#endif
 
         return out;
     }

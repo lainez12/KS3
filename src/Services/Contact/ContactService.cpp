@@ -1,3 +1,7 @@
+#if defined(BUILD_DEBUG)
+#include <QDebug>
+#endif
+
 #include <HAL/Actuators/Motors/IMotor.h>
 #include <HAL/MachineStatus/actuators_labels.h>
 #include <HAL/MachineStatus/sensors_labels.h>
@@ -27,17 +31,14 @@ namespace Kub3::Services
     {
         this->initializeMachineValues();
 
-        // Motors
-        m_zMotors = {
-            m_registry->get<HAL::Act::IMotor>(Z_LEFT_MOTOR),
-            m_registry->get<HAL::Act::IMotor>(Z_RIGHT_MOTOR),
-            m_registry->get<HAL::Act::IMotor>(Z_BACK_MOTOR)};
-
-        // Thresholds
-        m_conf.max_process_force_gf;    // Get absolute max force allowed to be requested
-        m_conf.hw_crash_force_limit_gf; // Get absolute max physical force allowed (hardware protection)
-        m_conf.contact_threshold_gf;
-        m_conf.autolevel_force_gf;
+        // Motors & kinematics
+        UNWRAP_OR_THROW(leftMotor, m_registry->get<HAL::Act::IMotor>(Z_LEFT_MOTOR), "[ContactService] Failed to load Z Left Motor: ");
+        UNWRAP_OR_THROW(rightMotor, m_registry->get<HAL::Act::IMotor>(Z_RIGHT_MOTOR), "[ContactService] Failed to load Z Right Motor: ");
+        UNWRAP_OR_THROW(backMotor, m_registry->get<HAL::Act::IMotor>(Z_BACK_MOTOR), "[ContactService] Failed to load Z Back Motor: ");
+        m_zMotors          = {leftMotor, rightMotor, backMotor};
+        m_freeProfile      = processConf.getKinematicProfile(Z_BACK_MOTOR, "normal");
+        m_contactProfile   = processConf.getKinematicProfile(Z_BACK_MOTOR, "fine");
+        m_maxMotorsDeltaMm = processConf.elevator.max_z_relative_distance_mm;
 
         // Conversions factors
         if (auto it = hwConfig.adc_to_gf_factors.find(FORCE_LEFT); it != hwConfig.adc_to_gf_factors.end())
@@ -54,6 +55,13 @@ namespace Kub3::Services
             m_adcToGFBackFactor = it->second;
         else
             throw std::runtime_error("ContactService: Missing back sensor ADC to gram-force conversion factor in hardware configuration.");
+
+#if defined(BUILD_DEBUG)
+        qDebug().noquote() << QString("ADC to gram-force ratios (L ; R ; B): (%1 ; %2 ; %3)")
+                                  .arg(m_adcToGFLeftFactor)
+                                  .arg(m_adcToGFRightFactor)
+                                  .arg(m_adcToGFBackFactor);
+#endif
     }
 
     void ContactService::tick(void)
@@ -65,17 +73,18 @@ namespace Kub3::Services
             double zR = m_zMotors[1]->getEncoderPositionMm();
             double zB = m_zMotors[2]->getEncoderPositionMm();
 
-            // TODO: get max distance between motors from config
-            constexpr double MAX_RELATIVE_Z_DIFF_MM = 0.50; // 500 microns absolute kinematic limit
-
-            if (std::abs(zL - zR) > MAX_RELATIVE_Z_DIFF_MM ||
-                std::abs(zR - zB) > MAX_RELATIVE_Z_DIFF_MM ||
-                std::abs(zL - zB) > MAX_RELATIVE_Z_DIFF_MM)
+            // Motors delta maximum value (tilt limit) threshold detection
+            if (std::abs(zL - zR) > m_maxMotorsDeltaMm ||
+                std::abs(zR - zB) > m_maxMotorsDeltaMm ||
+                std::abs(zL - zB) > m_maxMotorsDeltaMm)
             {
                 this->stop();
                 if (this->getStatus() == ServiceStatus::Running)
                     abortSequence("CRITICAL: Z-Motors relative distance exceeded max limit. Binding protection triggered.");
 
+#if defined(BUILD_DEBUG)
+                qDebug() << QString("Positions: [L=%1; R=%2; B=%3]").arg(zL).arg(zR).arg(zB);
+#endif
                 qCritical() << "CRITICAL: Z-Motors binding protection triggered. Motors emergency stopped.";
                 return;
             }
@@ -88,6 +97,13 @@ namespace Kub3::Services
             if (this->getStatus() == ServiceStatus::Running)
                 abortSequence("CRITICAL: Absolute hardware crash limit exceeded during automation.");
             qCritical() << "CRITICAL: Absolute hardware crash limit exceeded. All Z motors emergency stopped.";
+            return;
+        }
+
+        if (!m_taskAbortReason.empty())
+        {
+            this->abortSequence(m_taskAbortReason);
+            m_taskAbortReason.clear();
             return;
         }
 
@@ -116,10 +132,9 @@ namespace Kub3::Services
         }
     }
 
-    void ContactService::stop(void)
+    void ContactService::onStop(void)
     {
         this->stopZManual();
-        BaseTaskService::stop();
     }
 
     // ==========================================
@@ -196,12 +211,16 @@ namespace Kub3::Services
 
     void ContactService::buildAutolevelingLanes(void)
     {
-        auto abortCb        = [this](const std::string &reason) { this->abortSequence(reason); };
+        auto abortCb        = [this](std::string reason) { m_taskAbortReason = std::move(reason); };
         auto maxForceGetter = [this]() -> double { return this->getMaxCurrentForceGF(); };
         auto forceGetter    = [this]() -> ForceReadings {
             const double fL = static_cast<double>(HAL::MS::readUInt16(m_repo, FORCE_LEFT)) * m_adcToGFLeftFactor;
             const double fR = static_cast<double>(HAL::MS::readUInt16(m_repo, FORCE_RIGHT)) * m_adcToGFRightFactor;
             const double fB = static_cast<double>(HAL::MS::readUInt16(m_repo, FORCE_BACK)) * m_adcToGFBackFactor;
+#if defined(BUILD_DEBUG)
+            qDebug().nospace() << "(Current forces pre-conv) LEFT = " << static_cast<double>(HAL::MS::readUInt16(m_repo, FORCE_LEFT)) << "gF; RIGHT = " << static_cast<double>(HAL::MS::readUInt16(m_repo, FORCE_RIGHT)) << "gF; BACK = " << static_cast<double>(HAL::MS::readUInt16(m_repo, FORCE_BACK)) << "gF";
+            qDebug().nospace() << "(Current forces) LEFT = " << fL << "gF; RIGHT = " << fR << "gF; BACK = " << fB << "gF";
+#endif
 
             return {fL, fR, fB, std::max({fL, fR, fB})};
         };
@@ -217,19 +236,15 @@ namespace Kub3::Services
 
     void ContactService::buildBasicContactLanes(double forceGF)
     {
+        auto abortCb        = [this](std::string reason) { m_taskAbortReason = std::move(reason); };
         auto maxForceGetter = [this]() -> double {
             return this->getMaxCurrentForceGF();
         };
-
         auto forceGetter = [this]() -> ForceReadings {
             const double fL = static_cast<double>(HAL::MS::readUInt16(m_repo, FORCE_LEFT)) * m_adcToGFLeftFactor;
             const double fR = static_cast<double>(HAL::MS::readUInt16(m_repo, FORCE_RIGHT)) * m_adcToGFRightFactor;
             const double fB = static_cast<double>(HAL::MS::readUInt16(m_repo, FORCE_BACK)) * m_adcToGFBackFactor;
             return {fL, fR, fB, std::max({fL, fR, fB})};
-        };
-
-        auto abortCb = [this](const std::string &reason) {
-            this->abortSequence(reason);
         };
 
         // Approach until contact threshold is touched.
@@ -243,6 +258,7 @@ namespace Kub3::Services
 
     Algorithms::Control::admittance_config_t ContactService::buildAdmittanceConfig(double targetForceGF, double toleranceGF) const
     {
+        qDebug() << "[Admittance configuration] Target force:" << targetForceGF << "gF, Tolerance" << toleranceGF << "gf";
         return Algorithms::Control::admittance_config_t{
             // Targets and Limits
             .target_force_gf      = targetForceGF,

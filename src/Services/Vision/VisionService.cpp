@@ -55,23 +55,41 @@ namespace Kub3::Services
         m_registry(std::move(registry)),
         m_repo(std::move(repo))
     {
-        setupMotor(VisionMotor::UpperLeftCameraX, LEFT_CAMERA_X_MOTOR, processConf);
-        setupMotor(VisionMotor::UpperLeftCameraY, LEFT_CAMERA_Y_MOTOR, processConf);
-        setupMotor(VisionMotor::UpperRightCameraX, RIGHT_CAMERA_X_MOTOR, processConf);
-        setupMotor(VisionMotor::UpperRightCameraY, RIGHT_CAMERA_Y_MOTOR, processConf);
+        setupCameraMotor(VisionMotor::UpperLeftCameraX, LEFT_CAMERA_X_MOTOR, processConf);
+        setupCameraMotor(VisionMotor::UpperLeftCameraY, LEFT_CAMERA_Y_MOTOR, processConf);
+        setupCameraMotor(VisionMotor::UpperRightCameraX, RIGHT_CAMERA_X_MOTOR, processConf);
+        setupCameraMotor(VisionMotor::UpperRightCameraY, RIGHT_CAMERA_Y_MOTOR, processConf);
         m_minCameraDistanceMm = processConf.vision.min_camera_distance_mm;
 
-        // Initialize Deck Motor (TODO: verify label names and config variables match your actual codebase)
-        m_deckMotor   = m_registry->get<HAL::Act::IMotor>(DECK_MOTOR);
+        auto deckMotorRes = m_registry->get<HAL::Act::IMotor>(DECK_MOTOR);
+
+        if (!deckMotorRes)
+        {
+            auto err = std::string("[VisionService] Failed to load Camera's Deck Motor: ") + deckMotorRes.unwrap_err();
+
+            qCritical().noquote() << err;
+            throw std::runtime_error(err);
+        }
+        m_deckMotor   = deckMotorRes.unwrap();
         m_deckProfile = processConf.getKinematicProfile(DECK_MOTOR, "normal");
     }
 
-    void VisionService::setupMotor(VisionMotor motorId, const char *motorConfId, const Config::process_config_t &conf)
+    void VisionService::setupCameraMotor(VisionMotor motorId, const char *motorConfId, const Config::process_config_t &conf)
     {
+        auto motor = m_registry->get<HAL::Act::IMotor>(motorConfId);
+
+        if (!motor)
+        {
+            auto err = std::string("[VisionService] Failed to load motor ") + motorConfId + ": " + motor.unwrap_err();
+
+            qCritical().noquote() << err;
+            throw std::runtime_error(err);
+        }
+
         m_cameraMotors.emplace(
             motorId,
             vision_motor_config_t{
-                .motor       = m_registry->get<HAL::Act::IMotor>(motorConfId),
+                .motor       = motor.unwrap(),
                 .fastProfile = conf.getKinematicProfile(motorConfId, "normal"),
                 .fineProfile = conf.getKinematicProfile(motorConfId, "fine"),
             });
