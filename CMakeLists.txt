@@ -105,6 +105,7 @@ qt_add_library(Kub3Core STATIC
     src/Services/Contact/ContactService.cpp
     src/Services/Contact/tasks/AdmittanceControlTask.cpp
     src/Services/Contact/tasks/FastApproachTask.cpp
+    src/Services/Contact/tasks/SaveCurrentPlanTask.cpp
     # --- Exposure service & tasks
     src/Services/Exposure/ExposureService.cpp
 
@@ -203,6 +204,7 @@ qt_add_library(Kub3Core STATIC
     include/Services/Contact/ContactService.h
     include/Services/Contact/tasks/AdmittanceControlTask.h
     include/Services/Contact/tasks/FastApproachTask.h
+    include/Services/Contact/tasks/SaveCurrentPlanTask.h
     # --- Exposure service & tasks
     include/Services/Exposure/ExposureService.h
     include/Services/Exposure/IExposureService.h

@@ -11,6 +11,7 @@
 #include <Services/Contact/ContactService.h>
 #include <Services/Contact/tasks/AdmittanceControlTask.h>
 #include <Services/Contact/tasks/FastApproachTask.h>
+#include <Services/Contact/tasks/SaveCurrentPlanTask.h>
 
 namespace Kub3::Services
 {
@@ -202,6 +203,13 @@ namespace Kub3::Services
                     return;
                 }
                 buildBasicContactLanes(p.forceGF); },
+            [&](const HorizontalityPayload &) {
+                if (!m_horizontalPlanDeltas.has_value()) {
+                    abortSequence("No horizontal plan was saved.");
+                    setupSuccess = false;
+                    return;
+                }
+                buildHorizontalityLanes(); },
             [&](const auto &) {});
 
         std::visit(museum, kind);
@@ -232,6 +240,8 @@ namespace Kub3::Services
                                                  buildAdmittanceConfig(m_conf.autolevel_force_gf, m_conf.autolevel_force_tolerance_gf),
                                                  AdmittanceControlTask::Mode::Autoleveling,
                                                  m_contactProfile);
+        // Save relative deltas of the reached planeity
+        this->enqueueTask<SaveCurrentPlanTask>(m_zMotors, m_horizontalPlanDeltas);
     }
 
     void ContactService::buildBasicContactLanes(double forceGF)
@@ -254,6 +264,11 @@ namespace Kub3::Services
                                                  buildAdmittanceConfig(forceGF, m_conf.autolevel_force_tolerance_gf), // TODO: define another tolerance threshold
                                                  AdmittanceControlTask::Mode::BasicContact,
                                                  m_contactProfile);
+    }
+
+    void ContactService::buildHorizontalityLanes(void)
+    {
+        // TODO: build lanes to perform horizontal planeity
     }
 
     Algorithms::Control::admittance_config_t ContactService::buildAdmittanceConfig(double targetForceGF, double toleranceGF) const

@@ -18,6 +18,7 @@ namespace Kub3::Services
     struct BasicContactPayload {
         double forceGF; // Force expressed in gram-force
     };
+    struct HorizontalityPayload {};
 
     class ContactService final : public BaseTaskService<IContactService>
     {
@@ -40,6 +41,7 @@ namespace Kub3::Services
     private:
         void buildAutolevelingLanes(void);
         void buildBasicContactLanes(double forceGF);
+        void buildHorizontalityLanes(void);
         Algorithms::Control::admittance_config_t buildAdmittanceConfig(double targetForceGF, double toleranceGF) const;
 
         void initializeMachineValues(void);
@@ -67,9 +69,10 @@ namespace Kub3::Services
         double m_maxMotorsDeltaMm = 0.5;
         double m_requestedForceGF = 0.0;
         // Conversion factors (ADC to gram-force)
-        double m_adcToGFLeftFactor  = 1.0;
-        double m_adcToGFRightFactor = 1.0;
-        double m_adcToGFBackFactor  = 1.0;
+        double m_adcToGFLeftFactor                     = 1.0;
+        double m_adcToGFRightFactor                    = 1.0;
+        double m_adcToGFBackFactor                     = 1.0;
+        Optional<plan_deltas_t> m_horizontalPlanDeltas = std::nullopt;
     };
 
 }

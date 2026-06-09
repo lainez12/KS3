@@ -9,10 +9,15 @@ namespace Kub3::Services
 
     struct BasicContactPayload;
     struct AutolevelingPayload;
+    struct HorizontalityPayload;
 
-    using ContactPayload = std::variant<
-        BasicContactPayload,
-        AutolevelingPayload>;
+    using ContactPayload = std::variant<BasicContactPayload, AutolevelingPayload, HorizontalityPayload>;
+
+    typedef struct plan_relative_motors_positions_deltas_s {
+        double left;
+        double right;
+        double back;
+    } plan_deltas_t;
 
     enum class ZDirection
     {
