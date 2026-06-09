@@ -221,7 +221,7 @@ namespace Kub3::Config
 
     void ConfigSaver::saveAdminConfig(const admin_config_t &config, const std::string &targetPath)
     {
-        qInfo() << "[SAVING PROCESS CONFIGURATION] to" << targetPath.c_str();
+        qInfo() << "[SAVING ADMIN CONFIGURATION] to" << targetPath.c_str();
         const std::string tempPath = targetPath + ".tmp";
 
         {
@@ -234,7 +234,7 @@ namespace Kub3::Config
             settings.sync();
             if (settings.status() != QSettings::NoError)
             {
-                throw std::runtime_error(std::format("CRITICAL: Failed to write temp process config file: {}", tempPath));
+                throw std::runtime_error(std::format("CRITICAL: Failed to write temp admin config file: {}", tempPath));
             }
         } // END SCOPE
 
@@ -244,7 +244,7 @@ namespace Kub3::Config
         if (ec)
         {
             std::filesystem::remove(tempPath, ec); // Cleanup orphaned tmp file
-            throw std::runtime_error(std::format("CRITICAL: Atomic process config swap failed: {}", ec.message()));
+            throw std::runtime_error(std::format("CRITICAL: Atomic admin config swap failed: {}", ec.message()));
         }
     }
 

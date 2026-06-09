@@ -284,7 +284,7 @@ namespace Kub3::Config
 
         if (settings.status() != QSettings::NoError)
         {
-            throw std::runtime_error("CRITICAL: Failed to open or parse process config file: " + filePath);
+            throw std::runtime_error("CRITICAL: Failed to open or parse admin config file: " + filePath);
         }
 
         if (!settings.contains(CONF_ADMIN_KLOE_MODE))

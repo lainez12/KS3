@@ -51,7 +51,7 @@ namespace Kub3::Security
         vault.write(newSalt);
         vault.write(newHash);
         vault.close();
-#if defined(BUILD_DEBUG)
+#if defined(BUILD_RELEASE)
         // Enforce root-only rw access in production (Fail-Open safety)
         vault.setPermissions(QFileDevice::ReadOwner | QFileDevice::WriteOwner);
 #endif
