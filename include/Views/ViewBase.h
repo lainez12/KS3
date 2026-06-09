@@ -63,6 +63,9 @@ namespace Kub3::UI::Views {
 
         void showAnOverlayMessage(QString text);
 
+        void simulationKey(Qt::Key keyCode, const QString &text);
+        void clearInputSelected();
+
         void resizeEventOverride(QResizeEvent *event) {
             resizeEvent(event);
         }
@@ -115,7 +118,6 @@ namespace Kub3::UI::Views {
                 emit s_buttonTextChanged(buttonId, text);
             }
         }
-
     signals:
         void s_openView(Kub3::UI::ViewId viewId);
         void s_goBack();

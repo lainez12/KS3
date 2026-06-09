@@ -1,7 +1,9 @@
 #include "Views/Components/Colors.h"
-#include <Views/ViewBase.h>
-
+#include <QApplication>
 #include <QGraphicsDropShadowEffect>
+#include <QLineEdit>
+#include <QSpinBox>
+#include <Views/ViewBase.h>
 
 namespace Kub3::UI::Views {
 
@@ -35,6 +37,31 @@ namespace Kub3::UI::Views {
     void ViewBase::showAnOverlayMessage(QString text) {
         m_messages->setText(text);
         m_messages->show();
+    }
+
+    void ViewBase::simulationKey(Qt::Key keyCode, const QString &text) {
+        QWidget *focusedWidget = QApplication::focusWidget();
+        if (focusedWidget) {
+            QKeyEvent *keyPress = new QKeyEvent(QEvent::KeyPress, keyCode, Qt::NoModifier, text);
+            QApplication::postEvent(focusedWidget, keyPress);
+
+            QKeyEvent *keyRelease = new QKeyEvent(QEvent::KeyRelease, keyCode, Qt::NoModifier, text);
+            QApplication::postEvent(focusedWidget, keyRelease);
+        }
+    }
+
+    void ViewBase::clearInputSelected() {
+        QWidget *focusedWidget = QApplication::focusWidget();
+        if (!focusedWidget) {
+            return;
+        }
+        if (QSpinBox *spinBox = qobject_cast<QSpinBox *>(focusedWidget)) {
+            spinBox->clear();
+        } else if (QDoubleSpinBox *doubleSpinBox = qobject_cast<QDoubleSpinBox *>(focusedWidget)) {
+            doubleSpinBox->clear();
+        } else if (QLineEdit *lineEdit = qobject_cast<QLineEdit *>(focusedWidget)) {
+            lineEdit->clear();
+        }
     }
 
 } // namespace Kub3::UI::Views

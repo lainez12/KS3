@@ -219,7 +219,6 @@ qt_add_executable(Kub3Software
     src/Views/AlignmentViewBase.cpp
     src/Views/SettingsViewBase.cpp
     src/Views/ExposureViewBase.cpp
-    src/Views/Components/NavButtonManager.cpp
     src/Views/DebugView.cpp
     src/Views/HomeView.cpp
     src/Views/HomeEightView.cpp
@@ -236,6 +235,8 @@ qt_add_executable(Kub3Software
     src/Views/ViewsAlignment/VisualisationView.cpp
     src/Views/ViewsAlignment/DistanceView.cpp
     src/Views/Components/FavoriteExposureSettingButton.cpp
+    src//Views/Components/MessageOverlay.cpp
+    src/Views/Components/NavButtonManager.cpp
     src/Views/Components/NavButton.cpp
     src/Views/Components/UpBar.cpp
     src/Views/Components/ActionBox.cpp
@@ -273,7 +274,6 @@ qt_add_executable(Kub3Software
     include/Views/AlignmentViewBase.h
     include/Views/SettingsViewBase.h
     include/Views/ExposureViewBase.h
-    include/Views/Components/NavButtonManager.h
     include/Views/DebugView.h
     include/Views/HomeView.h
     include/Views/HomeEightView.h
@@ -290,6 +290,8 @@ qt_add_executable(Kub3Software
     include/Views/ViewsAlignment/VisualisationView.h
     include/Views/ViewsAlignment/DistanceView.h
     include/Views/Components/FavoriteExposureSettingButton.h
+    include/Views/Components/NavButtonManager.h
+    include/Views/Components/MessageOverlay.h
     include/Views/Components/NavButton.h
     include/Views/Components/UpBar.h
     include/Views/Components/ActionBox.h

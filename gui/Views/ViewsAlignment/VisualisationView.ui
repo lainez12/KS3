@@ -7,13 +7,19 @@
     <x>0</x>
     <y>0</y>
     <width>1920</width>
-    <height>901</height>
+    <height>818</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>1920</width>
-    <height>0</height>
+    <height>818</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1920</width>
+    <height>818</height>
    </size>
   </property>
   <property name="styleSheet">
@@ -387,7 +393,7 @@ font-size: 20px;</string>
            <x>829</x>
            <y>0</y>
            <width>131</width>
-           <height>721</height>
+           <height>651</height>
           </rect>
          </property>
          <property name="styleSheet">
@@ -1114,7 +1120,7 @@ height: 50px;
            <x>0</x>
            <y>0</y>
            <width>131</width>
-           <height>721</height>
+           <height>651</height>
           </rect>
          </property>
          <property name="styleSheet">
