@@ -100,12 +100,15 @@ font-size: 30px;</string>
           <number>25</number>
          </property>
          <item row="0" column="6">
-          <widget class="QPushButton" name="pushButton_4">
+          <widget class="QPushButton" name="btn7">
            <property name="minimumSize">
             <size>
              <width>70</width>
              <height>70</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="text">
             <string>7</string>
@@ -113,25 +116,31 @@ font-size: 30px;</string>
           </widget>
          </item>
          <item row="1" column="10">
-          <widget class="QPushButton" name="pushButton_22">
+          <widget class="QPushButton" name="btnClear">
            <property name="minimumSize">
             <size>
              <width>70</width>
              <height>70</height>
             </size>
            </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
+           </property>
            <property name="text">
-            <string>/</string>
+            <string>clear</string>
            </property>
           </widget>
          </item>
          <item row="2" column="2">
-          <widget class="QPushButton" name="pushButton_25">
+          <widget class="QPushButton" name="btnD">
            <property name="minimumSize">
             <size>
              <width>70</width>
              <height>70</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="text">
             <string>D</string>
@@ -139,12 +148,15 @@ font-size: 30px;</string>
           </widget>
          </item>
          <item row="0" column="9">
-          <widget class="QPushButton" name="pushButton">
+          <widget class="QPushButton" name="btn0">
            <property name="minimumSize">
             <size>
              <width>70</width>
              <height>70</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="text">
             <string>0</string>
@@ -152,12 +164,15 @@ font-size: 30px;</string>
           </widget>
          </item>
          <item row="1" column="3">
-          <widget class="QPushButton" name="pushButton_15">
+          <widget class="QPushButton" name="btnR">
            <property name="minimumSize">
             <size>
              <width>70</width>
              <height>70</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="text">
             <string>R</string>
@@ -165,12 +180,15 @@ font-size: 30px;</string>
           </widget>
          </item>
          <item row="0" column="2">
-          <widget class="QPushButton" name="pushButton_8">
+          <widget class="QPushButton" name="btn3">
            <property name="minimumSize">
             <size>
              <width>70</width>
              <height>70</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="text">
             <string>3</string>
@@ -178,12 +196,15 @@ font-size: 30px;</string>
           </widget>
          </item>
          <item row="1" column="4">
-          <widget class="QPushButton" name="pushButton_16">
+          <widget class="QPushButton" name="btnT">
            <property name="minimumSize">
             <size>
              <width>70</width>
              <height>70</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="text">
             <string>T</string>
@@ -191,12 +212,15 @@ font-size: 30px;</string>
           </widget>
          </item>
          <item row="1" column="5">
-          <widget class="QPushButton" name="pushButton_17">
+          <widget class="QPushButton" name="btnY">
            <property name="minimumSize">
             <size>
              <width>70</width>
              <height>70</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="text">
             <string>Y</string>
@@ -204,12 +228,15 @@ font-size: 30px;</string>
           </widget>
          </item>
          <item row="2" column="1">
-          <widget class="QPushButton" name="pushButton_24">
+          <widget class="QPushButton" name="btnS">
            <property name="minimumSize">
             <size>
              <width>70</width>
              <height>70</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="text">
             <string>S</string>
@@ -217,12 +244,15 @@ font-size: 30px;</string>
           </widget>
          </item>
          <item row="0" column="8">
-          <widget class="QPushButton" name="pushButton_2">
+          <widget class="QPushButton" name="btn9">
            <property name="minimumSize">
             <size>
              <width>70</width>
              <height>70</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="text">
             <string>9</string>
@@ -230,12 +260,15 @@ font-size: 30px;</string>
           </widget>
          </item>
          <item row="0" column="4">
-          <widget class="QPushButton" name="pushButton_6">
+          <widget class="QPushButton" name="btn5">
            <property name="minimumSize">
             <size>
              <width>70</width>
              <height>70</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="text">
             <string>5</string>
@@ -243,12 +276,15 @@ font-size: 30px;</string>
           </widget>
          </item>
          <item row="0" column="0">
-          <widget class="QPushButton" name="pushButton_10">
+          <widget class="QPushButton" name="btn1">
            <property name="minimumSize">
             <size>
              <width>70</width>
              <height>70</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="text">
             <string>1</string>
@@ -256,12 +292,15 @@ font-size: 30px;</string>
           </widget>
          </item>
          <item row="1" column="0">
-          <widget class="QPushButton" name="pushButton_12">
+          <widget class="QPushButton" name="btnQ">
            <property name="minimumSize">
             <size>
              <width>70</width>
              <height>70</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="text">
             <string>Q</string>
@@ -269,12 +308,15 @@ font-size: 30px;</string>
           </widget>
          </item>
          <item row="1" column="9">
-          <widget class="QPushButton" name="pushButton_21">
+          <widget class="QPushButton" name="btnP">
            <property name="minimumSize">
             <size>
              <width>70</width>
              <height>70</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="text">
             <string>P</string>
@@ -282,12 +324,15 @@ font-size: 30px;</string>
           </widget>
          </item>
          <item row="2" column="0">
-          <widget class="QPushButton" name="pushButton_23">
+          <widget class="QPushButton" name="btnA">
            <property name="minimumSize">
             <size>
              <width>70</width>
              <height>70</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="text">
             <string>A</string>
@@ -295,12 +340,15 @@ font-size: 30px;</string>
           </widget>
          </item>
          <item row="1" column="2">
-          <widget class="QPushButton" name="pushButton_14">
+          <widget class="QPushButton" name="btnE">
            <property name="minimumSize">
             <size>
              <width>70</width>
              <height>70</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="text">
             <string>E</string>
@@ -308,12 +356,15 @@ font-size: 30px;</string>
           </widget>
          </item>
          <item row="0" column="5">
-          <widget class="QPushButton" name="pushButton_5">
+          <widget class="QPushButton" name="btn6">
            <property name="minimumSize">
             <size>
              <width>70</width>
              <height>70</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="text">
             <string>6</string>
@@ -321,12 +372,15 @@ font-size: 30px;</string>
           </widget>
          </item>
          <item row="1" column="8">
-          <widget class="QPushButton" name="pushButton_20">
+          <widget class="QPushButton" name="btnO">
            <property name="minimumSize">
             <size>
              <width>70</width>
              <height>70</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="text">
             <string>O</string>
@@ -334,12 +388,15 @@ font-size: 30px;</string>
           </widget>
          </item>
          <item row="0" column="10">
-          <widget class="QPushButton" name="pushButton_11">
+          <widget class="QPushButton" name="btnBackspace">
            <property name="minimumSize">
             <size>
              <width>70</width>
              <height>70</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="text">
             <string>x</string>
@@ -347,12 +404,15 @@ font-size: 30px;</string>
           </widget>
          </item>
          <item row="0" column="3">
-          <widget class="QPushButton" name="pushButton_7">
+          <widget class="QPushButton" name="btn4">
            <property name="minimumSize">
             <size>
              <width>70</width>
              <height>70</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="text">
             <string>4</string>
@@ -360,12 +420,15 @@ font-size: 30px;</string>
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QPushButton" name="pushButton_9">
+          <widget class="QPushButton" name="btn2">
            <property name="minimumSize">
             <size>
              <width>70</width>
              <height>70</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="text">
             <string>2</string>
@@ -373,12 +436,15 @@ font-size: 30px;</string>
           </widget>
          </item>
          <item row="1" column="1">
-          <widget class="QPushButton" name="pushButton_13">
+          <widget class="QPushButton" name="btnW">
            <property name="minimumSize">
             <size>
              <width>70</width>
              <height>70</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="text">
             <string>W</string>
@@ -386,12 +452,15 @@ font-size: 30px;</string>
           </widget>
          </item>
          <item row="0" column="7">
-          <widget class="QPushButton" name="pushButton_3">
+          <widget class="QPushButton" name="btn8">
            <property name="minimumSize">
             <size>
              <width>70</width>
              <height>70</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="text">
             <string>8</string>
@@ -399,12 +468,15 @@ font-size: 30px;</string>
           </widget>
          </item>
          <item row="1" column="7">
-          <widget class="QPushButton" name="pushButton_19">
+          <widget class="QPushButton" name="btnI">
            <property name="minimumSize">
             <size>
              <width>70</width>
              <height>70</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="text">
             <string>I</string>
@@ -412,12 +484,15 @@ font-size: 30px;</string>
           </widget>
          </item>
          <item row="1" column="6">
-          <widget class="QPushButton" name="pushButton_18">
+          <widget class="QPushButton" name="btnU">
            <property name="minimumSize">
             <size>
              <width>70</width>
              <height>70</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="text">
             <string>U</string>
@@ -425,12 +500,15 @@ font-size: 30px;</string>
           </widget>
          </item>
          <item row="3" column="0">
-          <widget class="QPushButton" name="pushButton_26">
+          <widget class="QPushButton" name="btnZ">
            <property name="minimumSize">
             <size>
              <width>70</width>
              <height>70</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="text">
             <string>Z</string>
@@ -438,12 +516,15 @@ font-size: 30px;</string>
           </widget>
          </item>
          <item row="2" column="3">
-          <widget class="QPushButton" name="pushButton_27">
+          <widget class="QPushButton" name="btnF">
            <property name="minimumSize">
             <size>
              <width>70</width>
              <height>70</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="text">
             <string>F</string>
@@ -451,12 +532,15 @@ font-size: 30px;</string>
           </widget>
          </item>
          <item row="2" column="4">
-          <widget class="QPushButton" name="pushButton_28">
+          <widget class="QPushButton" name="btnG">
            <property name="minimumSize">
             <size>
              <width>70</width>
              <height>70</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="text">
             <string>G</string>
@@ -464,12 +548,15 @@ font-size: 30px;</string>
           </widget>
          </item>
          <item row="2" column="5">
-          <widget class="QPushButton" name="pushButton_29">
+          <widget class="QPushButton" name="btnH">
            <property name="minimumSize">
             <size>
              <width>70</width>
              <height>70</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="text">
             <string>H</string>
@@ -477,12 +564,15 @@ font-size: 30px;</string>
           </widget>
          </item>
          <item row="2" column="6">
-          <widget class="QPushButton" name="pushButton_30">
+          <widget class="QPushButton" name="btnJ">
            <property name="minimumSize">
             <size>
              <width>70</width>
              <height>70</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="text">
             <string>J</string>
@@ -490,12 +580,15 @@ font-size: 30px;</string>
           </widget>
          </item>
          <item row="2" column="7">
-          <widget class="QPushButton" name="pushButton_31">
+          <widget class="QPushButton" name="btnK">
            <property name="minimumSize">
             <size>
              <width>70</width>
              <height>70</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="text">
             <string>K</string>
@@ -503,12 +596,15 @@ font-size: 30px;</string>
           </widget>
          </item>
          <item row="2" column="8">
-          <widget class="QPushButton" name="pushButton_32">
+          <widget class="QPushButton" name="btnL">
            <property name="minimumSize">
             <size>
              <width>70</width>
              <height>70</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="text">
             <string>L</string>
@@ -516,12 +612,15 @@ font-size: 30px;</string>
           </widget>
          </item>
          <item row="2" column="9">
-          <widget class="QPushButton" name="pushButton_33">
+          <widget class="QPushButton" name="btnMinus">
            <property name="minimumSize">
             <size>
              <width>70</width>
              <height>70</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="text">
             <string>-</string>
@@ -529,12 +628,15 @@ font-size: 30px;</string>
           </widget>
          </item>
          <item row="3" column="1">
-          <widget class="QPushButton" name="pushButton_34">
+          <widget class="QPushButton" name="btnX">
            <property name="minimumSize">
             <size>
              <width>70</width>
              <height>70</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="text">
             <string>X</string>
@@ -542,12 +644,15 @@ font-size: 30px;</string>
           </widget>
          </item>
          <item row="3" column="2">
-          <widget class="QPushButton" name="pushButton_35">
+          <widget class="QPushButton" name="btnC">
            <property name="minimumSize">
             <size>
              <width>70</width>
              <height>70</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="text">
             <string>C</string>
@@ -555,12 +660,15 @@ font-size: 30px;</string>
           </widget>
          </item>
          <item row="3" column="3">
-          <widget class="QPushButton" name="pushButton_36">
+          <widget class="QPushButton" name="btnV">
            <property name="minimumSize">
             <size>
              <width>70</width>
              <height>70</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="text">
             <string>V</string>
@@ -568,12 +676,15 @@ font-size: 30px;</string>
           </widget>
          </item>
          <item row="3" column="4">
-          <widget class="QPushButton" name="pushButton_37">
+          <widget class="QPushButton" name="btnB">
            <property name="minimumSize">
             <size>
              <width>70</width>
              <height>70</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="text">
             <string>B</string>
@@ -581,12 +692,15 @@ font-size: 30px;</string>
           </widget>
          </item>
          <item row="3" column="5">
-          <widget class="QPushButton" name="pushButton_38">
+          <widget class="QPushButton" name="btnN">
            <property name="minimumSize">
             <size>
              <width>70</width>
              <height>70</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="text">
             <string>N</string>
@@ -594,12 +708,15 @@ font-size: 30px;</string>
           </widget>
          </item>
          <item row="3" column="6">
-          <widget class="QPushButton" name="pushButton_39">
+          <widget class="QPushButton" name="btnM">
            <property name="minimumSize">
             <size>
              <width>70</width>
              <height>70</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="text">
             <string>M</string>
@@ -607,12 +724,15 @@ font-size: 30px;</string>
           </widget>
          </item>
          <item row="3" column="7">
-          <widget class="QPushButton" name="pushButton_40">
+          <widget class="QPushButton" name="btnPoint">
            <property name="minimumSize">
             <size>
              <width>70</width>
              <height>70</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="text">
             <string>.</string>
@@ -620,12 +740,15 @@ font-size: 30px;</string>
           </widget>
          </item>
          <item row="3" column="8" colspan="3">
-          <widget class="QPushButton" name="pushButton_41">
+          <widget class="QPushButton" name="btnEspace">
            <property name="minimumSize">
             <size>
              <width>70</width>
              <height>70</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="text">
             <string>ESPACE</string>
@@ -633,15 +756,18 @@ font-size: 30px;</string>
           </widget>
          </item>
          <item row="2" column="10">
-          <widget class="QPushButton" name="pushButton_42">
+          <widget class="QPushButton" name="btnUnderscore">
            <property name="minimumSize">
             <size>
              <width>70</width>
              <height>70</height>
             </size>
            </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
+           </property>
            <property name="text">
-            <string>+</string>
+            <string>_</string>
            </property>
           </widget>
          </item>

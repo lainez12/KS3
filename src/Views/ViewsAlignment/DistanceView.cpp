@@ -10,8 +10,10 @@
 
 DistanceView::DistanceView(Unique<DistanceViewModel> viewModel, QWidget *parent) :
     AlignmentViewBase(std::move(viewModel), parent),
+    m_keyboard(this),
     ui(new Ui::DistanceView) {
     ui->setupUi(this);
+    m_keyboard.setupKeyboardConnections(this);
     setDefaultTitleBar("Mask-to-substrate distance");
     createNavButtonsConfigs();
     setNavButtonEnabled(ID_BTN_VALIDATE, true);

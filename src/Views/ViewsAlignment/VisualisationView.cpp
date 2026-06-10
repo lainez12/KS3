@@ -11,8 +11,11 @@
 
 VisualisationView::VisualisationView(Unique<VisualisationViewModel> viewModel, QWidget *parent) :
     AlignmentViewBase(std::move(viewModel), parent),
+    m_keyboard(this),
     ui(new Ui::VisualisationView) {
     ui->setupUi(this);
+    m_keyboard.setupKeyboardConnections(this, "_d");
+    m_keyboard.setupKeyboardConnections(this, "_g");
     setDefaultTitleBar("Visualisation");
     createNavButtonsConfigs();
     setNavButtonEnabled(ID_BTN_VALIDATE, true);

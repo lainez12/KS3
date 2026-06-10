@@ -13,8 +13,10 @@
 
 SaveExposureSettingsView::SaveExposureSettingsView(Unique<SaveExposureSettingsViewModel> viewModel, QWidget *parent) :
     ExposureViewBase(std::move(viewModel), parent),
+    m_keyboard(this),
     ui(new Ui::SaveExposureSettingsView) {
     ui->setupUi(this);
+    m_keyboard.setupKeyboardConnections(this);
 
     setNewNavButtonsConfigs();
     createNavButtonsConfigs();

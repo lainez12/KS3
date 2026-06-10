@@ -469,6 +469,9 @@ opacity: 1;</string>
              <height>120</height>
             </size>
            </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
+           </property>
            <property name="styleSheet">
             <string notr="true">border: 2px solid #0070DB;
 background-color: #ffffff;
@@ -495,6 +498,9 @@ font-family: arial;</string>
              <width>120</width>
              <height>120</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="styleSheet">
             <string notr="true">border: 2px solid #0070DB;
@@ -523,6 +529,9 @@ font-family: arial;</string>
              <height>120</height>
             </size>
            </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
+           </property>
            <property name="styleSheet">
             <string notr="true">border: 2px solid #0070DB;
 background-color: #ffffff;
@@ -550,6 +559,9 @@ font-family: arial;</string>
              <height>120</height>
             </size>
            </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
+           </property>
            <property name="styleSheet">
             <string notr="true">border: 2px solid #0070DB;
 background-color: #ffffff;
@@ -576,6 +588,9 @@ font-family: arial;</string>
              <width>120</width>
              <height>120</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="styleSheet">
             <string notr="true">border: 2px solid #0070DB;
@@ -606,6 +621,9 @@ font-family: arial;</string>
              <width>120</width>
              <height>120</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="styleSheet">
             <string notr="true">border: 2px solid #0070DB;
@@ -644,6 +662,9 @@ font-family: arial;</string>
              <italic>false</italic>
              <bold>true</bold>
             </font>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="styleSheet">
             <string notr="true">border: 2px solid #0070DB;
@@ -697,6 +718,9 @@ font-family: arial;
              <height>250</height>
             </size>
            </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
+           </property>
            <property name="styleSheet">
             <string notr="true">border: 2px solid #0070DB;
 background-color: #ffffff;
@@ -724,6 +748,9 @@ font-family: arial;</string>
              <height>120</height>
             </size>
            </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
+           </property>
            <property name="styleSheet">
             <string notr="true">border: 2px solid #0070DB;
 background-color: #ffffff;
@@ -750,6 +777,9 @@ font-family: arial;</string>
              <width>120</width>
              <height>120</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="styleSheet">
             <string notr="true">border: 2px solid #0070DB;
@@ -813,6 +843,9 @@ font-family: arial;</string>
              <height>120</height>
             </size>
            </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
+           </property>
            <property name="styleSheet">
             <string notr="true">border: 2px solid #0070DB;
 background-color: #ffffff;
@@ -839,6 +872,9 @@ font-family: arial;</string>
              <width>120</width>
              <height>120</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="styleSheet">
             <string notr="true">border: 2px solid #0070DB;
@@ -867,6 +903,9 @@ font-family: arial;</string>
              <height>120</height>
             </size>
            </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
+           </property>
            <property name="styleSheet">
             <string notr="true">border: 2px solid #0070DB;
 background-color: #ffffff;
@@ -893,6 +932,9 @@ font-family: arial;</string>
              <width>120</width>
              <height>120</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="styleSheet">
             <string notr="true">border: 2px solid #0070DB;

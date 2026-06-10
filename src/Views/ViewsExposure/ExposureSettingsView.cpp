@@ -13,9 +13,10 @@
 
 ExposureSettingsView::ExposureSettingsView(Unique<ExposureSettingsViewModel> viewModel, QWidget *parent) :
     ExposureViewBase(std::move(viewModel), parent),
+    m_keyboard(this),
     ui(new Ui::ExposureSettingsView) {
     ui->setupUi(this);
-
+    m_keyboard.setupKeyboardConnections(this);
     ui->inputsStack->setCurrentWidget(ui->pageContinuous);
 
     NavButtonConfig saveBtn(
@@ -58,20 +59,6 @@ ExposureSettingsView::ExposureSettingsView(Unique<ExposureSettingsViewModel> vie
     connect(ui->favoriteSettingslabel, &QPushButton::clicked, this, [this]() { emit s_openView(Kub3::UI::ViewId::FAVORITE_EXPOSURE_SETTINGS_VIEW); });
     connect(ui->continuousModeBtn, &QPushButton::clicked, this, &ExposureSettingsView::switchToContinuousMode);
     connect(ui->flashingModeBtn, &QPushButton::clicked, this, &ExposureSettingsView::switchToFlashingMode);
-
-    connect(ui->btn0, &QPushButton::clicked, this, [this]() { simulationKey(Qt::Key_0, "0"); });
-    connect(ui->btn1, &QPushButton::clicked, this, [this]() { simulationKey(Qt::Key_1, "1"); });
-    connect(ui->btn2, &QPushButton::clicked, this, [this]() { simulationKey(Qt::Key_2, "2"); });
-    connect(ui->btn3, &QPushButton::clicked, this, [this]() { simulationKey(Qt::Key_3, "3"); });
-    connect(ui->btn4, &QPushButton::clicked, this, [this]() { simulationKey(Qt::Key_4, "4"); });
-    connect(ui->btn5, &QPushButton::clicked, this, [this]() { simulationKey(Qt::Key_5, "5"); });
-    connect(ui->btn6, &QPushButton::clicked, this, [this]() { simulationKey(Qt::Key_6, "6"); });
-    connect(ui->btn7, &QPushButton::clicked, this, [this]() { simulationKey(Qt::Key_7, "7"); });
-    connect(ui->btn8, &QPushButton::clicked, this, [this]() { simulationKey(Qt::Key_8, "8"); });
-    connect(ui->btn9, &QPushButton::clicked, this, [this]() { simulationKey(Qt::Key_9, "9"); });
-    connect(ui->btnBackspace, &QPushButton::clicked, this, [this]() { simulationKey(Qt::Key_Backspace, ""); });
-    connect(ui->btnEnter, &QPushButton::clicked, this, [this]() { simulationKey(Qt::Key_Tab, "\t"); });
-    connect(ui->btnClear, &QPushButton::clicked, this, [this]() { clearInputSelected(); });
 
     setNavButtonEnabled(ID_BTN_VALIDATE, true);
 }

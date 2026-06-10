@@ -6,6 +6,7 @@
 #include <Views/AlignmentViewBase.h>
 
 #include "Views/ViewBase.h"
+#include <Views/KeyboardConnections.h>
 
 namespace Ui {
     class SaveParametersView;
@@ -31,6 +32,7 @@ namespace Kub3::UI::Views::ViewsAlignment {
 
     private:
         Ui::SaveParametersView *ui;
+        KeyboardConnections m_keyboard;
     };
 
 } // namespace Kub3::UI::Views

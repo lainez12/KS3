@@ -5,6 +5,7 @@
 #include <ViewModels/ViewModelsExposure/SaveExposureSettingsViewModel.h>
 
 #include <Views/ExposureViewBase.h>
+#include <Views/KeyboardConnections.h>
 
 namespace Ui {
     class SaveExposureSettingsView;
@@ -31,7 +32,7 @@ namespace Kub3::UI::Views::ViewsExposure {
 
     private:
         Ui::SaveExposureSettingsView *ui;
-
+        KeyboardConnections m_keyboard;
         bool m_isFlashingMode = false;
     };
 

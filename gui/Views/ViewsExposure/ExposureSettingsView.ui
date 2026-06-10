@@ -64,7 +64,7 @@
         </spacer>
        </item>
        <item>
-        <layout class="QGridLayout" name="gridLayout_2" columnstretch="0,0,0,0">
+        <layout class="QGridLayout" name="numPadContainer" columnstretch="0,0,0,0">
          <property name="sizeConstraint">
           <enum>QLayout::SizeConstraint::SetFixedSize</enum>
          </property>

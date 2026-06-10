@@ -63,9 +63,6 @@ namespace Kub3::UI::Views {
 
         void showAnOverlayMessage(QString text);
 
-        void simulationKey(Qt::Key keyCode, const QString &text);
-        void clearInputSelected();
-
         void resizeEventOverride(QResizeEvent *event) {
             resizeEvent(event);
         }

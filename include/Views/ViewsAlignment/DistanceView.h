@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <ViewModels/ViewModelsAlignment/DistanceViewModel.h>
 #include <Views/AlignmentViewBase.h>
+#include <Views/KeyboardConnections.h>
 
 #include "Views/ViewBase.h"
 
@@ -31,6 +32,7 @@ namespace Kub3::UI::Views::ViewsAlignment {
 
     private:
         Ui::DistanceView *ui;
+        KeyboardConnections m_keyboard;
     };
 
 } // namespace Kub3::UI::Views

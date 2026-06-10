@@ -9,8 +9,10 @@
 
 SaveParametersView::SaveParametersView(Unique<SaveParametersViewModel> viewModel, QWidget *parent) :
     AlignmentViewBase(std::move(viewModel), parent),
+    m_keyboard(this),
     ui(new Ui::SaveParametersView) {
     ui->setupUi(this);
+    m_keyboard.setupKeyboardConnections(this);
     setDefaultTitleBar("Exposure Settings");
 }
 SaveParametersView::~SaveParametersView() {

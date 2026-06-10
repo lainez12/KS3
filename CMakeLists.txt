@@ -216,6 +216,7 @@ qt_add_executable(Kub3Software
     src/Views/ViewsExposure/SaveExposureSettingsView.cpp
     src/Views/MainWindow.cpp
     src/Views/ViewBase.cpp
+    src/Views/KeyboardConnections.cpp
     src/Views/AlignmentViewBase.cpp
     src/Views/SettingsViewBase.cpp
     src/Views/ExposureViewBase.cpp
@@ -271,6 +272,7 @@ qt_add_executable(Kub3Software
     include/Views/ViewsExposure/SaveExposureSettingsView.h
     include/Views/MainWindow.h
     include/Views/ViewBase.h
+    include/Views/KeyboardConnections.h
     include/Views/AlignmentViewBase.h
     include/Views/SettingsViewBase.h
     include/Views/ExposureViewBase.h

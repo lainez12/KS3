@@ -6,6 +6,7 @@
 #include <Views/AlignmentViewBase.h>
 
 #include "Views/ViewBase.h"
+#include <Views/KeyboardConnections.h>
 
 namespace Ui {
     class VisualisationView;
@@ -44,6 +45,7 @@ namespace Kub3::UI::Views::ViewsAlignment {
 
     private:
         Ui::VisualisationView *ui;
+        KeyboardConnections m_keyboard;
     };
 
 } // namespace Kub3::UI::Views
