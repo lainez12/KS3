@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 
+#include <Algorithms/Filters/TimeAwareEMAFilter.h>
 #include <Config/conf.h>
 #include <HAL/Actuators/ActuatorRegistry.h>
 #include <HAL/Actuators/Motors/IPositionMotor.h>
@@ -74,10 +75,12 @@ namespace Kub3::Tools::Tester
 
         // Kinematic Calculation State
         std::chrono::steady_clock::time_point m_lastTickTime;
-        double m_lastPosition = 0.0;
-        double m_lastSpeed    = 0.0;
+        double m_lastPosition      = 0.0;
+        double m_lastFilteredSpeed = 0.0;
 
         MotorTelemetry m_telemetry;
+        Algorithms::Filter::LowPassFilter m_speedFilter{10};
+        Algorithms::Filter::LowPassFilter m_accelFilter{5};
     };
 
 } // namespace Kub3::Tools::Tester

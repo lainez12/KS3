@@ -127,6 +127,7 @@ qt_add_library(Kub3Core STATIC
     src/Algorithms/Kinematic/utils.cpp
     src/Algorithms/Kinematic/TrapezoidalGenerator.cpp
     src/Algorithms/Admittance/AdmittanceController.cpp
+    src/Algorithms/Filters/TimeAwareEMAFilter.cpp
 
 
     # ===============
@@ -248,6 +249,7 @@ qt_add_library(Kub3Core STATIC
     include/Algorithms/Kinematic/IKinematicGenerator.h
     include/Algorithms/Kinematic/TrapezoidalGenerator.h
     include/Algorithms/Admittance/AdmittanceController.h
+    include/Algorithms/Filters/TimeAwareEMAFilter.h
 )
 
 # PUBLIC: Everything that links to Kub3Core automatically gets these headers and macros

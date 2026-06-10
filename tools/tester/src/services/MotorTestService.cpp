@@ -30,26 +30,26 @@ namespace Kub3::Tools::Tester
         if (dt <= 0.001)
             return; // Prevent division by zero
 
-        // Read Single Source of Truth
+        // Read encoder position
         const double currentPos = m_selectedMotor.value()->getEncoderPositionMm();
-        // Finite difference calculations
-        double currentSpeed = (currentPos - m_lastPosition) / dt;
-        double currentAccel = (currentSpeed - m_lastSpeed) / dt;
+        // Compute and filter speed
+        double rawSpeed      = (currentPos - m_lastPosition) / dt;
+        double filteredSpeed = m_speedFilter.update(rawSpeed, dt);
+        // Compute and filter acceleration
+        double rawAccel      = (filteredSpeed - m_lastFilteredSpeed) / dt;
+        double filteredAccel = m_accelFilter.update(rawAccel, dt);
 
-        // Filter tiny noise out for clean UI (Deadband)
-        if (std::abs(currentSpeed) < 0.0001)
-            currentSpeed = 0.0;
-        if (std::abs(currentAccel) < 0.0001)
-            currentAccel = 0.0;
+        double displaySpeed = std::abs(filteredSpeed);
+        double displayAccel = std::abs(filteredAccel);
 
         // Update telemetry struct for the Owner to poll
         m_telemetry.positionMm = currentPos;
-        m_telemetry.speedMmS   = currentSpeed;
-        m_telemetry.accelMmS2  = currentAccel;
+        m_telemetry.speedMmS   = displaySpeed;
+        m_telemetry.accelMmS2  = displayAccel;
 
-        m_lastPosition = currentPos;
-        m_lastSpeed    = currentSpeed;
-        m_lastTickTime = now;
+        m_lastPosition      = currentPos;
+        m_lastFilteredSpeed = filteredSpeed;
+        m_lastTickTime      = now;
     }
 
     void MotorTestService::stop(void)
@@ -93,10 +93,12 @@ namespace Kub3::Tools::Tester
             m_selectedMotor = motor.unwrap();
 
             // Reset kinematic history
-            m_lastTickTime = std::chrono::steady_clock::now();
-            m_lastPosition = motor->getEncoderPositionMm();
-            m_lastSpeed    = 0.0;
-            m_telemetry    = MotorTelemetry{m_lastPosition, 0.0, 0.0};
+            m_lastTickTime      = std::chrono::steady_clock::now();
+            m_lastPosition      = motor->getEncoderPositionMm();
+            m_lastFilteredSpeed = 0.0;
+            m_speedFilter.reset(0.0);
+            m_accelFilter.reset(0.0);
+            m_telemetry = MotorTelemetry{m_lastPosition, 0.0, 0.0};
 
             return true;
         }
