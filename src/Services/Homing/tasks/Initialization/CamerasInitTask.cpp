@@ -6,12 +6,14 @@ namespace Kub3::Services
 {
 
     CamerasInitTask::CamerasInitTask(Shared<HAL::MS::IMachineStatusRepo> repo,
-                                     Shared<HAL::Act::IMotor> leftCamXMotor,
-                                     Shared<HAL::Act::IMotor> leftCamYMotor,
-                                     Shared<HAL::Act::IMotor> rightCamXMotor,
-                                     Shared<HAL::Act::IMotor> rightCamYMotor,
+                                     const Config::process_config_t &processConfig,
+                                     Shared<HAL::Act::IPositionMotor> leftCamXMotor,
+                                     Shared<HAL::Act::IPositionMotor> leftCamYMotor,
+                                     Shared<HAL::Act::IPositionMotor> rightCamXMotor,
+                                     Shared<HAL::Act::IPositionMotor> rightCamYMotor,
                                      Config::kinematic_profile_t kinematicProfile) :
         m_repo(std::move(repo)),
+        m_processConf(processConfig),
         m_leftCamXMotor(std::move(leftCamXMotor)),
         m_leftCamYMotor(std::move(leftCamYMotor)),
         m_rightCamXMotor(std::move(rightCamXMotor)),
@@ -50,19 +52,19 @@ namespace Kub3::Services
         handleSingleMotorLogic(m_rightCamXMotor, rightCamXLimitVal);
         handleSingleMotorLogic(m_rightCamYMotor, rightCamYLimitVal);
 
-        // Initialization limits reached and motors stopped, reset encoders
+        // Initialization limits reached and motors stopped, reset encoders using config values (in mm)
         if (leftCamXLimitVal && leftCamYLimitVal && rightCamXLimitVal && rightCamYLimitVal)
         {
-            m_leftCamXMotor->resetEncoder(0.0);  // TODO: get offset value from config
-            m_leftCamYMotor->resetEncoder(0.0);  // TODO: get offset value from config
-            m_rightCamXMotor->resetEncoder(0.0); // TODO: get offset value from config
-            m_rightCamYMotor->resetEncoder(0.0); // TODO: get offset value from config
+            m_leftCamXMotor->resetEncoder(m_processConf.vision.left_cam_x_reset_pos_mm);
+            m_leftCamYMotor->resetEncoder(m_processConf.vision.left_cam_y_reset_pos_mm);
+            m_rightCamXMotor->resetEncoder(m_processConf.vision.right_cam_x_reset_pos_mm);
+            m_rightCamYMotor->resetEncoder(m_processConf.vision.right_cam_y_reset_pos_mm);
             return true;
         }
         return false;
     }
 
-    void CamerasInitTask::stopMotorIfMoving(Shared<HAL::Act::IMotor> motor)
+    void CamerasInitTask::stopMotorIfMoving(Shared<HAL::Act::IPositionMotor> motor)
     {
         if (motor && motor->isMoving())
             motor->emergencyStop();
@@ -70,7 +72,7 @@ namespace Kub3::Services
 
     // Stops motor if `motor->isMoving()` returns `true` and `limitValue` is `true`.
     // Starts motor if not `limitValue` is `false` and `motor->isMoving()` returns `false`.
-    void CamerasInitTask::handleSingleMotorLogic(Shared<HAL::Act::IMotor> motor, bool limitValue)
+    void CamerasInitTask::handleSingleMotorLogic(Shared<HAL::Act::IPositionMotor> motor, bool limitValue)
     {
         if (!motor)
             return;

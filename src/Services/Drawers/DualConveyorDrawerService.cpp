@@ -33,17 +33,15 @@ namespace Kub3::Services
         if (target == DrawerTarget::Wafer && !isMaskInserted())
             target = DrawerTarget::Both;
 
-        // TODO: handle throws on get
-        auto maskMotor  = m_registry->get<HAL::Act::IMotor>(MASK_DRAWER_MOTOR);
-        auto waferMotor = m_registry->get<HAL::Act::IMotor>(WAFER_DRAWER_MOTOR);
-
         if (target == DrawerTarget::Mask || target == DrawerTarget::Both)
         {
+            UNWRAP_OR_ABORT(maskMotor, m_registry->get<HAL::Act::IPositionMotor>(MASK_DRAWER_MOTOR));
             enqueueTask<MaskInsertionTask>(m_repo, maskMotor, m_maskFastProfile, m_maskFineProfile, m_maskContactProfile);
         }
 
         if (target == DrawerTarget::Wafer || target == DrawerTarget::Both)
         {
+            UNWRAP_OR_ABORT(waferMotor, m_registry->get<HAL::Act::IPositionMotor>(WAFER_DRAWER_MOTOR));
             enqueueTask<WaferInsertionTask>(m_repo, waferMotor, m_waferFastProfile, m_waferFineProfile);
         }
 
@@ -57,18 +55,16 @@ namespace Kub3::Services
         if (target == DrawerTarget::Mask && !isWaferEjected())
             target = DrawerTarget::Both;
 
-        // TODO: handle throws on get
-        auto maskMotor  = m_registry->get<HAL::Act::IMotor>(MASK_DRAWER_MOTOR);
-        auto waferMotor = m_registry->get<HAL::Act::IMotor>(WAFER_DRAWER_MOTOR);
-
         if (target == DrawerTarget::Wafer || target == DrawerTarget::Both)
         {
+            UNWRAP_OR_ABORT(waferMotor, m_registry->get<HAL::Act::IPositionMotor>(WAFER_DRAWER_MOTOR));
             enqueueTask<WaferEjectionTask>(
                 m_repo, waferMotor, m_waferFastProfile, m_waferFineProfile, m_waferEjectionFinePosThreshold);
         }
 
         if (target == DrawerTarget::Mask || target == DrawerTarget::Both)
         {
+            UNWRAP_OR_ABORT(maskMotor, m_registry->get<HAL::Act::IPositionMotor>(MASK_DRAWER_MOTOR));
             enqueueTask<MaskEjectionTask>(
                 m_repo, maskMotor, m_maskFastProfile, m_maskFineProfile, m_maskEjectionFinePosThreshold);
         }
@@ -76,13 +72,10 @@ namespace Kub3::Services
         this->startSequence();
     }
 
-    void DualConveyorDrawerService::stop(void)
+    void DualConveyorDrawerService::onStop(void)
     {
-        // TODO: handle throws on get
-        m_registry->get<HAL::Act::IMotor>(MASK_DRAWER_MOTOR)->emergencyStop();
-        m_registry->get<HAL::Act::IMotor>(WAFER_DRAWER_MOTOR)->emergencyStop();
-
-        BaseTaskService::stop();
+        STOP_MOTOR_RESULT(MASK_DRAWER_MOTOR, m_registry);
+        STOP_MOTOR_RESULT(WAFER_DRAWER_MOTOR, m_registry);
     }
 
     // Private methods

@@ -8,7 +8,8 @@
 
 SettingsView::SettingsView(Unique<SettingsViewModel> viewModel, QWidget *parent) :
     ViewBase(std::move(viewModel), parent),
-    ui(new Ui::SettingsView) {
+    ui(new Ui::SettingsView)
+{
     ui->setupUi(this);
 
     createNavButtonsConfigs();
@@ -34,15 +35,18 @@ SettingsView::SettingsView(Unique<SettingsViewModel> viewModel, QWidget *parent)
     connect(ui->ledTestBtn, &NavButton::clicked, this, [this]() { emit s_openView(Kub3::UI::ViewId::SETTINGS_LED_TEST_VIEW); });
     connect(ui->updateSoftBtn, &NavButton::clicked, this, [this]() { emit s_openView(Kub3::UI::ViewId::SETTINGS_UPDATE_SOFTWARE_VIEW); });
 }
-SettingsView::~SettingsView() {
+SettingsView::~SettingsView()
+{
 }
 
-void SettingsView::resizeEvent(QResizeEvent *ev) {
+void SettingsView::resizeEvent(QResizeEvent *ev)
+{
     QWidget::resizeEvent(ev);
     ui->buttonsLayout->setSpacing(this->width() * 0.03); // 7% of window width
 }
 
-void SettingsView::createNavButtonsConfigs() {
+void SettingsView::createNavButtonsConfigs()
+{
     NavButtonConfig homeBtn(
         "Home",
         ":/icons/home.svg",
@@ -50,17 +54,20 @@ void SettingsView::createNavButtonsConfigs() {
         std::bind(&SettingsView::onHomeButtonClicked, this, std::placeholders::_1));
     addNavButton("left", homeBtn);
 }
-void SettingsView::configTitleBar() {
-    m_titleBar = TitleBarConfig(
-        "Parameters",
-        QColor("#FFF"),
-        QColor(BLUE_COLOR),
-        ":/icons/admin-circle.svg",
-        "Parameters",
-        true,
-        true);
+void SettingsView::configTitleBar()
+{
+    setTitleBar(TitleBarConfig{
+        .viewTitle      = "Parameters",
+        .textColor      = QColor("#FFF"),
+        .bgColor        = QColor(BLUE_COLOR),
+        .iconPath       = ":/icons/admin-circle.svg",
+        .sectionTitle   = "Parameters",
+        .showTitleBar   = true,
+        .m_showLeftLogo = true,
+    });
 }
 
-void SettingsView::onHomeButtonClicked(const QString &buttonId) {
+void SettingsView::onHomeButtonClicked(const QString &buttonId)
+{
     emit s_openView(Kub3::UI::ViewId::HOME_VIEW);
 }

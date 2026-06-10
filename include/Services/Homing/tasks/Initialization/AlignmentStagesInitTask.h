@@ -1,6 +1,6 @@
 #pragma once
 
-#include <HAL/Actuators/Motors/IMotor.h>
+#include <HAL/Actuators/Motors/IPositionMotor.h>
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
 #include <Services/ITask.h>
 #include <utils.h>
@@ -12,9 +12,9 @@ namespace Kub3::Services
     {
     public:
         AlignmentStagesInitTask(Shared<HAL::MS::IMachineStatusRepo> repo,
-                                Shared<HAL::Act::IMotor> xStageMotor,
-                                Shared<HAL::Act::IMotor> yStageMotor,
-                                Shared<HAL::Act::IMotor> thetaStageMotor,
+                                Shared<HAL::Act::IPositionMotor> xStageMotor,
+                                Shared<HAL::Act::IPositionMotor> yStageMotor,
+                                Shared<HAL::Act::IPositionMotor> thetaStageMotor,
                                 Config::kinematic_profile_t xStageProfile,
                                 Config::kinematic_profile_t yStageProfile,
                                 Config::kinematic_profile_t thetaStageProfile);
@@ -23,15 +23,15 @@ namespace Kub3::Services
         bool tick(void) override;
 
     private:
-        void stopMotorIfMoving(Shared<HAL::Act::IMotor> motor);
-        void handleSingleMotorLogic(Shared<HAL::Act::IMotor> motor, Config::kinematic_profile_t kineProfile, bool limitValue);
+        void stopMotorIfMoving(Shared<HAL::Act::IPositionMotor> motor);
+        void handleSingleMotorLogic(Shared<HAL::Act::IPositionMotor> motor, Config::kinematic_profile_t kineProfile, bool limitValue);
 
     private:
         Shared<HAL::MS::IMachineStatusRepo> m_repo;
 
-        Shared<HAL::Act::IMotor> m_xStageMotor;
-        Shared<HAL::Act::IMotor> m_yStageMotor;
-        Shared<HAL::Act::IMotor> m_thetaStageMotor;
+        Shared<HAL::Act::IPositionMotor> m_xStageMotor;
+        Shared<HAL::Act::IPositionMotor> m_yStageMotor;
+        Shared<HAL::Act::IPositionMotor> m_thetaStageMotor;
 
         Config::kinematic_profile_t m_xStageProfile;
         Config::kinematic_profile_t m_yStageProfile;

@@ -1,16 +1,17 @@
 #include <Views/Components/Colors.h>
 #include <Views/SettingsViewBase.h>
 
-namespace Kub3::UI::Views {
+namespace Kub3::UI::Views
+{
 
-    SettingsViewBase::SettingsViewBase(
-        Unique<ViewModels::IViewModel> viewModel,
-        QWidget *parent) :
-        ViewBase(std::move(viewModel), parent) {
+    SettingsViewBase::SettingsViewBase(Unique<ViewModels::BaseViewModel> viewModel, QWidget *parent) :
+        ViewBase(std::move(viewModel), parent)
+    {
         createNavButtonsConfigs();
     }
 
-    void SettingsViewBase::createNavButtonsConfigs() {
+    void SettingsViewBase::createNavButtonsConfigs()
+    {
         NavButtonConfig homeBtn(
             "Home",
             ":/icons/home.svg",
@@ -26,26 +27,31 @@ namespace Kub3::UI::Views {
         addNavButton("left", backBtn);
     }
 
-    void SettingsViewBase::configTitleBar() {
+    void SettingsViewBase::configTitleBar()
+    {
         // setDefaultTitleBar("");
     }
 
-    void SettingsViewBase::setDefaultTitleBar(const QString &viewTitle) {
-        m_titleBar = TitleBarConfig(
-            viewTitle,
-            QColor("#FFF"),
-            QColor(BLUE_COLOR),
-            ":/icons/admin-circle.svg",
-            "Settings",
-            true,
-            true);
+    void SettingsViewBase::setDefaultTitleBar(const QString &viewTitle)
+    {
+        setTitleBar(TitleBarConfig{
+            .viewTitle      = viewTitle,
+            .textColor      = QColor("#FFF"),
+            .bgColor        = QColor(BLUE_COLOR),
+            .iconPath       = ":/icons/admin-circle.svg",
+            .sectionTitle   = "Settings",
+            .showTitleBar   = true,
+            .m_showLeftLogo = true,
+        });
     }
 
-    void SettingsViewBase::onHomeButtonClicked(const QString &buttonId) {
+    void SettingsViewBase::onHomeButtonClicked(const QString &buttonId)
+    {
         emit s_openView(Kub3::UI::ViewId::HOME_VIEW);
     }
 
-    void SettingsViewBase::onBackButtonClicked(const QString &buttonId) {
+    void SettingsViewBase::onBackButtonClicked(const QString &buttonId)
+    {
         emit s_openView(Kub3::UI::ViewId::SETTINGS_VIEW);
     }
 

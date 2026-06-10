@@ -16,6 +16,7 @@ namespace Kub3::HAL::Act
                                            Weak<MCUDriver> driver,
                                            Config::dc_motor_hw_properties_t hwConfig,
                                            std::function<double()> posGetter,
+                                           std::string encoderId,
                                            Unique<IKinematicGenerator> kinematicEngine,
                                            QObject *parent) :
         QObject(parent),
@@ -23,13 +24,14 @@ namespace Kub3::HAL::Act
         m_motorByteId(motorByteId),
         m_hwConfig(std::move(hwConfig)),
         m_driver(std::move(driver)),
+        m_encoderId(std::move(encoderId)),
         m_encoderValueGetter(std::move(posGetter)),
         m_kinematicEngine(std::move(kinematicEngine)),
         m_controlTimer(this)
     {
-        qDebug() << std::format("DirectCurrentMotor[{}] Loaded config:", m_id).c_str();
-        qDebug() << std::format("--- maxVelocityMmS={}", m_hwConfig.maxVelocityMmS).c_str();
-        qDebug() << std::format("--- maxAccelerationMmS2={}", m_hwConfig.maxAccelerationMmS2).c_str();
+        qInfo() << std::format("DirectCurrentMotor[{}] Loaded config:", m_id).c_str();
+        qInfo() << std::format("--- maxVelocityMmS={}", m_hwConfig.maxVelocityMmS).c_str();
+        qInfo() << std::format("--- maxAccelerationMmS2={}", m_hwConfig.maxAccelerationMmS2).c_str();
 
         if (!m_kinematicEngine)
         {
@@ -43,61 +45,11 @@ namespace Kub3::HAL::Act
     {
         if (auto driver = m_driver.lock())
         {
-            QMetaObject::invokeMethod(
-                driver.get(),
-                &MCUDriver::ps_sendCommand,
-                Qt::QueuedConnection,
-                payload);
+            driver->sendCommand(payload);
         }
         else
         {
             throw std::runtime_error("Attempted to send command, but MCUDriver is dead. Actuator: " + m_id);
-        }
-    }
-
-    void DirectCurrentMotor::moveAbsolute(double position_mm, Config::kinematic_profile_t profile)
-    {
-        const double safeVel = std::min(profile.targetVelocityMmS, m_hwConfig.maxVelocityMmS);
-        const double safeAcc = std::min(profile.accelerationMmS2, m_hwConfig.maxAccelerationMmS2);
-
-        // Reset caches for the new move
-        m_lastSentPwm.reset();
-        m_lastSentDir.reset();
-
-        if (!m_controlTimer.isActive())
-        {
-            m_kinematicEngine->startPositionMove(getEncoderPositionMm(), position_mm, safeVel, safeAcc);
-            m_lastTickNsecs = 0;
-            m_dtTimer.start();
-            m_controlTimer.start(CONTROL_TIMER_VALUE_MS);
-        }
-        else
-        {
-            m_kinematicEngine->updatePositionMove(position_mm, safeVel, safeAcc);
-        }
-    }
-
-    void DirectCurrentMotor::moveRelative(double distance_mm, Config::kinematic_profile_t profile)
-    {
-        const double safeVel = std::min(profile.targetVelocityMmS, m_hwConfig.maxVelocityMmS);
-        const double safeAcc = std::min(profile.accelerationMmS2, m_hwConfig.maxAccelerationMmS2);
-
-        m_lastSentPwm.reset();
-        m_lastSentDir.reset();
-
-        if (!m_controlTimer.isActive())
-        {
-            const double encoderPos = getEncoderPositionMm();
-            m_kinematicEngine->startPositionMove(encoderPos, encoderPos + distance_mm, safeVel, safeAcc);
-
-            m_lastTickNsecs = 0;
-            m_dtTimer.start();
-            m_controlTimer.start(CONTROL_TIMER_VALUE_MS);
-        }
-        else
-        {
-            const double currentMathEnginePos = m_kinematicEngine->getCurrentState().position;
-            m_kinematicEngine->updatePositionMove(currentMathEnginePos + distance_mm, safeVel, safeAcc);
         }
     }
 
@@ -113,7 +65,7 @@ namespace Kub3::HAL::Act
 
         if (!m_controlTimer.isActive())
         {
-            m_kinematicEngine->startVelocityMove(getEncoderPositionMm(), sign, safeVel, safeAcc);
+            m_kinematicEngine->startVelocityMove(0.0, sign, safeVel, safeAcc);
 
             m_lastTickNsecs = 0;
             m_dtTimer.start();
@@ -137,21 +89,9 @@ namespace Kub3::HAL::Act
         sendPayload(command.toUtf8());
     }
 
-    void DirectCurrentMotor::home(void)
-    {
-        throw std::runtime_error("Not implemented");
-    }
-
     bool DirectCurrentMotor::isMoving(void) const
     {
         return m_controlTimer.isActive();
-    }
-
-    double DirectCurrentMotor::getEncoderPositionMm(void) const
-    {
-        const double encoderValue = m_encoderValueGetter ? m_encoderValueGetter() : 0.0;
-
-        return static_cast<double>(encoderValue) * (static_cast<double>(m_hwConfig.encoderTopsPerRev) / m_hwConfig.screwPitchMm);
     }
 
     void DirectCurrentMotor::onControlTick(void)
@@ -161,7 +101,7 @@ namespace Kub3::HAL::Act
 
         m_lastTickNsecs = currentNsecs;
 
-        const kinematic_state_t state = m_kinematicEngine->calculateNext(dt);
+        const kinematic_state_t state = m_kinematicEngine->computeNext(dt);
 
         if (state.isFinished)
         {

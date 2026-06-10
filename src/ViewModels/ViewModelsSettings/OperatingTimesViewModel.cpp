@@ -1,17 +1,14 @@
 #include <ViewModels/ViewModelsSettings/OperatingTimesViewModel.h>
 
-namespace Kub3::UI::ViewModels::ViewModelsSettings {
+namespace Kub3::UI::ViewModels::ViewModelsSettings
+{
     OperatingTimesViewModel::OperatingTimesViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent) :
         QObject(parent),
-        m_repo(repo) {
+        m_repo(repo)
+    {
     }
-    OperatingTimesViewModel::~OperatingTimesViewModel() {
-    }
-
-    void OperatingTimesViewModel::loadConnections(void) {
-    }
-
-    void OperatingTimesViewModel::unloadConnections(void) {
+    OperatingTimesViewModel::~OperatingTimesViewModel()
+    {
     }
 
 } // namespace Kub3::UI::ViewModels::ViewModelsSettings

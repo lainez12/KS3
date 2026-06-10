@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Config/machine_config.h>
+#include <Config/conf.h>
 #include <HAL/Actuators/ActuatorRegistry.h>
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
 #include <Services/BaseTaskService.h>
@@ -23,9 +23,12 @@ namespace Kub3::Services
 
         void initialize(void) override;
         void home(HomingTarget::Type target = HomingTarget::ALL) override;
-        void stop(void) override;
+
+    protected:
+        void onStop(void) override;
 
     private:
+        void stopAllMotors(void);
         void loadMotorsKinematicProfiles(void);
 
     private: // TODO: Could be general and defined in a `utils` ?
@@ -36,7 +39,7 @@ namespace Kub3::Services
             RightX,
             RightY
         };
-        camera_motor_bundle_t buildCameraMotorBundle(CameraMotorIdArg arg);
+        Result<camera_motor_bundle_t, std::string> buildCameraMotorBundle(CameraMotorIdArg arg);
 
         enum class ZMotorIdArg
         {
@@ -44,7 +47,7 @@ namespace Kub3::Services
             Right,
             Back,
         };
-        z_motor_bundle_t buildZMotorBundle(ZMotorIdArg arg);
+        Result<z_motor_bundle_t, std::string> buildZMotorBundle(ZMotorIdArg arg);
 
         enum class StageMotorIdArg
         {
@@ -52,12 +55,12 @@ namespace Kub3::Services
             YStage,
             ThetaStage,
         };
-        stage_motor_bundle_t buildStageMotorBundle(StageMotorIdArg id);
+        Result<stage_motor_bundle_t, std::string> buildStageMotorBundle(StageMotorIdArg id);
 
     private:
         Shared<HAL::Act::ActuatorRegistry> m_registry;
         Shared<HAL::MS::IMachineStatusRepo> m_repo;
-        const Config::process_config_t &m_processConfig;
+        const Config::process_config_t &m_processConf;
 
         // Kinematic profiles
         // --- Z motors

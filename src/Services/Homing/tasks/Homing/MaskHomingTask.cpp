@@ -5,7 +5,7 @@ namespace Kub3::Services
 {
 
     MaskHomingTask::MaskHomingTask(Shared<HAL::MS::IMachineStatusRepo> repo,
-                                   Shared<HAL::Act::IMotor> motor,
+                                   Shared<HAL::Act::IPositionMotor> motor,
                                    Config::kinematic_profile_t fastProfile,
                                    Config::kinematic_profile_t fineProfile,
                                    Config::kinematic_profile_t contactProfile) :
@@ -127,7 +127,7 @@ namespace Kub3::Services
 
         if (!cm2)
         {
-            m_motor->moveDirection(HAL::Act::MotorDirection::Negative, m_fineProfile);
+            m_motor->moveDirection(HAL::Act::MotorDirection::Negative, m_contactProfile);
             m_step = Step::ContactMode;
         }
     }

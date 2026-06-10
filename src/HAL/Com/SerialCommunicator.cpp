@@ -83,6 +83,7 @@ namespace Kub3::HAL::Com
             qWarning() << "[Serial] Incomplete write. Expected:" << data.size() << "Written:" << bytesWritten;
         }
 
+        // qInfo() << "[Serial]" << bytesWritten << "bytes written:" << data.toHex(' ');
         m_serialPort.waitForBytesWritten(100); // 100ms timeout
         return true;
     }
@@ -101,6 +102,16 @@ namespace Kub3::HAL::Com
     {
         if (!m_serialPort.isOpen())
             return;
+
+#if defined(BUILD_DEBUG)
+        // --- HIL SIMULATION BYPASS ---
+        // Virtual PTYs (/dev/pts/X) do not appear in QSerialPortInfo because they lack
+        // physical udev metadata. We assume they are strictly managed by the OS.
+        if (m_serialPort.portName().startsWith("pts/") || m_serialPort.portName().startsWith("ttyS"))
+        {
+            return;
+        }
+#endif
 
         bool found = false;
 

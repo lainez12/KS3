@@ -7,7 +7,8 @@
 
 HomeView::HomeView(Unique<HomeViewModel> viewModel, QWidget *parent) :
     ViewBase(std::move(viewModel), parent),
-    ui(new Ui::HomeView) {
+    ui(new Ui::HomeView)
+{
     ui->setupUi(this);
 
     createNavButtonsConfigs();
@@ -25,18 +26,21 @@ HomeView::HomeView(Unique<HomeViewModel> viewModel, QWidget *parent) :
     this->updateMachineLogo(this->height());
 }
 
-HomeView::~HomeView() {
+HomeView::~HomeView()
+{
     delete ui;
 }
 
-void HomeView::resizeEvent(QResizeEvent *ev) {
+void HomeView::resizeEvent(QResizeEvent *ev)
+{
     QWidget::resizeEvent(ev);
 
     this->updateMachineLogo(this->height());
     ui->buttonsLayout->setSpacing(this->width() * 0.07); // 7% of window width
 }
 
-void HomeView::updateMachineLogo(int h) {
+void HomeView::updateMachineLogo(int h)
+{
     if (h <= 0)
         return;
 
@@ -52,7 +56,8 @@ void HomeView::updateMachineLogo(int h) {
     ui->machineName->setText(templateStr.arg(baseFontSize).arg(substrateSizeFontSize).arg(KUB_MODEL_STR));
 }
 
-void HomeView::createNavButtonsConfigs() {
+void HomeView::createNavButtonsConfigs()
+{
     NavButtonConfig settingsBtn(
         "settings",
         QColor("#0072BA"),
@@ -71,14 +76,17 @@ void HomeView::createNavButtonsConfigs() {
         std::bind(&HomeView::onOpenButtonClicked, this, std::placeholders::_1));
     addNavButton("right", openBtn);
 }
-void HomeView::configTitleBar() {
-    m_titleBar = TitleBarConfig();
+void HomeView::configTitleBar()
+{
+    setTitleBar(TitleBarConfig{});
 }
 
-void HomeView::onSettingsButtonClicked(const QString &buttonId) {
+void HomeView::onSettingsButtonClicked(const QString &buttonId)
+{
     emit s_openView(Kub3::UI::ViewId::SETTINGS_VIEW);
 }
-void HomeView::onOpenButtonClicked(const QString &buttonId) {
+void HomeView::onOpenButtonClicked(const QString &buttonId)
+{
     setNavButtonEnabled(ID_BTN_SETTINGS, false);
     removeNavButton(ID_BTN_OPEN);
     NavButtonConfig closeBtn(
@@ -91,7 +99,8 @@ void HomeView::onOpenButtonClicked(const QString &buttonId) {
     addNavButton("right", closeBtn);
 }
 
-void HomeView::onCloseButtonCliked(const QString &buttonId) {
+void HomeView::onCloseButtonCliked(const QString &buttonId)
+{
     setNavButtonEnabled(ID_BTN_SETTINGS, true);
     m_buttonManager.removeButton(ID_BTN_CLOSE);
     NavButtonConfig openBtn(
@@ -104,10 +113,12 @@ void HomeView::onCloseButtonCliked(const QString &buttonId) {
     addNavButton("right", openBtn);
 }
 
-void HomeView::onFloodExposureClicked() {
+void HomeView::onFloodExposureClicked()
+{
     emit s_openView(Kub3::UI::ViewId::EXPOSURE_SETTINGS_VIEW);
 }
 
-void HomeView::onMaskAlignmentClicked() {
+void HomeView::onMaskAlignmentClicked()
+{
     emit s_openView(Kub3::UI::ViewId::ALIGNMENT_DISTANCE_VIEW);
 }

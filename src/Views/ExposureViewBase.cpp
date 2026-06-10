@@ -4,15 +4,16 @@
 #define ID_BTN_VALIDATE "V"
 #define ID_BTN_HOME     "H"
 
-namespace Kub3::UI::Views {
+namespace Kub3::UI::Views
+{
 
-    ExposureViewBase::ExposureViewBase(
-        Unique<ViewModels::IViewModel> viewModel,
-        QWidget *parent) :
-        ViewBase(std::move(viewModel), parent) {
+    ExposureViewBase::ExposureViewBase(Unique<ViewModels::BaseViewModel> viewModel, QWidget *parent) :
+        ViewBase(std::move(viewModel), parent)
+    {
     }
 
-    void ExposureViewBase::createNavButtonsConfigs() {
+    void ExposureViewBase::createNavButtonsConfigs()
+    {
         NavButtonConfig homeBtn(
             "Home",
             ":/icons/home.svg",
@@ -32,22 +33,26 @@ namespace Kub3::UI::Views {
         setNavButtonEnabled(ID_BTN_VALIDATE, false);
     }
 
-    void ExposureViewBase::configTitleBar() {
+    void ExposureViewBase::configTitleBar()
+    {
         // setDefaultTitleBar("");
     }
 
-    void ExposureViewBase::setDefaultTitleBar(const QString &viewTitle) {
-        m_titleBar = TitleBarConfig(
-            viewTitle,
-            QColor("#FFF"),
-            QColor(PURPLE_COLOR),
-            ":/icons/flood_icon.svg",
-            "Flood Exposure",
-            true,
-            true);
+    void ExposureViewBase::setDefaultTitleBar(const QString &viewTitle)
+    {
+        setTitleBar(TitleBarConfig{
+            .viewTitle      = viewTitle,
+            .textColor      = QColor("#FFF"),
+            .bgColor        = QColor(PURPLE_COLOR),
+            .iconPath       = ":/icons/flood_icon.svg",
+            .sectionTitle   = "Flood Exposure",
+            .showTitleBar   = true,
+            .m_showLeftLogo = true,
+        });
     }
 
-    void ExposureViewBase::onHomeButtonClicked(const QString &buttonId) {
+    void ExposureViewBase::onHomeButtonClicked(const QString &buttonId)
+    {
         emit s_openView(Kub3::UI::ViewId::HOME_VIEW);
     }
 

@@ -2,15 +2,15 @@
 
 #include <Views/ViewBase.h>
 
-namespace Kub3::UI::Views {
+namespace Kub3::UI::Views
+{
 
-    class SettingsViewBase : public ViewBase {
+    class SettingsViewBase : public ViewBase
+    {
         Q_OBJECT
 
     public:
-        explicit SettingsViewBase(
-            Unique<ViewModels::IViewModel> viewModel,
-            QWidget *parent = nullptr);
+        explicit SettingsViewBase(Unique<ViewModels::BaseViewModel> viewModel, QWidget *parent = nullptr);
 
         virtual ~SettingsViewBase() = default;
 

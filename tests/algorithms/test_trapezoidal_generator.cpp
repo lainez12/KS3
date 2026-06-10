@@ -27,9 +27,9 @@ TEST_CASE("TrapezoidalGenerator Physics Integration", "[kinematics][math]")
 
         // Simulate exactly 1 second of acceleration in 50Hz (20ms) ticks
         for (int i = 0; i < 50; ++i)
-            generator.calculateNext(0.02);
+            generator.computeNext(0.02);
 
-        kinematic_state_t state = generator.calculateNext(0.0); // Peek state
+        kinematic_state_t state = generator.computeNext(0.0); // Peek state
 
         REQUIRE_THAT(state.velocity, WithinAbs(10.0, 0.001));
         REQUIRE_THAT(state.position, WithinAbs(5.0, 0.001)); // Proves integration is correct
@@ -47,7 +47,7 @@ TEST_CASE("TrapezoidalGenerator Physics Integration", "[kinematics][math]")
         // std::cerr << "finished: " << state.isFinished << " ticks:" << ticks << std::endl;
         while (!state.isFinished && ticks++ < 1000)
         {
-            state = generator.calculateNext(0.02);
+            state = generator.computeNext(0.02);
             // std::cerr << "Position update: " << state.position << "mm | Speed: " << state.velocity << "mm/s" << std::endl;
         }
 
@@ -63,11 +63,11 @@ TEST_CASE("TrapezoidalGenerator Physics Integration", "[kinematics][math]")
 
         generator.startVelocityMove(initialPos, targetPos, velocity, acceleration); // Infinite move
         for (int i = 0; i < 100; ++i)
-            generator.calculateNext(0.02); // Cruise
+            generator.computeNext(0.02); // Cruise
         generator.commandSmoothStop();
 
         while (!state.isFinished)
-            state = generator.calculateNext(0.02);
+            state = generator.computeNext(0.02);
 
         REQUIRE(state.isFinished == true);
         REQUIRE_THAT(state.velocity, WithinAbs(0.0, 0.001));
@@ -87,7 +87,7 @@ TEST_CASE("TrapezoidalGenerator Physics Integration", "[kinematics][math]")
 
         // Tick for 1.5 seconds. Velocity should reach and settle 100.0mm/s
         for (int i = 0; i < 75; ++i)
-            generator.calculateNext(0.02);
+            generator.computeNext(0.02);
 
         state = generator.getCurrentState();
         REQUIRE_THAT(state.velocity, WithinAbs(100.0, 0.001));
@@ -97,7 +97,7 @@ TEST_CASE("TrapezoidalGenerator Physics Integration", "[kinematics][math]")
 
         // Tick for 2 seconds. It should decelerate at 50mm/s^2 and settle at 20.0mm/s
         for (int i = 0; i < 100; ++i)
-            generator.calculateNext(0.02);
+            generator.computeNext(0.02);
 
         state = generator.getCurrentState();
         REQUIRE(state.isFinished == false);
@@ -107,14 +107,14 @@ TEST_CASE("TrapezoidalGenerator Physics Integration", "[kinematics][math]")
     SECTION("On-the-fly Target Extension (Position Mode)")
     {
         kinematic_state_t state = {.isFinished = false};
-        double initialPos = 0.0, targetPos = 50.0, velocity = 20.0, acceleration = 100.0;
+        double initialPos = 0.0, targetPos = 50.0, precision = 0.01, velocity = 20.0, acceleration = 100.0;
 
         // Start a move to 50mm
-        generator.startPositionMove(initialPos, targetPos, velocity, acceleration);
+        generator.startPositionMove(initialPos, targetPos, velocity, acceleration, precision);
 
         // Tick exactly halfway (Pos ~25mm)
         for (int i = 0; i < 60; ++i)
-            generator.calculateNext(0.02);
+            generator.computeNext(0.02);
 
         state = generator.getCurrentState();
         REQUIRE(state.position > 20.0);
@@ -123,13 +123,13 @@ TEST_CASE("TrapezoidalGenerator Physics Integration", "[kinematics][math]")
 
         // INJECT NEW PROFILE: Extend target to 100mm, keep cruising
         targetPos = 100.0;
-        generator.updatePositionMove(targetPos, velocity, acceleration);
+        generator.updatePositionMove(targetPos, velocity, acceleration, precision);
 
         // Tick until finished
         int ticks = 0;
         while (!state.isFinished && ticks++ < 1000)
         {
-            state = generator.calculateNext(0.02);
+            state = generator.computeNext(0.02);
         }
 
         // Proves it seamlessly continued to the new target
@@ -140,7 +140,7 @@ TEST_CASE("TrapezoidalGenerator Physics Integration", "[kinematics][math]")
     SECTION("On-the-fly Target Extension (Position Mode + Direction Switch)")
     {
         kinematic_state_t state = {.isFinished = false};
-        double initialPos = 0.0, targetPos = 50.0, velocity = 20.0, acceleration = 100.0;
+        double initialPos = 0.0, precision = 0.01, targetPos = 50.0, velocity = 20.0, acceleration = 100.0;
 
         // Start a move to 50mm
         generator.startPositionMove(initialPos, targetPos, velocity, acceleration);
@@ -148,7 +148,7 @@ TEST_CASE("TrapezoidalGenerator Physics Integration", "[kinematics][math]")
         // Tick exactly halfway (Pos ~25mm)
         for (int i = 0; i < 60; ++i)
         {
-            state = generator.calculateNext(0.02);
+            state = generator.computeNext(0.02);
         }
 
         state = generator.getCurrentState();
@@ -158,13 +158,13 @@ TEST_CASE("TrapezoidalGenerator Physics Integration", "[kinematics][math]")
 
         // INJECT NEW PROFILE: Set target to -10mm
         targetPos = -10.0;
-        generator.updatePositionMove(targetPos, velocity, acceleration);
+        generator.updatePositionMove(targetPos, velocity, acceleration, precision);
 
         // Tick until finished
         int ticks = 0;
         while (!state.isFinished && ticks++ < 1000)
         {
-            state = generator.calculateNext(0.02);
+            state = generator.computeNext(0.02);
         }
 
         // Proves it seamlessly continued to the new target
@@ -175,22 +175,23 @@ TEST_CASE("TrapezoidalGenerator Physics Integration", "[kinematics][math]")
     SECTION("Mode Switching (Velocity -> Position on the fly)")
     {
         kinematic_state_t state = {.isFinished = false};
+        double initialPos = 0.0, targetPos = 100.0, directionSign = 1.0, precision = 0.01, velocity = 50.0, acceleration = 100.0;
 
-        generator.startVelocityMove(0.0, 1.0, 50.0, 50.0);
+        generator.startVelocityMove(initialPos, directionSign, velocity, acceleration);
 
         for (int i = 0; i < 50; ++i)
         {
-            state = generator.calculateNext(0.02); // Let it cruise
+            state = generator.computeNext(0.02); // Let it cruise
         }
 
         REQUIRE_THAT(generator.getCurrentState().velocity, WithinAbs(50.0, 0.001));
 
-        generator.updatePositionMove(100.0, 50.0, 50.0);
+        generator.updatePositionMove(targetPos, velocity, acceleration, precision);
 
         int ticks = 0;
         while (!state.isFinished && ticks++ < 1000)
         {
-            state = generator.calculateNext(0.02);
+            state = generator.computeNext(0.02);
         }
 
         // Proves the math engine successfully switched from infinite cruise to a targeted stop

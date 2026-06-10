@@ -1,10 +1,15 @@
 #pragma once
 
 #include <QFrame>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QPixmap>
 #include <QWidget>
+
 #include <Views/ViewBase.h>
 
-class UpBar : public QFrame {
+class UpBar : public QFrame
+{
     Q_OBJECT
 public:
     explicit UpBar(QWidget *parent);

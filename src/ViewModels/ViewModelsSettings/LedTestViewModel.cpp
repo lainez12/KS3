@@ -1,17 +1,14 @@
 #include <ViewModels/ViewModelsSettings/LedTestViewModel.h>
 
-namespace Kub3::UI::ViewModels::ViewModelsSettings {
+namespace Kub3::UI::ViewModels::ViewModelsSettings
+{
     LedTestViewModel::LedTestViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent) :
         QObject(parent),
-        m_repo(repo) {
+        m_repo(repo)
+    {
     }
-    LedTestViewModel::~LedTestViewModel() {
-    }
-
-    void LedTestViewModel::loadConnections(void) {
-    }
-
-    void LedTestViewModel::unloadConnections(void) {
+    LedTestViewModel::~LedTestViewModel()
+    {
     }
 
 } // namespace Kub3::UI::ViewModels::ViewModelsSettings

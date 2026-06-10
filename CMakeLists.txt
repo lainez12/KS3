@@ -19,8 +19,18 @@ configure_file(
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_COMPILE_WARNING_AS_ERROR ON)
 
-set(CMAKE_AUTOUIC_SEARCH_PATHS "gui;gui/Views;gui/Components;gui/Views/ViewsSettings;gui/Views/ViewsExposure;gui/Views/ViewsAlignment;tools/configurator/gui")
+set(CMAKE_AUTOUIC_SEARCH_PATHS
+    # Main app
+    "gui;gui/Components"
+    # --- Views
+    "gui/Views;gui/Views/ViewsSettings;gui/Views/ViewsExposure;gui/Views/ViewsAlignment"
+    # Configurator tool
+    "tools/configurator/gui"
+    # Motor tester tool
+    "tools/tester/gui"
+)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -41,18 +51,31 @@ endif()
 # 4. PROJECT'S CORE LIBRARY
 # ==============================================================================
 qt_add_library(Kub3Core STATIC
+    # ===============
     # Sources
+    # ===============
+
     ## Utils & miscellaneous
     src/utils.cpp
     src/Config/ConfigLoader.cpp
+    src/Config/ConfigSaver.cpp
+
+    ## Views / View Models Boilerplate
+    src/ViewModels/BaseViewModel.cpp
+
     ## Master FSM
-    src/MFSM/MasterFSM.cpp
+    src/MFSM/MasterFSM.actions.cpp
+    src/MFSM/MasterFSM.core.cpp
+    src/MFSM/MasterFSM.heartbeat.cpp
+    src/MFSM/MasterFSM.transitions.macro.cpp
+    src/MFSM/MasterFSM.transitions.operational.cpp
+    src/MFSM/interlocks.cpp
+
     ## Services
+    # --- Generic tasks
     src/Services/tasks/ReachLimitTask.cpp
-    src/Services/Drawers/DualConveyorDrawerService.cpp
-    src/Services/Drawers/SingleConveyorDrawerService.cpp
-    src/Services/Drawers/tasks/MaskEjectionTask.cpp
-    src/Services/Drawers/tasks/WaferEjectionTask.cpp
+    src/Services/tasks/ToggleValveTask.cpp
+    # --- Homing service and tasks
     src/Services/Homing/HomingService.cpp
     src/Services/Homing/tasks/ZMotorsReachLimitTask.cpp
     src/Services/Homing/tasks/Homing/AlignmentStagesHomingTask.cpp
@@ -63,10 +86,29 @@ qt_add_library(Kub3Core STATIC
     src/Services/Homing/tasks/Homing/ZMotorsHomingTask.cpp
     src/Services/Homing/tasks/Initialization/AlignmentStagesInitTask.cpp
     src/Services/Homing/tasks/Initialization/CamerasInitTask.cpp
-    src/Services/Homing/tasks/Initialization/DeckInitTask.cpp
     src/Services/Homing/tasks/Initialization/MaskConveyorInitTask.cpp
     src/Services/Homing/tasks/Initialization/WaferConveyorInitTask.cpp
     src/Services/Homing/tasks/Initialization/ZMotorsInitTask.cpp
+    # --- Drawers service and tasks
+    src/Services/Drawers/DualConveyorDrawerService.cpp
+    src/Services/Drawers/SingleConveyorDrawerService.cpp
+    src/Services/Drawers/tasks/MaskEjectionTask.cpp
+    src/Services/Drawers/tasks/WaferEjectionTask.cpp
+    # --- Stowage service & tasks
+    src/Services/Stowage/StowageService.cpp
+    src/Services/Stowage/tasks/StowageMoveZToLimitTask.cpp
+    # --- Alignment service & tasks
+    src/Services/Alignment/AlignmentService.cpp
+    # --- Vision service & tasks
+    src/Services/Vision/VisionService.cpp
+    # --- Contact service & tasks
+    src/Services/Contact/ContactService.cpp
+    src/Services/Contact/tasks/AdmittanceControlTask.cpp
+    src/Services/Contact/tasks/FastApproachTask.cpp
+    src/Services/Contact/tasks/SaveCurrentPlanTask.cpp
+    # --- Exposure service & tasks
+    src/Services/Exposure/ExposureService.cpp
+
     ## HAL
     src/HAL/HardwareManager.cpp
     src/HAL/MachineStatus/MachineStatusRepo.cpp
@@ -76,36 +118,56 @@ qt_add_library(Kub3Core STATIC
     src/HAL/Com/MockCommunicator.cpp
     src/HAL/Com/LengthBasedParser.cpp
     src/HAL/Com/PacketRouter.cpp
+    src/HAL/Vision/HikrobotCamera/HikrobotCamera.cpp
     src/HAL/Actuators/Lights/UVExposureHead.cpp
     src/HAL/Actuators/Motors/StepperMotor.cpp
     src/HAL/Actuators/Motors/DirectCurrentMotor.cpp
     src/HAL/Actuators/Valves/SolenoidValve.cpp
+    src/HAL/Actuators/Focal/Focal.cpp
     ## Algorithms
     src/Algorithms/Kinematic/utils.cpp
     src/Algorithms/Kinematic/TrapezoidalGenerator.cpp
+    src/Algorithms/Admittance/AdmittanceController.cpp
+    src/Algorithms/Filters/TimeAwareEMAFilter.cpp
 
+
+    # ===============
     # Headers
-    ## Utils & miscellaneous
+    # ===============
+
+    ## Utils, Config & miscellaneous
     include/utils.h
+    include/Common/Enums.h
     include/Config/ConfigLoader.h
+    include/Config/ConfigSaver.h
     include/Config/kinematics.h
-    include/Config/machine_config.h
+    include/Config/conf.h
+    include/Config/hardware.h
+    include/Config/process.h
+    include/Config/admin.h
+    include/Config/helper.h
+    include/Config/keys/hardware.h
+    include/Config/keys/process.h
+
+    ## Views / View Models Boilerplate
+    include/ViewModels/BaseViewModel.h
+
     ## Master FSM
-    include/MFSM/MasterFSM.h
     include/MFSM/events.h
-    include/MFSM/states.h
+    include/MFSM/interlocks.h
+    include/MFSM/MasterFSM.h
+    include/MFSM/posture.h
+    include/MFSM/states.macro.h
+    include/MFSM/states.operational.h
+
     ## Services
     include/Services/ITask.h
     include/Services/IService.h
     include/Services/BaseTaskService.h
+    # --- Generic tasks
     include/Services/tasks/ReachLimitTask.h
-    include/Services/Drawers/IDrawerService.h
-    include/Services/Drawers/DualConveyorDrawerService.h
-    include/Services/Drawers/SingleConveyorDrawerService.h
-    include/Services/Drawers/tasks/MaskInsertionTask.h
-    include/Services/Drawers/tasks/MaskEjectionTask.h
-    include/Services/Drawers/tasks/WaferInsertionTask.h
-    include/Services/Drawers/tasks/WaferEjectionTask.h
+    include/Services/tasks/ToggleValveTask.h
+    # --- Homing service and tasks
     include/Services/Homing/IHomingService.h
     include/Services/Homing/HomingService.h
     include/Services/Homing/tasks/ZMotorsReachLimitTask.h
@@ -121,12 +183,43 @@ qt_add_library(Kub3Core STATIC
     include/Services/Homing/tasks/Initialization/MaskConveyorInitTask.h
     include/Services/Homing/tasks/Initialization/WaferConveyorInitTask.h
     include/Services/Homing/tasks/Initialization/ZMotorsInitTask.h
+    # --- Drawers service and tasks
+    include/Services/Drawers/IDrawerService.h
+    include/Services/Drawers/DualConveyorDrawerService.h
+    include/Services/Drawers/SingleConveyorDrawerService.h
+    include/Services/Drawers/tasks/MaskInsertionTask.h
+    include/Services/Drawers/tasks/MaskEjectionTask.h
+    include/Services/Drawers/tasks/WaferInsertionTask.h
+    include/Services/Drawers/tasks/WaferEjectionTask.h
+    # --- Stowage service & tasks
+    include/Services/Stowage/IStowageService.h
+    include/Services/Stowage/StowageService.h
+    include/Services/Stowage/tasks/StowageCenterStagesTask.h
+    include/Services/Stowage/tasks/StowageMoveZToLimitTask.h
+    # --- Alignment service & tasks
+    include/Services/Alignment/IAlignmentService.h
+    include/Services/Alignment/AlignmentService.h
+    # --- Vision service & tasks
+    include/Services/Vision/IVisionService.h
+    include/Services/Vision/VisionService.h
+    # --- Contact service & tasks
+    include/Services/Contact/IContactService.h
+    include/Services/Contact/ContactService.h
+    include/Services/Contact/tasks/AdmittanceControlTask.h
+    include/Services/Contact/tasks/FastApproachTask.h
+    include/Services/Contact/tasks/SaveCurrentPlanTask.h
+    # --- Exposure service & tasks
+    include/Services/Exposure/ExposureService.h
+    include/Services/Exposure/IExposureService.h
+
     ## HAL
     include/HAL/HardwareManager.h
     include/HAL/MachineStatus/IMachineStatusRepo.h
     include/HAL/MachineStatus/MachineStatusRepo.h
     include/HAL/MachineStatus/utils.h
+    include/HAL/MachineStatus/actuators_labels.h
     include/HAL/MachineStatus/sensors_labels.h
+    include/HAL/MachineStatus/virtual_labels.h
     include/HAL/MCUDriver.h
     include/HAL/Com/ICommunicator.h
     include/HAL/Com/SerialCommunicator.h
@@ -136,6 +229,9 @@ qt_add_library(Kub3Core STATIC
     include/HAL/Com/PacketRouter.h
     include/HAL/Sensors/ISensor.h
     include/HAL/Sensors/Sensor.h
+    include/HAL/Vision/ICamera.h
+    include/HAL/Vision/identifiers.h
+    include/HAL/Vision/Hikrobot/HikrobotCamera.h
     include/HAL/Actuators/ActuatorRegistry.h
     include/HAL/Actuators/IActuator.h
     include/HAL/Actuators/Lights/IExposureSystem.h
@@ -145,10 +241,15 @@ qt_add_library(Kub3Core STATIC
     include/HAL/Actuators/Motors/DirectCurrentMotor.h
     include/HAL/Actuators/Valves/IValve.h
     include/HAL/Actuators/Valves/SolenoidValve.h
+    include/HAL/Actuators/Focal/IFocal.h
+    include/HAL/Actuators/Focal/Focal.h
+
     ## Algorithms
     include/Algorithms/Kinematic/utils.h
     include/Algorithms/Kinematic/IKinematicGenerator.h
     include/Algorithms/Kinematic/TrapezoidalGenerator.h
+    include/Algorithms/Admittance/AdmittanceController.h
+    include/Algorithms/Filters/TimeAwareEMAFilter.h
 )
 
 # PUBLIC: Everything that links to Kub3Core automatically gets these headers and macros
@@ -162,6 +263,8 @@ target_link_libraries(Kub3Core PUBLIC
     Qt6::Core
     Qt6::SerialPort
     Qt6::Svg
+    Qt6::Gui
+    Qt6::Widgets
 )
 
 if(MVS_LIBRARY)
@@ -175,8 +278,20 @@ target_compile_definitions(Kub3Core PUBLIC KUB_MODEL_${KUB_MODEL} KUB_MODEL_STR=
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     target_compile_definitions(Kub3Core PUBLIC BUILD_DEBUG)
+    target_compile_definitions(Kub3Core PUBLIC
+        KUB3_HARDWARE_CONFIG_PATH="${CMAKE_SOURCE_DIR}/tests/hardware.ini"
+        KUB3_PROCESS_CONFIG_PATH="${CMAKE_SOURCE_DIR}/tests/process.ini"
+        KUB3_ADMIN_CONFIG_PATH="${CMAKE_SOURCE_DIR}/tests/admin.ini"
+        KUB3_ADMIN_VAULT_PATH="${CMAKE_SOURCE_DIR}/tests/admin_vault.bin"
+    )
 else()
     target_compile_definitions(Kub3Core PUBLIC BUILD_RELEASE)
+    target_compile_definitions(Kub3Core PUBLIC
+        KUB3_HARDWARE_CONFIG_PATH="/etc/kub3/hardware.ini"
+        KUB3_PROCESS_CONFIG_PATH="/etc/kub3/process.ini"
+        KUB3_ADMIN_CONFIG_PATH="/etc/kub3/admin.ini"
+        KUB3_ADMIN_VAULT_PATH="/etc/kub3/admin_vault.bin"
+    )
 endif()
 
 # ==============================================================================
@@ -189,7 +304,6 @@ qt_add_executable(Kub3Software
     src/Logger.h
     src/ApplicationBuilder.cpp
     src/ViewModels/HomeViewModel.cpp
-    src/ViewModels/DebugViewModel.cpp
     src/ViewModels/SettingsViewModel.cpp
     src/ViewModels/ViewModelsExposure/ExposureSettingsViewModel.cpp
     src/ViewModels/ViewModelsExposure/FavoriteExposureSettingsViewModel.cpp
@@ -220,7 +334,6 @@ qt_add_executable(Kub3Software
     src/Views/AlignmentViewBase.cpp
     src/Views/SettingsViewBase.cpp
     src/Views/ExposureViewBase.cpp
-    src/Views/DebugView.cpp
     src/Views/HomeView.cpp
     src/Views/HomeEightView.cpp
     src/Views/SettingsView.cpp
@@ -238,14 +351,17 @@ qt_add_executable(Kub3Software
     src/Views/Components/FavoriteExposureSettingButton.cpp
     src//Views/Components/MessageOverlay.cpp
     src/Views/Components/NavButtonManager.cpp
+    src/ViewModels/BaseVisionViewModel.cpp
+    src/Views/Modules/CamerasTestView.cpp
+    src/Views/Components/CameraStreamWidget.cpp
     src/Views/Components/NavButton.cpp
     src/Views/Components/UpBar.cpp
     src/Views/Components/ActionBox.cpp
     src/Views/Components/BottomCroppedCircle.cpp
+    src/Views/Components/DoubleRatioSlider.cpp
     # Headers
     include/ApplicationBuilder.h
     include/ViewModels/HomeViewModel.h
-    include/ViewModels/DebugViewModel.h
     include/ViewModels/SettingsViewModel.h
     include/ViewModels/ViewModelsExposure/ExposureSettingsViewModel.h
     include/ViewModels/ViewModelsExposure/FavoriteExposureSettingsViewModel.h
@@ -276,7 +392,6 @@ qt_add_executable(Kub3Software
     include/Views/AlignmentViewBase.h
     include/Views/SettingsViewBase.h
     include/Views/ExposureViewBase.h
-    include/Views/DebugView.h
     include/Views/HomeView.h
     include/Views/HomeEightView.h
     include/Views/SettingsView.h
@@ -294,14 +409,17 @@ qt_add_executable(Kub3Software
     include/Views/Components/FavoriteExposureSettingButton.h
     include/Views/Components/NavButtonManager.h
     include/Views/Components/MessageOverlay.h
+    include/ViewModels/BaseVisionViewModel.h
+    include/Views/Modules/CamerasTestView.h
+    include/Views/Components/CameraStreamWidget.h
     include/Views/Components/NavButton.h
     include/Views/Components/UpBar.h
     include/Views/Components/ActionBox.h
     include/Views/Components/BottomCroppedCircle.h
+    include/Views/Components/DoubleRatioSlider.h
     # UI
     gui/resources.qrc
     gui/MainWindow.ui
-    gui/Views/DebugView.ui
     gui/Views/ViewsExposure/ExposureSettingsView.ui
     gui/Views/ViewsExposure/FavoriteExposureSettingsView.ui
     gui/Views/ViewsExposure/RecapExposureSettingsView.ui
@@ -333,26 +451,10 @@ target_link_libraries(Kub3Software PRIVATE
 )
 
 # ==============================================================================
-# 6. CONFIGURATOR EXECUTABLE: Kub3Configurator
+# 6. STANDALONE TOOLS
 # ==============================================================================
-qt_add_executable(Kub3Configurator
-    MANUAL_FINALIZATION
-    # Sources
-    tools/configurator/src/main.cpp
-    tools/configurator/src/ConfigWindow.cpp
-    # Headers
-    tools/configurator/include/ConfigWindow.h
-    # UI
-    tools/configurator/gui/ConfigWindow.ui
-)
-
-qt_finalize_target(Kub3Configurator)
-
-target_link_libraries(Kub3Configurator PRIVATE
-    Kub3Core
-    Qt6::Gui
-    Qt6::Widgets
-)
+add_subdirectory(tools/configurator)
+add_subdirectory(tools/tester)
 
 # ==============================================================================
 # 7. TESTS
@@ -371,10 +473,8 @@ set_target_properties(Kub3Software PROPERTIES
     BUILD_WITH_INSTALL_RPATH FALSE
 )
 
-# Install the main executable into the "bin" directory of our output folder
+# Install the main executable into the "bin" dir of the output folder
 install(TARGETS Kub3Software    RUNTIME DESTINATION bin)
-# Install the configurator executable into the "bin" directory of our output folder
-install(TARGETS Kub3Configurator RUNTIME DESTINATION bin)
 
 # Explicitly deploy the MVS Camera libraries
 if(MVS_LIBRARY)

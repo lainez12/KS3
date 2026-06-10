@@ -2,15 +2,15 @@
 
 #include <Views/ViewBase.h>
 
-namespace Kub3::UI::Views {
+namespace Kub3::UI::Views
+{
 
-    class ExposureViewBase : public ViewBase {
+    class ExposureViewBase : public ViewBase
+    {
         Q_OBJECT
 
     public:
-        explicit ExposureViewBase(
-            Unique<ViewModels::IViewModel> viewModel,
-            QWidget *parent = nullptr);
+        explicit ExposureViewBase(Unique<ViewModels::BaseViewModel> viewModel, QWidget *parent = nullptr);
 
         virtual ~ExposureViewBase() = default;
 

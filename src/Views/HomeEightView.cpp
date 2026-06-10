@@ -7,7 +7,8 @@
 
 HomeEightView::HomeEightView(Unique<HomeViewModel> viewModel, QWidget *parent) :
     ViewBase(std::move(viewModel), parent),
-    ui(new Ui::HomeEightView) {
+    ui(new Ui::HomeEightView)
+{
     ui->setupUi(this);
 
     createNavButtonsConfigs();
@@ -19,17 +20,20 @@ HomeEightView::HomeEightView(Unique<HomeViewModel> viewModel, QWidget *parent) :
     connect(ui->mainSubmenuExposureBtn, &QPushButton::clicked, this, &HomeEightView::onFloodExposureClicked);
 }
 
-HomeEightView::~HomeEightView() {
+HomeEightView::~HomeEightView()
+{
     delete ui;
 }
 
-void HomeEightView::resizeEvent(QResizeEvent *ev) {
+void HomeEightView::resizeEvent(QResizeEvent *ev)
+{
     QWidget::resizeEvent(ev);
 
     this->updateMachineLogo(this->height());
 }
 
-void HomeEightView::updateMachineLogo(int h) {
+void HomeEightView::updateMachineLogo(int h)
+{
     if (h <= 0)
         return;
 
@@ -45,7 +49,8 @@ void HomeEightView::updateMachineLogo(int h) {
     ui->mainTitle->setText(templateStr.arg(baseFontSize).arg(substrateSizeFontSize).arg(KUB_MODEL_STR));
 }
 
-void HomeEightView::createNavButtonsConfigs() {
+void HomeEightView::createNavButtonsConfigs()
+{
     NavButtonConfig settingsBtn(
         "settings",
         QColor("#0072BA"),
@@ -64,14 +69,17 @@ void HomeEightView::createNavButtonsConfigs() {
         std::bind(&HomeEightView::onOpenButtonClicked, this, std::placeholders::_1));
     addNavButton("right", openBtn);
 }
-void HomeEightView::configTitleBar() {
-    m_titleBar = TitleBarConfig();
+void HomeEightView::configTitleBar()
+{
+    setTitleBar(TitleBarConfig{});
 }
 
-void HomeEightView::onSettingsButtonClicked(const QString &buttonId) {
+void HomeEightView::onSettingsButtonClicked(const QString &buttonId)
+{
     emit s_openView(Kub3::UI::ViewId::SETTINGS_VIEW);
 }
-void HomeEightView::onOpenButtonClicked(const QString &buttonId) {
+void HomeEightView::onOpenButtonClicked(const QString &buttonId)
+{
     setNavButtonEnabled(ID_BTN_SETTINGS, false);
     removeNavButton(ID_BTN_OPEN);
     NavButtonConfig closeBtn(
@@ -84,7 +92,8 @@ void HomeEightView::onOpenButtonClicked(const QString &buttonId) {
     addNavButton("right", closeBtn);
 }
 
-void HomeEightView::onCloseButtonCliked(const QString &buttonId) {
+void HomeEightView::onCloseButtonCliked(const QString &buttonId)
+{
     setNavButtonEnabled(ID_BTN_SETTINGS, true);
     m_buttonManager.removeButton(ID_BTN_CLOSE);
     NavButtonConfig openBtn(
@@ -97,10 +106,12 @@ void HomeEightView::onCloseButtonCliked(const QString &buttonId) {
     addNavButton("right", openBtn);
 }
 
-void HomeEightView::onFloodExposureClicked() {
+void HomeEightView::onFloodExposureClicked()
+{
     emit s_openView(Kub3::UI::ViewId::HOME_VIEW);
 }
 
-void HomeEightView::onMaskAlignmentClicked() {
+void HomeEightView::onMaskAlignmentClicked()
+{
     emit s_openView(Kub3::UI::ViewId::ALIGNMENT_DISTANCE_VIEW);
 }

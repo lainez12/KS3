@@ -2,15 +2,22 @@
 
 #include <ApplicationBuilder.h>
 
+#include <Config/helper.h>
 // Services
+#include <Services/Alignment/AlignmentService.h>
+#include <Services/Contact/ContactService.h>
+#include <Services/Exposure/ExposureService.h>
 #include <Services/Homing/HomingService.h>
+#include <Services/Stowage/StowageService.h>
+#include <Services/Vision/VisionService.h>
 #if defined(KUB_MODEL_4) || defined(KUB_MODEL_6)
 #include <Services/Drawers/SingleConveyorDrawerService.h>
 #elif defined(KUB_MODEL_8)
 #include <Services/Drawers/DualConveyorDrawerService.h>
 #endif
 
-namespace Kub3 {
+namespace Kub3
+{
 
 #if defined(KUB_MODEL_4) || defined(KUB_MODEL_6)
     using ConveyorDrawerService = Services::SingleConveyorDrawerService;
@@ -18,15 +25,30 @@ namespace Kub3 {
     using ConveyorDrawerService = Services::DualConveyorDrawerService;
 #endif
 
-    ApplicationBuilder &ApplicationBuilder::loadConfigurations(const std::string &hwPath, const std::string &processPath) {
+    ApplicationBuilder &ApplicationBuilder::loadConfigurations(const std::string &hwPath,
+                                                               const std::string &processPath,
+                                                               const std::string &adminPath)
+    {
         qInfo() << "Loading Configurations...";
         m_hwConfig      = Config::ConfigLoader::loadHardwareConfig(hwPath);
         m_processConfig = Config::ConfigLoader::loadProcessConfig(processPath);
+        m_adminConfig   = Config::ConfigLoader::loadAdminConfig(adminPath);
+
+#if defined(BUILD_RELEASE)
+        if (!m_adminConfig.kloe_mode)
+        {
+            QApplication::setOverrideCursor(Qt::BlankCursor);
+        }
+#endif
+
+        qInfo() << m_hwConfig;
+        qInfo() << m_processConfig;
 
         return *this;
     }
 
-    ApplicationBuilder &ApplicationBuilder::buildHardwareTier(void) {
+    ApplicationBuilder &ApplicationBuilder::buildHardwareTier(void)
+    {
         qInfo() << "Building Tier 3 (Hardware)...";
         m_repo = std::make_shared<HAL::MS::MachineStatusRepo>();
 
@@ -36,23 +58,32 @@ namespace Kub3 {
         return *this;
     }
 
-    ApplicationBuilder &ApplicationBuilder::buildLogicTier(void) {
+    ApplicationBuilder &ApplicationBuilder::buildLogicTier(void)
+    {
         qInfo() << "Building Tier 2 (Logic)...";
 
-        m_drawerService = std::make_shared<ConveyorDrawerService>(
-            m_hwManager->getActuatorRegistry(),
-            m_repo,
-            m_processConfig);
+        auto actReg = m_hwManager->getActuatorRegistry();
 
-        m_homingService = std::make_shared<Services::HomingService>(
-            m_hwManager->getActuatorRegistry(),
-            m_repo,
-            m_processConfig);
+        m_homingService    = std::make_shared<Services::HomingService>(actReg, m_repo, m_processConfig);
+        m_drawerService    = std::make_shared<ConveyorDrawerService>(actReg, m_repo, m_processConfig);
+        m_stowageService   = std::make_shared<Services::StowageService>(actReg, m_repo, m_processConfig);
+        m_alignmentService = std::make_shared<Services::AlignmentService>(actReg, m_repo, m_processConfig);
+        m_visionService    = std::make_shared<Services::VisionService>(actReg, m_repo, m_processConfig);
+        m_contactService   = std::make_shared<Services::ContactService>(actReg, m_repo, m_processConfig, m_hwConfig);
+        m_exposureService  = std::make_shared<Services::ExposureService>(actReg);
 
         // Standard Qt Worker Object instantiation
         // Parented to qApp to ensure no memory leaks if run() is bypassed
         m_logicThread = new QThread(qApp);
-        m_masterFSM   = new MFSM::MasterFSM(m_repo, m_homingService, m_drawerService);
+        m_masterFSM   = new MFSM::MasterFSM(
+            m_repo,
+            m_homingService,
+            m_drawerService,
+            m_stowageService,
+            m_alignmentService,
+            m_visionService,
+            m_contactService,
+            m_exposureService);
 
         // Move the FSM to the logic thread
         m_masterFSM->moveToThread(m_logicThread);
@@ -60,12 +91,15 @@ namespace Kub3 {
         return *this;
     }
 
-    ApplicationBuilder &ApplicationBuilder::buildUserInterfaceTier(void) {
+    ApplicationBuilder &ApplicationBuilder::buildUserInterfaceTier(void)
+    {
         qInfo() << "Building Tier 1 (UI)...";
 
         m_mainWindow = std::make_unique<MainWindow>();
 
+        // Building MachineStatusView
         {
+            // View models creation
             auto machineStatusViewModel            = std::make_unique<UI::ViewModels::MachineStatusViewModel>(m_repo);
             auto homeViewModel                     = std::make_unique<UI::ViewModels::HomeViewModel>(m_repo);
             auto settingsViewModel                 = std::make_unique<UI::ViewModels::SettingsViewModel>(m_repo);
@@ -85,26 +119,30 @@ namespace Kub3 {
             auto visualisationViewModel            = std::make_unique<UI::ViewModels::ViewModelsAlignment::VisualisationViewModel>(m_repo);
             auto loadParametersViewModel           = std::make_unique<UI::ViewModels::ViewModelsAlignment::LoadParametersViewModel>(m_repo);
             auto saveParametersViewModel           = std::make_unique<UI::ViewModels::ViewModelsAlignment::SaveParametersViewModel>(m_repo);
-            auto *settingsView                     = new SettingsView(std::move(settingsViewModel), m_mainWindow.get());
-            auto *exposureSettingsView             = new ExposureSettingsView(std::move(exposureSettingsViewModel), m_mainWindow.get());
-            auto *favoriteExposureSettingsView     = new FavoriteExposureSettingsView(std::move(favoriteExposureSettingsViewModel), m_mainWindow.get());
-            auto *recapExposureSettingsView        = new RecapExposureSettingsView(std::move(recapExposureSettingsViewModel), m_mainWindow.get());
-            auto *progressExposureView             = new ProgressExposureView(std::move(progressExposureViewModel), m_mainWindow.get());
-            auto *completeExposureView             = new CompleteExposureView(std::move(completeExposureViewModel), m_mainWindow.get());
-            auto *versionView                      = new VersionView(std::move(versionViewModel), m_mainWindow.get());
-            auto *temperatureView                  = new TemperatureView(std::move(temperatureViewModel), m_mainWindow.get());
-            auto *operatingTimeView                = new OperatingTimesView(std::move(operatingTimeViewModel), m_mainWindow.get());
-            auto *screenshotView                   = new ScreenshotExportView(std::move(screenshotViewModel), m_mainWindow.get());
-            auto *ledTestView                      = new LedTestView(std::move(ledTestViewModel), m_mainWindow.get());
-            auto *machineStatusView                = new MachineStatusView(std::move(machineStatusViewModel), m_mainWindow.get());
-            auto *saveExposureSettingsView         = new SaveExposureSettingsView(std::move(saveExposureSettingsViewModel), m_mainWindow.get());
-            auto *updateSoftwareView               = new UpdateSoftwareView(std::move(updateSoftwareViewModel), m_mainWindow.get());
-            auto *distanceView                     = new DistanceView(std::move(distanceViewModel), m_mainWindow.get());
-            auto *visualisationView                = new VisualisationView(std::move(visualisationViewModel), m_mainWindow.get());
-            auto *loadParametersView               = new LoadParametersView(std::move(loadParametersViewModel), m_mainWindow.get());
-            auto *saveParametersView               = new SaveParametersView(std::move(saveParametersViewModel), m_mainWindow.get());
-            auto *homeView                         = new HomeView(std::move(homeViewModel), m_mainWindow.get());
-            auto *homeEightView                    = new HomeEightView(std::make_unique<UI::ViewModels::HomeViewModel>(m_repo), m_mainWindow.get());
+            m_machineStatusVM                      = std::make_shared<UI::ViewModels::MachineStatusViewModel>(m_repo);
+
+            // Views creation
+            auto *settingsView                 = new SettingsView(std::move(settingsViewModel), m_mainWindow.get());
+            auto *exposureSettingsView         = new ExposureSettingsView(std::move(exposureSettingsViewModel), m_mainWindow.get());
+            auto *favoriteExposureSettingsView = new FavoriteExposureSettingsView(std::move(favoriteExposureSettingsViewModel), m_mainWindow.get());
+            auto *recapExposureSettingsView    = new RecapExposureSettingsView(std::move(recapExposureSettingsViewModel), m_mainWindow.get());
+            auto *progressExposureView         = new ProgressExposureView(std::move(progressExposureViewModel), m_mainWindow.get());
+            auto *completeExposureView         = new CompleteExposureView(std::move(completeExposureViewModel), m_mainWindow.get());
+            auto *versionView                  = new VersionView(std::move(versionViewModel), m_mainWindow.get());
+            auto *temperatureView              = new TemperatureView(std::move(temperatureViewModel), m_mainWindow.get());
+            auto *operatingTimeView            = new OperatingTimesView(std::move(operatingTimeViewModel), m_mainWindow.get());
+            auto *screenshotView               = new ScreenshotExportView(std::move(screenshotViewModel), m_mainWindow.get());
+            auto *ledTestView                  = new LedTestView(std::move(ledTestViewModel), m_mainWindow.get());
+            auto *machineStatusView            = new MachineStatusView(std::move(machineStatusViewModel), m_mainWindow.get());
+            auto *saveExposureSettingsView     = new SaveExposureSettingsView(std::move(saveExposureSettingsViewModel), m_mainWindow.get());
+            auto *updateSoftwareView           = new UpdateSoftwareView(std::move(updateSoftwareViewModel), m_mainWindow.get());
+            auto *distanceView                 = new DistanceView(std::move(distanceViewModel), m_mainWindow.get());
+            auto *visualisationView            = new VisualisationView(std::move(visualisationViewModel), m_mainWindow.get());
+            auto *loadParametersView           = new LoadParametersView(std::move(loadParametersViewModel), m_mainWindow.get());
+            auto *saveParametersView           = new SaveParametersView(std::move(saveParametersViewModel), m_mainWindow.get());
+            auto *homeView                     = new HomeView(std::move(homeViewModel), m_mainWindow.get());
+            auto *homeEightView                = new HomeEightView(std::make_unique<UI::ViewModels::HomeViewModel>(m_repo), m_mainWindow.get());
+
             m_mainWindow->addView(Kub3::UI::ViewId::HOME_VIEW, homeView);
             m_mainWindow->addView(Kub3::UI::ViewId::HOME_EIGHT_VIEW, homeEightView);
             m_mainWindow->addView(Kub3::UI::ViewId::MACHINE_STATUS_VIEW, machineStatusView);
@@ -127,24 +165,22 @@ namespace Kub3 {
             m_mainWindow->addView(Kub3::UI::ViewId::ALIGNMENT_SAVE_PARAMETERS_VIEW, saveParametersView);
         }
 
-        if (m_masterFSM) {
-            QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_stateChanged, m_mainWindow.get(), &MainWindow::ps_stateChanged);
-        }
-
-        m_mainWindow->ps_openView(Kub3::UI::ViewId::HOME_EIGHT_VIEW);
-
         return *this;
     }
 
-    ApplicationBuilder &ApplicationBuilder::wireArchitecture(void) {
+    ApplicationBuilder &ApplicationBuilder::wireArchitecture(void)
+    {
         qInfo() << "Wiring Inter-Tier Connections...";
+
+        namespace VM = UI::ViewModels;
 
         // Thread Lifecycle Wiring
         QObject::connect(m_logicThread, &QThread::started, m_masterFSM, &MFSM::MasterFSM::start);
 
         // Logic -> HAL Wiring
-        QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_requestHardwareRetry, m_hwManager.get(), &HAL::HardwareManager::ps_reconnectSubsystem);
+        QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_requestHardwareRetry, m_hwManager.get(), &HAL::HardwareManager::ps_reconnectMCUSubsystem);
         QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_requestPowerOff, m_hwManager.get(), &HAL::HardwareManager::ps_powerOff);
+        QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_requestCameraParamUpdate, m_hwManager.get(), &HAL::HardwareManager::ps_updateCameraParameter);
 
         // System power-off
         QObject::connect(m_hwManager.get(), &HAL::HardwareManager::s_hardwarePowerOffSent, [this]() { this->powerOff(); });
@@ -154,15 +190,27 @@ namespace Kub3 {
         QObject::connect(m_logicThread, &QThread::finished, m_logicThread, &QObject::deleteLater);
 
         // 2. UI -> Logic Wiring (Queued Connections implicitly used across threads)
+        // --- MachineStatusViewModel
+        auto *msvm = m_machineStatusVM.get();
         QObject::connect(m_mainWindow.get(), &MainWindow::s_initializationRequest, m_masterFSM, &MFSM::MasterFSM::ps_requestInitialization);
+        QObject::connect(msvm, &VM::MachineStatusViewModel::s_exposureSliderValueChanged, m_masterFSM, &MFSM::MasterFSM::ps_requestExposureUpdate);
+        QObject::connect(msvm, &VM::MachineStatusViewModel::s_gainSliderValueChanged, m_masterFSM, &MFSM::MasterFSM::ps_requestGainUpdate);
+        QObject::connect(msvm, &VM::MachineStatusViewModel::s_framerateValueChanged, m_masterFSM, &MFSM::MasterFSM::ps_requestFrameRateUpdate);
+        QObject::connect(msvm, &VM::MachineStatusViewModel::s_centeredZoomValueChanged, m_masterFSM, &MFSM::MasterFSM::ps_requestCenteredZoomUpdate);
+        QObject::connect(msvm, &VM::MachineStatusViewModel::s_roiChanged, m_masterFSM, &MFSM::MasterFSM::ps_requestROIUpdate);
 
         // 3. Logic -> UI Wiring
-        // QObject::connect(m_masterFSM, &MSFM::MasterFSM::stateChanged, m_mainWindow.get(), &MainWindow::onMachineStateChanged);
+        QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_stateChanged, m_mainWindow.get(), &MainWindow::ps_stateChanged);
+        m_machineStatusVM->bindConnection(m_hwManager.get(), &HAL::HardwareManager::s_cameraFrameReady,
+                                          msvm, &VM::BaseVisionViewModel::ps_onCameraFrameReceived);
+        m_machineStatusVM->bindConnection(m_repo.get(), &HAL::MS::IMachineStatusRepo::s_machineValueChanged,
+                                          msvm, &VM::MachineStatusViewModel::ps_handleSensorValueChanged);
 
         return *this;
     }
 
-    int ApplicationBuilder::run(QApplication &app) {
+    int ApplicationBuilder::run(QApplication &app)
+    {
         qInfo() << "[ApplicationBuilder::run]: Starting Hardware Manager.";
         m_hwManager->startAll();
 
@@ -170,6 +218,7 @@ namespace Kub3 {
         m_logicThread->start();
 
         qInfo() << "[ApplicationBuilder::run]: Showing UI.";
+        m_mainWindow->ps_openView(Kub3::UI::ViewId::HOME_EIGHT_VIEW);
 #if defined(BUILD_DEBUG)
         m_mainWindow->show();
 #else
@@ -185,12 +234,14 @@ namespace Kub3 {
         return ret;
     }
 
-    void ApplicationBuilder::powerOff(void) {
+    void ApplicationBuilder::powerOff(void)
+    {
 #ifdef BUILD_DEBUG
         qDebug() << "[ApplicationBuilder::powerOff] triggered (debug mode: closing app).";
         qApp->quit();
 #else
-        std::system("sudo poweroff");
+        if (std::system("sudo poweroff") != 0)
+            qCritical() << "Failed to run power off command.";
 #endif
     }
 

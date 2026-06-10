@@ -3,17 +3,16 @@
 
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
 #include <QObject>
-#include <ViewModels/IViewModel.h>
+#include <ViewModels/BaseViewModel.h>
 
-namespace Kub3::UI::ViewModels::ViewModelsExposure {
-    class FavoriteExposureSettingsViewModel final : public QObject, public IViewModel {
+namespace Kub3::UI::ViewModels::ViewModelsExposure
+{
+    class FavoriteExposureSettingsViewModel final : public QObject, public BaseViewModel
+    {
         Q_OBJECT
     public:
         explicit FavoriteExposureSettingsViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent = nullptr);
         ~FavoriteExposureSettingsViewModel() override;
-
-        void loadConnections(void) override;
-        void unloadConnections(void) override;
 
     private:
         Shared<HAL::MS::IMachineStatusRepo> m_repo;

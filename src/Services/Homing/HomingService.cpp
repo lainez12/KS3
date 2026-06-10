@@ -28,10 +28,10 @@ namespace Kub3::Services
 
     HomingService::HomingService(Shared<HAL::Act::ActuatorRegistry> registry,
                                  Shared<HAL::MS::IMachineStatusRepo> repo,
-                                 const Config::process_config_t &processConfig) :
+                                 const Config::process_config_t &processConf) :
         m_registry(std::move(registry)),
         m_repo(std::move(repo)),
-        m_processConfig(processConfig)
+        m_processConf(processConf)
     {
     }
 
@@ -42,17 +42,17 @@ namespace Kub3::Services
 #if defined(KUB_MODEL_8)
         // VISUALIZATION-UNRELATED TASKS LANE BUILD
         {
-            const bool z1                               = Kub3::HAL::MS::readBool(m_repo, Z1);
-            const bool z2                               = Kub3::HAL::MS::readBool(m_repo, Z2);
-            const bool waferOn                          = Kub3::HAL::MS::readBool(m_repo, WAFER_ON);
-            const z_motor_bundle_t leftZMotorBundle     = buildZMotorBundle(ZMotorIdArg::Left);
-            const z_motor_bundle_t rightZMotorBundle    = buildZMotorBundle(ZMotorIdArg::Right);
-            const z_motor_bundle_t backZMotorBundle     = buildZMotorBundle(ZMotorIdArg::Back);
-            const stage_motor_bundle_t xStageBundle     = buildStageMotorBundle(StageMotorIdArg::XStage);
-            const stage_motor_bundle_t yStageBundle     = buildStageMotorBundle(StageMotorIdArg::YStage);
-            const stage_motor_bundle_t thetaStageBundle = buildStageMotorBundle(StageMotorIdArg::ThetaStage);
-            Shared<HAL::Act::IMotor> maskConvMotor      = m_registry->get<HAL::Act::IMotor>(MASK_DRAWER_MOTOR);
-            Shared<HAL::Act::IMotor> waferConvMotor     = m_registry->get<HAL::Act::IMotor>(WAFER_DRAWER_MOTOR);
+            const bool z1      = Kub3::HAL::MS::readBool(m_repo, Z1);
+            const bool z2      = Kub3::HAL::MS::readBool(m_repo, Z2);
+            const bool waferOn = Kub3::HAL::MS::readBool(m_repo, WAFER_ON);
+            UNWRAP_OR_ABORT(leftZMotorBundle, buildZMotorBundle(ZMotorIdArg::Left));
+            UNWRAP_OR_ABORT(rightZMotorBundle, buildZMotorBundle(ZMotorIdArg::Right));
+            UNWRAP_OR_ABORT(backZMotorBundle, buildZMotorBundle(ZMotorIdArg::Back));
+            UNWRAP_OR_ABORT(xStageBundle, buildStageMotorBundle(StageMotorIdArg::XStage));
+            UNWRAP_OR_ABORT(yStageBundle, buildStageMotorBundle(StageMotorIdArg::YStage));
+            UNWRAP_OR_ABORT(thetaStageBundle, buildStageMotorBundle(StageMotorIdArg::ThetaStage));
+            UNWRAP_OR_ABORT(maskConvMotor, m_registry->get<HAL::Act::IPositionMotor>(MASK_DRAWER_MOTOR));
+            UNWRAP_OR_ABORT(waferConvMotor, m_registry->get<HAL::Act::IPositionMotor>(WAFER_DRAWER_MOTOR));
 
             if (waferOn)
             {
@@ -79,23 +79,25 @@ namespace Kub3::Services
             enqueueTask<AlignmentStagesHomingTask>(m_repo, xStageBundle, yStageBundle, thetaStageBundle);
             // Init 3Z (lower to T2MK low limits)
             enqueueTask<ZMotorsInitTask>(m_repo, leftZMotorBundle, rightZMotorBundle, backZMotorBundle);
-            // TODO: Tare force sensors here
+            // TODO: Add task to tare force sensors here
             // Init mask conveyor
             enqueueTask<MaskConveyorInitTask>(
                 m_repo, maskConvMotor,
-                m_maskConveyorFastProfile, m_maskConveyorFineProfile, m_maskConveyorContactProfile, 0.0); // TODO: Get cm3 reset pos from config
+                m_maskConveyorFastProfile, m_maskConveyorFineProfile, m_maskConveyorContactProfile,
+                m_processConf.drawers.cm3_reset_pos_mm);
             // Init wafer conveyor
             enqueueTask<WaferConveyorInitTask>(m_repo, waferConvMotor, m_waferConveyorFastProfile, m_waferConveyorFineProfile);
         }
         // CAMERAS TASKS LANE BUILD
         {
-            const camera_motor_bundle_t leftCamXBundle  = buildCameraMotorBundle(CameraMotorIdArg::LeftX);
-            const camera_motor_bundle_t leftCamYBundle  = buildCameraMotorBundle(CameraMotorIdArg::LeftY);
-            const camera_motor_bundle_t rightCamXBundle = buildCameraMotorBundle(CameraMotorIdArg::RightX);
-            const camera_motor_bundle_t rightCamYBundle = buildCameraMotorBundle(CameraMotorIdArg::RightY);
+            UNWRAP_OR_ABORT(leftCamXBundle, buildCameraMotorBundle(CameraMotorIdArg::LeftX));
+            UNWRAP_OR_ABORT(leftCamYBundle, buildCameraMotorBundle(CameraMotorIdArg::LeftY));
+            UNWRAP_OR_ABORT(rightCamXBundle, buildCameraMotorBundle(CameraMotorIdArg::RightX));
+            UNWRAP_OR_ABORT(rightCamYBundle, buildCameraMotorBundle(CameraMotorIdArg::RightY));
 
             enqueueTask<CamerasInitTask, CAMERAS_TASKS_QUEUE_LANE>(
-                m_repo, leftCamXBundle.motor, leftCamYBundle.motor, rightCamXBundle.motor, rightCamYBundle.motor,
+                m_repo, m_processConf,
+                leftCamXBundle.motor, leftCamYBundle.motor, rightCamXBundle.motor, rightCamYBundle.motor,
                 m_leftCameraXKineProfile);
             enqueueTask<CamerasHomingTask, CAMERAS_TASKS_QUEUE_LANE>(
                 m_repo, leftCamXBundle, leftCamYBundle, rightCamXBundle, rightCamYBundle,
@@ -103,7 +105,7 @@ namespace Kub3::Services
         }
         // DECK TASKS LANE BUILD
         {
-            Shared<HAL::Act::IMotor> deckMotor = m_registry->get<HAL::Act::IMotor>(DECK_MOTOR);
+            UNWRAP_OR_ABORT(deckMotor, m_registry->get<HAL::Act::IMotor>(DECK_MOTOR));
 
             enqueueTask<DeckInitTask, DECK_TASKS_QUEUE_LANE>(m_repo, deckMotor, m_deckKineProfile);
             enqueueTask<DeckHomingTask, DECK_TASKS_QUEUE_LANE>(m_repo, deckMotor, m_deckKineProfile);
@@ -129,14 +131,14 @@ namespace Kub3::Services
             const bool cm3     = Kub3::HAL::MS::readBool(m_repo, CM3);
 
             // Actuators
-            const z_motor_bundle_t leftZMotorBundle     = buildZMotorBundle(ZMotorIdArg::Left);
-            const z_motor_bundle_t rightZMotorBundle    = buildZMotorBundle(ZMotorIdArg::Right);
-            const z_motor_bundle_t backZMotorBundle     = buildZMotorBundle(ZMotorIdArg::Back);
-            const stage_motor_bundle_t xStageBundle     = buildStageMotorBundle(StageMotorIdArg::XStage);
-            const stage_motor_bundle_t yStageBundle     = buildStageMotorBundle(StageMotorIdArg::YStage);
-            const stage_motor_bundle_t thetaStageBundle = buildStageMotorBundle(StageMotorIdArg::ThetaStage);
-            Shared<HAL::Act::IMotor> maskConvMotor      = m_registry->get<HAL::Act::IMotor>(MASK_DRAWER_MOTOR);
-            Shared<HAL::Act::IMotor> waferConvMotor     = m_registry->get<HAL::Act::IMotor>(WAFER_DRAWER_MOTOR);
+            UNWRAP_OR_ABORT(leftZMotorBundle, buildZMotorBundle(ZMotorIdArg::Left));
+            UNWRAP_OR_ABORT(rightZMotorBundle, buildZMotorBundle(ZMotorIdArg::Right));
+            UNWRAP_OR_ABORT(backZMotorBundle, buildZMotorBundle(ZMotorIdArg::Back));
+            UNWRAP_OR_ABORT(xStageBundle, buildStageMotorBundle(StageMotorIdArg::XStage));
+            UNWRAP_OR_ABORT(yStageBundle, buildStageMotorBundle(StageMotorIdArg::YStage));
+            UNWRAP_OR_ABORT(thetaStageBundle, buildStageMotorBundle(StageMotorIdArg::ThetaStage));
+            UNWRAP_OR_ABORT(maskConvMotor, m_registry->get<HAL::Act::IPositionMotor>(MASK_DRAWER_MOTOR));
+            UNWRAP_OR_ABORT(waferConvMotor, m_registry->get<HAL::Act::IPositionMotor>(WAFER_DRAWER_MOTOR));
 
             // Requests
             const bool alignmentHomeRequested     = (target & HomingTarget::ALIGNMENT_STAGES); // Needs !Z1 or contact Z2
@@ -247,120 +249,181 @@ namespace Kub3::Services
         // Cameras homing
         if (target & HomingTarget::CAMERAS)
         {
-            const camera_motor_bundle_t leftCamXBundle  = buildCameraMotorBundle(CameraMotorIdArg::LeftX);
-            const camera_motor_bundle_t leftCamYBundle  = buildCameraMotorBundle(CameraMotorIdArg::LeftY);
-            const camera_motor_bundle_t rightCamXBundle = buildCameraMotorBundle(CameraMotorIdArg::RightX);
-            const camera_motor_bundle_t rightCamYBundle = buildCameraMotorBundle(CameraMotorIdArg::RightY);
-
+            UNWRAP_OR_ABORT(leftCamXBundle, buildCameraMotorBundle(CameraMotorIdArg::LeftX));
+            UNWRAP_OR_ABORT(leftCamYBundle, buildCameraMotorBundle(CameraMotorIdArg::LeftY));
+            UNWRAP_OR_ABORT(rightCamXBundle, buildCameraMotorBundle(CameraMotorIdArg::RightX));
+            UNWRAP_OR_ABORT(rightCamYBundle, buildCameraMotorBundle(CameraMotorIdArg::RightY));
             enqueueTask<CamerasHomingTask, CAMERAS_TASKS_QUEUE_LANE>(
                 m_repo, leftCamXBundle, leftCamYBundle, rightCamXBundle, rightCamYBundle, m_leftCameraXKineProfile);
         }
 
         // Deck homing
         if (target & HomingTarget::DECK)
-            enqueueTask<DeckHomingTask, DECK_TASKS_QUEUE_LANE>(m_repo, m_registry->get<HAL::Act::IMotor>(DECK_MOTOR), m_deckKineProfile);
+        {
+            UNWRAP_OR_ABORT(deckMotor, m_registry->get<HAL::Act::IMotor>(DECK_MOTOR));
+            enqueueTask<DeckHomingTask, DECK_TASKS_QUEUE_LANE>(m_repo, deckMotor, m_deckKineProfile);
+        }
 #endif
 
         this->startSequence();
     }
 
-    void HomingService::stop(void)
+    void HomingService::onStop(void)
     {
-        BaseTaskService::stop();
+        this->stopAllMotors();
+    }
+
+    void HomingService::stopAllMotors(void)
+    {
+        STOP_MOTOR_RESULT(MASK_DRAWER_MOTOR, m_registry);
+        STOP_MOTOR_RESULT(WAFER_DRAWER_MOTOR, m_registry);
+        STOP_MOTOR_RESULT(Z_LEFT_MOTOR, m_registry);
+        STOP_MOTOR_RESULT(Z_RIGHT_MOTOR, m_registry);
+        STOP_MOTOR_RESULT(Z_BACK_MOTOR, m_registry);
+        STOP_MOTOR_RESULT(X_STAGE_MOTOR, m_registry);
+        STOP_MOTOR_RESULT(Y_STAGE_MOTOR, m_registry);
+        STOP_MOTOR_RESULT(THETA_STAGE_MOTOR, m_registry);
+        STOP_MOTOR_RESULT(LEFT_CAMERA_X_MOTOR, m_registry);
+        STOP_MOTOR_RESULT(LEFT_CAMERA_Y_MOTOR, m_registry);
+        STOP_MOTOR_RESULT(RIGHT_CAMERA_X_MOTOR, m_registry);
+        STOP_MOTOR_RESULT(RIGHT_CAMERA_Y_MOTOR, m_registry);
+        STOP_MOTOR_RESULT(DECK_MOTOR, m_registry);
     }
 
     void HomingService::loadMotorsKinematicProfiles(void)
     {
         // --- Z motors
-        m_leftFastProfile  = m_processConfig.getKinematicProfile(Z_LEFT_MOTOR, "normal");
-        m_leftFineProfile  = m_processConfig.getKinematicProfile(Z_LEFT_MOTOR, "fine");
-        m_rightFastProfile = m_processConfig.getKinematicProfile(Z_RIGHT_MOTOR, "normal");
-        m_rightFineProfile = m_processConfig.getKinematicProfile(Z_RIGHT_MOTOR, "fine");
-        m_backFastProfile  = m_processConfig.getKinematicProfile(Z_BACK_MOTOR, "normal");
-        m_backFineProfile  = m_processConfig.getKinematicProfile(Z_BACK_MOTOR, "fine");
+        m_leftFastProfile  = m_processConf.getKinematicProfile(Z_LEFT_MOTOR, "normal");
+        m_leftFineProfile  = m_processConf.getKinematicProfile(Z_LEFT_MOTOR, "fine");
+        m_rightFastProfile = m_processConf.getKinematicProfile(Z_RIGHT_MOTOR, "normal");
+        m_rightFineProfile = m_processConf.getKinematicProfile(Z_RIGHT_MOTOR, "fine");
+        m_backFastProfile  = m_processConf.getKinematicProfile(Z_BACK_MOTOR, "normal");
+        m_backFineProfile  = m_processConf.getKinematicProfile(Z_BACK_MOTOR, "fine");
         // --- Alignment Stages
-        m_xStageKineProfile     = m_processConfig.getKinematicProfile(X_STAGE_MOTOR, "normal");
-        m_yStageKineProfile     = m_processConfig.getKinematicProfile(Y_STAGE_MOTOR, "normal");
-        m_thetaStageKineProfile = m_processConfig.getKinematicProfile(THETA_STAGE_MOTOR, "normal");
+        m_xStageKineProfile     = m_processConf.getKinematicProfile(X_STAGE_MOTOR, "normal");
+        m_yStageKineProfile     = m_processConf.getKinematicProfile(Y_STAGE_MOTOR, "normal");
+        m_thetaStageKineProfile = m_processConf.getKinematicProfile(THETA_STAGE_MOTOR, "normal");
         // --- Drawer conveyors
-        m_maskConveyorFastProfile    = m_processConfig.getKinematicProfile(MASK_DRAWER_MOTOR, "normal");
-        m_maskConveyorFineProfile    = m_processConfig.getKinematicProfile(MASK_DRAWER_MOTOR, "fine");
-        m_maskConveyorContactProfile = m_processConfig.getKinematicProfile(MASK_DRAWER_MOTOR, "contact");
-        m_waferConveyorFastProfile   = m_processConfig.getKinematicProfile(WAFER_DRAWER_MOTOR, "normal");
-        m_waferConveyorFineProfile   = m_processConfig.getKinematicProfile(WAFER_DRAWER_MOTOR, "fine");
+        m_maskConveyorFastProfile    = m_processConf.getKinematicProfile(MASK_DRAWER_MOTOR, "normal");
+        m_maskConveyorFineProfile    = m_processConf.getKinematicProfile(MASK_DRAWER_MOTOR, "fine");
+        m_maskConveyorContactProfile = m_processConf.getKinematicProfile(MASK_DRAWER_MOTOR, "contact");
+        m_waferConveyorFastProfile   = m_processConf.getKinematicProfile(WAFER_DRAWER_MOTOR, "normal");
+        m_waferConveyorFineProfile   = m_processConf.getKinematicProfile(WAFER_DRAWER_MOTOR, "fine");
         // --- Deck / cameras
-        m_deckKineProfile         = m_processConfig.getKinematicProfile(DECK_MOTOR, "normal");
-        m_leftCameraXKineProfile  = m_processConfig.getKinematicProfile(LEFT_CAMERA_X_MOTOR, "normal");
-        m_leftCameraYKineProfile  = m_processConfig.getKinematicProfile(LEFT_CAMERA_Y_MOTOR, "normal");
-        m_rightCameraXKineProfile = m_processConfig.getKinematicProfile(RIGHT_CAMERA_X_MOTOR, "normal");
-        m_rightCameraYKineProfile = m_processConfig.getKinematicProfile(RIGHT_CAMERA_Y_MOTOR, "normal");
+        m_deckKineProfile         = m_processConf.getKinematicProfile(DECK_MOTOR, "normal");
+        m_leftCameraXKineProfile  = m_processConf.getKinematicProfile(LEFT_CAMERA_X_MOTOR, "normal");
+        m_leftCameraYKineProfile  = m_processConf.getKinematicProfile(LEFT_CAMERA_Y_MOTOR, "normal");
+        m_rightCameraXKineProfile = m_processConf.getKinematicProfile(RIGHT_CAMERA_X_MOTOR, "normal");
+        m_rightCameraYKineProfile = m_processConf.getKinematicProfile(RIGHT_CAMERA_Y_MOTOR, "normal");
     }
 
-    camera_motor_bundle_t HomingService::buildCameraMotorBundle(CameraMotorIdArg arg)
+    Result<camera_motor_bundle_t, std::string> HomingService::buildCameraMotorBundle(CameraMotorIdArg arg)
     {
-        auto argToId = [](CameraMotorIdArg arg) -> const char * {
-            if (arg == CameraMotorIdArg::LeftX)
-                return LEFT_CAMERA_X_MOTOR;
-            if (arg == CameraMotorIdArg::LeftY)
-                return LEFT_CAMERA_Y_MOTOR;
-            if (arg == CameraMotorIdArg::RightX)
-                return RIGHT_CAMERA_X_MOTOR;
-            // if (arg == CameraMotorIdArg::RightY)
-            return RIGHT_CAMERA_Y_MOTOR;
+        const char *motorId = nullptr;
+        double centerPosMm  = 0.0;
+
+        switch (arg)
+        {
+        case CameraMotorIdArg::LeftX:
+            motorId     = LEFT_CAMERA_X_MOTOR;
+            centerPosMm = m_processConf.vision.left_cam_x_reset_pos_mm;
+            break;
+        case CameraMotorIdArg::LeftY:
+            motorId     = LEFT_CAMERA_Y_MOTOR;
+            centerPosMm = m_processConf.vision.left_cam_y_reset_pos_mm;
+            break;
+        case CameraMotorIdArg::RightX:
+            motorId     = RIGHT_CAMERA_X_MOTOR;
+            centerPosMm = m_processConf.vision.right_cam_x_reset_pos_mm;
+            break;
+        case CameraMotorIdArg::RightY:
+            motorId     = RIGHT_CAMERA_Y_MOTOR;
+            centerPosMm = m_processConf.vision.right_cam_y_reset_pos_mm;
+            break;
+        }
+
+        auto buildBundle = [=](auto motor) {
+            return camera_motor_bundle_t{
+                .motor            = motor,
+                .centerPositionMm = centerPosMm,
+            };
         };
 
-        return camera_motor_bundle_t{
-            .motor            = m_registry->get<HAL::Act::IMotor>(argToId(arg)),
-            .centerPositionMm = 0.0 // TODO: Get from config
-        };
+        return m_registry->get<HAL::Act::IPositionMotor>(motorId).map(buildBundle);
     }
 
-    z_motor_bundle_t HomingService::buildZMotorBundle(ZMotorIdArg arg)
+    Result<z_motor_bundle_t, std::string> HomingService::buildZMotorBundle(ZMotorIdArg arg)
     {
-        if (arg == ZMotorIdArg::Left)
+        const char *label                       = nullptr;
+        const Config::kinematic_profile_t *fast = nullptr;
+        const Config::kinematic_profile_t *fine = nullptr;
+
+        switch (arg)
+        {
+        case ZMotorIdArg::Left:
+            label = Z_LEFT_MOTOR;
+            fast  = &m_leftFastProfile;
+            fine  = &m_leftFineProfile;
+            break;
+        case ZMotorIdArg::Right:
+            label = Z_RIGHT_MOTOR;
+            fast  = &m_rightFastProfile;
+            fine  = &m_rightFineProfile;
+            break;
+        case ZMotorIdArg::Back:
+        default:
+            label = Z_BACK_MOTOR;
+            fast  = &m_backFastProfile;
+            fine  = &m_backFineProfile;
+            break;
+        }
+
+        auto bundleBuilder = [=](auto motor) {
             return z_motor_bundle_t{
-                .motor       = m_registry->get<HAL::Act::IMotor>(Z_LEFT_MOTOR),
-                .fastProfile = m_leftFastProfile,
-                .fineProfile = m_leftFineProfile,
+                .motor       = motor,
+                .fastProfile = *fast,
+                .fineProfile = *fine,
             };
-
-        if (arg == ZMotorIdArg::Right)
-            return z_motor_bundle_t{
-                .motor       = m_registry->get<HAL::Act::IMotor>(Z_RIGHT_MOTOR),
-                .fastProfile = m_rightFastProfile,
-                .fineProfile = m_rightFineProfile,
-            };
-
-        // if (arg == ZMotorIdArg::Back)
-        return z_motor_bundle_t{
-            .motor       = m_registry->get<HAL::Act::IMotor>(Z_BACK_MOTOR),
-            .fastProfile = m_backFastProfile,
-            .fineProfile = m_backFineProfile,
         };
+
+        return m_registry->get<HAL::Act::IPositionMotor>(label).map(bundleBuilder);
     }
 
-    stage_motor_bundle_t HomingService::buildStageMotorBundle(StageMotorIdArg arg)
+    Result<stage_motor_bundle_t, std::string> HomingService::buildStageMotorBundle(StageMotorIdArg arg)
     {
-        if (arg == StageMotorIdArg::XStage)
-            return stage_motor_bundle_t{
-                .motor            = m_registry->get<HAL::Act::IMotor>(X_STAGE_MOTOR),
-                .kinematic        = m_xStageKineProfile,
-                .centerPositionMm = 0.0 // TODO: get from config
-            };
+        const char *motorId                          = nullptr;
+        double centerPositionMm                      = 0.0;
+        const Config::kinematic_profile_t *kinematic = nullptr;
 
-        if (arg == StageMotorIdArg::YStage)
-            return stage_motor_bundle_t{
-                .motor            = m_registry->get<HAL::Act::IMotor>(Y_STAGE_MOTOR),
-                .kinematic        = m_yStageKineProfile,
-                .centerPositionMm = 0.0, // TODO: Get from config
-            };
+        switch (arg)
+        {
+        case StageMotorIdArg::XStage:
+            motorId          = X_STAGE_MOTOR;
+            kinematic        = &m_xStageKineProfile;
+            centerPositionMm = m_processConf.alignment.x_stage_center_pos_mm;
+            break;
+        case StageMotorIdArg::YStage:
+            motorId          = Y_STAGE_MOTOR;
+            kinematic        = &m_yStageKineProfile;
+            centerPositionMm = m_processConf.alignment.y_stage_center_pos_mm;
+            break;
+        case StageMotorIdArg::ThetaStage:
+        default:
+            motorId          = THETA_STAGE_MOTOR;
+            kinematic        = &m_thetaStageKineProfile;
+            centerPositionMm = m_processConf.alignment.theta_stage_center_pos_mm;
+            break;
+        }
 
-        // if (arg == StageMotorIdArg::ThetaStage)
-        return stage_motor_bundle_t{
-            .motor            = m_registry->get<HAL::Act::IMotor>(THETA_STAGE_MOTOR),
-            .kinematic        = m_thetaStageKineProfile,
-            .centerPositionMm = 0.0, // TODO: Get from config
+        auto bundleBuilder = [=](auto motor) {
+            return stage_motor_bundle_t{
+                .motor            = motor,
+                .kinematic        = *kinematic,
+                .centerPositionMm = centerPositionMm,
+            };
         };
+
+        return m_registry->get<HAL::Act::IPositionMotor>(motorId).map(bundleBuilder);
     }
 
 }

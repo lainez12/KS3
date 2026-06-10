@@ -1,17 +1,16 @@
 #include <ViewModels/ViewModelsAlignment/VisualisationViewModel.h>
 
-namespace Kub3::UI::ViewModels::ViewModelsAlignment {
+namespace Kub3::UI::ViewModels::ViewModelsAlignment
+{
+
     VisualisationViewModel::VisualisationViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent) :
         QObject(parent),
-        m_repo(repo) {
-    }
-    VisualisationViewModel::~VisualisationViewModel() {
-    }
-
-    void VisualisationViewModel::loadConnections(void) {
+        m_repo(repo)
+    {
     }
 
-    void VisualisationViewModel::unloadConnections(void) {
+    VisualisationViewModel::~VisualisationViewModel()
+    {
     }
 
 } // namespace Kub3::UI::ViewModels::ViewModelsAlignment

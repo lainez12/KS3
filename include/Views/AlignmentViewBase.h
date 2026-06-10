@@ -2,16 +2,15 @@
 
 #include <Views/ViewBase.h>
 
-namespace Kub3::UI::Views {
+namespace Kub3::UI::Views
+{
 
-    class AlignmentViewBase : public ViewBase {
+    class AlignmentViewBase : public ViewBase
+    {
         Q_OBJECT
 
     public:
-        explicit AlignmentViewBase(
-            Unique<ViewModels::IViewModel> viewModel,
-            QWidget *parent = nullptr);
-
+        explicit AlignmentViewBase(Unique<ViewModels::BaseViewModel> viewModel, QWidget *parent = nullptr);
         virtual ~AlignmentViewBase() = default;
 
     private:

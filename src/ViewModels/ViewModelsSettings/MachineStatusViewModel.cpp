@@ -3,51 +3,41 @@
 #include <HAL/MachineStatus/utils.h>
 #include <ViewModels/ViewModelsSettings/MachineStatusViewModel.h>
 
-namespace Kub3::UI::ViewModels {
+namespace Kub3::UI::ViewModels
+{
 
     MachineStatusViewModel::MachineStatusViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent) :
-        QObject(parent),
-        m_repo(repo) {
+        BaseVisionViewModel(parent),
+        m_repo(std::move(repo))
+    {
     }
 
-    MachineStatusViewModel::~MachineStatusViewModel() {
+    void MachineStatusViewModel::loadConnections(void)
+    {
+        BaseViewModel::loadConnections();
+
+        for (const std::string &key : m_repo->getRegisteredKeys())
+        {
+            ps_handleSensorValueChanged(key);
+        }
     }
 
-    void MachineStatusViewModel::loadConnections(void) {
-        HAL::MS::IMachineStatusRepo *repo = m_repo.get();
-
-        if (!repo)
-            return;
-
-        // Connect machine status repository to view model
-        connect(repo, &HAL::MS::IMachineStatusRepo::s_sensorValueChanged, this, &MachineStatusViewModel::handleSensorValueChanged);
-    }
-
-    void MachineStatusViewModel::unloadConnections(void) {
-        HAL::MS::IMachineStatusRepo *repo = m_repo.get();
-
-        if (!repo)
-            return;
-
-        // Disonnect machine status repository to view model
-        disconnect(repo, &HAL::MS::IMachineStatusRepo::s_sensorValueChanged, this, &MachineStatusViewModel::handleSensorValueChanged);
-    }
-
-    void MachineStatusViewModel::handleSensorValueChanged(const QString &key) {
-        using SensorValue = HAL::MS::SensorValue;
-
-        Optional<SensorValue> valueOpt = m_repo->getSensorRaw(key.toStdString());
+    void MachineStatusViewModel::ps_handleSensorValueChanged(const std::string &key)
+    {
+        Optional<HAL::MS::MachineValue> valueOpt = m_repo->getValueRaw(key);
 
         if (!valueOpt.has_value())
             return;
 
-        SensorValue value = valueOpt.value();
+        auto qKey   = QString::fromStdString(key);
+        auto museum = overloadedCallable(
+            [&](bool v) { emit s_booleanSensorUpdate(qKey, v); },
+            [&](int32_t v) { emit s_integerSensorUpdate(qKey, v); },
+            [&](uint16_t v) { emit s_unsignedIntegerSensorUpdate(qKey, v); },
+            [&](uint32_t v) { emit s_unsignedIntegerSensorUpdate(qKey, v); },
+            [&](auto) { qWarning() << "[MachineStatusViewModel] unknown sensor changed notification received."; });
 
-        auto visitor = overloadedCallable(
-            [&](bool v) { emit s_booleanSensorUpdate(key, v); },
-            [&](int32_t v) { emit s_integerSensorUpdate(key, v); },
-            [&](uint32_t v) { emit s_unsignedIntegerSensorUpdate(key, v); });
-
-        std::visit(visitor, value);
+        std::visit(museum, valueOpt.value());
     }
+
 }

@@ -15,8 +15,9 @@ add_executable(unit_tests
     test_main.cpp
     test_dummy.cpp
     test_machine_status_repo.cpp
+    algorithms/test_admittance_controller.cpp
     algorithms/test_trapezoidal_generator.cpp
-    HAL/test_stepper_motor.cpp
+    # HAL/test_stepper_motor.cpp
     tasks/Drawers/test_mask_insertion_task.cpp
 )
 

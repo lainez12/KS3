@@ -10,7 +10,6 @@
 
 #include "Views/Components/NavButton.h"
 #include "Views/Components/UpBar.h"
-#include "Views/DebugView.h"
 #include "Views/HomeEightView.h"
 #include "Views/HomeView.h"
 #include "Views/SettingsView.h"
@@ -33,11 +32,13 @@
 #include "Views/ViewsSettings/UpdateSoftwareView.h"
 #include "Views/ViewsSettings/VersionView.h"
 
-namespace Ui {
+namespace Ui
+{
     class MainWindow;
 }
 
-class MainWindow : public QMainWindow {
+class MainWindow : public QMainWindow
+{
     Q_OBJECT
 
 public:

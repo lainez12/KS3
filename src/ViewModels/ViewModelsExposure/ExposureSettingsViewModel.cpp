@@ -1,17 +1,14 @@
 #include <ViewModels/ViewModelsExposure/ExposureSettingsViewModel.h>
 
-namespace Kub3::UI::ViewModels::ViewModelsExposure {
+namespace Kub3::UI::ViewModels::ViewModelsExposure
+{
     ExposureSettingsViewModel::ExposureSettingsViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent) :
         QObject(parent),
-        m_repo(repo) {
+        m_repo(repo)
+    {
     }
-    ExposureSettingsViewModel::~ExposureSettingsViewModel() {
-    }
-
-    void ExposureSettingsViewModel::loadConnections(void) {
-    }
-
-    void ExposureSettingsViewModel::unloadConnections(void) {
+    ExposureSettingsViewModel::~ExposureSettingsViewModel()
+    {
     }
 
 } // namespace Kub3::UI::ViewModels::ViewModelsExposure

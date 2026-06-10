@@ -3,17 +3,16 @@
 
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
 #include <QObject>
-#include <ViewModels/IViewModel.h>
+#include <ViewModels/BaseViewModel.h>
 
-namespace Kub3::UI::ViewModels::ViewModelsSettings {
-    class LedTestViewModel final : public QObject, public IViewModel {
+namespace Kub3::UI::ViewModels::ViewModelsSettings
+{
+    class LedTestViewModel final : public QObject, public BaseViewModel
+    {
         Q_OBJECT
     public:
         explicit LedTestViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent = nullptr);
         ~LedTestViewModel() override;
-
-        void loadConnections(void) override;
-        void unloadConnections(void) override;
 
     private:
         Shared<HAL::MS::IMachineStatusRepo> m_repo;

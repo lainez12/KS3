@@ -2,7 +2,7 @@
 
 #include <QObject>
 
-#include <HAL/Actuators/Motors/IMotor.h>
+#include <HAL/Actuators/Motors/IPositionMotor.h>
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
 #include <HAL/MachineStatus/actuators_labels.h>
 #include <HAL/MachineStatus/sensors_labels.h>
@@ -16,7 +16,7 @@ namespace Kub3::Services
     {
     public:
         MaskHomingTask(Shared<HAL::MS::IMachineStatusRepo> repo,
-                       Shared<HAL::Act::IMotor> motor,
+                       Shared<HAL::Act::IPositionMotor> motor,
                        Config::kinematic_profile_t fastProfile,
                        Config::kinematic_profile_t fineProfile,
                        Config::kinematic_profile_t contactProfile);
@@ -32,7 +32,7 @@ namespace Kub3::Services
 
     protected:
         Shared<HAL::MS::IMachineStatusRepo> m_repo;
-        Shared<HAL::Act::IMotor> m_motor;
+        Shared<HAL::Act::IPositionMotor> m_motor;
 
     private:
         enum class Step

@@ -1,0 +1,73 @@
+/* ========================================================================
+   KUB3 INDUSTRIAL CONFIGURATOR - TOUCH OPTIMIZED (SIMPLIFIED)
+   ======================================================================== */
+
+/* Global font size for all text elements */
+QWidget {
+    font-size: 16pt;
+}
+
+/* Increase height for all interactive controls */
+QPushButton, 
+QComboBox, 
+QLineEdit, 
+QSpinBox, 
+QDoubleSpinBox {
+    min-height: 60px;
+}
+
+/* Make SpinBox up/down buttons wide enough for fingers */
+QSpinBox::up-button, QDoubleSpinBox::up-button,
+QSpinBox::down-button, QDoubleSpinBox::down-button {
+    width: 60px;
+}
+
+/* Make ComboBox dropdown button wide enough for fingers */
+QComboBox::drop-down {
+    width: 60px;
+}
+
+/* Increase height of list items (Categories and Items) */
+QListWidget::item {
+    min-height: 75px;
+}
+
+/* Increase size of tabs */
+QTabBar::tab {
+    min-height: 60px;
+    min-width: 180px;
+    padding: 5px;
+}
+
+/* Make scrollbars thick enough to grab/slide easily */
+QScrollBar:vertical {
+    width: 50px;
+}
+
+QScrollBar::handle:vertical {
+    min-height: 80px;
+}
+
+QScrollBar:horizontal {
+    height: 50px;
+}
+
+QScrollBar::handle:horizontal {
+    min-width: 80px;
+}
+
+/* Add padding to GroupBoxes for visual clarity */
+QGroupBox {
+    margin-top: 40px;
+    padding-top: 20px;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+}
+
+/* Standardize padding in form fields */
+QLineEdit, QSpinBox, QDoubleSpinBox {
+    padding: 0px 10px;
+}

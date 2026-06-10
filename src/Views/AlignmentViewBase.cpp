@@ -5,15 +5,16 @@
 #define ID_BTN_HOME     "H"
 #define ID_BTN_BACK     "B"
 
-namespace Kub3::UI::Views {
+namespace Kub3::UI::Views
+{
 
-    AlignmentViewBase::AlignmentViewBase(
-        Unique<ViewModels::IViewModel> viewModel,
-        QWidget *parent) :
-        ViewBase(std::move(viewModel), parent) {
+    AlignmentViewBase::AlignmentViewBase(Unique<ViewModels::BaseViewModel> viewModel, QWidget *parent) :
+        ViewBase(std::move(viewModel), parent)
+    {
     }
 
-    void AlignmentViewBase::createNavButtonsConfigs() {
+    void AlignmentViewBase::createNavButtonsConfigs()
+    {
         NavButtonConfig homeBtn(
             "Home",
             ":/icons/home.svg",
@@ -40,22 +41,26 @@ namespace Kub3::UI::Views {
         setNavButtonEnabled(ID_BTN_VALIDATE, false);
     }
 
-    void AlignmentViewBase::configTitleBar() {
+    void AlignmentViewBase::configTitleBar()
+    {
         // setDefaultTitleBar("");
     }
 
-    void AlignmentViewBase::setDefaultTitleBar(const QString &viewTitle) {
-        m_titleBar = TitleBarConfig(
-            viewTitle,
-            QColor("#FFF"),
-            QColor(TURQUOISE_COLOR),
-            ":/icons/flood_icon.svg",
-            "Mask Alignment",
-            true,
-            true);
+    void AlignmentViewBase::setDefaultTitleBar(const QString &viewTitle)
+    {
+        setTitleBar(TitleBarConfig{
+            .viewTitle      = viewTitle,
+            .textColor      = QColor("#FFF"),
+            .bgColor        = QColor(TURQUOISE_COLOR),
+            .iconPath       = ":/icons/flood_icon.svg",
+            .sectionTitle   = "Mask Alignment",
+            .showTitleBar   = true,
+            .m_showLeftLogo = true,
+        });
     }
 
-    void AlignmentViewBase::onHomeButtonClicked(const QString &buttonId) {
+    void AlignmentViewBase::onHomeButtonClicked(const QString &buttonId)
+    {
         emit s_openView(Kub3::UI::ViewId::HOME_VIEW);
     }
 

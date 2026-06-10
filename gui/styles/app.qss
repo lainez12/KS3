@@ -23,7 +23,7 @@ QMainWindow {
     background-color: @white;
 }
 
-QWidget#HomeView, QWidget#DebugView, QWidget#MachineStatusView {
+QWidget#HomeView, QWidget#MachineStatusView {
     background: transparent;
 }
 

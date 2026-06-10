@@ -4,12 +4,13 @@
 #include <QElapsedTimer>
 #include <memory>
 
-#include "Config/machine_config.h"
-#include "HAL/Actuators/ActuatorRegistry.h"
-#include "HAL/MachineStatus/IMachineStatusRepo.h"
+#include <Config/conf.h>
+#include <HAL/Actuators/ActuatorRegistry.h>
+#include <HAL/MachineStatus/IMachineStatusRepo.h>
+#include <Services/BaseTaskService.h>
+#include <utils.h>
+
 #include "IDrawerService.h"
-#include "Services/BaseTaskService.h"
-#include "utils.h"
 
 namespace Kub3::Services
 {
@@ -24,7 +25,9 @@ namespace Kub3::Services
 
         void insert(DrawerTarget target) override;
         void eject(DrawerTarget target) override;
-        void stop(void) override;
+
+    protected:
+        void onStop(void) override;
 
     private:
         bool isWaferEjected(void);

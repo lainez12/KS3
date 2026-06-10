@@ -18,6 +18,8 @@ namespace Kub3::HAL
         explicit MCUDriver(Unique<Com::ICommunicator> comm, Unique<Com::IProtocolParser> parser, QObject *parent = nullptr);
         ~MCUDriver();
 
+        void sendCommand(QByteArray payload, Qt::ConnectionType connType = Qt::AutoConnection);
+
     signals:
         void s_packetReady(const Com::packet_t &packet);
         void s_hardwareError(const QString &reason);
@@ -27,9 +29,8 @@ namespace Kub3::HAL
         void s_connectionLost(void);
 
     public slots:
-        void ps_start(void);                     // Called to open the port
-        void ps_stop(void);                      // Called to close the port
-        void ps_sendCommand(QByteArray payload); // No reference
+        void ps_start(void); // Called to open the port
+        void ps_stop(void);  // Called to close the port
 
     private slots:
         // Triggered automatically when the Communicator emits s_dataReceived

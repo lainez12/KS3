@@ -7,7 +7,7 @@ namespace Kub3::HAL::Sensors
 {
 
     template <typename T>
-    class Sensor : public ISensor
+    class Sensor final : public ISensor
     {
     public:
         using Mapper = std::function<T(const QByteArray &)>;
@@ -18,13 +18,13 @@ namespace Kub3::HAL::Sensors
             m_mapper(mapper),
             m_repo(std::move(repo))
         {
-            m_repo->setSensor<T>(m_key, initialValue);
+            m_repo->setValue<T>(m_key, initialValue);
             if (!m_mapper)
                 qWarning().nospace() << "Sensor [" << m_key << "] was provided a null mapper function.";
         }
 
         // The implementation of the base interface
-        void processData(const QByteArray &data)
+        void processData(const QByteArray &data) override
         {
             if (!m_mapper)
             {
@@ -33,7 +33,7 @@ namespace Kub3::HAL::Sensors
             }
 
             T value = m_mapper(data);
-            m_repo->setSensor<T>(m_key, value);
+            m_repo->setValue<T>(m_key, value);
         }
 
     private:

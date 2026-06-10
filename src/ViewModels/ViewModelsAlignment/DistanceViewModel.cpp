@@ -1,17 +1,16 @@
 #include <ViewModels/ViewModelsAlignment/DistanceViewModel.h>
 
-namespace Kub3::UI::ViewModels::ViewModelsAlignment {
+namespace Kub3::UI::ViewModels::ViewModelsAlignment
+{
+
     DistanceViewModel::DistanceViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent) :
         QObject(parent),
-        m_repo(repo) {
-    }
-    DistanceViewModel::~DistanceViewModel() {
-    }
-
-    void DistanceViewModel::loadConnections(void) {
+        m_repo(repo)
+    {
     }
 
-    void DistanceViewModel::unloadConnections(void) {
+    DistanceViewModel::~DistanceViewModel()
+    {
     }
 
 } // namespace Kub3::UI::ViewModels::ViewModelsAlignment

@@ -31,8 +31,10 @@ VERSION=$(cat .version | tr -d '\r' | xargs)
 echo -e "${BLUE}==>${NC} Starting production deployment for ${GREEN}KUB3-$MODEL (Version: $VERSION)${NC}..."
 
 # 2. Configure & Build
+NPROC=$(( $(nproc 2>/dev/null || echo 1) - 1 ))
+[ "$NPROC" -lt 1 ] && NPROC=1
 cmake --preset "kub3-$MODEL-production"
-cmake --build --preset "kub3-$MODEL-production"
+cmake --build --preset "kub3-$MODEL-production" -j $NPROC
 
 # 3. Install into dist
 cmake --install "build/kub$MODEL-production"

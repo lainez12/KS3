@@ -1,6 +1,8 @@
 #include <QDebug>
+#include <QRect>
 
 #include <Algorithms/Kinematic/IKinematicGenerator.h>
+#include <HAL/Actuators/Focal/Focal.h>
 #include <HAL/Actuators/Lights/UVExposureHead.h>
 #include <HAL/Actuators/Valves/SolenoidValve.h>
 #include <HAL/Com/LengthBasedParser.h>
@@ -10,8 +12,14 @@
 #include <HAL/MachineStatus/sensors_labels.h>
 #include <HAL/MachineStatus/utils.h>
 #include <HAL/Sensors/Sensor.h>
+#include <HAL/Vision/Hikrobot/HikrobotCamera.h>
 
 using namespace std::string_literals;
+
+#define ARDUINO1_INDEX 0
+#define ARDUINO2_INDEX 1
+#define ARDUINO3_INDEX 2
+#define ARDUINO4_INDEX 3
 
 // Packet key extractors
 static std::string_view arduino1KeyExtractor(const Kub3::HAL::Com::packet_t &packet);
@@ -40,6 +48,7 @@ namespace Kub3::HAL
         setupArduino1Subsystem(config);
         setupArduino2Subsystem(config);
         setupArduino3Subsystem(config);
+        setupCamerasSubsystem(config);
 #endif
     }
 
@@ -53,39 +62,62 @@ namespace Kub3::HAL
         for (auto &[key, subsys] : m_subsystems)
         {
             subsys.thread->start();
-            QMetaObject::invokeMethod(subsys.driver.get(), &MCUDriver::ps_start);
+            QMetaObject::invokeMethod(subsys.driver.get(), &MCUDriver::ps_start, Qt::QueuedConnection);
+        }
+
+        for (auto &[key, subsys] : m_cameras)
+        {
+            subsys.thread->start();
+            QMetaObject::invokeMethod(subsys.camera.get(), &Vision::ICamera::connectDevice, Qt::QueuedConnection);
+            QMetaObject::invokeMethod(subsys.camera.get(), &Vision::ICamera::startAcquisition, Qt::QueuedConnection);
         }
     }
 
     void HardwareManager::stopAll()
     {
+        auto stopThreadHelper = [this](QThread *thread, std::function<void(void)> stopMethod) {
+            if (!thread || !thread->isRunning())
+                return;
+
+            if (stopMethod)
+                stopMethod();
+            thread->exit(0);
+            if (!thread->wait(2000))
+            {
+                thread->terminate(); // Force kill
+                thread->wait();
+            }
+        };
+
         for (auto &[key, subsys] : m_subsystems)
         {
-            if (!subsys.thread || !subsys.thread->isRunning())
-                continue;
+            stopThreadHelper(
+                subsys.thread.get(),
+                [&subsys]() {
+                    QMetaObject::invokeMethod(subsys.driver.get(), &MCUDriver::ps_stop, Qt::BlockingQueuedConnection);
+                });
+        }
 
-            QMetaObject::invokeMethod(subsys.driver.get(), &MCUDriver::ps_stop, Qt::QueuedConnection);
-            subsys.thread->exit(0);
-            if (!subsys.thread->wait(2000))
-            {
-                subsys.thread->terminate(); // Force kill
-                subsys.thread->wait();
-            }
+        for (auto &[key, subsys] : m_cameras)
+        {
+            stopThreadHelper(
+                subsys.thread.get(),
+                [&subsys]() {
+                    QMetaObject::invokeMethod(subsys.camera.get(), &Vision::ICamera::disconnectDevice, Qt::BlockingQueuedConnection);
+                });
         }
     }
 
-    void HardwareManager::ps_reconnectSubsystem(const QString &subsystemId)
+    void HardwareManager::ps_reconnectMCUSubsystem(const QString &subsystemId)
     {
-        const std::string id = subsystemId.toStdString();
-
-        if (auto it = m_subsystems.find(id); it != m_subsystems.end())
+        if (auto it = m_subsystems.find(subsystemId); it != m_subsystems.end())
         {
             auto &subsys = it->second;
 
-            qInfo() << "HardwareManager: Reconnecting targeted subsystem:" << id;
+            qInfo() << "HardwareManager: Reconnecting targeted subsystem:" << subsystemId;
             if (!subsys.thread)
             {
-                qCritical() << "HardwareManager: Attempt to reconnect using invalid thread pointer:" << id;
+                qCritical() << "HardwareManager: Attempt to reconnect using invalid thread pointer:" << subsystemId;
                 return;
             }
 
@@ -99,7 +131,64 @@ namespace Kub3::HAL
         }
         else
         {
-            qWarning() << "HardwareManager: Requested restart for unknown subsystem:" << id;
+            qWarning() << "HardwareManager: Requested restart for unknown subsystem:" << subsystemId;
+        }
+    }
+
+    void HardwareManager::ps_reconnectCameraSubsystem(const QString &cameraId)
+    {
+        if (auto it = m_cameras.find(cameraId); it != m_cameras.end())
+        {
+            auto &node = it->second;
+
+            qInfo() << "HardwareManager: Bouncing camera subsystem:" << cameraId;
+            // Push stop/start commands to the camera thread queue
+            QMetaObject::invokeMethod(node.camera.get(), &Vision::ICamera::stopAcquisition, Qt::QueuedConnection);
+            QMetaObject::invokeMethod(node.camera.get(), &Vision::ICamera::disconnectDevice, Qt::QueuedConnection);
+            QMetaObject::invokeMethod(node.camera.get(), &Vision::ICamera::connectDevice, Qt::QueuedConnection);
+            QMetaObject::invokeMethod(node.camera.get(), &Vision::ICamera::startAcquisition, Qt::QueuedConnection);
+        }
+    }
+
+    void HardwareManager::ps_updateCameraParameter(const QString &cameraId, Vision::CameraParamKind kind, Vision::CameraParam value)
+    {
+        if (auto it = m_cameras.find(cameraId); it != m_cameras.end())
+        {
+            switch (kind)
+            {
+            case Vision::CameraParamKind::EXPOSURE:
+            {
+                if (const double *val = std::get_if<double>(&value))
+                    it->second.camera->setExposure(*val);
+                break;
+            }
+            case Vision::CameraParamKind::GAIN:
+            {
+                if (const double *val = std::get_if<double>(&value))
+                    it->second.camera->setGain(*val);
+                break;
+            }
+            case Vision::CameraParamKind::FRAMERATE:
+            {
+                if (const double *val = std::get_if<double>(&value))
+                    it->second.camera->setFrameRate(*val);
+                break;
+            }
+            case Vision::CameraParamKind::CENTERED_ZOOM:
+            {
+                if (const double *val = std::get_if<double>(&value))
+                    it->second.camera->setCenteredZoom(*val);
+                break;
+            }
+            case Vision::CameraParamKind::REGION_OF_INTEREST:
+            {
+                if (const QRect *val = std::get_if<QRect>(&value))
+                    it->second.camera->setROI(val->x(), val->y(), val->width(), val->height());
+                break;
+            }
+            default:
+                break;
+            }
         }
     }
 
@@ -107,10 +196,7 @@ namespace Kub3::HAL
     {
         if (auto it = m_subsystems.find(MCU_ARDUINO2_ID); it != m_subsystems.end())
         {
-            MCUSubsystemNode &node = it->second;
-            QByteArray payload(1, 'E');
-
-            QMetaObject::invokeMethod(node.driver.get(), &MCUDriver::ps_sendCommand, Qt::BlockingQueuedConnection, payload);
+            it->second.driver->sendCommand(QByteArray(1, 'E'), Qt::BlockingQueuedConnection);
             emit s_hardwarePowerOffSent(); // Triggers device power off
         }
         else
@@ -132,8 +218,9 @@ namespace Kub3::HAL
         using namespace Kub3::HAL::Sensors;
 
         // Create thread & Driver for Arduino3
-        auto thread         = std::make_unique<QThread>();                                       // Driver thread
-        auto comms          = std::make_unique<Com::SerialCommunicator>("/dev/ttyACM2", 115200); // TODO: get port from settings file
+        auto mcuConf        = config.mcus[ARDUINO1_INDEX];
+        auto thread         = std::make_unique<QThread>(); // Driver thread
+        auto comms          = std::make_unique<Com::SerialCommunicator>(mcuConf.port, mcuConf.baudrate);
         auto parser         = std::make_unique<Com::LengthBasedParser>();
         auto arduino1Driver = std::make_shared<MCUDriver>(std::move(comms), std::move(parser));
         auto router         = std::make_unique<Com::PacketRouter>(&arduino1KeyExtractor);
@@ -143,14 +230,14 @@ namespace Kub3::HAL
 
         // Instanciate sensors and actuators software representations
         this->createArduino1Sensors(router.get());
-        this->createArduino1Actuators(config, arduino1Driver);
+        this->createArduino1Actuators(config, arduino1Driver, router.get());
 
         // Move MCUDriver to its own thread
         arduino1Driver->moveToThread(thread.get());
 
         // Wire MCUDriver connection status signals -> Machine Status Repo value update
-        QObject::connect(arduino1Driver.get(), &MCUDriver::s_connected, [&]() { m_repo->setSensorRaw(MCU_ARDUINO1_READY, true); });
-        QObject::connect(arduino1Driver.get(), &MCUDriver::s_connectionLost, [&]() { m_repo->setSensorRaw(MCU_ARDUINO1_READY, false); });
+        QObject::connect(arduino1Driver.get(), &MCUDriver::s_connected, [&]() { m_repo->setValueRaw(MCU_ARDUINO1_READY, true); });
+        QObject::connect(arduino1Driver.get(), &MCUDriver::s_connectionLost, [&]() { m_repo->setValueRaw(MCU_ARDUINO1_READY, false); });
         // Wire MCUDriver -> Router
         QObject::connect(arduino1Driver.get(), &MCUDriver::s_packetReady, router.get(), &Com::PacketRouter::ps_routePacket);
 
@@ -187,13 +274,13 @@ namespace Kub3::HAL
         auto thetaStageClockwiseLimit     = std::make_shared<Sensor<bool>>(m_repo, THETA_STAGE_CLOCKWISE_LIMIT, false, &limitSwitchParser);
         auto thetaStageAntiClockwiseLimit = std::make_shared<Sensor<bool>>(m_repo, THETA_STAGE_ANTI_CLOCKWISE_LIMIT, false, &limitSwitchParser);
         // --- Encoders
-        auto leftCameraXEncoder  = std::make_shared<Sensor<int32_t>>(m_repo, LEFT_CAMERA_X_ENCODER, INT32_MIN, &encoderValueParser);
-        auto leftCameraYEncoder  = std::make_shared<Sensor<int32_t>>(m_repo, LEFT_CAMERA_Y_ENCODER, INT32_MIN, &encoderValueParser);
-        auto rightCameraXEncoder = std::make_shared<Sensor<int32_t>>(m_repo, RIGHT_CAMERA_X_ENCODER, INT32_MIN, &encoderValueParser);
-        auto rightCameraYEncoder = std::make_shared<Sensor<int32_t>>(m_repo, RIGHT_CAMERA_Y_ENCODER, INT32_MIN, &encoderValueParser);
-        auto xStageEncoder       = std::make_shared<Sensor<int32_t>>(m_repo, X_STAGE_ENCODER, INT32_MIN, &encoderValueParser);
-        auto yStageEncoder       = std::make_shared<Sensor<int32_t>>(m_repo, Y_STAGE_ENCODER, INT32_MIN, &encoderValueParser);
-        auto thetaStageEncoder   = std::make_shared<Sensor<int32_t>>(m_repo, THETA_STAGE_ENCODER, INT32_MIN, &encoderValueParser);
+        auto leftCameraXEncoder  = std::make_shared<Sensor<int32_t>>(m_repo, LEFT_CAMERA_X_ENCODER, static_cast<int32_t>(0), &encoderValueParser);
+        auto leftCameraYEncoder  = std::make_shared<Sensor<int32_t>>(m_repo, LEFT_CAMERA_Y_ENCODER, static_cast<int32_t>(0), &encoderValueParser);
+        auto rightCameraXEncoder = std::make_shared<Sensor<int32_t>>(m_repo, RIGHT_CAMERA_X_ENCODER, static_cast<int32_t>(0), &encoderValueParser);
+        auto rightCameraYEncoder = std::make_shared<Sensor<int32_t>>(m_repo, RIGHT_CAMERA_Y_ENCODER, static_cast<int32_t>(0), &encoderValueParser);
+        auto xStageEncoder       = std::make_shared<Sensor<int32_t>>(m_repo, X_STAGE_ENCODER, static_cast<int32_t>(0), &encoderValueParser);
+        auto yStageEncoder       = std::make_shared<Sensor<int32_t>>(m_repo, Y_STAGE_ENCODER, static_cast<int32_t>(0), &encoderValueParser);
+        auto thetaStageEncoder   = std::make_shared<Sensor<int32_t>>(m_repo, THETA_STAGE_ENCODER, static_cast<int32_t>(0), &encoderValueParser);
 
         // Register sensors
         // --- Limit switches
@@ -221,13 +308,13 @@ namespace Kub3::HAL
         this->registerSensor(router, "7"s, std::move(thetaStageEncoder));
     }
 
-    void HardwareManager::createArduino1Actuators(const Config::hardware_config_t &config, const std::shared_ptr<MCUDriver> &driver)
+    void HardwareManager::createArduino1Actuators(const Config::hardware_config_t &config, const std::shared_ptr<MCUDriver> &driver, Com::PacketRouter *router)
     {
-        using Kinematics = Algorithms::Kinematic::KinematicGeneratorKind;
-
         // ===========================================
         // DOWNWARD PIPELINE (Software --> Hardware)
         // ===========================================
+
+        using Kinematics = Algorithms::Kinematic::KinematicGeneratorKind;
 
         /// --- Motors
         auto leftCameraXMotor  = createStepperMotor(config, LEFT_CAMERA_X_MOTOR, '1', Kinematics::TRAPEZOIDAL, driver, LEFT_CAMERA_X_ENCODER);
@@ -237,6 +324,18 @@ namespace Kub3::HAL
         auto xStageMotor       = createStepperMotor(config, X_STAGE_MOTOR, '5', Kinematics::TRAPEZOIDAL, driver, X_STAGE_ENCODER);
         auto yStageMotor       = createStepperMotor(config, Y_STAGE_MOTOR, '6', Kinematics::TRAPEZOIDAL, driver, Y_STAGE_ENCODER);
         auto thetaStageMotor   = createStepperMotor(config, THETA_STAGE_MOTOR, '7', Kinematics::TRAPEZOIDAL, driver, THETA_STAGE_ENCODER);
+        /// --- Focals
+        auto leftCameraFocal  = std::make_shared<Act::Focal>(LEFT_CAMERA_FOCAL, 'L', driver);
+        auto rightCameraFocal = std::make_shared<Act::Focal>(RIGHT_CAMERA_FOCAL, 'R', driver);
+
+        /* FEEDBACK HANDLING */
+        router->registerRoute("SS\x00"s, Act::StepperMotor::createFeedbackHandler(leftCameraXMotor));
+        router->registerRoute("SS\x01"s, Act::StepperMotor::createFeedbackHandler(leftCameraYMotor));
+        router->registerRoute("SS\x02"s, Act::StepperMotor::createFeedbackHandler(rightCameraXMotor));
+        router->registerRoute("SS\x03"s, Act::StepperMotor::createFeedbackHandler(rightCameraYMotor));
+        router->registerRoute("SS\x04"s, Act::StepperMotor::createFeedbackHandler(xStageMotor));
+        router->registerRoute("SS\x05"s, Act::StepperMotor::createFeedbackHandler(yStageMotor));
+        router->registerRoute("SS\x07"s, Act::StepperMotor::createFeedbackHandler(thetaStageMotor));
 
         /// --- Motors
         m_actuatorRegistry->registerActuator(std::move(leftCameraXMotor));
@@ -246,6 +345,11 @@ namespace Kub3::HAL
         m_actuatorRegistry->registerActuator(std::move(xStageMotor));
         m_actuatorRegistry->registerActuator(std::move(yStageMotor));
         m_actuatorRegistry->registerActuator(std::move(thetaStageMotor));
+        /// --- Focals
+        m_actuatorRegistry->registerActuator(std::move(leftCameraFocal));
+        m_actuatorRegistry->registerActuator(std::move(rightCameraFocal));
+        m_registeredFocalIds.push_back(LEFT_CAMERA_FOCAL);
+        m_registeredFocalIds.push_back(RIGHT_CAMERA_FOCAL);
     }
 
     // --- Arduino 2 HAL instanciation helpers
@@ -255,8 +359,9 @@ namespace Kub3::HAL
         using namespace Kub3::HAL::Sensors;
 
         // Create thread & Driver for Arduino3
-        auto thread         = std::make_unique<QThread>();                                       // Driver thread
-        auto comms          = std::make_unique<Com::SerialCommunicator>("/dev/ttyACM1", 115200); // TODO: get port from settings file
+        auto mcuConf        = config.mcus[ARDUINO2_INDEX];
+        auto thread         = std::make_unique<QThread>(); // Driver thread
+        auto comms          = std::make_unique<Com::SerialCommunicator>(mcuConf.port, mcuConf.baudrate);
         auto parser         = std::make_unique<Com::LengthBasedParser>();
         auto arduino2Driver = std::make_shared<MCUDriver>(std::move(comms), std::move(parser));
         auto router         = std::make_unique<Com::PacketRouter>(&arduino2KeyExtractor);
@@ -266,14 +371,14 @@ namespace Kub3::HAL
 
         // Instanciate sensors and actuators software representations
         this->createArduino2Sensors(router.get());
-        this->createArduino2Actuators(config, arduino2Driver);
+        this->createArduino2Actuators(config, arduino2Driver, router.get());
 
         // Move MCUDriver to its own thread
         arduino2Driver->moveToThread(thread.get());
 
         // Wire MCUDriver connection status signals -> Machine Status Repo value update
-        QObject::connect(arduino2Driver.get(), &MCUDriver::s_connected, [&]() { m_repo->setSensorRaw(MCU_ARDUINO2_READY, true); });
-        QObject::connect(arduino2Driver.get(), &MCUDriver::s_connectionLost, [&]() { m_repo->setSensorRaw(MCU_ARDUINO2_READY, false); });
+        QObject::connect(arduino2Driver.get(), &MCUDriver::s_connected, [&]() { m_repo->setValueRaw(MCU_ARDUINO2_READY, true); });
+        QObject::connect(arduino2Driver.get(), &MCUDriver::s_connectionLost, [&]() { m_repo->setValueRaw(MCU_ARDUINO2_READY, false); });
         // Wire MCUDriver -> Router
         QObject::connect(arduino2Driver.get(), &MCUDriver::s_packetReady, router.get(), &Com::PacketRouter::ps_routePacket);
 
@@ -316,7 +421,7 @@ namespace Kub3::HAL
         auto internalTemperature = std::make_shared<Sensor<int32_t>>(m_repo, INTERNAL_TEMPERATURE, INT32_MIN, &temperatureParser);
         auto externalTemperature = std::make_shared<Sensor<int32_t>>(m_repo, EXTERNAL_TEMPERATURE, INT32_MIN, &temperatureParser);
         // --- Encoders
-        auto camerasDeckEncoder = std::make_shared<Sensor<int32_t>>(m_repo, DECK_MOTOR_ENCODER, INT32_MIN, &encoderValueParser);
+        auto camerasDeckEncoder = std::make_shared<Sensor<int32_t>>(m_repo, DECK_MOTOR_ENCODER, static_cast<int32_t>(0), &encoderValueParser);
 
         // TODO: add "Fans voltage" & "LEDs voltages"
 
@@ -346,7 +451,7 @@ namespace Kub3::HAL
         // TODO: register deck's encoder when communication pattern is defined
     }
 
-    void HardwareManager::createArduino2Actuators(const Config::hardware_config_t &config, const std::shared_ptr<MCUDriver> &driver)
+    void HardwareManager::createArduino2Actuators(const Config::hardware_config_t &config, const std::shared_ptr<MCUDriver> &driver, Com::PacketRouter *router)
     {
         using Kinematics = Algorithms::Kinematic::KinematicGeneratorKind;
 
@@ -363,6 +468,8 @@ namespace Kub3::HAL
         /// --- Exposure head
         auto exposureHead = std::make_shared<Act::UVExposureHead>(UV_EXPOSURE_HEAD, driver);
 
+        // TODO: Add feedback handlers for deck motor, etc...
+
         /// --- Motors
         m_actuatorRegistry->registerActuator(std::move(camerasDeckMotor));
         /// --- Valves
@@ -378,8 +485,9 @@ namespace Kub3::HAL
     void HardwareManager::setupArduino3Subsystem(const Config::hardware_config_t &config)
     {
         // Create thread & Driver for Arduino3
-        auto thread         = std::make_unique<QThread>();                                       // Driver thread
-        auto comms          = std::make_unique<Com::SerialCommunicator>("/dev/ttyACM0", 115200); // TODO: get port from settings file
+        auto mcuConf        = config.mcus[ARDUINO3_INDEX];
+        auto thread         = std::make_unique<QThread>(); // Driver thread
+        auto comms          = std::make_unique<Com::SerialCommunicator>(mcuConf.port, mcuConf.baudrate);
         auto parser         = std::make_unique<Com::LengthBasedParser>();
         auto arduino3Driver = std::make_shared<MCUDriver>(std::move(comms), std::move(parser));
         auto router         = std::make_unique<Com::PacketRouter>(&arduino3KeyExtractor);
@@ -389,14 +497,14 @@ namespace Kub3::HAL
 
         // Instanciate sensors and actuators software representations
         this->createArduino3Sensors(router.get());
-        this->createArduino3Actuators(config, arduino3Driver);
+        this->createArduino3Actuators(config, arduino3Driver, router.get());
 
         // Move MCUDriver to its own thread
         arduino3Driver->moveToThread(thread.get());
 
         // Wire MCUDriver connection status signals -> Machine Status Repo value update
-        QObject::connect(arduino3Driver.get(), &MCUDriver::s_connected, [&]() { m_repo->setSensorRaw(MCU_ARDUINO3_READY, true); });
-        QObject::connect(arduino3Driver.get(), &MCUDriver::s_connectionLost, [&]() { m_repo->setSensorRaw(MCU_ARDUINO3_READY, false); });
+        QObject::connect(arduino3Driver.get(), &MCUDriver::s_connected, [&]() { m_repo->setValueRaw(MCU_ARDUINO3_READY, true); });
+        QObject::connect(arduino3Driver.get(), &MCUDriver::s_connectionLost, [&]() { m_repo->setValueRaw(MCU_ARDUINO3_READY, false); });
         // Wire MCUDriver -> Router
         QObject::connect(arduino3Driver.get(), &MCUDriver::s_packetReady, router.get(), &Com::PacketRouter::ps_routePacket);
 
@@ -481,7 +589,7 @@ namespace Kub3::HAL
         this->registerSensor(router, "F3"s, std::move(backForce));
     }
 
-    void HardwareManager::createArduino3Actuators(const Config::hardware_config_t &config, const std::shared_ptr<MCUDriver> &driver)
+    void HardwareManager::createArduino3Actuators(const Config::hardware_config_t &config, const std::shared_ptr<MCUDriver> &driver, Com::PacketRouter *router)
     {
         using Kinematics = Algorithms::Kinematic::KinematicGeneratorKind;
 
@@ -496,11 +604,49 @@ namespace Kub3::HAL
         auto maskMotor   = createStepperMotor(config, MASK_DRAWER_MOTOR, '4', Kinematics::TRAPEZOIDAL, driver, MASK_ENCODER);
         auto waferMotor  = createStepperMotor(config, WAFER_DRAWER_MOTOR, '5', Kinematics::TRAPEZOIDAL, driver, WAFER_ENCODER);
 
+        router->registerRoute("SS\x00"s, Act::StepperMotor::createFeedbackHandler(zLeftMotor));
+        router->registerRoute("SS\x01"s, Act::StepperMotor::createFeedbackHandler(zRightMotor));
+        router->registerRoute("SS\x02"s, Act::StepperMotor::createFeedbackHandler(zBackMotor));
+        router->registerRoute("SS\x03"s, Act::StepperMotor::createFeedbackHandler(maskMotor));
+        router->registerRoute("SS\x04"s, Act::StepperMotor::createFeedbackHandler(waferMotor));
+
         m_actuatorRegistry->registerActuator(std::move(zLeftMotor));
         m_actuatorRegistry->registerActuator(std::move(zRightMotor));
         m_actuatorRegistry->registerActuator(std::move(zBackMotor));
         m_actuatorRegistry->registerActuator(std::move(maskMotor));
         m_actuatorRegistry->registerActuator(std::move(waferMotor));
+    }
+
+    // --- Cameras HAL instanciation helpers
+
+    void HardwareManager::setupCamerasSubsystem(const Config::hardware_config_t &config)
+    {
+        for (auto [qId, config] : config.cameras)
+        {
+            auto thread = std::make_unique<QThread>();
+            // TODO: make a configuration-dependent camera class `C` in `std::make_shared<C>`
+            auto camera = std::make_shared<Vision::HikrobotCamera>(config);
+
+            camera->moveToThread(thread.get());
+            // On connection, set default parameters to camera
+            connect(
+                camera.get(), &Vision::ICamera::s_cameraConnected, this,
+                [cam = camera.get(), config]() {
+                    QMetaObject::invokeMethod(cam, &Vision::ICamera::setCenteredZoom, Qt::QueuedConnection, 1.0);
+                    QMetaObject::invokeMethod(cam, &Vision::ICamera::setExposure, Qt::QueuedConnection, config.defaultExposureUs);
+                    QMetaObject::invokeMethod(cam, &Vision::ICamera::setGain, Qt::QueuedConnection, config.defaultGainDb);
+                    QMetaObject::invokeMethod(cam, &Vision::ICamera::setFrameRate, Qt::QueuedConnection, config.framerate);
+                });
+            // Connect frame forwarding
+            connect(
+                camera.get(), &Vision::ICamera::s_frameReady, this,
+                [&, id = QString::fromStdString(config.id)](const QImage &frame) { emit s_cameraFrameReady(id, frame); });
+
+            m_cameras[qId] = CameraSubsystemNode{
+                .thread = std::move(thread),
+                .camera = std::move(camera),
+            };
+        }
     }
 
 #endif // defined(KUB_MODEL_8)
@@ -509,8 +655,15 @@ namespace Kub3::HAL
 
     void HardwareManager::registerSensor(Com::PacketRouter *router, std::string &&route, Shared<Kub3::HAL::Sensors::ISensor> sensor)
     {
+        auto handler = [weakSensor = std::weak_ptr<HAL::Sensors::ISensor>(sensor)](const QByteArray &data) {
+            if (auto safeSensor = weakSensor.lock())
+            {
+                safeSensor->processData(data);
+            }
+        };
+
         // Map the route in the router
-        router->registerRoute(route, sensor);
+        router->registerRoute(route, handler);
         // Store sensor to member vector
         m_sensors.push_back(std::move(sensor));
     }
@@ -519,7 +672,7 @@ namespace Kub3::HAL
 
     Shared<Act::StepperMotor> HardwareManager::createStepperMotor(
         const Config::hardware_config_t &config,
-        const std::string &motorId,
+        const QString &motorId,
         uint8_t byteId,
         Algorithms::Kinematic::KinematicGeneratorKind kineGenKind,
         const Shared<MCUDriver> &driver,
@@ -527,16 +680,18 @@ namespace Kub3::HAL
     {
         auto it = config.motors.find(motorId);
         if (it == config.motors.end())
-            throw std::runtime_error(std::format("Hardware configuration not found for key: '{}'", motorId));
-
+            throw std::runtime_error(std::format("Hardware configuration not found for key: '{}'", motorId.toStdString()));
         auto *hwProps = std::get_if<Config::stepper_hw_properties_t>(&it->second.hwProperties);
         if (!hwProps)
-            throw std::runtime_error(std::format("'{}' configuration doesn't match expected type (stepper)", motorId));
-
+            throw std::runtime_error(std::format("'{}' configuration doesn't match expected type (stepper)", motorId.toStdString()));
         auto kinematicEngine = Algorithms::Kinematic::buildKinematicGenerator(kineGenKind);
-        auto encoderGetter   = [repo = m_repo, encoderId]() { return HAL::MS::readInt(repo, encoderId); };
+        auto encoderGetter   = [repo = m_repo, encoderId]() { return HAL::MS::readInt32(repo, encoderId); };
 
-        return std::make_shared<Act::StepperMotor>(motorId, byteId, driver, *hwProps, std::move(encoderGetter), std::move(kinematicEngine));
+        m_registeredMotorIds.push_back(motorId.toStdString());
+        return std::make_shared<Act::StepperMotor>(
+            it->second.id, byteId, driver, *hwProps,
+            std::move(encoderGetter), encoderId,
+            std::move(kinematicEngine));
     }
 
 } // namespace Kub3::HAL
@@ -653,7 +808,7 @@ static std::string_view arduino3KeyExtractor(const Kub3::HAL::Com::packet_t &pac
 
 static bool limitSwitchParser(const QByteArray &d)
 {
-    return !d.isEmpty() && d[0] != 0x0;
+    return !d.isEmpty() && (d[0] != 0x0 && d[0] != '0');
 }
 
 static bool valveStatusParser(const QByteArray &d)

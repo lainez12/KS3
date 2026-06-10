@@ -22,3 +22,7 @@
 
 // Exposure Head (LEDs)
 #define UV_EXPOSURE_HEAD "uvLedExposureHead"
+
+// Focals
+#define LEFT_CAMERA_FOCAL  "leftCameraFocal"
+#define RIGHT_CAMERA_FOCAL "rightCameraFocal"

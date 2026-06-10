@@ -1,17 +1,16 @@
 #include <ViewModels/ViewModelsAlignment/SaveParametersViewModel.h>
 
-namespace Kub3::UI::ViewModels::ViewModelsAlignment {
+namespace Kub3::UI::ViewModels::ViewModelsAlignment
+{
+
     SaveParametersViewModel::SaveParametersViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent) :
         QObject(parent),
-        m_repo(repo) {
-    }
-    SaveParametersViewModel::~SaveParametersViewModel() {
-    }
-
-    void SaveParametersViewModel::loadConnections(void) {
+        m_repo(repo)
+    {
     }
 
-    void SaveParametersViewModel::unloadConnections(void) {
+    SaveParametersViewModel::~SaveParametersViewModel()
+    {
     }
 
 } // namespace Kub3::UI::ViewModels::ViewModelsAlignment
