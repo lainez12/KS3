@@ -128,12 +128,12 @@ namespace Kub3::Services
 
     void StowageService::initializeMotorsBundles(void)
     {
-        UNWRAP_OR_THROW(leftMotor, m_registry->get<HAL::Act::IMotor>(Z_LEFT_MOTOR), "[StowageService] Failed to load Z Left Motor: ");
-        UNWRAP_OR_THROW(rightMotor, m_registry->get<HAL::Act::IMotor>(Z_RIGHT_MOTOR), "[StowageService] Failed to load Z Right Motor: ");
-        UNWRAP_OR_THROW(backMotor, m_registry->get<HAL::Act::IMotor>(Z_BACK_MOTOR), "[StowageService] Failed to load Z Back Motor: ");
-        UNWRAP_OR_THROW(xMotor, m_registry->get<HAL::Act::IMotor>(X_STAGE_MOTOR), "[StowageService] Failed to load X Stage Motor: ");
-        UNWRAP_OR_THROW(yMotor, m_registry->get<HAL::Act::IMotor>(Y_STAGE_MOTOR), "[StowageService] Failed to load Y Stage Motor: ");
-        UNWRAP_OR_THROW(thetaMotor, m_registry->get<HAL::Act::IMotor>(THETA_STAGE_MOTOR), "[StowageService] Failed to load Theta Stage Motor: ");
+        UNWRAP_OR_THROW(leftMotor, m_registry->get<HAL::Act::IPositionMotor>(Z_LEFT_MOTOR), "[StowageService] Failed to load Z Left Motor: ");
+        UNWRAP_OR_THROW(rightMotor, m_registry->get<HAL::Act::IPositionMotor>(Z_RIGHT_MOTOR), "[StowageService] Failed to load Z Right Motor: ");
+        UNWRAP_OR_THROW(backMotor, m_registry->get<HAL::Act::IPositionMotor>(Z_BACK_MOTOR), "[StowageService] Failed to load Z Back Motor: ");
+        UNWRAP_OR_THROW(xMotor, m_registry->get<HAL::Act::IPositionMotor>(X_STAGE_MOTOR), "[StowageService] Failed to load X Stage Motor: ");
+        UNWRAP_OR_THROW(yMotor, m_registry->get<HAL::Act::IPositionMotor>(Y_STAGE_MOTOR), "[StowageService] Failed to load Y Stage Motor: ");
+        UNWRAP_OR_THROW(thetaMotor, m_registry->get<HAL::Act::IPositionMotor>(THETA_STAGE_MOTOR), "[StowageService] Failed to load Theta Stage Motor: ");
 
         // TODO: split kinematic profiles per motor (requires re-architecturing)
         m_zMotorsBundle = z_motors_bundle_t{

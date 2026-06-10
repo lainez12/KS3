@@ -3,7 +3,7 @@
 #include <Config/conf.h>
 #include <Config/kinematics.h>
 #include <HAL/Actuators/ActuatorRegistry.h>
-#include <HAL/Actuators/Motors/IMotor.h>
+#include <HAL/Actuators/Motors/IPositionMotor.h>
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
 #include <HAL/MachineStatus/actuators_labels.h>
 #include <HAL/MachineStatus/sensors_labels.h>
@@ -16,7 +16,7 @@ namespace Kub3::Services
     constexpr uint32_t ALIGNMENT_WATCHDOG_TIMEOUT_TICKS = 15u;
 
     typedef struct motor_alignment_config_s {
-        Shared<HAL::Act::IMotor> motor;
+        Shared<HAL::Act::IPositionMotor> motor;
         Config::kinematic_profile_t fastProfile;
         Config::kinematic_profile_t fineProfile;
         bool fineMode         = false;

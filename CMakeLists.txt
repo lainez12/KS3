@@ -85,7 +85,6 @@ qt_add_library(Kub3Core STATIC
     src/Services/Homing/tasks/Homing/ZMotorsHomingTask.cpp
     src/Services/Homing/tasks/Initialization/AlignmentStagesInitTask.cpp
     src/Services/Homing/tasks/Initialization/CamerasInitTask.cpp
-    src/Services/Homing/tasks/Initialization/DeckInitTask.cpp
     src/Services/Homing/tasks/Initialization/MaskConveyorInitTask.cpp
     src/Services/Homing/tasks/Initialization/WaferConveyorInitTask.cpp
     src/Services/Homing/tasks/Initialization/ZMotorsInitTask.cpp

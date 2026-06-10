@@ -2,7 +2,7 @@
 
 #include <array>
 
-#include <HAL/Actuators/Motors/IMotor.h>
+#include <HAL/Actuators/Motors/IPositionMotor.h>
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
 #include <Services/ITask.h>
 #include <utils.h>
@@ -11,7 +11,7 @@ namespace Kub3::Services
 {
 
     typedef struct z_motor_bundle_s {
-        Shared<HAL::Act::IMotor> motor;
+        Shared<HAL::Act::IPositionMotor> motor;
         Config::kinematic_profile_t fastProfile;
         Config::kinematic_profile_t fineProfile;
     } z_motor_bundle_t;

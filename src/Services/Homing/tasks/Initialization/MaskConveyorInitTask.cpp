@@ -6,7 +6,7 @@ namespace Kub3::Services
 {
 
     MaskConveyorInitTask::MaskConveyorInitTask(Shared<HAL::MS::IMachineStatusRepo> repo,
-                                               Shared<HAL::Act::IMotor> motor,
+                                               Shared<HAL::Act::IPositionMotor> motor,
                                                Config::kinematic_profile_t fastProfile,
                                                Config::kinematic_profile_t fineProfile,
                                                Config::kinematic_profile_t contactProfile,

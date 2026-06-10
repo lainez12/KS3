@@ -53,54 +53,6 @@ namespace Kub3::HAL::Act
         }
     }
 
-    void DirectCurrentMotor::moveAbsolute(double position_mm, Config::kinematic_profile_t profile)
-    {
-        const double safeVel     = std::min(profile.targetVelocityMmS, m_hwConfig.maxVelocityMmS);
-        const double safeAcc     = std::min(profile.accelerationMmS2, m_hwConfig.maxAccelerationMmS2);
-        const double precisionMm = this->computePrecisionMm(profile);
-
-        // Reset caches for the new move
-        m_lastSentPwm.reset();
-        m_lastSentDir.reset();
-
-        if (!m_controlTimer.isActive())
-        {
-            m_kinematicEngine->startPositionMove(getEncoderPositionMm(), position_mm, safeVel, safeAcc, precisionMm);
-            m_lastTickNsecs = 0;
-            m_dtTimer.start();
-            m_controlTimer.start(CONTROL_TIMER_VALUE_MS);
-        }
-        else
-        {
-            m_kinematicEngine->updatePositionMove(position_mm, safeVel, safeAcc, precisionMm);
-        }
-    }
-
-    void DirectCurrentMotor::moveRelative(double distance_mm, Config::kinematic_profile_t profile)
-    {
-        const double safeVel     = std::min(profile.targetVelocityMmS, m_hwConfig.maxVelocityMmS);
-        const double safeAcc     = std::min(profile.accelerationMmS2, m_hwConfig.maxAccelerationMmS2);
-        const double precisionMm = this->computePrecisionMm(profile);
-
-        m_lastSentPwm.reset();
-        m_lastSentDir.reset();
-
-        if (!m_controlTimer.isActive())
-        {
-            const double encoderPos = getEncoderPositionMm();
-            m_kinematicEngine->startPositionMove(encoderPos, encoderPos + distance_mm, safeVel, safeAcc, precisionMm);
-
-            m_lastTickNsecs = 0;
-            m_dtTimer.start();
-            m_controlTimer.start(CONTROL_TIMER_VALUE_MS);
-        }
-        else
-        {
-            const double currentMathEnginePos = m_kinematicEngine->getCurrentState().position;
-            m_kinematicEngine->updatePositionMove(currentMathEnginePos + distance_mm, safeVel, safeAcc, precisionMm);
-        }
-    }
-
     // TODO: profile could be a const reference ?
     void DirectCurrentMotor::moveDirection(MotorDirection dir, Config::kinematic_profile_t profile)
     {
@@ -113,7 +65,7 @@ namespace Kub3::HAL::Act
 
         if (!m_controlTimer.isActive())
         {
-            m_kinematicEngine->startVelocityMove(getEncoderPositionMm(), sign, safeVel, safeAcc);
+            m_kinematicEngine->startVelocityMove(0.0, sign, safeVel, safeAcc);
 
             m_lastTickNsecs = 0;
             m_dtTimer.start();
@@ -140,13 +92,6 @@ namespace Kub3::HAL::Act
     bool DirectCurrentMotor::isMoving(void) const
     {
         return m_controlTimer.isActive();
-    }
-
-    double DirectCurrentMotor::getEncoderPositionMm(void) const
-    {
-        const double encoderValue = m_encoderValueGetter ? m_encoderValueGetter() : 0.0;
-
-        return static_cast<double>(encoderValue) * (static_cast<double>(m_hwConfig.encoderTopsPerRev) / m_hwConfig.screwPitchMm);
     }
 
     void DirectCurrentMotor::onControlTick(void)
@@ -180,11 +125,6 @@ namespace Kub3::HAL::Act
             m_lastSentPwm = pwm;
             m_lastSentDir = dir;
         }
-    }
-
-    double DirectCurrentMotor::computePrecisionMm(const Config::kinematic_profile_t &profile)
-    {
-        throw std::runtime_error("Not implemented");
     }
 
     uint16_t DirectCurrentMotor::computePwm(double velocityMmS) const

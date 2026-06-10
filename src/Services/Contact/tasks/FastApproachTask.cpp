@@ -7,7 +7,7 @@
 namespace Kub3::Services
 {
 
-    FastApproachTask::FastApproachTask(std::array<Shared<HAL::Act::IMotor>, 3> motors,
+    FastApproachTask::FastApproachTask(std::array<Shared<HAL::Act::IPositionMotor>, 3> motors,
                                        std::function<double()> maxForceGetter,
                                        double contactThresholdGF,
                                        Config::kinematic_profile_t profile) :

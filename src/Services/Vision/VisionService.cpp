@@ -86,7 +86,7 @@ namespace Kub3::Services
 
     void VisionService::setupCameraMotor(VisionMotor motorId, const char *motorConfId, const Config::process_config_t &conf)
     {
-        auto motor = m_registry->get<HAL::Act::IMotor>(motorConfId);
+        auto motor = m_registry->get<HAL::Act::IPositionMotor>(motorConfId);
 
         if (!motor)
         {

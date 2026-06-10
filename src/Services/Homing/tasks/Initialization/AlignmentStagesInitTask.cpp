@@ -6,9 +6,9 @@ namespace Kub3::Services
 {
 
     AlignmentStagesInitTask::AlignmentStagesInitTask(Shared<HAL::MS::IMachineStatusRepo> repo,
-                                                     Shared<HAL::Act::IMotor> xStageMotor,
-                                                     Shared<HAL::Act::IMotor> yStageMotor,
-                                                     Shared<HAL::Act::IMotor> thetaStageMotor,
+                                                     Shared<HAL::Act::IPositionMotor> xStageMotor,
+                                                     Shared<HAL::Act::IPositionMotor> yStageMotor,
+                                                     Shared<HAL::Act::IPositionMotor> thetaStageMotor,
                                                      Config::kinematic_profile_t xStageProfile,
                                                      Config::kinematic_profile_t yStageProfile,
                                                      Config::kinematic_profile_t thetaStageProfile) :
@@ -59,7 +59,7 @@ namespace Kub3::Services
         return false;
     }
 
-    void AlignmentStagesInitTask::stopMotorIfMoving(Shared<HAL::Act::IMotor> motor)
+    void AlignmentStagesInitTask::stopMotorIfMoving(Shared<HAL::Act::IPositionMotor> motor)
     {
         if (motor && motor->isMoving())
             motor->emergencyStop();
@@ -67,7 +67,7 @@ namespace Kub3::Services
 
     // Stops motor if `motor->isMoving()` returns `true` and `limitValue` is `true`.
     // Starts motor if not `limitValue` is `false` and `motor->isMoving()` returns `false`.
-    void AlignmentStagesInitTask::handleSingleMotorLogic(Shared<HAL::Act::IMotor> motor, Config::kinematic_profile_t kineProfile, bool limitValue)
+    void AlignmentStagesInitTask::handleSingleMotorLogic(Shared<HAL::Act::IPositionMotor> motor, Config::kinematic_profile_t kineProfile, bool limitValue)
     {
         if (!motor)
             return;

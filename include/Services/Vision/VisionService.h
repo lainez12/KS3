@@ -3,7 +3,7 @@
 #include "IVisionService.h"
 #include <Config/conf.h>
 #include <HAL/Actuators/ActuatorRegistry.h>
-#include <HAL/Actuators/Motors/IMotor.h>
+#include <HAL/Actuators/Motors/IPositionMotor.h>
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
 #include <array>
 #include <unordered_map>
@@ -37,7 +37,7 @@ namespace Kub3::Services
     constexpr uint32_t VISION_WATCHDOG_TIMEOUT_TICKS = 15; // 300ms
 
     struct vision_motor_config_t {
-        Shared<HAL::Act::IMotor> motor;
+        Shared<HAL::Act::IPositionMotor> motor;
         Config::kinematic_profile_t fastProfile;
         Config::kinematic_profile_t fineProfile;
 

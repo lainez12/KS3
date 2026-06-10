@@ -3,6 +3,7 @@
 #include <Algorithms/Admittance/AdmittanceController.h>
 #include <Config/conf.h>
 #include <HAL/Actuators/ActuatorRegistry.h>
+#include <HAL/Actuators/Motors/IPositionMotor.h>
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
 #include <Services/BaseTaskService.h>
 #include <utils.h>
@@ -57,7 +58,7 @@ namespace Kub3::Services
         Shared<HAL::MS::IMachineStatusRepo> m_repo;
         Config::contact_process_config_t m_conf;
 
-        std::array<Shared<HAL::Act::IMotor>, 3> m_zMotors;
+        std::array<Shared<HAL::Act::IPositionMotor>, 3> m_zMotors;
         uint32_t m_manualWatchdogTicks = 0;
         ZDirection m_currentManualDir  = ZDirection::Down; // Tracking active manual direction
 

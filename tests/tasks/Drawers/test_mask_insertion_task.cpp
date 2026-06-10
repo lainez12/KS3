@@ -1,4 +1,4 @@
-#include "HAL/Actuators/Motors/IMotor.h"
+#include "HAL/Actuators/Motors/IPositionMotor.h"
 #include "HAL/MachineStatus/MachineStatusRepo.h"
 #include "Services/Drawers/tasks/MaskInsertionTask.h"
 #include <catch2/catch_test_macros.hpp>
@@ -7,7 +7,7 @@ using namespace Kub3::Services;
 using namespace Kub3::HAL;
 using namespace Kub3::Config;
 
-class DummyMotor : public Act::IMotor
+class DummyMotor : public Act::IPositionMotor
 {
 public:
     const std::string m_id;

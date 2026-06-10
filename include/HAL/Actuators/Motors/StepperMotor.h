@@ -8,17 +8,16 @@
 
 #include <Algorithms/Kinematic/IKinematicGenerator.h>
 #include <Config/conf.h>
+#include <HAL/Actuators/Motors/IPositionMotor.h>
 #include <HAL/MCUDriver.h>
 #include <utils.h>
-
-#include "IMotor.h"
 
 namespace Kub3::HAL::Act
 {
 
     using namespace Algorithms::Kinematic;
 
-    class StepperMotor final : public QObject, public IMotor
+    class StepperMotor final : public QObject, public IPositionMotor
     {
         Q_OBJECT
     public:

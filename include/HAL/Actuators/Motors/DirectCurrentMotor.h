@@ -37,24 +37,16 @@ namespace Kub3::HAL::Act
             return m_id;
         }
 
-        void moveAbsolute(double position_mm, Config::kinematic_profile_t profile) override;
-        void moveRelative(double distance_mm, Config::kinematic_profile_t profile) override;
         void moveDirection(MotorDirection dir, Config::kinematic_profile_t profile) override;
         void emergencyStop(void) override;
 
         // Getters
         [[nodiscard]] bool isMoving(void) const override;
-        [[nodiscard]] std::string_view getEncoderId(void) const override
-        {
-            return m_encoderId;
-        };
-        [[nodiscard]] double getEncoderPositionMm(void) const override;
 
     private slots:
         void onControlTick(void);
 
     private:
-        double computePrecisionMm(const Config::kinematic_profile_t &profile) override;
         uint16_t computePwm(double velocityMmS) const;
         void sendPayload(const QByteArray &payload) const;
 

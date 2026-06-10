@@ -7,7 +7,7 @@
 
 #include <Algorithms/Admittance/AdmittanceController.h>
 #include <Config/kinematics.h>
-#include <HAL/Actuators/Motors/IMotor.h>
+#include <HAL/Actuators/Motors/IPositionMotor.h>
 #include <Services/ITask.h>
 #include <utils.h>
 
@@ -33,7 +33,7 @@ namespace Kub3::Services
             BasicContact
         };
 
-        AdmittanceControlTask(std::array<Shared<HAL::Act::IMotor>, 3> motors,
+        AdmittanceControlTask(std::array<Shared<HAL::Act::IPositionMotor>, 3> motors,
                               std::function<ForceReadings()> forceGetter,
                               std::function<void(const std::string &)> abortCb,
                               Algorithms::Control::admittance_config_t config,
@@ -44,7 +44,7 @@ namespace Kub3::Services
         bool tick(void) override;
 
     private:
-        std::array<Shared<HAL::Act::IMotor>, 3> m_motors;
+        std::array<Shared<HAL::Act::IPositionMotor>, 3> m_motors;
         std::function<ForceReadings()> m_forceGetter;
         std::function<void(const std::string &)> m_abortCb;
 

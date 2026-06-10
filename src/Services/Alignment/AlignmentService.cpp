@@ -130,9 +130,9 @@ namespace Kub3::Services
 
     void AlignmentService::loadConfigurations(Shared<HAL::Act::ActuatorRegistry> registry, const Config::process_config_t &processConfig)
     {
-        UNWRAP_OR_THROW(xMotor, registry->get<HAL::Act::IMotor>(X_STAGE_MOTOR), "[AlignmentService] Failed to load X Stage Motor: ");
-        UNWRAP_OR_THROW(yMotor, registry->get<HAL::Act::IMotor>(Y_STAGE_MOTOR), "[AlignmentService] Failed to load Y Stage Motor: ");
-        UNWRAP_OR_THROW(thetaMotor, registry->get<HAL::Act::IMotor>(THETA_STAGE_MOTOR), "[AlignmentService] Failed to load Theta Stage Motor: ");
+        UNWRAP_OR_THROW(xMotor, registry->get<HAL::Act::IPositionMotor>(X_STAGE_MOTOR), "[AlignmentService] Failed to load X Stage Motor: ");
+        UNWRAP_OR_THROW(yMotor, registry->get<HAL::Act::IPositionMotor>(Y_STAGE_MOTOR), "[AlignmentService] Failed to load Y Stage Motor: ");
+        UNWRAP_OR_THROW(thetaMotor, registry->get<HAL::Act::IPositionMotor>(THETA_STAGE_MOTOR), "[AlignmentService] Failed to load Theta Stage Motor: ");
 
         const motor_alignment_config_t xStageConfig{
             .motor       = xMotor,

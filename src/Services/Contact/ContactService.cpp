@@ -31,9 +31,9 @@ namespace Kub3::Services
         this->initializeMachineValues();
 
         // Motors & kinematics
-        UNWRAP_OR_THROW(leftMotor, m_registry->get<HAL::Act::IMotor>(Z_LEFT_MOTOR), "[ContactService] Failed to load Z Left Motor: ");
-        UNWRAP_OR_THROW(rightMotor, m_registry->get<HAL::Act::IMotor>(Z_RIGHT_MOTOR), "[ContactService] Failed to load Z Right Motor: ");
-        UNWRAP_OR_THROW(backMotor, m_registry->get<HAL::Act::IMotor>(Z_BACK_MOTOR), "[ContactService] Failed to load Z Back Motor: ");
+        UNWRAP_OR_THROW(leftMotor, m_registry->get<HAL::Act::IPositionMotor>(Z_LEFT_MOTOR), "[ContactService] Failed to load Z Left Motor: ");
+        UNWRAP_OR_THROW(rightMotor, m_registry->get<HAL::Act::IPositionMotor>(Z_RIGHT_MOTOR), "[ContactService] Failed to load Z Right Motor: ");
+        UNWRAP_OR_THROW(backMotor, m_registry->get<HAL::Act::IPositionMotor>(Z_BACK_MOTOR), "[ContactService] Failed to load Z Back Motor: ");
         m_zMotors          = {leftMotor, rightMotor, backMotor};
         m_freeProfile      = processConf.getKinematicProfile(Z_BACK_MOTOR, "normal");
         m_contactProfile   = processConf.getKinematicProfile(Z_BACK_MOTOR, "fine");

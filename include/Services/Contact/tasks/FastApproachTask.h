@@ -4,7 +4,7 @@
 #include <functional>
 
 #include <Config/kinematics.h>
-#include <HAL/Actuators/Motors/IMotor.h>
+#include <HAL/Actuators/Motors/IPositionMotor.h>
 #include <Services/ITask.h>
 #include <utils.h>
 
@@ -21,7 +21,7 @@ namespace Kub3::Services
             Finished
         };
 
-        FastApproachTask(std::array<Shared<HAL::Act::IMotor>, 3> motors,
+        FastApproachTask(std::array<Shared<HAL::Act::IPositionMotor>, 3> motors,
                          std::function<double()> maxForceGetter,
                          double contactThresholdGF,
                          Config::kinematic_profile_t profile);
@@ -30,7 +30,7 @@ namespace Kub3::Services
         bool tick(void) override;
 
     private:
-        std::array<Shared<HAL::Act::IMotor>, 3> m_motors;
+        std::array<Shared<HAL::Act::IPositionMotor>, 3> m_motors;
         std::function<double()> m_currentMaxForceGetter;
         const double m_threshold;
         Config::kinematic_profile_t m_profile;

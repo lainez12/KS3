@@ -7,10 +7,10 @@ namespace Kub3::Services
 
     CamerasInitTask::CamerasInitTask(Shared<HAL::MS::IMachineStatusRepo> repo,
                                      const Config::process_config_t &processConfig,
-                                     Shared<HAL::Act::IMotor> leftCamXMotor,
-                                     Shared<HAL::Act::IMotor> leftCamYMotor,
-                                     Shared<HAL::Act::IMotor> rightCamXMotor,
-                                     Shared<HAL::Act::IMotor> rightCamYMotor,
+                                     Shared<HAL::Act::IPositionMotor> leftCamXMotor,
+                                     Shared<HAL::Act::IPositionMotor> leftCamYMotor,
+                                     Shared<HAL::Act::IPositionMotor> rightCamXMotor,
+                                     Shared<HAL::Act::IPositionMotor> rightCamYMotor,
                                      Config::kinematic_profile_t kinematicProfile) :
         m_repo(std::move(repo)),
         m_processConf(processConfig),
@@ -64,7 +64,7 @@ namespace Kub3::Services
         return false;
     }
 
-    void CamerasInitTask::stopMotorIfMoving(Shared<HAL::Act::IMotor> motor)
+    void CamerasInitTask::stopMotorIfMoving(Shared<HAL::Act::IPositionMotor> motor)
     {
         if (motor && motor->isMoving())
             motor->emergencyStop();
@@ -72,7 +72,7 @@ namespace Kub3::Services
 
     // Stops motor if `motor->isMoving()` returns `true` and `limitValue` is `true`.
     // Starts motor if not `limitValue` is `false` and `motor->isMoving()` returns `false`.
-    void CamerasInitTask::handleSingleMotorLogic(Shared<HAL::Act::IMotor> motor, bool limitValue)
+    void CamerasInitTask::handleSingleMotorLogic(Shared<HAL::Act::IPositionMotor> motor, bool limitValue)
     {
         if (!motor)
             return;

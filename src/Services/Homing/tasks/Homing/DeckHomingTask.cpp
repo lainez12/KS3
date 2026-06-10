@@ -37,6 +37,7 @@ namespace Kub3::Services
         return false;
     }
 
+    // TODO: `moveTowardsLimit` does not mean shit, limits are both ways here
     void DeckHomingTask::moveTowardsLimit(void)
     {
         if (m_deckMotor && !m_deckMotor->isMoving())

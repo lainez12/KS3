@@ -7,7 +7,7 @@
 namespace Kub3::Services
 {
 
-    SaveCurrentPlanTask::SaveCurrentPlanTask(std::array<Shared<HAL::Act::IMotor>, 3> motors,
+    SaveCurrentPlanTask::SaveCurrentPlanTask(std::array<Shared<HAL::Act::IPositionMotor>, 3> motors,
                                              Optional<plan_deltas_t> &outPlanDeltas) :
         m_motors(std::move(motors)),
         m_outPlanDeltas(outPlanDeltas)

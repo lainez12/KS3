@@ -51,8 +51,8 @@ namespace Kub3::Services
             UNWRAP_OR_ABORT(xStageBundle, buildStageMotorBundle(StageMotorIdArg::XStage));
             UNWRAP_OR_ABORT(yStageBundle, buildStageMotorBundle(StageMotorIdArg::YStage));
             UNWRAP_OR_ABORT(thetaStageBundle, buildStageMotorBundle(StageMotorIdArg::ThetaStage));
-            UNWRAP_OR_ABORT(maskConvMotor, m_registry->get<HAL::Act::IMotor>(MASK_DRAWER_MOTOR));
-            UNWRAP_OR_ABORT(waferConvMotor, m_registry->get<HAL::Act::IMotor>(WAFER_DRAWER_MOTOR));
+            UNWRAP_OR_ABORT(maskConvMotor, m_registry->get<HAL::Act::IPositionMotor>(MASK_DRAWER_MOTOR));
+            UNWRAP_OR_ABORT(waferConvMotor, m_registry->get<HAL::Act::IPositionMotor>(WAFER_DRAWER_MOTOR));
 
             if (waferOn)
             {
@@ -79,7 +79,7 @@ namespace Kub3::Services
             enqueueTask<AlignmentStagesHomingTask>(m_repo, xStageBundle, yStageBundle, thetaStageBundle);
             // Init 3Z (lower to T2MK low limits)
             enqueueTask<ZMotorsInitTask>(m_repo, leftZMotorBundle, rightZMotorBundle, backZMotorBundle);
-            // TODO: Tare force sensors here
+            // TODO: Add task to tare force sensors here
             // Init mask conveyor
             enqueueTask<MaskConveyorInitTask>(
                 m_repo, maskConvMotor,
@@ -137,8 +137,8 @@ namespace Kub3::Services
             UNWRAP_OR_ABORT(xStageBundle, buildStageMotorBundle(StageMotorIdArg::XStage));
             UNWRAP_OR_ABORT(yStageBundle, buildStageMotorBundle(StageMotorIdArg::YStage));
             UNWRAP_OR_ABORT(thetaStageBundle, buildStageMotorBundle(StageMotorIdArg::ThetaStage));
-            UNWRAP_OR_ABORT(maskConvMotor, m_registry->get<HAL::Act::IMotor>(MASK_DRAWER_MOTOR));
-            UNWRAP_OR_ABORT(waferConvMotor, m_registry->get<HAL::Act::IMotor>(WAFER_DRAWER_MOTOR));
+            UNWRAP_OR_ABORT(maskConvMotor, m_registry->get<HAL::Act::IPositionMotor>(MASK_DRAWER_MOTOR));
+            UNWRAP_OR_ABORT(waferConvMotor, m_registry->get<HAL::Act::IPositionMotor>(WAFER_DRAWER_MOTOR));
 
             // Requests
             const bool alignmentHomeRequested     = (target & HomingTarget::ALIGNMENT_STAGES); // Needs !Z1 or contact Z2
@@ -349,7 +349,7 @@ namespace Kub3::Services
             };
         };
 
-        return m_registry->get<HAL::Act::IMotor>(motorId).map(buildBundle);
+        return m_registry->get<HAL::Act::IPositionMotor>(motorId).map(buildBundle);
     }
 
     Result<z_motor_bundle_t, std::string> HomingService::buildZMotorBundle(ZMotorIdArg arg)
@@ -386,7 +386,7 @@ namespace Kub3::Services
             };
         };
 
-        return m_registry->get<HAL::Act::IMotor>(label).map(bundleBuilder);
+        return m_registry->get<HAL::Act::IPositionMotor>(label).map(bundleBuilder);
     }
 
     Result<stage_motor_bundle_t, std::string> HomingService::buildStageMotorBundle(StageMotorIdArg arg)
@@ -423,7 +423,7 @@ namespace Kub3::Services
             };
         };
 
-        return m_registry->get<HAL::Act::IMotor>(motorId).map(bundleBuilder);
+        return m_registry->get<HAL::Act::IPositionMotor>(motorId).map(bundleBuilder);
     }
 
 }

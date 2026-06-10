@@ -8,7 +8,7 @@ namespace Kub3::Services
 
     using Dir = HAL::Act::MotorDirection;
 
-    AdmittanceControlTask::AdmittanceControlTask(std::array<Shared<HAL::Act::IMotor>, 3> motors,
+    AdmittanceControlTask::AdmittanceControlTask(std::array<Shared<HAL::Act::IPositionMotor>, 3> motors,
                                                  std::function<ForceReadings()> forceGetter,
                                                  std::function<void(const std::string &)> abortCb,
                                                  Algorithms::Control::admittance_config_t config,
@@ -93,7 +93,7 @@ namespace Kub3::Services
         m_convergenceTimer.invalidate();
 
         // Command Continuous Velocities to HAL layer
-        auto applyVelocity = [this](Shared<HAL::Act::IMotor> &motor, double velocity) {
+        auto applyVelocity = [this](Shared<HAL::Act::IPositionMotor> &motor, double velocity) {
             if (!motor)
                 return;
 

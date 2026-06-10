@@ -76,7 +76,7 @@ namespace Kub3::Tools::Tester
 
         for (const auto &id : m_knownMotorIds)
         {
-            if (m_actuatorRegistry->get<HAL::Act::IMotor>(id).is_ok())
+            if (m_actuatorRegistry->get<HAL::Act::IPositionMotor>(id).is_ok())
             {
                 motors.push_back(id);
             }
@@ -86,7 +86,7 @@ namespace Kub3::Tools::Tester
 
     bool MotorTestService::selectMotor(const std::string &motorId)
     {
-        auto motor = m_actuatorRegistry->get<HAL::Act::IMotor>(motorId);
+        auto motor = m_actuatorRegistry->get<HAL::Act::IPositionMotor>(motorId);
 
         if (motor.is_ok())
         {

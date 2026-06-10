@@ -1,6 +1,6 @@
 #pragma once
 
-#include <HAL/Actuators/Motors/IMotor.h>
+#include <HAL/Actuators/Motors/IPositionMotor.h>
 #include <Services/ITask.h>
 #include <utils.h>
 
@@ -8,7 +8,7 @@ namespace Kub3::Services
 {
 
     typedef struct camera_motor_bundle_s {
-        Shared<HAL::Act::IMotor> motor;
+        Shared<HAL::Act::IPositionMotor> motor;
         double centerPositionMm;
     } camera_motor_bundle_t;
 

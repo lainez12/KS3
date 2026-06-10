@@ -7,7 +7,7 @@
 
 #include <Config/conf.h>
 #include <HAL/Actuators/ActuatorRegistry.h>
-#include <HAL/Actuators/Motors/IMotor.h>
+#include <HAL/Actuators/Motors/IPositionMotor.h>
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
 #include <Services/IService.h>
 #include <utils.h>
@@ -70,7 +70,7 @@ namespace Kub3::Tools::Tester
         std::string m_errorReason;
 
         // MISU: Hardware interactions are unrepresentable if this is nullopt
-        std::optional<Shared<HAL::Act::IMotor>> m_selectedMotor = std::nullopt;
+        std::optional<Shared<HAL::Act::IPositionMotor>> m_selectedMotor = std::nullopt;
 
         // Kinematic Calculation State
         std::chrono::steady_clock::time_point m_lastTickTime;
