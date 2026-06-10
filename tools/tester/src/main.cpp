@@ -15,6 +15,7 @@ int main(int argc, char **argv)
     qInfo() << "  Version:" << KUB3_VERSION_STR;
     qInfo() << "  Hardware Config Path:" << KUB3_HARDWARE_CONFIG_PATH;
     qInfo() << "  Process Config Path:" << KUB3_PROCESS_CONFIG_PATH;
+    qInfo() << "  Admin Config Path:" << KUB3_ADMIN_CONFIG_PATH; // Unused for now
     qInfo() << "========================================";
 
     Kub3::Tools::Tester::ApplicationBuilder builder;

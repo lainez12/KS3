@@ -25,6 +25,12 @@
 #define CONF_PROCESS_LEFT_CAM_Y_RESET_POS_MM  "left_cam_y_reset_pos_mm"
 #define CONF_PROCESS_RIGHT_CAM_X_RESET_POS_MM "right_cam_x_reset_pos_mm"
 #define CONF_PROCESS_RIGHT_CAM_Y_RESET_POS_MM "right_cam_y_reset_pos_mm"
+// Focals
+#define CONF_PROCESS_LEFT_FOCAL          "left_focal"  // --- Upper left camera focal
+#define CONF_PROCESS_RIGHT_FOCAL         "right_focal" // --- Upper right camera focal
+#define CONF_PROCESS_FOCAL_DEFAULT_VALUE "focal_default_value"
+#define CONF_PROCESS_FOCAL_MIN_VALUE     "focal_min_value"
+#define CONF_PROCESS_FOCAL_MAX_VALUE     "focal_max_value"
 
 // CONF_PROCESS_ELEVATOR_POSITIONS inner keys
 #define CONF_PROCESS_MAX_Z_RELATIVE_DISTANCE_MM "max_z_relative_distance_mm"

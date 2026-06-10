@@ -1,6 +1,4 @@
-#if defined(BUILD_DEBUG)
 #include <QDebug>
-#endif
 
 #include <HAL/Actuators/Motors/IMotor.h>
 #include <HAL/MachineStatus/actuators_labels.h>

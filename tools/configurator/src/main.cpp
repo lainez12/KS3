@@ -47,7 +47,6 @@ int main(int argc, char *argv[])
     qInfo() << "  Hardware Config Path:" << KUB3_HARDWARE_CONFIG_PATH;
     qInfo() << "  Process Config Path:" << KUB3_PROCESS_CONFIG_PATH;
     qInfo() << "  Admin Config Path:" << KUB3_ADMIN_CONFIG_PATH;
-    qInfo() << "  Admin Vault Path:" << KUB3_ADMIN_VAULT_PATH;
     qInfo() << "========================================";
 
     try

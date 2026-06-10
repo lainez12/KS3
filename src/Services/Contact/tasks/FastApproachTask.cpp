@@ -1,7 +1,5 @@
-#if defined(BUILD_DEBUG)
 #include <QDebug>
 #include <QString>
-#endif
 
 #include <Config/helper.h>
 #include <Services/Contact/tasks/FastApproachTask.h>

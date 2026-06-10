@@ -56,15 +56,23 @@ namespace Kub3::Config
         double max_z_relative_distance_mm;
     } elevator_process_config_t;
 
+    typedef struct focal_configuration_s {
+        uint32_t default_value = 0;
+        uint32_t min_value     = 0;
+        uint32_t max_value     = 4095;
+    } focal_conf_t;
+
     typedef struct vision_process_config_s {
         // Safety limits
         double min_camera_distance_mm = 5.0;
-
         // Reset positions
         double left_cam_x_reset_pos_mm  = 0.0;
         double left_cam_y_reset_pos_mm  = 0.0;
         double right_cam_x_reset_pos_mm = 0.0;
         double right_cam_y_reset_pos_mm = 0.0;
+        // Focals
+        focal_conf_t left_focal_conf;
+        focal_conf_t right_focal_conf;
     } vision_process_config_t;
 
     typedef struct alignment_process_config_s {

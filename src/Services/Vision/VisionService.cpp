@@ -1,5 +1,6 @@
 #include <QDebug>
 
+#include <HAL/Actuators/Focal/IFocal.h>
 #include <HAL/MachineStatus/actuators_labels.h>
 #include <HAL/MachineStatus/sensors_labels.h>
 #include <HAL/MachineStatus/utils.h>
@@ -53,13 +54,15 @@ namespace Kub3::Services
                                  Shared<HAL::MS::IMachineStatusRepo> repo,
                                  const Config::process_config_t &processConf) :
         m_registry(std::move(registry)),
-        m_repo(std::move(repo))
+        m_repo(std::move(repo)),
+        m_conf(processConf.vision)
     {
         setupCameraMotor(VisionMotor::UpperLeftCameraX, LEFT_CAMERA_X_MOTOR, processConf);
         setupCameraMotor(VisionMotor::UpperLeftCameraY, LEFT_CAMERA_Y_MOTOR, processConf);
         setupCameraMotor(VisionMotor::UpperRightCameraX, RIGHT_CAMERA_X_MOTOR, processConf);
         setupCameraMotor(VisionMotor::UpperRightCameraY, RIGHT_CAMERA_Y_MOTOR, processConf);
-        m_minCameraDistanceMm = processConf.vision.min_camera_distance_mm;
+        UNWRAP_OR_THROW(leftFocal, m_registry->get<HAL::Act::IFocal>(LEFT_CAMERA_FOCAL), "[VisionService] Failed to load upper left camera focal: ");
+        UNWRAP_OR_THROW(rightFocal, m_registry->get<HAL::Act::IFocal>(RIGHT_CAMERA_FOCAL), "[VisionService] Failed to load upper right camera focal: ");
 
         auto deckMotorRes = m_registry->get<HAL::Act::IMotor>(DECK_MOTOR);
 
@@ -72,6 +75,13 @@ namespace Kub3::Services
         }
         m_deckMotor   = deckMotorRes.unwrap();
         m_deckProfile = processConf.getKinematicProfile(DECK_MOTOR, "normal");
+
+        // Load focal configurations
+        m_focalConfs.emplace(LEFT_CAMERA_FOCAL, m_conf.left_focal_conf);
+        m_focalConfs.emplace(RIGHT_CAMERA_FOCAL, m_conf.right_focal_conf);
+        // Set focals default values
+        setFocalValue(LEFT_CAMERA_FOCAL, m_conf.left_focal_conf.default_value);
+        setFocalValue(RIGHT_CAMERA_FOCAL, m_conf.right_focal_conf.default_value);
     }
 
     void VisionService::setupCameraMotor(VisionMotor motorId, const char *motorConfId, const Config::process_config_t &conf)
@@ -271,6 +281,46 @@ namespace Kub3::Services
         }
     }
 
+    void VisionService::setFocalValue(const std::string &focalId, uint16_t val)
+    {
+        constexpr auto ERR_PREFIX = "[VisionService] Failed to update focal value:";
+        auto focal                = m_registry->get<HAL::Act::IFocal>(focalId);
+
+        if (focal)
+        {
+            if (auto it = m_focalConfs.find(focalId); it != m_focalConfs.end())
+            {
+                auto conf        = it->second;
+                uint16_t safeVal = std::clamp(val, (uint16_t)(conf.min_value), (uint16_t)(conf.max_value));
+
+                focal->setValue(safeVal);
+            }
+            else
+            {
+                qCritical().noquote() << ERR_PREFIX << "Could not find matching configuration for identifier" << focalId;
+            }
+        }
+        else
+        {
+            qCritical().noquote() << ERR_PREFIX << focal.unwrap_err();
+        }
+    }
+
+    void VisionService::setFocalEnabled(const std::string &focalId, bool enabled)
+    {
+        constexpr auto ERR_PREFIX = "[VisionService] Failed to toggle focal enabled state:";
+        auto focal                = m_registry->get<HAL::Act::IFocal>(focalId);
+
+        if (focal)
+        {
+            enabled ? focal->enable() : focal->disable();
+        }
+        else
+        {
+            qCritical().noquote() << ERR_PREFIX << focal.unwrap_err();
+        }
+    }
+
     // ==========================================
     // ANTI-COLLISION LOGIC
     // ==========================================
@@ -294,7 +344,7 @@ namespace Kub3::Services
         const double currentDistanceMm = std::fabs(posRightX - posLeftX);
 
         // Distance is safely above the threshold, no danger
-        if (currentDistanceMm > m_minCameraDistanceMm)
+        if (currentDistanceMm > m_conf.min_camera_distance_mm)
             return false;
 
         // Check direction depending on which camera moves

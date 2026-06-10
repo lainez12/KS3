@@ -635,6 +635,7 @@ namespace Kub3::HAL
                     QMetaObject::invokeMethod(cam, &Vision::ICamera::setCenteredZoom, Qt::QueuedConnection, 1.0);
                     QMetaObject::invokeMethod(cam, &Vision::ICamera::setExposure, Qt::QueuedConnection, config.defaultExposureUs);
                     QMetaObject::invokeMethod(cam, &Vision::ICamera::setGain, Qt::QueuedConnection, config.defaultGainDb);
+                    QMetaObject::invokeMethod(cam, &Vision::ICamera::setFrameRate, Qt::QueuedConnection, config.framerate);
                 });
             // Connect frame forwarding
             connect(

@@ -85,6 +85,7 @@ namespace Kub3::Config
                 settings.setValue(CONF_HW_DEFAULT_EXPOSURE_US, camera.defaultExposureUs);
                 settings.setValue(CONF_HW_MAX_GAIN_DB, camera.maxGainDb);
                 settings.setValue(CONF_HW_DEFAULT_GAIN_DB, camera.defaultGainDb);
+                settings.setValue(CONF_HW_FRAMERATE, camera.framerate);
                 settings.endGroup(); // camera.id
             }
             settings.endGroup(); // CONF_HW_CAMERAS
@@ -164,6 +165,18 @@ namespace Kub3::Config
             settings.setValue(CONF_PROCESS_LEFT_CAM_Y_RESET_POS_MM, config.vision.left_cam_y_reset_pos_mm);
             settings.setValue(CONF_PROCESS_RIGHT_CAM_X_RESET_POS_MM, config.vision.right_cam_x_reset_pos_mm);
             settings.setValue(CONF_PROCESS_RIGHT_CAM_Y_RESET_POS_MM, config.vision.right_cam_y_reset_pos_mm);
+            {
+                settings.beginGroup(CONF_PROCESS_LEFT_FOCAL);
+                settings.setValue(CONF_PROCESS_FOCAL_DEFAULT_VALUE, config.vision.left_focal_conf.default_value);
+                settings.setValue(CONF_PROCESS_FOCAL_MIN_VALUE, config.vision.left_focal_conf.min_value);
+                settings.setValue(CONF_PROCESS_FOCAL_MAX_VALUE, config.vision.left_focal_conf.max_value);
+                settings.endGroup();
+                settings.beginGroup(CONF_PROCESS_RIGHT_FOCAL);
+                settings.setValue(CONF_PROCESS_FOCAL_DEFAULT_VALUE, config.vision.right_focal_conf.default_value);
+                settings.setValue(CONF_PROCESS_FOCAL_MIN_VALUE, config.vision.right_focal_conf.min_value);
+                settings.setValue(CONF_PROCESS_FOCAL_MAX_VALUE, config.vision.right_focal_conf.max_value);
+                settings.endGroup();
+            }
             settings.endGroup(); // CONF_PROCESS_CAMERAS
 
             // SAVE ALIGNMENT POSITIONS

@@ -75,6 +75,8 @@ namespace Kub3::Services
         {
             m_pushingModeEnabled = enabled;
         }
+        void setFocalEnabled(const std::string &focalId, bool enabled);
+        void setFocalValue(const std::string &focalId, uint16_t val) override;
 
     private:
         [[nodiscard]] bool inCollisionZone(VisionMotor motor, VisionDirection dir) const;
@@ -85,10 +87,11 @@ namespace Kub3::Services
     private:
         Shared<HAL::Act::ActuatorRegistry> m_registry;
         Shared<HAL::MS::IMachineStatusRepo> m_repo;
+        Config::vision_process_config_t m_conf;
 
-        bool m_pushingModeEnabled    = false;
-        double m_minCameraDistanceMm = 0.0f; // Minimal safe distance to prevent collision
+        bool m_pushingModeEnabled = false;
         std::unordered_map<VisionMotor, vision_motor_config_t> m_cameraMotors;
+        std::unordered_map<std::string, Config::focal_conf_t> m_focalConfs;
 
         // --- Deck Movement State ---
         Shared<HAL::Act::IMotor> m_deckMotor;

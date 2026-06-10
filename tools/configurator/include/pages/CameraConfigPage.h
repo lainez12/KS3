@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QComboBox>
 #include <QDoubleSpinBox>
 #include <QFormLayout>
 #include <QLabel>
@@ -34,6 +35,7 @@ namespace Kub3::Components
         QDoubleSpinBox *m_defaultExposureUs = nullptr;
         QDoubleSpinBox *m_maxGainDb         = nullptr;
         QDoubleSpinBox *m_defaultGainDb     = nullptr;
+        QComboBox *m_cbFramerate            = nullptr;
     };
 
 } // namespace Kub3::Components

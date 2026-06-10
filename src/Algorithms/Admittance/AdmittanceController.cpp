@@ -2,10 +2,8 @@
 #include <algorithm>
 #include <cmath>
 
-#if defined(BUILD_DEBUG)
 #include <QDebug>
 #include <QString>
-#endif
 
 #include <Algorithms/Admittance/AdmittanceController.h>
 

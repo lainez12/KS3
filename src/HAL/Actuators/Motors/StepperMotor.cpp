@@ -1,6 +1,4 @@
-#if defined(BUILD_DEBUG)
 #include <QDebug>
-#endif
 
 #include <QMetaObject>
 #include <stdexcept>

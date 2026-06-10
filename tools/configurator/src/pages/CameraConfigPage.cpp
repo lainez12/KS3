@@ -36,16 +36,23 @@ namespace Kub3::Components
         // Machine Vision cameras often have exposures up to 1+ seconds (1,000,000 us)
         m_maxExposureUs     = createDoubleSpinBox(10000000.0, 2);
         m_defaultExposureUs = createDoubleSpinBox(10000000.0, 2);
-
         // Gain typically ranges from 0 to ~40-100 dB depending on the sensor
         m_maxGainDb     = createDoubleSpinBox(100.0, 2);
         m_defaultGainDb = createDoubleSpinBox(100.0, 2);
+        // Framerate
+        m_cbFramerate                  = new QComboBox();
+        const QList<double> fpsOptions = {24, 25, 30, 48, 50, 60};
+        for (double fps : fpsOptions)
+        {
+            m_cbFramerate->addItem(QString("%1 FPS").arg(fps), QVariant::fromValue(fps));
+        }
 
         formLayout->addRow("Serial Number:", m_serialNumber);
         formLayout->addRow("Maximum Exposure (µs):", m_maxExposureUs);
         formLayout->addRow("Default Exposure (µs):", m_defaultExposureUs);
         formLayout->addRow("Maximum Gain (dB):", m_maxGainDb);
         formLayout->addRow("Default Gain (dB):", m_defaultGainDb);
+        formLayout->addRow("Default Framerate:", m_cbFramerate);
 
         m_layout->addLayout(formLayout);
         m_layout->addStretch(); // Push UI to the top
@@ -71,6 +78,16 @@ namespace Kub3::Components
         m_defaultGainDb->setValue(conf.defaultGainDb);
 
         m_serialNumber->setText(QString::fromStdString(conf.serialNumber));
+
+        if (int idx = m_cbFramerate->findData(conf.framerate); idx != -1)
+            m_cbFramerate->setCurrentIndex(idx);
+        else
+        {
+            // Failsafe: If the .ini has an unusual custom framerate (e.g., set manually in a text editor),
+            // inject it dynamically so it isn't accidentally lost/overwritten.
+            m_cbFramerate->addItem(QString("%1 FPS (Custom)").arg(conf.framerate), conf.framerate);
+            m_cbFramerate->setCurrentIndex(m_cbFramerate->count() - 1);
+        }
     }
 
     void CameraConfigPage::pullDataToStruct(Kub3::Config::camera_config_t &outConf) const
@@ -81,6 +98,7 @@ namespace Kub3::Components
         outConf.defaultExposureUs = m_defaultExposureUs->value();
         outConf.maxGainDb         = m_maxGainDb->value();
         outConf.defaultGainDb     = m_defaultGainDb->value();
+        outConf.framerate         = m_cbFramerate->currentData().toDouble();
     }
 
 } // namespace Kub3::Components

@@ -15,6 +15,7 @@
 #include <utils.h>
 
 #include <QDoubleSpinBox>
+#include <QFile>
 #include <QGroupBox>
 #include <QLabel>
 #include <QLineEdit>
@@ -88,7 +89,7 @@ void ConfigWindow::onSaveClicked()
         Kub3::Config::ConfigSaver::saveProcessConfig(m_processConfig, m_processConfigPath.toStdString());
         Kub3::Config::ConfigSaver::saveAdminConfig(m_adminConfig, m_adminConfigPath.toStdString());
 
-#ifndef BUILD_DEBUG
+#ifdef BUILD_RELEASE
         // SECURE THE FILE: Enforce root-only access for Admin Config in release or deploy mode
         QFile adminFile(m_adminConfigPath);
         if (adminFile.exists())

@@ -51,6 +51,7 @@ namespace Kub3::Config
         double defaultExposureUs;
         double maxGainDb;
         double defaultGainDb;
+        double framerate = 30.0;
     } camera_config_t;
 
     // Top level struct for hardware config

@@ -1,6 +1,4 @@
-#if defined(BUILD_DEBUG)
 #include <QDebug>
-#endif
 
 #include <HAL/Actuators/Focal/Focal.h>
 

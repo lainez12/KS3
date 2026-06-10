@@ -25,11 +25,21 @@ namespace Kub3
     using ConveyorDrawerService = Services::DualConveyorDrawerService;
 #endif
 
-    ApplicationBuilder &ApplicationBuilder::loadConfigurations(const std::string &hwPath, const std::string &processPath)
+    ApplicationBuilder &ApplicationBuilder::loadConfigurations(const std::string &hwPath,
+                                                               const std::string &processPath,
+                                                               const std::string &adminPath)
     {
         qInfo() << "Loading Configurations...";
         m_hwConfig      = Config::ConfigLoader::loadHardwareConfig(hwPath);
         m_processConfig = Config::ConfigLoader::loadProcessConfig(processPath);
+        m_adminConfig   = Config::ConfigLoader::loadAdminConfig(adminPath);
+
+#if defined(BUILD_RELEASE)
+        if (!m_adminConfig.kloe_mode)
+        {
+            QApplication::setOverrideCursor(Qt::BlankCursor);
+        }
+#endif
 
         qInfo() << m_hwConfig;
         qInfo() << m_processConfig;
