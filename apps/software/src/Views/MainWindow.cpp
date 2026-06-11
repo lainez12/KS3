@@ -175,8 +175,10 @@ void MainWindow::clearBottomBar()
         QLayoutItem *item;
         while ((item = layout->takeAt(0)))
         {
-            if (item->widget())
+            if (item->widget()){
+                item->widget()->setParent(nullptr);
                 item->widget()->deleteLater();
+            }
             delete item;
         }
     };

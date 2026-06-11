@@ -1,6 +1,7 @@
 #ifndef VISUALISATIONVIEW_H
 #define VISUALISATIONVIEW_H
 
+#include <QLabel>
 #include <QWidget>
 #include <ViewModels/Alignment/VisualisationViewModel.h>
 #include <Views/AlignmentViewBase.h>
@@ -49,6 +50,9 @@ namespace Kub3::UI::Views::ViewsAlignment
     private:
         Ui::VisualisationView *ui;
         KeyboardConnections m_keyboard;
+        QWidget *m_maskingDistanceWidget;
+        QLabel *m_labelText;
+        QLabel *m_labelValue;
     };
 
 } // namespace Kub3::UI::Views

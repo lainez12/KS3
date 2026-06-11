@@ -1,5 +1,6 @@
 #include <QDebug>
 #include <QString>
+#include <QLabel>
 
 #include <Views/Alignment/VisualisationView.h>
 #include <Views/Components/Colors.h>
@@ -46,6 +47,8 @@ VisualisationView::VisualisationView(Unique<VisualisationViewModel> viewModel, Q
 
     connect(ui->configCamLeftCheck, &QCheckBox::toggled, this, &VisualisationView::leftCamConfigToggled);
     connect(ui->configCamRightCheck, &QCheckBox::toggled, this, &VisualisationView::rightCamConfigToggled);
+    
+    
     connect(ui->moveCamLeft, &NavButton::clicked, [this]() {
         ui->moveCamLeft->switchColor(ui->moveLeftCamWidget->isVisible());
         ui->moveLeftCamWidget->setVisible(!ui->moveLeftCamWidget->isVisible());
@@ -54,6 +57,16 @@ VisualisationView::VisualisationView(Unique<VisualisationViewModel> viewModel, Q
         ui->moveCamRight->switchColor(ui->moveRightCamWidget->isVisible());
         ui->moveRightCamWidget->setVisible(!ui->moveRightCamWidget->isVisible());
     });
+
+    // Create masking distance widget
+    m_maskingDistanceWidget = new QWidget(this);
+    m_maskingDistanceWidget->setStyleSheet(QString("background-color: %1;").arg(TURQUOISE_COLOR));
+    
+    m_labelText = new QLabel("Masking distance", m_maskingDistanceWidget);
+    m_labelText->setStyleSheet("color: white; font-weight: bold; font-size: 25px;");
+    
+    m_labelValue = new QLabel("150μm", m_maskingDistanceWidget);
+    m_labelValue->setStyleSheet("color: white; font-weight: bold; font-size: 25px;");
 
     setNewNavButtonsConfigs();
 }
@@ -124,6 +137,18 @@ void VisualisationView::resizeEvent(QResizeEvent *ev)
     // Position moveRightCamWidget: right side of visioRight, full height
     int moveRightCamWidgetX = visioRightWidth - ui->moveRightCamWidget->width();
     ui->moveRightCamWidget->setGeometry(moveRightCamWidgetX, 0, ui->moveRightCamWidget->width(), visioRightHeight);
+
+    // Position masking distance widget: centered at bottom
+    int maskingWidgetWidth = 381;
+    int maskingWidgetHeight = 73;
+    int maskingWidgetX = (width() - maskingWidgetWidth) / 2;
+    int maskingWidgetY = height() - maskingWidgetHeight - BOTTOM_MARGIN;
+    m_maskingDistanceWidget->setGeometry(maskingWidgetX, maskingWidgetY, maskingWidgetWidth, maskingWidgetHeight);
+    
+    // Position labels horizontally inside the widget
+    int halfWidth = (maskingWidgetWidth - 30) / 2;
+    m_labelText->setGeometry(10, 10, halfWidth, 53);
+    m_labelValue->setGeometry(10 + halfWidth + 10, 10, halfWidth, 53);
 }
 
 void VisualisationView::setNewNavButtonsConfigs()
@@ -227,8 +252,8 @@ void VisualisationView::onValidateButtonClicked(const QString &buttonId)
     emit s_openView(Kub3::UI::ViewId::EXPOSURE_SETTINGS_VIEW);
 }
 
-void VisualisationView::onSaveButtonClicked(const QString &buttonId)
-{
+void VisualisationView::onSaveButtonClicked(const QString &buttonId) {
+    emit s_openView(Kub3::UI::ViewId::ALIGNMENT_SAVE_PARAMETERS_VIEW);
 }
 
 void VisualisationView::onLoadButtonClicked(const QString &buttonId)

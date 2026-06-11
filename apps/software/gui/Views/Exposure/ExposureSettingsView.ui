@@ -910,7 +910,7 @@ opacity: 1;</string>
               </size>
              </property>
              <property name="styleSheet">
-              <string notr="true">box-shadow: 8px 8px 8px #0070DB29;
+              <string notr="true">
 width: 85px;
 height: 55px;
 text-align: left;
@@ -1169,7 +1169,7 @@ opacity: 1;</string>
               </size>
              </property>
              <property name="styleSheet">
-              <string notr="true">box-shadow: 8px 8px 8px #0070DB29;
+              <string notr="true">
 width: 85px;
 height: 55px;
 text-align: left;
@@ -1337,7 +1337,7 @@ opacity: 1;</string>
               </size>
              </property>
              <property name="styleSheet">
-              <string notr="true">box-shadow: 8px 8px 8px #0070DB29;
+              <string notr="true">
 width: 85px;
 height: 55px;
 text-align: left;
@@ -1406,7 +1406,7 @@ opacity: 1;</string>
               </size>
              </property>
              <property name="styleSheet">
-              <string notr="true">box-shadow: 8px 8px 8px #0070DB29;
+              <string notr="true">
 width: 85px;
 height: 55px;
 text-align: left;
@@ -1493,7 +1493,7 @@ opacity: 1;</string>
               </size>
              </property>
              <property name="styleSheet">
-              <string notr="true">box-shadow: 8px 8px 8px #0070DB29;
+              <string notr="true">
 width: 85px;
 height: 55px;
 text-align: left;
@@ -1599,7 +1599,7 @@ opacity: 1;</string>
               </size>
              </property>
              <property name="styleSheet">
-              <string notr="true">box-shadow: 8px 8px 8px #0070DB29;
+              <string notr="true">
 
 text-align: left;
 font: normal normal bold 25px/29px Arial;
@@ -1754,7 +1754,7 @@ opacity: 1;</string>
               <bool>false</bool>
              </property>
              <property name="styleSheet">
-              <string notr="true">box-shadow: 8px 8px 8px #0070DB29;
+              <string notr="true">
 width: 85px;
 height: 55px;
 text-align: left;

@@ -110,6 +110,12 @@ opacity: 1;</string>
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
+             <property name="minimumSize">
+              <size>
+               <width>200</width>
+               <height>0</height>
+              </size>
+             </property>
              <property name="maximumSize">
               <size>
                <width>280</width>
@@ -176,6 +182,12 @@ opacity: 1;</string>
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
+             <property name="minimumSize">
+              <size>
+               <width>300</width>
+               <height>0</height>
+              </size>
+             </property>
              <property name="maximumSize">
               <size>
                <width>300</width>
@@ -239,9 +251,15 @@ opacity: 1;</string>
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
+             <property name="minimumSize">
+              <size>
+               <width>200</width>
+               <height>0</height>
+              </size>
+             </property>
              <property name="maximumSize">
               <size>
-               <width>280</width>
+               <width>200</width>
                <height>16777215</height>
               </size>
              </property>
@@ -287,7 +305,7 @@ opacity: 1;</string>
               <enum>Qt::Orientation::Horizontal</enum>
              </property>
              <property name="sizeType">
-              <enum>QSizePolicy::Policy::Minimum</enum>
+              <enum>QSizePolicy::Policy::MinimumExpanding</enum>
              </property>
              <property name="sizeHint" stdset="0">
               <size>
@@ -301,13 +319,13 @@ opacity: 1;</string>
             <widget class="QLabel" name="label_6">
              <property name="minimumSize">
               <size>
-               <width>450</width>
+               <width>300</width>
                <height>0</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
-               <width>450</width>
+               <width>300</width>
                <height>150</height>
               </size>
              </property>
@@ -970,7 +988,7 @@ font-family: arial;</string>
       </layout>
      </item>
      <item row="1" column="0" colspan="2">
-      <layout class="QHBoxLayout" name="horizontalLayout">
+      <layout class="QHBoxLayout" name="maskingDistanceLayout">
        <item>
         <widget class="QLabel" name="label_9">
          <property name="sizePolicy">
