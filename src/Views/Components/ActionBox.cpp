@@ -1,9 +1,10 @@
 #include <QRegion>
 #include <QResizeEvent>
 
-#include "Views/Components/ActionBox.h"
+#include <Views/Components/ActionBox.h>
 
-ActionBox::ActionBox(QWidget *parent) : BottomCroppedCircle(parent) {
+ActionBox::ActionBox(QWidget *parent) : BottomCroppedCircle(parent)
+{
     this->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     m_layout = new QVBoxLayout(this);
@@ -28,20 +29,23 @@ ActionBox::ActionBox(QWidget *parent) : BottomCroppedCircle(parent) {
     m_layout->addWidget(m_text, 0, Qt::AlignHCenter);
 }
 
-void ActionBox::setup(const QString &text, const QColor &color, const QString &iconPath) {
+void ActionBox::setup(const QString &text, const QColor &color, const QString &iconPath)
+{
     m_text->setText(text);
     this->setColor(color);
     this->setIcon(iconPath);
 }
 
-void ActionBox::setIcon(const QString &iconPath) {
+void ActionBox::setIcon(const QString &iconPath)
+{
     m_iconPath = iconPath;
     if (iconPath.isEmpty())
         return;
 
     QPixmap pix(iconPath);
 
-    if (!pix.isNull()) {
+    if (!pix.isNull())
+    {
         const int iconSize = this->width() * 0.36; // 36% of width
 
         m_icon->setPixmap(pix);
@@ -49,7 +53,8 @@ void ActionBox::setIcon(const QString &iconPath) {
     }
 }
 
-void ActionBox::resizeEvent(QResizeEvent *event) {
+void ActionBox::resizeEvent(QResizeEvent *event)
+{
     BottomCroppedCircle::resizeEvent(event);
 
     int side = this->width();
@@ -74,6 +79,7 @@ void ActionBox::resizeEvent(QResizeEvent *event) {
         m_icon->setStyleSheet(QString("background-color: none; border-radius: 0px;"));
 }
 
-void ActionBox::mouseReleaseEvent(QMouseEvent *event) {
+void ActionBox::mouseReleaseEvent(QMouseEvent *event)
+{
     emit clicked();
 }

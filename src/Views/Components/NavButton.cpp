@@ -1,8 +1,9 @@
-#include "Views/Components/NavButton.h"
 #include "ui_NavButton.h"
+#include <Views/Components/NavButton.h>
 
 NavButton::NavButton(QWidget *parent) :
-    QWidget(parent) {
+    QWidget(parent)
+{
     QVBoxLayout *layout = new QVBoxLayout(this);
 
     layout->setAlignment(Qt::AlignCenter);
@@ -34,7 +35,8 @@ NavButton::NavButton(QWidget *parent) :
     layout->addWidget(m_text, 0, Qt::AlignHCenter);
 }
 
-void NavButton::setup(const QString &text, const QColor &colorEnabled, const QColor &colorDisabled, const QString &iconPath) {
+void NavButton::setup(const QString &text, const QColor &colorEnabled, const QColor &colorDisabled, const QString &iconPath)
+{
     m_text->setText(text);
     m_circle->setColor(colorEnabled);
     this->colorEnabled  = colorEnabled;
@@ -45,51 +47,65 @@ void NavButton::setup(const QString &text, const QColor &colorEnabled, const QCo
         this->setIcon(iconPath);
 }
 
-void NavButton::setIcon(const QString &path) {
+void NavButton::setIcon(const QString &path)
+{
     QPixmap pix(path);
 
     if (!pix.isNull())
         m_iconLabel->setPixmap(pix);
 }
 
-void NavButton::setText(const QString &newText) {
+void NavButton::setText(const QString &newText)
+{
     m_text->setText(newText);
 }
 
-void NavButton::setEnabledNavButton(bool state) {
+void NavButton::setEnabledNavButton(bool state)
+{
     setEnabled(state);
-    if (state) {
+    if (state)
+    {
         m_text->setStyleSheet(QString("color: %1; font-size: 12px;").arg(colorEnabled.name()));
         m_circle->setColor(colorEnabled);
-    } else {
+    }
+    else
+    {
         m_text->setStyleSheet(QString("color: %1; font-size: 12px;").arg(colorDisabled.name()));
         m_circle->setColor(colorDisabled);
     }
 }
 
-void NavButton::getColorDisabled() {
+void NavButton::getColorDisabled()
+{
     m_text->setStyleSheet(QString("color: %1; font-size: 12px;").arg(colorDisabled.name()));
     m_circle->setColor(colorDisabled);
 }
 
-void NavButton::getColorEnabled() {
+void NavButton::getColorEnabled()
+{
     m_text->setStyleSheet(QString("color: %1; font-size: 12px;").arg(colorEnabled.name()));
     m_circle->setColor(colorEnabled);
 }
 
-void NavButton::switchColor(bool enabled) {
-    if (enabled) {
+void NavButton::switchColor(bool enabled)
+{
+    if (enabled)
+    {
         getColorEnabled();
-    } else {
+    }
+    else
+    {
         getColorDisabled();
     }
 }
 
-void NavButton::mouseReleaseEvent(QMouseEvent *event) {
+void NavButton::mouseReleaseEvent(QMouseEvent *event)
+{
     emit clicked();
 }
 
-void NavButton::setSize(const uint sizePx) {
+void NavButton::setSize(const uint sizePx)
+{
     int iconSizePx = static_cast<int>(sizePx * (2.0 / 3.0));
 
     m_circle->setFixedSize(QSize(sizePx, sizePx));

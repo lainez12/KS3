@@ -1,8 +1,8 @@
-#include "Views/Components/Colors.h"
 #include <QApplication>
 #include <QGraphicsDropShadowEffect>
 #include <QLineEdit>
 #include <QSpinBox>
+#include <Views/Components/Colors.h>
 #include <Views/ViewBase.h>
 
 namespace Kub3::UI::Views

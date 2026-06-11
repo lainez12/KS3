@@ -1,18 +1,23 @@
 // KeyboardConnections.cpp
-#include "Views/KeyboardConnections.h"
 #include <QApplication>
 #include <QLineEdit>
 #include <QSpinBox>
 
-namespace Kub3::UI::Views {
+#include <Views/KeyboardConnections.h>
+
+namespace Kub3::UI::Views
+{
 
     KeyboardConnections::KeyboardConnections(QWidget *parent) :
-        QWidget(parent) {
+        QWidget(parent)
+    {
     }
 
-    void KeyboardConnections::simulationKey(Qt::Key keyCode, const QString &text) {
+    void KeyboardConnections::simulationKey(Qt::Key keyCode, const QString &text)
+    {
         QWidget *focusedWidget = QApplication::focusWidget();
-        if (focusedWidget) {
+        if (focusedWidget)
+        {
             QKeyEvent *keyPress = new QKeyEvent(QEvent::KeyPress, keyCode, Qt::NoModifier, text);
             QApplication::postEvent(focusedWidget, keyPress);
 
@@ -21,21 +26,29 @@ namespace Kub3::UI::Views {
         }
     }
 
-    void KeyboardConnections::clearInputSelected() {
+    void KeyboardConnections::clearInputSelected()
+    {
         QWidget *focusedWidget = QApplication::focusWidget();
-        if (!focusedWidget) {
+        if (!focusedWidget)
+        {
             return;
         }
-        if (QSpinBox *spinBox = qobject_cast<QSpinBox *>(focusedWidget)) {
+        if (QSpinBox *spinBox = qobject_cast<QSpinBox *>(focusedWidget))
+        {
             spinBox->clear();
-        } else if (QDoubleSpinBox *doubleSpinBox = qobject_cast<QDoubleSpinBox *>(focusedWidget)) {
+        }
+        else if (QDoubleSpinBox *doubleSpinBox = qobject_cast<QDoubleSpinBox *>(focusedWidget))
+        {
             doubleSpinBox->clear();
-        } else if (QLineEdit *lineEdit = qobject_cast<QLineEdit *>(focusedWidget)) {
+        }
+        else if (QLineEdit *lineEdit = qobject_cast<QLineEdit *>(focusedWidget))
+        {
             lineEdit->clear();
         }
     }
 
-    void KeyboardConnections::setupKeyboardConnections(QWidget *parent, const QString &suffix) {
+    void KeyboardConnections::setupKeyboardConnections(QWidget *parent, const QString &suffix)
+    {
         if (!parent)
             parent = this;
 
@@ -85,18 +98,22 @@ namespace Kub3::UI::Views {
         connectButton(parent, "btnM" + suffix, Qt::Key_M, "M");
     }
 
-    void KeyboardConnections::connectButton(QWidget *parent, const QString &buttonName, Qt::Key keyCode, const QString &text) {
+    void KeyboardConnections::connectButton(QWidget *parent, const QString &buttonName, Qt::Key keyCode, const QString &text)
+    {
         QPushButton *btn = parent->findChild<QPushButton *>(buttonName);
-        if (btn) {
+        if (btn)
+        {
             connect(btn, &QPushButton::clicked, this, [this, keyCode, text]() {
                 simulationKey(keyCode, text);
             });
         }
     }
 
-    void KeyboardConnections::connectClearButton(QWidget *parent, const QString &buttonName) {
+    void KeyboardConnections::connectClearButton(QWidget *parent, const QString &buttonName)
+    {
         QPushButton *btn = parent->findChild<QPushButton *>(buttonName);
-        if (btn) {
+        if (btn)
+        {
             connect(btn, &QPushButton::clicked, this, [this]() {
                 clearInputSelected();
             });

@@ -1,4 +1,5 @@
-#include "Views/HomeEightView.h"
+#include <Views/HomeEightView.h>
+
 #include "ui_HomeEightView.h"
 
 #define ID_BTN_SETTINGS "S"

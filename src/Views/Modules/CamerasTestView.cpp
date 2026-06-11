@@ -1,6 +1,6 @@
 #include "ui_CamerasTestView.h"
 #include <HAL/Vision/identifiers.h>
-#include <ViewModels/ViewModelsSettings/MachineStatusViewModel.h>
+#include <ViewModels/Settings/MachineStatusViewModel.h>
 #include <Views/Components/DoubleRatioSlider.h>
 #include <Views/Modules/CamerasTestView.h>
 

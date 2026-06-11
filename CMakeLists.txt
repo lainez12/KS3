@@ -25,7 +25,7 @@ set(CMAKE_AUTOUIC_SEARCH_PATHS
     # Main app
     "gui;gui/Components"
     # --- Views
-    "gui/Views;gui/Views/ViewsSettings;gui/Views/ViewsExposure;gui/Views/ViewsAlignment"
+    "gui/Views;gui/Views/Settings;gui/Views/Exposure;gui/Views/Alignment"
     # Configurator tool
     "tools/configurator/gui"
     # Motor tester tool
@@ -305,29 +305,29 @@ qt_add_executable(Kub3Software
     src/ApplicationBuilder.cpp
     src/ViewModels/HomeViewModel.cpp
     src/ViewModels/SettingsViewModel.cpp
-    src/ViewModels/ViewModelsExposure/ExposureSettingsViewModel.cpp
-    src/ViewModels/ViewModelsExposure/FavoriteExposureSettingsViewModel.cpp
-    src/ViewModels/ViewModelsExposure/RecapExposureSettingsViewModel.cpp
-    src/ViewModels/ViewModelsExposure/CompleteExposureViewModel.cpp
-    src/ViewModels/ViewModelsExposure/ProgressExposureViewModel.cpp
-    src/ViewModels/ViewModelsExposure/SaveExposureSettingsViewModel.cpp
-    src/ViewModels/ViewModelsSettings/MachineStatusViewModel.cpp
-    src/ViewModels/ViewModelsSettings/VersionViewModel.cpp
-    src/ViewModels/ViewModelsSettings/TemperatureViewModel.cpp
-    src/ViewModels/ViewModelsSettings/UpdateSoftwareViewModel.cpp
-    src/ViewModels/ViewModelsSettings/ScreenshotExportViewModel.cpp
-    src/ViewModels/ViewModelsSettings/LedTestViewModel.cpp
-    src/ViewModels/ViewModelsSettings/OperatingTimesViewModel.cpp
-    src/ViewModels/ViewModelsAlignment/LoadParametersViewModel.cpp
-    src/ViewModels/ViewModelsAlignment/SaveParametersViewModel.cpp
-    src/ViewModels/ViewModelsAlignment/VisualisationViewModel.cpp
-    src/ViewModels/ViewModelsAlignment/DistanceViewModel.cpp
-    src/Views/ViewsExposure/ExposureSettingsView.cpp
-    src/Views/ViewsExposure/FavoriteExposureSettingsView.cpp
-    src/Views/ViewsExposure/RecapExposureSettingsView.cpp
-    src/Views/ViewsExposure/CompleteExposureView.cpp
-    src/Views/ViewsExposure/ProgressExposureView.cpp
-    src/Views/ViewsExposure/SaveExposureSettingsView.cpp
+    src/ViewModels/Exposure/ExposureSettingsViewModel.cpp
+    src/ViewModels/Exposure/FavoriteExposureSettingsViewModel.cpp
+    src/ViewModels/Exposure/RecapExposureSettingsViewModel.cpp
+    src/ViewModels/Exposure/CompleteExposureViewModel.cpp
+    src/ViewModels/Exposure/ProgressExposureViewModel.cpp
+    src/ViewModels/Exposure/SaveExposureSettingsViewModel.cpp
+    src/ViewModels/Settings/MachineStatusViewModel.cpp
+    src/ViewModels/Settings/VersionViewModel.cpp
+    src/ViewModels/Settings/TemperatureViewModel.cpp
+    src/ViewModels/Settings/UpdateSoftwareViewModel.cpp
+    src/ViewModels/Settings/ScreenshotExportViewModel.cpp
+    src/ViewModels/Settings/LedTestViewModel.cpp
+    src/ViewModels/Settings/OperatingTimesViewModel.cpp
+    src/ViewModels/Alignment/LoadParametersViewModel.cpp
+    src/ViewModels/Alignment/SaveParametersViewModel.cpp
+    src/ViewModels/Alignment/VisualisationViewModel.cpp
+    src/ViewModels/Alignment/DistanceViewModel.cpp
+    src/Views/Exposure/ExposureSettingsView.cpp
+    src/Views/Exposure/FavoriteExposureSettingsView.cpp
+    src/Views/Exposure/RecapExposureSettingsView.cpp
+    src/Views/Exposure/CompleteExposureView.cpp
+    src/Views/Exposure/ProgressExposureView.cpp
+    src/Views/Exposure/SaveExposureSettingsView.cpp
     src/Views/MainWindow.cpp
     src/Views/ViewBase.cpp
     src/Views/KeyboardConnections.cpp
@@ -337,17 +337,17 @@ qt_add_executable(Kub3Software
     src/Views/HomeView.cpp
     src/Views/HomeEightView.cpp
     src/Views/SettingsView.cpp
-    src/Views/ViewsSettings/MachineStatusView.cpp
-    src/Views/ViewsSettings/VersionView.cpp
-    src/Views/ViewsSettings/TemperatureView.cpp
-    src/Views/ViewsSettings/UpdateSoftwareView.cpp
-    src/Views/ViewsSettings/ScreenshotExportView.cpp
-    src/Views/ViewsSettings/LedTestView.cpp
-    src/Views/ViewsSettings/OperatingTimesView.cpp
-    src/Views/ViewsAlignment/LoadParametersView.cpp
-    src/Views/ViewsAlignment/SaveParametersView.cpp
-    src/Views/ViewsAlignment/VisualisationView.cpp
-    src/Views/ViewsAlignment/DistanceView.cpp
+    src/Views/Settings/MachineStatusView.cpp
+    src/Views/Settings/VersionView.cpp
+    src/Views/Settings/TemperatureView.cpp
+    src/Views/Settings/UpdateSoftwareView.cpp
+    src/Views/Settings/ScreenshotExportView.cpp
+    src/Views/Settings/LedTestView.cpp
+    src/Views/Settings/OperatingTimesView.cpp
+    src/Views/Alignment/LoadParametersView.cpp
+    src/Views/Alignment/SaveParametersView.cpp
+    src/Views/Alignment/VisualisationView.cpp
+    src/Views/Alignment/DistanceView.cpp
     src/Views/Components/FavoriteExposureSettingButton.cpp
     src//Views/Components/MessageOverlay.cpp
     src/Views/Components/NavButtonManager.cpp
@@ -363,29 +363,29 @@ qt_add_executable(Kub3Software
     include/ApplicationBuilder.h
     include/ViewModels/HomeViewModel.h
     include/ViewModels/SettingsViewModel.h
-    include/ViewModels/ViewModelsExposure/ExposureSettingsViewModel.h
-    include/ViewModels/ViewModelsExposure/FavoriteExposureSettingsViewModel.h
-    include/ViewModels/ViewModelsExposure/RecapExposureSettingsViewModel.h
-    include/ViewModels/ViewModelsExposure/CompleteExposureViewModel.h
-    include/ViewModels/ViewModelsExposure/ProgressExposureViewModel.h
-    include/ViewModels/ViewModelsExposure/SaveExposureSettingsViewModel.h
-    include/ViewModels/ViewModelsSettings/MachineStatusViewModel.h
-    include/ViewModels/ViewModelsSettings/VersionViewModel.h
-    include/ViewModels/ViewModelsSettings/TemperatureViewModel.h
-    include/ViewModels/ViewModelsSettings/UpdateSoftwareViewModel.h
-    include/ViewModels/ViewModelsSettings/ScreenshotExportViewModel.h
-    include/ViewModels/ViewModelsSettings/LedTestViewModel.h
-    include/ViewModels/ViewModelsSettings/OperatingTimesViewModel.h
-    include/ViewModels/ViewModelsAlignment/LoadParametersViewModel.h
-    include/ViewModels/ViewModelsAlignment/SaveParametersViewModel.h
-    include/ViewModels/ViewModelsAlignment/VisualisationViewModel.h
-    include/ViewModels/ViewModelsAlignment/DistanceViewModel.h
-    include/Views/ViewsExposure/ExposureSettingsView.h
-    include/Views/ViewsExposure/FavoriteExposureSettingsView.h
-    include/Views/ViewsExposure/RecapExposureSettingsView.h
-    include/Views/ViewsExposure/CompleteExposureView.h
-    include/Views/ViewsExposure/ProgressExposureView.h
-    include/Views/ViewsExposure/SaveExposureSettingsView.h
+    include/ViewModels/Exposure/ExposureSettingsViewModel.h
+    include/ViewModels/Exposure/FavoriteExposureSettingsViewModel.h
+    include/ViewModels/Exposure/RecapExposureSettingsViewModel.h
+    include/ViewModels/Exposure/CompleteExposureViewModel.h
+    include/ViewModels/Exposure/ProgressExposureViewModel.h
+    include/ViewModels/Exposure/SaveExposureSettingsViewModel.h
+    include/ViewModels/Settings/MachineStatusViewModel.h
+    include/ViewModels/Settings/VersionViewModel.h
+    include/ViewModels/Settings/TemperatureViewModel.h
+    include/ViewModels/Settings/UpdateSoftwareViewModel.h
+    include/ViewModels/Settings/ScreenshotExportViewModel.h
+    include/ViewModels/Settings/LedTestViewModel.h
+    include/ViewModels/Settings/OperatingTimesViewModel.h
+    include/ViewModels/Alignment/LoadParametersViewModel.h
+    include/ViewModels/Alignment/SaveParametersViewModel.h
+    include/ViewModels/Alignment/VisualisationViewModel.h
+    include/ViewModels/Alignment/DistanceViewModel.h
+    include/Views/Exposure/ExposureSettingsView.h
+    include/Views/Exposure/FavoriteExposureSettingsView.h
+    include/Views/Exposure/RecapExposureSettingsView.h
+    include/Views/Exposure/CompleteExposureView.h
+    include/Views/Exposure/ProgressExposureView.h
+    include/Views/Exposure/SaveExposureSettingsView.h
     include/Views/MainWindow.h
     include/Views/ViewBase.h
     include/Views/KeyboardConnections.h
@@ -395,17 +395,17 @@ qt_add_executable(Kub3Software
     include/Views/HomeView.h
     include/Views/HomeEightView.h
     include/Views/SettingsView.h
-    include/Views/ViewsSettings/MachineStatusView.h
-    include/Views/ViewsSettings/TemperatureView.h
-    include/Views/ViewsSettings/VersionView.h
-    include/Views/ViewsSettings/UpdateSoftwareView.h
-    include/Views/ViewsSettings/ScreenshotExportView.h
-    include/Views/ViewsSettings/LedTestView.h
-    include/Views/ViewsSettings/OperatingTimesView.h
-    include/Views/ViewsAlignment/LoadParametersView.h
-    include/Views/ViewsAlignment/SaveParametersView.h
-    include/Views/ViewsAlignment/VisualisationView.h
-    include/Views/ViewsAlignment/DistanceView.h
+    include/Views/Settings/MachineStatusView.h
+    include/Views/Settings/TemperatureView.h
+    include/Views/Settings/VersionView.h
+    include/Views/Settings/UpdateSoftwareView.h
+    include/Views/Settings/ScreenshotExportView.h
+    include/Views/Settings/LedTestView.h
+    include/Views/Settings/OperatingTimesView.h
+    include/Views/Alignment/LoadParametersView.h
+    include/Views/Alignment/SaveParametersView.h
+    include/Views/Alignment/VisualisationView.h
+    include/Views/Alignment/DistanceView.h
     include/Views/Components/FavoriteExposureSettingButton.h
     include/Views/Components/NavButtonManager.h
     include/Views/Components/MessageOverlay.h
@@ -420,25 +420,25 @@ qt_add_executable(Kub3Software
     # UI
     gui/resources.qrc
     gui/MainWindow.ui
-    gui/Views/ViewsExposure/ExposureSettingsView.ui
-    gui/Views/ViewsExposure/FavoriteExposureSettingsView.ui
-    gui/Views/ViewsExposure/RecapExposureSettingsView.ui
-    gui/Views/ViewsExposure/CompleteExposureView.ui
-    gui/Views/ViewsExposure/ProgressExposureView.ui
+    gui/Views/Exposure/ExposureSettingsView.ui
+    gui/Views/Exposure/FavoriteExposureSettingsView.ui
+    gui/Views/Exposure/RecapExposureSettingsView.ui
+    gui/Views/Exposure/CompleteExposureView.ui
+    gui/Views/Exposure/ProgressExposureView.ui
     gui/Views/HomeView.ui
     gui/Views/HomeEightView.ui
     gui/Views/SettingsView.ui
-    gui/Views/ViewsSettings/MachineStatusView.ui
-    gui/Views/ViewsSettings/VersionView.ui
-    gui/Views/ViewsSettings/TemperatureView.ui
-    gui/Views/ViewsSettings/UpdateSoftwareView.ui
-    gui/Views/ViewsSettings/ScreenshotExportView.ui
-    gui/Views/ViewsSettings/LedTestView.ui
-    gui/Views/ViewsSettings/OperatingTimesView.ui
-    gui/Views/ViewsAlignment/LoadParametersView.ui
-    gui/Views/ViewsAlignment/SaveParametersView.ui
-    gui/Views/ViewsAlignment/VisualisationView.ui
-    gui/Views/ViewsAlignment/DistanceView.ui
+    gui/Views/Settings/MachineStatusView.ui
+    gui/Views/Settings/VersionView.ui
+    gui/Views/Settings/TemperatureView.ui
+    gui/Views/Settings/UpdateSoftwareView.ui
+    gui/Views/Settings/ScreenshotExportView.ui
+    gui/Views/Settings/LedTestView.ui
+    gui/Views/Settings/OperatingTimesView.ui
+    gui/Views/Alignment/LoadParametersView.ui
+    gui/Views/Alignment/SaveParametersView.ui
+    gui/Views/Alignment/VisualisationView.ui
+    gui/Views/Alignment/DistanceView.ui
 )
 
 qt_finalize_target(Kub3Software)

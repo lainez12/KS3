@@ -1,19 +1,23 @@
 #ifndef HOMEVIEW_H
 #define HOMEVIEW_H
 
-#include "Views/Components/NavButton.h"
 #include <QWidget>
+
 #include <ViewModels/HomeViewModel.h>
+#include <Views/Components/NavButton.h>
 
 #include "ViewBase.h"
 
-namespace Ui {
+namespace Ui
+{
     class HomeView;
 }
 
-namespace Kub3::UI::Views {
+namespace Kub3::UI::Views
+{
 
-    class HomeView final : public ViewBase {
+    class HomeView final : public ViewBase
+    {
         using HomeViewModel = Kub3::UI::ViewModels::HomeViewModel;
 
         Q_OBJECT

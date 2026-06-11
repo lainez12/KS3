@@ -17,10 +17,10 @@
 // --- Master Finite state Machine
 #include <MFSM/MasterFSM.h>
 // --- UI
+#include <ViewModels/Exposure/SaveExposureSettingsViewModel.h>
 #include <ViewModels/HomeViewModel.h>
+#include <ViewModels/Settings/MachineStatusViewModel.h>
 #include <ViewModels/SettingsViewModel.h>
-#include <ViewModels/ViewModelsExposure/SaveExposureSettingsViewModel.h>
-#include <ViewModels/ViewModelsSettings/MachineStatusViewModel.h>
 #include <Views/MainWindow.h>
 
 namespace Kub3

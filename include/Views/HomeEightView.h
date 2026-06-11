@@ -1,19 +1,23 @@
 #ifndef HOMEEIGHTVIEW_H
 #define HOMEEIGHTVIEW_H
 
-#include "Views/Components/NavButton.h"
 #include <QWidget>
+
 #include <ViewModels/HomeViewModel.h>
+#include <Views/Components/NavButton.h>
 
 #include "ViewBase.h"
 
-namespace Ui {
+namespace Ui
+{
     class HomeEightView;
 }
 
-namespace Kub3::UI::Views {
+namespace Kub3::UI::Views
+{
 
-    class HomeEightView final : public ViewBase {
+    class HomeEightView final : public ViewBase
+    {
         using HomeViewModel = Kub3::UI::ViewModels::HomeViewModel;
 
         Q_OBJECT

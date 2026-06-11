@@ -1,4 +1,5 @@
-#include "Views/HomeView.h"
+#include <Views/HomeView.h>
+
 #include "ui_HomeView.h"
 
 #define ID_BTN_SETTINGS "S"
