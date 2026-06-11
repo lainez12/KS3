@@ -15,7 +15,7 @@ namespace Ui
 
 namespace Kub3::UI::Views::ViewsAlignment
 {
-    using SaveParametersViewModel = Kub3::UI::ViewModels::ViewModelsAlignment::SaveParametersViewModel;
+    using SaveParametersViewModel = Kub3::UI::ViewModels::Alignment::SaveParametersViewModel;
 
     class SaveParametersView final : public AlignmentViewBase
     {

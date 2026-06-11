@@ -5,7 +5,7 @@
 #include <QObject>
 #include <ViewModels/BaseViewModel.h>
 
-namespace Kub3::UI::ViewModels::ViewModelsAlignment
+namespace Kub3::UI::ViewModels::Alignment
 {
 
     class VisualisationViewModel final : public QObject, public BaseViewModel
@@ -20,6 +20,6 @@ namespace Kub3::UI::ViewModels::ViewModelsAlignment
         Shared<HAL::MS::IMachineStatusRepo> m_repo;
     };
 
-} // namespace Kub3::UI::ViewModels::ViewModelsAlignment
+} // namespace Kub3::UI::ViewModels::Alignment
 
 #endif

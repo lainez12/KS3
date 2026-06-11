@@ -5,7 +5,7 @@
 #include <QObject>
 #include <ViewModels/BaseViewModel.h>
 
-namespace Kub3::UI::ViewModels::ViewModelsSettings
+namespace Kub3::UI::ViewModels::Settings
 {
     class TemperatureViewModel final : public QObject, public BaseViewModel
     {
@@ -18,6 +18,6 @@ namespace Kub3::UI::ViewModels::ViewModelsSettings
         Shared<HAL::MS::IMachineStatusRepo> m_repo;
     };
 
-} // namespace Kub3::UI::ViewModels::ViewModelsSettings
+} // namespace Kub3::UI::ViewModels::Settings
 
 #endif

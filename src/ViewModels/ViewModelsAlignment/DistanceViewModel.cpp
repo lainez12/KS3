@@ -1,6 +1,6 @@
 #include <ViewModels/ViewModelsAlignment/DistanceViewModel.h>
 
-namespace Kub3::UI::ViewModels::ViewModelsAlignment
+namespace Kub3::UI::ViewModels::Alignment
 {
 
     DistanceViewModel::DistanceViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent) :
@@ -13,4 +13,4 @@ namespace Kub3::UI::ViewModels::ViewModelsAlignment
     {
     }
 
-} // namespace Kub3::UI::ViewModels::ViewModelsAlignment
+} // namespace Kub3::UI::ViewModels::Alignment

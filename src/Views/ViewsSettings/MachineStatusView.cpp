@@ -9,7 +9,7 @@
 #define SUCCESS_QLABEL_STYLESHEET "QLabel{ background: green; color : white; }"
 #define FAILURE_QLABEL_STYLESHEET "QLabel{ background: red; color : white; }"
 
-MachineStatusView::MachineStatusView(Shared<MachineStatusViewModel> viewModel, QWidget *parent) :
+MachineStatusView::MachineStatusView(Unique<MachineStatusViewModel> viewModel, QWidget *parent) :
     ViewBase(std::move(viewModel), parent),
     ui(new Ui::MachineStatusView)
 {
@@ -23,10 +23,10 @@ MachineStatusView::MachineStatusView(Shared<MachineStatusViewModel> viewModel, Q
     this->populateIntegerSensorsMap();
     this->populateUnsignedIntegerSensorsMap();
 
-    Shared<MachineStatusViewModel> model = std::static_pointer_cast<MachineStatusViewModel>(m_viewModel);
-    connect(model.get(), &MachineStatusViewModel::s_booleanSensorUpdate, this, &MachineStatusView::ps_booleanSensorUpdate);
-    connect(model.get(), &MachineStatusViewModel::s_integerSensorUpdate, this, &MachineStatusView::ps_integerSensorUpdate);
-    connect(model.get(), &MachineStatusViewModel::s_unsignedIntegerSensorUpdate, this, &MachineStatusView::ps_unsignedIntegerSensorUpdate);
+    MachineStatusViewModel *model = static_cast<MachineStatusViewModel *>(m_viewModel.get());
+    connect(model, &MachineStatusViewModel::s_booleanSensorUpdate, this, &MachineStatusView::ps_booleanSensorUpdate);
+    connect(model, &MachineStatusViewModel::s_integerSensorUpdate, this, &MachineStatusView::ps_integerSensorUpdate);
+    connect(model, &MachineStatusViewModel::s_unsignedIntegerSensorUpdate, this, &MachineStatusView::ps_unsignedIntegerSensorUpdate);
 }
 
 MachineStatusView::~MachineStatusView()
@@ -62,7 +62,7 @@ void MachineStatusView::on_openCamerasBtn_clicked(void)
     if (!m_viewModel)
         return;
 
-    Modules::CamerasTestView modal(std::static_pointer_cast<MachineStatusViewModel>(m_viewModel), this);
+    Modules::CamerasTestView modal(static_cast<MachineStatusViewModel *>(m_viewModel.get()), this);
 
     modal.exec();
 }

@@ -7,13 +7,16 @@
 #include <Views/ExposureViewBase.h>
 #include <Views/KeyboardConnections.h>
 
-namespace Ui {
+namespace Ui
+{
     class ExposureSettingsView;
 } // namespace UI
 
-namespace Kub3::UI::Views::ViewsExposure {
-    class ExposureSettingsView final : public ExposureViewBase {
-        using ExposureSettingsViewModel = Kub3::UI::ViewModels::ViewModelsExposure::ExposureSettingsViewModel;
+namespace Kub3::UI::Views::ViewsExposure
+{
+    class ExposureSettingsView final : public ExposureViewBase
+    {
+        using ExposureSettingsViewModel = Kub3::UI::ViewModels::Exposure::ExposureSettingsViewModel;
 
         Q_OBJECT
 

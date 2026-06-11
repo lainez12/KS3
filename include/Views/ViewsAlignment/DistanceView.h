@@ -8,13 +8,16 @@
 
 #include "Views/ViewBase.h"
 
-namespace Ui {
+namespace Ui
+{
     class DistanceView;
 } // namespace UI
 
-namespace Kub3::UI::Views::ViewsAlignment {
-    class DistanceView final : public AlignmentViewBase {
-        using DistanceViewModel = Kub3::UI::ViewModels::ViewModelsAlignment::DistanceViewModel;
+namespace Kub3::UI::Views::ViewsAlignment
+{
+    class DistanceView final : public AlignmentViewBase
+    {
+        using DistanceViewModel = Kub3::UI::ViewModels::Alignment::DistanceViewModel;
 
         Q_OBJECT
 

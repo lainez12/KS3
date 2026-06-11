@@ -7,13 +7,16 @@
 
 #include "Views/ViewBase.h"
 
-namespace Ui {
+namespace Ui
+{
     class LoadParametersView;
 } // namespace UI
 
-namespace Kub3::UI::Views::ViewsAlignment {
-    class LoadParametersView final : public AlignmentViewBase {
-        using LoadParametersViewModel = Kub3::UI::ViewModels::ViewModelsAlignment::LoadParametersViewModel;
+namespace Kub3::UI::Views::ViewsAlignment
+{
+    class LoadParametersView final : public AlignmentViewBase
+    {
+        using LoadParametersViewModel = Kub3::UI::ViewModels::Alignment::LoadParametersViewModel;
 
         Q_OBJECT
 

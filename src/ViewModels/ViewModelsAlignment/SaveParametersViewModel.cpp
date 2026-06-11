@@ -1,6 +1,6 @@
 #include <ViewModels/ViewModelsAlignment/SaveParametersViewModel.h>
 
-namespace Kub3::UI::ViewModels::ViewModelsAlignment
+namespace Kub3::UI::ViewModels::Alignment
 {
 
     SaveParametersViewModel::SaveParametersViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent) :
@@ -13,4 +13,4 @@ namespace Kub3::UI::ViewModels::ViewModelsAlignment
     {
     }
 
-} // namespace Kub3::UI::ViewModels::ViewModelsAlignment
+} // namespace Kub3::UI::ViewModels::Alignment

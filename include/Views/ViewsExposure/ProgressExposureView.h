@@ -6,13 +6,16 @@
 
 #include <Views/ExposureViewBase.h>
 
-namespace Ui {
+namespace Ui
+{
     class ProgressExposureView;
 } // namespace UI
 
-namespace Kub3::UI::Views::ViewsExposure {
-    class ProgressExposureView final : public ExposureViewBase {
-        using ProgressExposureViewModel = Kub3::UI::ViewModels::ViewModelsExposure::ProgressExposureViewModel;
+namespace Kub3::UI::Views::ViewsExposure
+{
+    class ProgressExposureView final : public ExposureViewBase
+    {
+        using ProgressExposureViewModel = Kub3::UI::ViewModels::Exposure::ProgressExposureViewModel;
 
         Q_OBJECT
 

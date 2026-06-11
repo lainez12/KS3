@@ -6,13 +6,16 @@
 
 #include <Views/ExposureViewBase.h>
 
-namespace Ui {
+namespace Ui
+{
     class CompleteExposureView;
 } // namespace UI
 
-namespace Kub3::UI::Views::ViewsExposure {
-    class CompleteExposureView final : public ExposureViewBase {
-        using CompleteExposureViewModel = Kub3::UI::ViewModels::ViewModelsExposure::CompleteExposureViewModel;
+namespace Kub3::UI::Views::ViewsExposure
+{
+    class CompleteExposureView final : public ExposureViewBase
+    {
+        using CompleteExposureViewModel = Kub3::UI::ViewModels::Exposure::CompleteExposureViewModel;
 
         Q_OBJECT
 

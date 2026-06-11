@@ -5,7 +5,7 @@
 #include <QObject>
 #include <ViewModels/BaseViewModel.h>
 
-namespace Kub3::UI::ViewModels::ViewModelsExposure
+namespace Kub3::UI::ViewModels::Exposure
 {
     class RecapExposureSettingsViewModel final : public QObject, public BaseViewModel
     {

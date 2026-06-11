@@ -1,6 +1,6 @@
 #include <ViewModels/ViewModelsAlignment/LoadParametersViewModel.h>
 
-namespace Kub3::UI::ViewModels::ViewModelsAlignment
+namespace Kub3::UI::ViewModels::Alignment
 {
     LoadParametersViewModel::LoadParametersViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent) :
         QObject(parent),
@@ -12,4 +12,4 @@ namespace Kub3::UI::ViewModels::ViewModelsAlignment
     {
     }
 
-} // namespace Kub3::UI::ViewModels::ViewModelsAlignment
+} // namespace Kub3::UI::ViewModels::Alignment

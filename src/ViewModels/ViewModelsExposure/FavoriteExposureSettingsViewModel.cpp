@@ -1,6 +1,6 @@
 #include <ViewModels/ViewModelsExposure/FavoriteExposureSettingsViewModel.h>
 
-namespace Kub3::UI::ViewModels::ViewModelsExposure
+namespace Kub3::UI::ViewModels::Exposure
 {
     FavoriteExposureSettingsViewModel::FavoriteExposureSettingsViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent) :
         QObject(parent),
@@ -11,4 +11,4 @@ namespace Kub3::UI::ViewModels::ViewModelsExposure
     {
     }
 
-} // namespace Kub3::UI::ViewModels::ViewModelsExposure
+} // namespace Kub3::UI::ViewModels::Exposure

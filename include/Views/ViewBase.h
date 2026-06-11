@@ -57,7 +57,7 @@ namespace Kub3::UI::Views
         Q_OBJECT
 
     public:
-        explicit ViewBase(Shared<ViewModels::BaseViewModel> viewModel, QWidget *parent = nullptr);
+        explicit ViewBase(Unique<ViewModels::BaseViewModel> viewModel, QWidget *parent = nullptr);
         virtual ~ViewBase() = default;
 
     public:
@@ -155,7 +155,7 @@ namespace Kub3::UI::Views
         void setUpShawedBoxStyle(QWidget *widget);
 
     protected:
-        Shared<ViewModels::BaseViewModel> m_viewModel;
+        Unique<ViewModels::BaseViewModel> m_viewModel;
         bool m_showCentralLogo;
         NavButtonManager m_buttonManager;
         Unique<MessageOverlay> m_messages = std::make_unique<MessageOverlay>(this);

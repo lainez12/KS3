@@ -7,13 +7,16 @@
 
 #include "Views/ViewBase.h"
 
-namespace Ui {
+namespace Ui
+{
     class OperatingTimesView;
 } // namespace UI
 
-namespace Kub3::UI::Views::ViewsSettings {
-    class OperatingTimesView final : public SettingsViewBase {
-        using OperatingTimesViewModel = Kub3::UI::ViewModels::ViewModelsSettings::OperatingTimesViewModel;
+namespace Kub3::UI::Views::ViewsSettings
+{
+    class OperatingTimesView final : public SettingsViewBase
+    {
+        using OperatingTimesViewModel = Kub3::UI::ViewModels::Settings::OperatingTimesViewModel;
 
         Q_OBJECT
 

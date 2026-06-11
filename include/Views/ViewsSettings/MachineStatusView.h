@@ -25,7 +25,7 @@ namespace Kub3::UI::Views
         Q_OBJECT
 
     public:
-        explicit MachineStatusView(Shared<MachineStatusViewModel> viewModel, QWidget *parent = nullptr);
+        explicit MachineStatusView(Unique<MachineStatusViewModel> viewModel, QWidget *parent = nullptr);
         ~MachineStatusView() override;
 
     signals:

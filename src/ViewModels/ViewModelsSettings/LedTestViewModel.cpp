@@ -1,6 +1,6 @@
 #include <ViewModels/ViewModelsSettings/LedTestViewModel.h>
 
-namespace Kub3::UI::ViewModels::ViewModelsSettings
+namespace Kub3::UI::ViewModels::Settings
 {
     LedTestViewModel::LedTestViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent) :
         QObject(parent),
@@ -11,4 +11,4 @@ namespace Kub3::UI::ViewModels::ViewModelsSettings
     {
     }
 
-} // namespace Kub3::UI::ViewModels::ViewModelsSettings
+} // namespace Kub3::UI::ViewModels::Settings

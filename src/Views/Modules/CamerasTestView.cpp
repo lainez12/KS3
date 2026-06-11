@@ -35,10 +35,10 @@ namespace
 namespace Kub3::UI::Modules
 {
 
-    CamerasTestView::CamerasTestView(Shared<ViewModels::MachineStatusViewModel> viewModel, QWidget *parent) :
+    CamerasTestView::CamerasTestView(ViewModels::MachineStatusViewModel *viewModel, QWidget *parent) :
         QDialog(parent),
         ui(new Ui::CamerasTestView),
-        m_viewModel(std::move(viewModel))
+        m_viewModel(viewModel)
     {
         ui->setupUi(this);
 
@@ -48,16 +48,14 @@ namespace Kub3::UI::Modules
         // TODO: design a way for viewModels to provide current data to view
 
         // Frame reception
-        connect(
-            m_viewModel.get(),
-            &ViewModels::MachineStatusViewModel::s_upperLeftCameraFrameReady,
-            ui->leftCameraWidget,
-            &CameraStreamWidget::ps_onFrameUpdated);
-        connect(
-            m_viewModel.get(),
-            &ViewModels::MachineStatusViewModel::s_upperRightCameraFrameReady,
-            ui->rightCameraWidget,
-            &CameraStreamWidget::ps_onFrameUpdated);
+        connect(m_viewModel,
+                &ViewModels::MachineStatusViewModel::s_upperLeftCameraFrameReady,
+                ui->leftCameraWidget,
+                &CameraStreamWidget::ps_onFrameUpdated);
+        connect(m_viewModel,
+                &ViewModels::MachineStatusViewModel::s_upperRightCameraFrameReady,
+                ui->rightCameraWidget,
+                &CameraStreamWidget::ps_onFrameUpdated);
 
         setupExposureComponents();
         setupGainComponents();
@@ -88,20 +86,20 @@ namespace Kub3::UI::Modules
     {
         connect(
             ui->upperLeftCamExposureSlider, &DoubleRatioSlider::doubleValueChanged,
-            [vm = m_viewModel.get()](double val) { emit vm->s_exposureSliderValueChanged(UPPER_LEFT_CAMERA, val); });
+            [vm = m_viewModel](double val) { emit vm->s_exposureSliderValueChanged(UPPER_LEFT_CAMERA, val); });
         connect(
             ui->upperRightCamExposureSlider, &DoubleRatioSlider::doubleValueChanged,
-            [vm = m_viewModel.get()](double val) { emit vm->s_exposureSliderValueChanged(UPPER_RIGHT_CAMERA, val); });
+            [vm = m_viewModel](double val) { emit vm->s_exposureSliderValueChanged(UPPER_RIGHT_CAMERA, val); });
     }
 
     void CamerasTestView::setupGainComponents(void)
     {
         connect(
             ui->upperLeftCamGainSlider, &DoubleRatioSlider::doubleValueChanged,
-            [vm = m_viewModel.get()](double val) { emit vm->s_gainSliderValueChanged(UPPER_LEFT_CAMERA, val); });
+            [vm = m_viewModel](double val) { emit vm->s_gainSliderValueChanged(UPPER_LEFT_CAMERA, val); });
         connect(
             ui->upperRightCamGainSlider, &DoubleRatioSlider::doubleValueChanged,
-            [vm = m_viewModel.get()](double val) { emit vm->s_gainSliderValueChanged(UPPER_RIGHT_CAMERA, val); });
+            [vm = m_viewModel](double val) { emit vm->s_gainSliderValueChanged(UPPER_RIGHT_CAMERA, val); });
     }
 
     void CamerasTestView::setupFramerateComponents(void)
@@ -116,12 +114,12 @@ namespace Kub3::UI::Modules
 
         connect(
             ui->upperLeftCamFramerateBox, &QComboBox::currentIndexChanged,
-            [vm = m_viewModel.get(), box = ui->upperLeftCamFramerateBox](int idx) {
+            [vm = m_viewModel, box = ui->upperLeftCamFramerateBox](int idx) {
                 emit vm->s_framerateValueChanged(UPPER_LEFT_CAMERA, box->itemData(idx).toDouble());
             });
         connect(
             ui->upperRightCamFramerateBox, &QComboBox::currentIndexChanged,
-            [vm = m_viewModel.get(), box = ui->upperRightCamFramerateBox](int idx) {
+            [vm = m_viewModel, box = ui->upperRightCamFramerateBox](int idx) {
                 emit vm->s_framerateValueChanged(UPPER_RIGHT_CAMERA, box->itemData(idx).toDouble());
             });
     }
@@ -138,12 +136,12 @@ namespace Kub3::UI::Modules
 
         connect(
             ui->upperLeftCameraCZoomBox, &QComboBox::currentIndexChanged,
-            [vm = m_viewModel.get(), box = ui->upperLeftCameraCZoomBox](int idx) {
+            [vm = m_viewModel, box = ui->upperLeftCameraCZoomBox](int idx) {
                 emit vm->s_centeredZoomValueChanged(UPPER_LEFT_CAMERA, box->itemData(idx).toDouble());
             });
         connect(
             ui->upperRightCameraCZoomBox, &QComboBox::currentIndexChanged,
-            [vm = m_viewModel.get(), box = ui->upperRightCameraCZoomBox](int idx) {
+            [vm = m_viewModel, box = ui->upperRightCameraCZoomBox](int idx) {
                 emit vm->s_centeredZoomValueChanged(UPPER_RIGHT_CAMERA, box->itemData(idx).toDouble());
             });
     }

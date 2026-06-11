@@ -7,13 +7,16 @@
 
 #include "Views/ViewBase.h"
 
-namespace Ui {
+namespace Ui
+{
     class UpdateSoftwareView;
 } // namespace UI
 
-namespace Kub3::UI::Views::ViewsSettings {
-    class UpdateSoftwareView final : public SettingsViewBase {
-        using UpdateSoftwareViewModel = Kub3::UI::ViewModels::ViewModelsSettings::UpdateSoftwareViewModel;
+namespace Kub3::UI::Views::ViewsSettings
+{
+    class UpdateSoftwareView final : public SettingsViewBase
+    {
+        using UpdateSoftwareViewModel = Kub3::UI::ViewModels::Settings::UpdateSoftwareViewModel;
 
         Q_OBJECT
 

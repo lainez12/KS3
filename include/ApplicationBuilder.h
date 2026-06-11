@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QApplication>
+#include <QPointer>
 #include <QString>
 #include <QThread>
 #include <memory>
@@ -22,9 +23,11 @@
 #include <ViewModels/ViewModelsSettings/MachineStatusViewModel.h>
 #include <Views/MainWindow.h>
 
-namespace Kub3 {
+namespace Kub3
+{
 
-    class ApplicationBuilder final {
+    class ApplicationBuilder final
+    {
     public:
         ApplicationBuilder()  = default;
         ~ApplicationBuilder() = default;
@@ -71,7 +74,26 @@ namespace Kub3 {
         // --- Windows
         Unique<MainWindow> m_mainWindow;
         // --- View models
-        Shared<UI::ViewModels::MachineStatusViewModel> m_machineStatusVM;
+        QPointer<UI::ViewModels::MachineStatusViewModel> m_machineStatusVM;
+        QPointer<UI::ViewModels::HomeViewModel> m_homeVM;
+        QPointer<UI::ViewModels::HomeViewModel> m_homeEightVM;
+        QPointer<UI::ViewModels::SettingsViewModel> m_settingsVM;
+        QPointer<UI::ViewModels::Exposure::SaveExposureSettingsViewModel> m_saveExposureSettingsVM;
+        QPointer<UI::ViewModels::Exposure::ExposureSettingsViewModel> m_exposureSettingsVM;
+        QPointer<UI::ViewModels::Exposure::FavoriteExposureSettingsViewModel> m_favoriteExposureSettingsVM;
+        QPointer<UI::ViewModels::Exposure::RecapExposureSettingsViewModel> m_recapExposureSettingsVM;
+        QPointer<UI::ViewModels::Exposure::ProgressExposureViewModel> m_progressExposureVM;
+        QPointer<UI::ViewModels::Exposure::CompleteExposureViewModel> m_completeExposureVM;
+        QPointer<UI::ViewModels::Settings::VersionViewModel> m_versionVM;
+        QPointer<UI::ViewModels::Settings::TemperatureViewModel> m_temperatureVM;
+        QPointer<UI::ViewModels::Settings::OperatingTimesViewModel> m_operatingTimeVM;
+        QPointer<UI::ViewModels::Settings::ScreenshotExportViewModel> m_screenshotVM;
+        QPointer<UI::ViewModels::Settings::LedTestViewModel> m_ledTestVM;
+        QPointer<UI::ViewModels::Settings::UpdateSoftwareViewModel> m_updateSoftwareVM;
+        QPointer<UI::ViewModels::Alignment::DistanceViewModel> m_distanceVM;
+        QPointer<UI::ViewModels::Alignment::VisualisationViewModel> m_visualisationVM;
+        QPointer<UI::ViewModels::Alignment::LoadParametersViewModel> m_loadParametersVM;
+        QPointer<UI::ViewModels::Alignment::SaveParametersViewModel> m_saveParametersVM;
     };
 
 } // namespace Kub3

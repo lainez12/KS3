@@ -7,13 +7,16 @@
 
 #include "Views/ViewBase.h"
 
-namespace Ui {
+namespace Ui
+{
     class TemperatureView;
 } // namespace UI
 
-namespace Kub3::UI::Views::ViewsSettings {
-    class TemperatureView final : public SettingsViewBase {
-        using TemperatureViewModel = Kub3::UI::ViewModels::ViewModelsSettings::TemperatureViewModel;
+namespace Kub3::UI::Views::ViewsSettings
+{
+    class TemperatureView final : public SettingsViewBase
+    {
+        using TemperatureViewModel = Kub3::UI::ViewModels::Settings::TemperatureViewModel;
 
         Q_OBJECT
 

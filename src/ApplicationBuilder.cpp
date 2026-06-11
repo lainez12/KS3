@@ -16,6 +16,10 @@
 #include <Services/Drawers/DualConveyorDrawerService.h>
 #endif
 
+#define ASSIGN_VIEW_MODEL(Type, local_var, member_var, ...) \
+    auto local_var   = std::make_unique<Type>(__VA_ARGS__); \
+    this->member_var = local_var.get()
+
 namespace Kub3
 {
 
@@ -100,48 +104,48 @@ namespace Kub3
         // Building MachineStatusView
         {
             // View models creation
-            auto machineStatusViewModel            = std::make_unique<UI::ViewModels::MachineStatusViewModel>(m_repo);
-            auto homeViewModel                     = std::make_unique<UI::ViewModels::HomeViewModel>(m_repo);
-            auto settingsViewModel                 = std::make_unique<UI::ViewModels::SettingsViewModel>(m_repo);
-            auto saveExposureSettingsViewModel     = std::make_unique<UI::ViewModels::ViewModelsExposure::SaveExposureSettingsViewModel>(m_repo);
-            auto exposureSettingsViewModel         = std::make_unique<UI::ViewModels::ViewModelsExposure::ExposureSettingsViewModel>(m_repo);
-            auto favoriteExposureSettingsViewModel = std::make_unique<UI::ViewModels::ViewModelsExposure::FavoriteExposureSettingsViewModel>(m_repo);
-            auto recapExposureSettingsViewModel    = std::make_unique<UI::ViewModels::ViewModelsExposure::RecapExposureSettingsViewModel>(m_repo);
-            auto progressExposureViewModel         = std::make_unique<UI::ViewModels::ViewModelsExposure::ProgressExposureViewModel>(m_repo);
-            auto completeExposureViewModel         = std::make_unique<UI::ViewModels::ViewModelsExposure::CompleteExposureViewModel>(m_repo);
-            auto versionViewModel                  = std::make_unique<UI::ViewModels::ViewModelsSettings::VersionViewModel>(m_repo);
-            auto temperatureViewModel              = std::make_unique<UI::ViewModels::ViewModelsSettings::TemperatureViewModel>(m_repo);
-            auto operatingTimeViewModel            = std::make_unique<UI::ViewModels::ViewModelsSettings::OperatingTimesViewModel>(m_repo);
-            auto screenshotViewModel               = std::make_unique<UI::ViewModels::ViewModelsSettings::ScreenshotExportViewModel>(m_repo);
-            auto ledTestViewModel                  = std::make_unique<UI::ViewModels::ViewModelsSettings::LedTestViewModel>(m_repo);
-            auto updateSoftwareViewModel           = std::make_unique<UI::ViewModels::ViewModelsSettings::UpdateSoftwareViewModel>(m_repo);
-            auto distanceViewModel                 = std::make_unique<UI::ViewModels::ViewModelsAlignment::DistanceViewModel>(m_repo);
-            auto visualisationViewModel            = std::make_unique<UI::ViewModels::ViewModelsAlignment::VisualisationViewModel>(m_repo);
-            auto loadParametersViewModel           = std::make_unique<UI::ViewModels::ViewModelsAlignment::LoadParametersViewModel>(m_repo);
-            auto saveParametersViewModel           = std::make_unique<UI::ViewModels::ViewModelsAlignment::SaveParametersViewModel>(m_repo);
-            m_machineStatusVM                      = std::make_shared<UI::ViewModels::MachineStatusViewModel>(m_repo);
+            ASSIGN_VIEW_MODEL(UI::ViewModels::HomeViewModel, homeVM, m_homeVM, m_repo);
+            ASSIGN_VIEW_MODEL(UI::ViewModels::HomeViewModel, homeEightVM, m_homeEightVM, m_repo);
+            ASSIGN_VIEW_MODEL(UI::ViewModels::MachineStatusViewModel, machineStatusVM, m_machineStatusVM, m_repo);
+            ASSIGN_VIEW_MODEL(UI::ViewModels::SettingsViewModel, settingsVM, m_settingsVM, m_repo);
+            ASSIGN_VIEW_MODEL(UI::ViewModels::Exposure::ExposureSettingsViewModel, exposureSettingsVM, m_exposureSettingsVM, m_repo);
+            ASSIGN_VIEW_MODEL(UI::ViewModels::Exposure::FavoriteExposureSettingsViewModel, favoriteExposureSettingsVM, m_favoriteExposureSettingsVM, m_repo);
+            ASSIGN_VIEW_MODEL(UI::ViewModels::Exposure::RecapExposureSettingsViewModel, recapExposureSettingsVM, m_recapExposureSettingsVM, m_repo);
+            ASSIGN_VIEW_MODEL(UI::ViewModels::Exposure::ProgressExposureViewModel, progressExposureVM, m_progressExposureVM, m_repo);
+            ASSIGN_VIEW_MODEL(UI::ViewModels::Exposure::CompleteExposureViewModel, completeExposureVM, m_completeExposureVM, m_repo);
+            ASSIGN_VIEW_MODEL(UI::ViewModels::Exposure::SaveExposureSettingsViewModel, saveExposureSettingsVM, m_saveExposureSettingsVM, m_repo);
+            ASSIGN_VIEW_MODEL(UI::ViewModels::Settings::VersionViewModel, versionVM, m_versionVM, m_repo);
+            ASSIGN_VIEW_MODEL(UI::ViewModels::Settings::TemperatureViewModel, temperatureVM, m_temperatureVM, m_repo);
+            ASSIGN_VIEW_MODEL(UI::ViewModels::Settings::OperatingTimesViewModel, operatingTimeVM, m_operatingTimeVM, m_repo);
+            ASSIGN_VIEW_MODEL(UI::ViewModels::Settings::ScreenshotExportViewModel, screenshotVM, m_screenshotVM, m_repo);
+            ASSIGN_VIEW_MODEL(UI::ViewModels::Settings::LedTestViewModel, ledTestVM, m_ledTestVM, m_repo);
+            ASSIGN_VIEW_MODEL(UI::ViewModels::Settings::UpdateSoftwareViewModel, updateSoftwareVM, m_updateSoftwareVM, m_repo);
+            ASSIGN_VIEW_MODEL(UI::ViewModels::Alignment::DistanceViewModel, distanceVM, m_distanceVM, m_repo);
+            ASSIGN_VIEW_MODEL(UI::ViewModels::Alignment::VisualisationViewModel, visualisationVM, m_visualisationVM, m_repo);
+            ASSIGN_VIEW_MODEL(UI::ViewModels::Alignment::LoadParametersViewModel, loadParametersVM, m_loadParametersVM, m_repo);
+            ASSIGN_VIEW_MODEL(UI::ViewModels::Alignment::SaveParametersViewModel, saveParametersVM, m_saveParametersVM, m_repo);
 
             // Views creation
-            auto *settingsView                 = new SettingsView(std::move(settingsViewModel), m_mainWindow.get());
-            auto *exposureSettingsView         = new ExposureSettingsView(std::move(exposureSettingsViewModel), m_mainWindow.get());
-            auto *favoriteExposureSettingsView = new FavoriteExposureSettingsView(std::move(favoriteExposureSettingsViewModel), m_mainWindow.get());
-            auto *recapExposureSettingsView    = new RecapExposureSettingsView(std::move(recapExposureSettingsViewModel), m_mainWindow.get());
-            auto *progressExposureView         = new ProgressExposureView(std::move(progressExposureViewModel), m_mainWindow.get());
-            auto *completeExposureView         = new CompleteExposureView(std::move(completeExposureViewModel), m_mainWindow.get());
-            auto *versionView                  = new VersionView(std::move(versionViewModel), m_mainWindow.get());
-            auto *temperatureView              = new TemperatureView(std::move(temperatureViewModel), m_mainWindow.get());
-            auto *operatingTimeView            = new OperatingTimesView(std::move(operatingTimeViewModel), m_mainWindow.get());
-            auto *screenshotView               = new ScreenshotExportView(std::move(screenshotViewModel), m_mainWindow.get());
-            auto *ledTestView                  = new LedTestView(std::move(ledTestViewModel), m_mainWindow.get());
-            auto *machineStatusView            = new MachineStatusView(std::move(machineStatusViewModel), m_mainWindow.get());
-            auto *saveExposureSettingsView     = new SaveExposureSettingsView(std::move(saveExposureSettingsViewModel), m_mainWindow.get());
-            auto *updateSoftwareView           = new UpdateSoftwareView(std::move(updateSoftwareViewModel), m_mainWindow.get());
-            auto *distanceView                 = new DistanceView(std::move(distanceViewModel), m_mainWindow.get());
-            auto *visualisationView            = new VisualisationView(std::move(visualisationViewModel), m_mainWindow.get());
-            auto *loadParametersView           = new LoadParametersView(std::move(loadParametersViewModel), m_mainWindow.get());
-            auto *saveParametersView           = new SaveParametersView(std::move(saveParametersViewModel), m_mainWindow.get());
-            auto *homeView                     = new HomeView(std::move(homeViewModel), m_mainWindow.get());
-            auto *homeEightView                = new HomeEightView(std::make_unique<UI::ViewModels::HomeViewModel>(m_repo), m_mainWindow.get());
+            auto *homeView                     = new HomeView(std::move(homeVM), m_mainWindow.get());
+            auto *homeEightView                = new HomeEightView(std::move(homeEightVM), m_mainWindow.get());
+            auto *machineStatusView            = new MachineStatusView(std::move(machineStatusVM), m_mainWindow.get());
+            auto *settingsView                 = new SettingsView(std::move(settingsVM), m_mainWindow.get());
+            auto *exposureSettingsView         = new ExposureSettingsView(std::move(exposureSettingsVM), m_mainWindow.get());
+            auto *favoriteExposureSettingsView = new FavoriteExposureSettingsView(std::move(favoriteExposureSettingsVM), m_mainWindow.get());
+            auto *recapExposureSettingsView    = new RecapExposureSettingsView(std::move(recapExposureSettingsVM), m_mainWindow.get());
+            auto *progressExposureView         = new ProgressExposureView(std::move(progressExposureVM), m_mainWindow.get());
+            auto *completeExposureView         = new CompleteExposureView(std::move(completeExposureVM), m_mainWindow.get());
+            auto *saveExposureSettingsView     = new SaveExposureSettingsView(std::move(saveExposureSettingsVM), m_mainWindow.get());
+            auto *versionView                  = new VersionView(std::move(versionVM), m_mainWindow.get());
+            auto *temperatureView              = new TemperatureView(std::move(temperatureVM), m_mainWindow.get());
+            auto *operatingTimeView            = new OperatingTimesView(std::move(operatingTimeVM), m_mainWindow.get());
+            auto *screenshotView               = new ScreenshotExportView(std::move(screenshotVM), m_mainWindow.get());
+            auto *ledTestView                  = new LedTestView(std::move(ledTestVM), m_mainWindow.get());
+            auto *updateSoftwareView           = new UpdateSoftwareView(std::move(updateSoftwareVM), m_mainWindow.get());
+            auto *distanceView                 = new DistanceView(std::move(distanceVM), m_mainWindow.get());
+            auto *visualisationView            = new VisualisationView(std::move(visualisationVM), m_mainWindow.get());
+            auto *loadParametersView           = new LoadParametersView(std::move(loadParametersVM), m_mainWindow.get());
+            auto *saveParametersView           = new SaveParametersView(std::move(saveParametersVM), m_mainWindow.get());
 
             m_mainWindow->addView(Kub3::UI::ViewId::HOME_VIEW, homeView);
             m_mainWindow->addView(Kub3::UI::ViewId::HOME_EIGHT_VIEW, homeEightView);
@@ -152,13 +156,13 @@ namespace Kub3
             m_mainWindow->addView(Kub3::UI::ViewId::RECAP_EXPOSURE_SETTINGS_VIEW, recapExposureSettingsView);
             m_mainWindow->addView(Kub3::UI::ViewId::PROGRESS_EXPOSURE_VIEW, progressExposureView);
             m_mainWindow->addView(Kub3::UI::ViewId::COMPLETE_EXPOSURE_VIEW, completeExposureView);
+            m_mainWindow->addView(Kub3::UI::ViewId::SAVE_EXPOSURE_SETTINGS_VIEW, saveExposureSettingsView);
             m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_ABOUT_VIEW, versionView);
             m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_TEMPERATURE_VIEW, temperatureView);
             m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_OPERATING_TIMES_VIEW, operatingTimeView);
             m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_SCREENSHOT_EXPORT_VIEW, screenshotView);
             m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_LED_TEST_VIEW, ledTestView);
             m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_UPDATE_SOFTWARE_VIEW, updateSoftwareView);
-            m_mainWindow->addView(Kub3::UI::ViewId::SAVE_EXPOSURE_SETTINGS_VIEW, saveExposureSettingsView);
             m_mainWindow->addView(Kub3::UI::ViewId::ALIGNMENT_DISTANCE_VIEW, distanceView);
             m_mainWindow->addView(Kub3::UI::ViewId::ALIGNMENT_VISUALISATION_VIEW, visualisationView);
             m_mainWindow->addView(Kub3::UI::ViewId::ALIGNMENT_LOAD_PARAMETERS_VIEW, loadParametersView);
@@ -201,10 +205,10 @@ namespace Kub3
 
         // 3. Logic -> UI Wiring
         QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_stateChanged, m_mainWindow.get(), &MainWindow::ps_stateChanged);
-        m_machineStatusVM->bindConnection(m_hwManager.get(), &HAL::HardwareManager::s_cameraFrameReady,
-                                          msvm, &VM::BaseVisionViewModel::ps_onCameraFrameReceived);
-        m_machineStatusVM->bindConnection(m_repo.get(), &HAL::MS::IMachineStatusRepo::s_machineValueChanged,
-                                          msvm, &VM::MachineStatusViewModel::ps_handleSensorValueChanged);
+        msvm->bindConnection(m_hwManager.get(), &HAL::HardwareManager::s_cameraFrameReady,
+                             msvm, &VM::BaseVisionViewModel::ps_onCameraFrameReceived);
+        msvm->bindConnection(m_repo.get(), &HAL::MS::IMachineStatusRepo::s_machineValueChanged,
+                             msvm, &VM::MachineStatusViewModel::ps_handleSensorValueChanged);
 
         return *this;
     }

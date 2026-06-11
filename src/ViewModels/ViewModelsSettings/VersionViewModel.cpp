@@ -1,6 +1,6 @@
 #include <ViewModels/ViewModelsSettings/VersionViewModel.h>
 
-namespace Kub3::UI::ViewModels::ViewModelsSettings
+namespace Kub3::UI::ViewModels::Settings
 {
     VersionViewModel::VersionViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent) :
         QObject(parent),
@@ -11,4 +11,4 @@ namespace Kub3::UI::ViewModels::ViewModelsSettings
     {
     }
 
-} // namespace Kub3::UI::ViewModels::ViewModelsSettings
+} // namespace Kub3::UI::ViewModels::Settings

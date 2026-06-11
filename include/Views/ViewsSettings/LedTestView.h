@@ -7,13 +7,16 @@
 
 #include "Views/ViewBase.h"
 
-namespace Ui {
+namespace Ui
+{
     class LedTestView;
 } // namespace UI
 
-namespace Kub3::UI::Views::ViewsSettings {
-    class LedTestView final : public SettingsViewBase {
-        using LedTestViewModel = Kub3::UI::ViewModels::ViewModelsSettings::LedTestViewModel;
+namespace Kub3::UI::Views::ViewsSettings
+{
+    class LedTestView final : public SettingsViewBase
+    {
+        using LedTestViewModel = Kub3::UI::ViewModels::Settings::LedTestViewModel;
 
         Q_OBJECT
 

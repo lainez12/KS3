@@ -7,13 +7,16 @@
 
 #include "Views/ViewBase.h"
 
-namespace Ui {
+namespace Ui
+{
     class ScreenshotExportView;
 } // namespace UI
 
-namespace Kub3::UI::Views::ViewsSettings {
-    class ScreenshotExportView final : public SettingsViewBase {
-        using ScreenshotExportViewModel = Kub3::UI::ViewModels::ViewModelsSettings::ScreenshotExportViewModel;
+namespace Kub3::UI::Views::ViewsSettings
+{
+    class ScreenshotExportView final : public SettingsViewBase
+    {
+        using ScreenshotExportViewModel = Kub3::UI::ViewModels::Settings::ScreenshotExportViewModel;
 
         Q_OBJECT
 

@@ -8,13 +8,16 @@
 #include "Views/ViewBase.h"
 #include <Views/KeyboardConnections.h>
 
-namespace Ui {
+namespace Ui
+{
     class VisualisationView;
 } // namespace UI
 
-namespace Kub3::UI::Views::ViewsAlignment {
-    class VisualisationView final : public AlignmentViewBase {
-        using VisualisationViewModel = Kub3::UI::ViewModels::ViewModelsAlignment::VisualisationViewModel;
+namespace Kub3::UI::Views::ViewsAlignment
+{
+    class VisualisationView final : public AlignmentViewBase
+    {
+        using VisualisationViewModel = Kub3::UI::ViewModels::Alignment::VisualisationViewModel;
 
         Q_OBJECT
 
