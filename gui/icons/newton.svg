@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   id="svg2"
+   width="53.158691"
+   height="66.994659"
+   viewBox="0 0 53.158693 66.994659"
+   sodipodi:docname="newton-enabled.ai"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs6">
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath960">
+      <g
+         id="g964"
+         transform="translate(-690.5654,-386.7827)">
+        <path
+           d="M 0,768 H 1366 V 0 H 0 Z"
+           id="path962" />
+      </g>
+    </clipPath>
+  </defs>
+  <sodipodi:namedview
+     id="namedview4"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false" />
+  <g
+     id="g10"
+     inkscape:groupmode="layer"
+     inkscape:label="Page 1"
+     transform="matrix(1.3333333,0,0,-1.3333333,-920.75382,582.70493)">
+    <g
+       id="g24"
+       transform="translate(690.5654,386.7827)"
+       clip-path="url(#clipPath960)">
+      <path
+         d="M 0,0 V 50.246 H 9.87 L 30.442,16.692 v 33.554 h 9.427 V 0 H 29.69 L 9.435,32.766 V 0 Z"
+         style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="path26" />
+    </g>
+  </g>
+</svg>

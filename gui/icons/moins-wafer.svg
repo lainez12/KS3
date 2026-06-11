@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   id="svg2"
+   width="57.493347"
+   height="11.101349"
+   viewBox="0 0 57.493349 11.101349"
+   sodipodi:docname="moins-wafer-orange-enabled.ai"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs6">
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath876">
+      <g
+         id="g880"
+         transform="translate(-715.7803,-391.1147)">
+        <path
+           d="M 0,768 H 1366 V 0 H 0 Z"
+           id="path878" />
+      </g>
+    </clipPath>
+  </defs>
+  <sodipodi:namedview
+     id="namedview4"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false" />
+  <g
+     id="g10"
+     inkscape:groupmode="layer"
+     inkscape:label="Page 1"
+     transform="matrix(1.3333333,0,0,-1.3333333,-902.55234,532.58627)">
+    <g
+       id="g24"
+       transform="translate(715.7803,391.1147)"
+       clip-path="url(#clipPath876)"
+       inkscape:export-filename="moins-wafer.svg"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96">
+      <path
+         d="m 0,0 h -34.612 c -2.299,-0.05 -4.203,1.772 -4.253,4.071 -0.05,2.299 1.772,4.202 4.071,4.253 0.061,10e-4 0.121,10e-4 0.182,0 H 0 C 2.299,8.374 4.202,6.551 4.253,4.252 4.303,1.954 2.48,0.05 0.182,0 0.121,-0.001 0.061,-0.001 0,0"
+         style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="path26" />
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   id="svg2"
+   width="126.11246"
+   height="21.420532"
+   viewBox="0 0 126.11246 21.420532"
+   sodipodi:docname="measurement-enabled-checked.ai"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs6">
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath24">
+      <path
+         d="M 0,841.89 H 595.276 V 0 H 0 Z"
+         id="path22" />
+    </clipPath>
+  </defs>
+  <sodipodi:namedview
+     id="namedview4"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false" />
+  <g
+     id="g10"
+     inkscape:groupmode="layer"
+     inkscape:label="Page 1"
+     transform="matrix(1.3333333,0,0,-1.3333333,-348.46164,685.51401)">
+    <g
+       id="g18">
+      <g
+         id="g20"
+         clip-path="url(#clipPath24)">
+        <g
+           id="g26"
+           transform="translate(298.4517,482.3928)" />
+        <path
+           style="fill:#ffffff;stroke-width:0.75"
+           d="m 262.8984,514.02622 v -9.87527 h 2.29448 v 9.87527 h 2.33947 v -4.83641 h 2.09203 v 4.8814 h 2.29449 v -4.8814 h 2.04704 v 4.81392 h 2.33947 v -4.88141 h 2.18201 v 4.9264 h 2.2495 v -9.83029 h 2.29448 v 9.76281 h 2.2045 v -4.88141 h 2.38447 v 4.92639 h 2.40695 v -4.94888 h 2.09204 v 5.01637 h 2.06953 v -4.92639 h 2.227 v 4.8814 h 2.36197 v -9.92027 h 2.06953 v 9.96526 h 2.36197 v -4.9039 h 2.27199 v 4.81392 h 2.47445 v -4.79142 h 1.95705 v 4.9039 h 2.27199 v -4.97139 h 2.18202 v 4.92639 h 2.29448 v -9.83028 h 2.13702 v 9.87528 h 2.36197 v -4.94889 h 2.2045 v 4.8589 h 2.13698 v -4.9171 c 0,0 2.32126,-0.0634 2.33823,0 0.0169,0.0634 0,4.88324 0,4.88324 h 2.37005 v -4.81962 h 2.22688 v 4.96278 h 2.06782 v -9.97327 h 2.17917 v 9.90964 h 2.29051 v -4.94687 h 2.19508 v 4.94687 h 2.25869 v -4.97868 h 2.24279 v 4.99459 h 2.2587 v -5.02641 h 2.22689 v 5.0105 h 2.24279 v -9.89373 h 2.11554 v 9.90964 h 1.41566 v -16.01767 h -94.58434 v 15.96995 z"
+           id="path594" />
+      </g>
+    </g>
+  </g>
+</svg>

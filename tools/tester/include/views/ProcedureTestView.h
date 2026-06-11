@@ -4,9 +4,9 @@
 #include <memory>
 #include <unordered_map>
 
-#include "view_models/ProcedureTestViewModel.h"
-#include <Views/ViewBase.h>
 #include <utils.h>
+#include <view_models/ProcedureTestViewModel.h>
+#include <views/ViewBase.h>
 
 namespace Ui
 {
@@ -16,7 +16,7 @@ namespace Ui
 namespace Kub3::Tools::Tester
 {
 
-    class ProcedureTestView : public UI::Views::ViewBase
+    class ProcedureTestView final : public UI::Views::ViewBase
     {
         Q_OBJECT
 
@@ -33,6 +33,7 @@ namespace Kub3::Tools::Tester
         void updateBoolSensorsText(QLabel *label, const bool state);
         void updateIntSensorsText(QLabel *label, const int32_t state);
 
+    private:
         Unique<Ui::ProcedureTestView> ui;
         Shared<ProcedureTestViewModel> m_procedureViewModel; // Typed convenience ptr
 

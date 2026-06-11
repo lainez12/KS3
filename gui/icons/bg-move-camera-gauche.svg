@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   id="svg607"
+   width="759.99994"
+   height="854.66669"
+   viewBox="0 0 759.99996 854.66669"
+   sodipodi:docname="rectangle-blanc-move-camera-left.ai"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs611">
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath623">
+      <path
+         d="M 0,768 H 1366 V 0 H 0 Z"
+         id="path621" />
+    </clipPath>
+  </defs>
+  <sodipodi:namedview
+     id="namedview609"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false" />
+  <g
+     id="g615"
+     inkscape:groupmode="layer"
+     inkscape:label="Page 1"
+     transform="matrix(1.3333333,0,0,-1.3333333,-721.33329,1024)">
+    <g
+       id="g617">
+      <g
+         id="g619"
+         clip-path="url(#clipPath623)">
+        <g
+           id="g625"
+           transform="translate(541,1151)">
+          <path
+             d="m 0,0 h 570 v -624 c 0,-220.914 -179.086,-400 -400,-400 H 0 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path627" />
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

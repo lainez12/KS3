@@ -4,13 +4,13 @@
 
 #include <memory>
 
-#include <Views/ViewBase.h>
 #include <view_models/MotorTestViewModel.h>
+#include <views/ViewBase.h>
 
 namespace Kub3::Tools::Tester
 {
 
-    class MotorTestView : public UI::Views::ViewBase
+    class MotorTestView final : public UI::Views::ViewBase
     {
         Q_OBJECT
     public:

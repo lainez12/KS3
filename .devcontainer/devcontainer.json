@@ -25,11 +25,12 @@
                 "ms-vscode.cpptools",
                 "ms-vscode.cpptools-extension-pack",
                 "ms-vscode.cmake-tools",
+                "theqtcompany.qt-ui",
                 "twxs.cmake"
             ]
         }
     },
     // Allows the vscode user to use dialout group for serial port without sudo
-    "postCreateCommand": "sudo usermod -a -G dialout vscode && git config --global --add safe.directory '*'",
+    "postCreateCommand": "sudo usermod -a -G dialout vscode && git config --global --add safe.directory '*' && ln -sf /workspaces/KUB3Software/tests/hardware.ini /tmp/hardware.ini && ln -sf /workspaces/KUB3Software/tests/process.ini /tmp/process.ini",
     "remoteUser": "vscode"
 }

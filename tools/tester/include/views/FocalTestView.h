@@ -4,14 +4,14 @@
 #include <QVBoxLayout>
 #include <memory>
 
-#include <Views/ViewBase.h>
 #include <utils.h>
 #include <view_models/FocalTestViewModel.h>
+#include <views/ViewBase.h>
 
 namespace Kub3::Tools::Tester
 {
 
-    class FocalTestView : public UI::Views::ViewBase
+    class FocalTestView final : public UI::Views::ViewBase
     {
         Q_OBJECT
 

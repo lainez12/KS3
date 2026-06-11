@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   id="svg672"
+   width="255.08716"
+   height="190.85899"
+   viewBox="0 0 255.08716 190.85899"
+   sodipodi:docname="Base icônes.ai"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs676">
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath688">
+      <path
+         d="M 0,768 H 1366 V 0 H 0 Z"
+         id="path686" />
+    </clipPath>
+  </defs>
+  <sodipodi:namedview
+     id="namedview674"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false" />
+  <g
+     id="g680"
+     inkscape:groupmode="layer"
+     inkscape:label="Page 1"
+     transform="matrix(1.3333333,0,0,-1.3333333,-153.18313,855.46898)">
+    <g
+       id="g682">
+      <g
+         id="g684"
+         clip-path="url(#clipPath688)">
+        <g
+           id="g694"
+           transform="translate(183.0596,498.4575)">
+          <path
+             d="m 0,0 c -5.304,0 -10.392,2.107 -14.142,5.857 l -48.172,48.172 c -7.811,7.811 -7.811,20.475 0,28.285 7.811,7.811 20.474,7.811 28.284,0 L 0,48.284 89,137.286 c 7.811,7.811 20.475,7.811 28.286,0 7.809,-7.81 7.81,-20.474 0,-28.285 L 14.142,5.857 C 10.392,2.107 5.304,0 0,0"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path696" />
+        </g>
+        <g
+           id="g698"
+           transform="translate(543.8872,430)">
+          <path
+             d="M 0,0 H 111.226 C 161.55,21.589 196.804,71.579 196.804,129.809 196.804,207.787 133.59,271 55.613,271 -22.365,271 -85.578,207.787 -85.578,129.809 -85.578,71.579 -50.325,21.589 0,0"
+             style="fill:#0070db;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path700" />
+        </g>
+        <path
+           d="m 667.838,482.351 h -124.83 v 45 h 124.83 z m -83.856,151.362 v -30 h 18.21 v 30 h 4.553 v -35 h -63.737 v 35 z m 50.446,5 h -24.524 -3.159 -4.553 -18.21 -40.974 -5.274 -12.936 v -79.859 -38.248 -28.758 c 0,-7.973 5.94,-14.497 13.2,-14.497 h 134.851 c 7.259,0 13.2,6.524 13.2,14.497 v 28.758 38.248 23.166 z"
+           style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           id="path702" />
+        <g
+           id="g704"
+           transform="translate(968.8867,423)">
+          <path
+             d="m 0,0 h 111.227 c 50.324,21.589 85.578,71.579 85.578,129.809 C 196.805,207.787 133.591,271 55.613,271 -22.364,271 -85.578,207.787 -85.578,129.809 -85.578,71.579 -50.324,21.589 0,0"
+             style="fill:#0070db;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path706" />
+        </g>
+        <g
+           id="g708"
+           transform="translate(1106.9375,587.3721)">
+          <path
+             d="m 0,0 h -164.875 l 82.646,51.516 z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path710" />
+        </g>
+        <g
+           id="g712"
+           transform="translate(942.0625,577.4204)">
+          <path
+             d="m 0,0 v -42.131 -24.123 -20.748 c 0,-5.409 4.426,-9.834 9.834,-9.834 h 44.008 v 46.667 c 0,6.6 5.4,12 12,12 h 33.191 c 6.6,0 12,-5.4 12,-12 v -46.667 h 44.008 c 5.408,0 9.834,4.425 9.834,9.834 V -66.254 -42.131 0 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path714" />
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

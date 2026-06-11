@@ -2,6 +2,8 @@
 #include <QFontDatabase>
 #include <QMessageBox>
 #include <QObject>
+#include <QRegularExpression>
+#include <QRegularExpressionMatchIterator>
 #include <QThread>
 #include <exception>
 
@@ -21,6 +23,26 @@ static void qtLogsHandler(QtMsgType type, const QMessageLogContext &context, con
         originalHandler(type, context, msg);
 }
 
+static QString preprocesVariablesStyles(QString styles)
+{
+    QRegularExpression varRegex("(@[\\w-]+):\\s*(.*?);");
+    QRegularExpressionMatchIterator i = varRegex.globalMatch(styles);
+    QMap<QString, QString> variables;
+    while (i.hasNext())
+    {
+        QRegularExpressionMatch match = i.next();
+        variables.insert(match.captured(1), match.captured(2));
+    }
+    QMapIterator<QString, QString> it(variables);
+    it.toBack();
+    while (it.hasPrevious())
+    {
+        it.previous();
+        styles.replace(it.key(), it.value());
+    }
+    return styles;
+}
+
 static void loadStyles(QApplication *app)
 {
     // Load QSS files
@@ -29,7 +51,9 @@ static void loadStyles(QApplication *app)
     if (f.open(QFile::ReadOnly | QFile::Text))
     {
         QTextStream ts(&f);
-        app->setStyleSheet(ts.readAll());
+        QString content    = ts.readAll();
+        QString stylesheet = preprocesVariablesStyles(content);
+        app->setStyleSheet(stylesheet);
         f.close();
     }
 
@@ -37,11 +61,23 @@ static void loadStyles(QApplication *app)
     int fontId = QFontDatabase::addApplicationFont(":/fonts/ArtNormFont.ttf");
     if (fontId != -1)
     {
-        QString familyName = QFontDatabase::applicationFontFamilies(fontId).at(0);
-        qInfo() << "Loaded font family w/ name:" << familyName;
+        QString familyNameArt = QFontDatabase::applicationFontFamilies(fontId).at(0);
+        qDebug() << "Loaded font family w/ name:" << familyNameArt;
     }
     else
-        qWarning() << "Failed to load font: ':/fonts/ArtNormFont.ttf'";
+    {
+        qDebug() << "Failed to load font: ':/fonts/ArtNormFont.ttf'";
+    }
+    int fontIdArial = QFontDatabase::addApplicationFont(":/fonts/arial.ttf");
+    if (fontIdArial != -1)
+    {
+        QString familyNameArial = QFontDatabase::applicationFontFamilies(fontIdArial).at(0);
+        qDebug() << "Loaded font family w/ name:" << familyNameArial;
+    }
+    else
+    {
+        qDebug() << "Failed to load font: ':/fonts/arial.ttf'";
+    }
 }
 
 int main(int argc, char *argv[])

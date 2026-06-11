@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   id="svg187"
+   width="25.156006"
+   height="38.254669"
+   viewBox="0 0 25.156007 38.254669"
+   sodipodi:docname="micron-enabled.ai"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs191">
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath207">
+      <path
+         d="M 0,768 H 1366 V 0 H 0 Z"
+         id="path205" />
+    </clipPath>
+  </defs>
+  <sodipodi:namedview
+     id="namedview189"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false" />
+  <g
+     id="g195"
+     inkscape:groupmode="layer"
+     inkscape:label="Page 1"
+     transform="matrix(1.3333333,0,0,-1.3333333,-950.34116,575.79425)">
+    <path
+       d="m 791.61,348 h -140 v 140 h 140 z"
+       style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="path197" />
+    <path
+       d="M 652.604,348.993 H 790.619 V 487.007 H 652.604 Z M 791.611,348 h -140 v 140 h 140 z"
+       style="fill:#0070db;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="path199" />
+    <g
+       id="g201">
+      <g
+         id="g203"
+         clip-path="url(#clipPath207)">
+        <g
+           id="g209"
+           transform="translate(712.7559,431.8457)">
+          <path
+             d="m 0,0 h 5.449 v -9.395 c 0,-2.708 0.274,-4.55 0.821,-5.527 0.689,-1.263 1.711,-1.894 3.066,-1.894 0.728,0 1.419,0.234 2.07,0.703 0.651,0.468 1.133,1.119 1.446,1.953 0.312,0.833 0.468,2.402 0.468,4.707 V 0 h 5.547 V -20.742 H 13.75 v 2.5 c -0.391,-0.73 -0.762,-1.277 -1.113,-1.641 -0.352,-0.365 -0.824,-0.683 -1.416,-0.957 -0.593,-0.273 -1.137,-0.41 -1.631,-0.41 -0.925,0 -1.745,0.254 -2.461,0.762 -0.508,0.377 -1.068,1.126 -1.68,2.246 V -28.691 H 0 Z"
+             style="fill:#0070db;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path211" />
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

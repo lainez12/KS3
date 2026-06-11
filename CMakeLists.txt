@@ -23,7 +23,9 @@ set(CMAKE_COMPILE_WARNING_AS_ERROR ON)
 
 set(CMAKE_AUTOUIC_SEARCH_PATHS
     # Main app
-    "gui;gui/Views;gui/Modules;gui/Components"
+    "gui;gui/Components"
+    # --- Views
+    "gui/Views;gui/Views/Settings;gui/Views/Exposure;gui/Views/Alignment"
     # Configurator tool
     "tools/configurator/gui"
     # Motor tester tool
@@ -33,7 +35,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-find_package(Qt6 6.8 REQUIRED COMPONENTS Core Gui Widgets SerialPort)
+find_package(Qt6 6.8 REQUIRED COMPONENTS Core Gui Widgets SerialPort Svg)
 
 # ==============================================================================
 # 3. EXTERNAL DEPENDENCIES (MVS Library)
@@ -60,7 +62,6 @@ qt_add_library(Kub3Core STATIC
 
     ## Views / View Models Boilerplate
     src/ViewModels/BaseViewModel.cpp
-    src/Views/ViewBase.cpp
 
     ## Master FSM
     src/MFSM/MasterFSM.actions.cpp
@@ -150,7 +151,6 @@ qt_add_library(Kub3Core STATIC
 
     ## Views / View Models Boilerplate
     include/ViewModels/BaseViewModel.h
-    include/Views/ViewBase.h
 
     ## Master FSM
     include/MFSM/events.h
@@ -262,6 +262,7 @@ target_include_directories(Kub3Core PUBLIC
 target_link_libraries(Kub3Core PUBLIC
     Qt6::Core
     Qt6::SerialPort
+    Qt6::Svg
     Qt6::Gui
     Qt6::Widgets
 )
@@ -302,38 +303,142 @@ qt_add_executable(Kub3Software
     src/main.cpp
     src/Logger.h
     src/ApplicationBuilder.cpp
-    src/ViewModels/BaseVisionViewModel.cpp
-    src/ViewModels/MachineStatusViewModel.cpp
+    src/ViewModels/HomeViewModel.cpp
+    src/ViewModels/SettingsViewModel.cpp
+    src/ViewModels/Exposure/ExposureSettingsViewModel.cpp
+    src/ViewModels/Exposure/FavoriteExposureSettingsViewModel.cpp
+    src/ViewModels/Exposure/RecapExposureSettingsViewModel.cpp
+    src/ViewModels/Exposure/CompleteExposureViewModel.cpp
+    src/ViewModels/Exposure/ProgressExposureViewModel.cpp
+    src/ViewModels/Exposure/SaveExposureSettingsViewModel.cpp
+    src/ViewModels/Settings/MachineStatusViewModel.cpp
+    src/ViewModels/Settings/VersionViewModel.cpp
+    src/ViewModels/Settings/TemperatureViewModel.cpp
+    src/ViewModels/Settings/UpdateSoftwareViewModel.cpp
+    src/ViewModels/Settings/ScreenshotExportViewModel.cpp
+    src/ViewModels/Settings/LedTestViewModel.cpp
+    src/ViewModels/Settings/OperatingTimesViewModel.cpp
+    src/ViewModels/Alignment/LoadParametersViewModel.cpp
+    src/ViewModels/Alignment/SaveParametersViewModel.cpp
+    src/ViewModels/Alignment/VisualisationViewModel.cpp
+    src/ViewModels/Alignment/DistanceViewModel.cpp
+    src/Views/Exposure/ExposureSettingsView.cpp
+    src/Views/Exposure/FavoriteExposureSettingsView.cpp
+    src/Views/Exposure/RecapExposureSettingsView.cpp
+    src/Views/Exposure/CompleteExposureView.cpp
+    src/Views/Exposure/ProgressExposureView.cpp
+    src/Views/Exposure/SaveExposureSettingsView.cpp
     src/Views/MainWindow.cpp
-    src/Views/DebugView.cpp
+    src/Views/ViewBase.cpp
+    src/Views/KeyboardConnections.cpp
+    src/Views/AlignmentViewBase.cpp
+    src/Views/SettingsViewBase.cpp
+    src/Views/ExposureViewBase.cpp
     src/Views/HomeView.cpp
-    src/Views/MachineStatusView.cpp
+    src/Views/HomeEightView.cpp
+    src/Views/SettingsView.cpp
+    src/Views/Settings/MachineStatusView.cpp
+    src/Views/Settings/VersionView.cpp
+    src/Views/Settings/TemperatureView.cpp
+    src/Views/Settings/UpdateSoftwareView.cpp
+    src/Views/Settings/ScreenshotExportView.cpp
+    src/Views/Settings/LedTestView.cpp
+    src/Views/Settings/OperatingTimesView.cpp
+    src/Views/Alignment/LoadParametersView.cpp
+    src/Views/Alignment/SaveParametersView.cpp
+    src/Views/Alignment/VisualisationView.cpp
+    src/Views/Alignment/DistanceView.cpp
+    src/Views/Components/FavoriteExposureSettingButton.cpp
+    src//Views/Components/MessageOverlay.cpp
+    src/Views/Components/NavButtonManager.cpp
+    src/ViewModels/BaseVisionViewModel.cpp
     src/Views/Modules/CamerasTestView.cpp
     src/Views/Components/CameraStreamWidget.cpp
     src/Views/Components/NavButton.cpp
+    src/Views/Components/UpBar.cpp
     src/Views/Components/ActionBox.cpp
     src/Views/Components/BottomCroppedCircle.cpp
     src/Views/Components/DoubleRatioSlider.cpp
     # Headers
     include/ApplicationBuilder.h
-    include/ViewModels/BaseVisionViewModel.h
-    include/ViewModels/MachineStatusViewModel.h
+    include/ViewModels/HomeViewModel.h
+    include/ViewModels/SettingsViewModel.h
+    include/ViewModels/Exposure/ExposureSettingsViewModel.h
+    include/ViewModels/Exposure/FavoriteExposureSettingsViewModel.h
+    include/ViewModels/Exposure/RecapExposureSettingsViewModel.h
+    include/ViewModels/Exposure/CompleteExposureViewModel.h
+    include/ViewModels/Exposure/ProgressExposureViewModel.h
+    include/ViewModels/Exposure/SaveExposureSettingsViewModel.h
+    include/ViewModels/Settings/MachineStatusViewModel.h
+    include/ViewModels/Settings/VersionViewModel.h
+    include/ViewModels/Settings/TemperatureViewModel.h
+    include/ViewModels/Settings/UpdateSoftwareViewModel.h
+    include/ViewModels/Settings/ScreenshotExportViewModel.h
+    include/ViewModels/Settings/LedTestViewModel.h
+    include/ViewModels/Settings/OperatingTimesViewModel.h
+    include/ViewModels/Alignment/LoadParametersViewModel.h
+    include/ViewModels/Alignment/SaveParametersViewModel.h
+    include/ViewModels/Alignment/VisualisationViewModel.h
+    include/ViewModels/Alignment/DistanceViewModel.h
+    include/Views/Exposure/ExposureSettingsView.h
+    include/Views/Exposure/FavoriteExposureSettingsView.h
+    include/Views/Exposure/RecapExposureSettingsView.h
+    include/Views/Exposure/CompleteExposureView.h
+    include/Views/Exposure/ProgressExposureView.h
+    include/Views/Exposure/SaveExposureSettingsView.h
     include/Views/MainWindow.h
-    include/Views/DebugView.h
+    include/Views/ViewBase.h
+    include/Views/KeyboardConnections.h
+    include/Views/AlignmentViewBase.h
+    include/Views/SettingsViewBase.h
+    include/Views/ExposureViewBase.h
     include/Views/HomeView.h
-    include/Views/MachineStatusView.h
+    include/Views/HomeEightView.h
+    include/Views/SettingsView.h
+    include/Views/Settings/MachineStatusView.h
+    include/Views/Settings/TemperatureView.h
+    include/Views/Settings/VersionView.h
+    include/Views/Settings/UpdateSoftwareView.h
+    include/Views/Settings/ScreenshotExportView.h
+    include/Views/Settings/LedTestView.h
+    include/Views/Settings/OperatingTimesView.h
+    include/Views/Alignment/LoadParametersView.h
+    include/Views/Alignment/SaveParametersView.h
+    include/Views/Alignment/VisualisationView.h
+    include/Views/Alignment/DistanceView.h
+    include/Views/Components/FavoriteExposureSettingButton.h
+    include/Views/Components/NavButtonManager.h
+    include/Views/Components/MessageOverlay.h
+    include/ViewModels/BaseVisionViewModel.h
     include/Views/Modules/CamerasTestView.h
     include/Views/Components/CameraStreamWidget.h
     include/Views/Components/NavButton.h
+    include/Views/Components/UpBar.h
     include/Views/Components/ActionBox.h
     include/Views/Components/BottomCroppedCircle.h
     include/Views/Components/DoubleRatioSlider.h
     # UI
     gui/resources.qrc
     gui/MainWindow.ui
-    gui/Views/DebugView.ui
+    gui/Views/Exposure/ExposureSettingsView.ui
+    gui/Views/Exposure/FavoriteExposureSettingsView.ui
+    gui/Views/Exposure/RecapExposureSettingsView.ui
+    gui/Views/Exposure/CompleteExposureView.ui
+    gui/Views/Exposure/ProgressExposureView.ui
     gui/Views/HomeView.ui
-    gui/Views/MachineStatusView.ui
+    gui/Views/HomeEightView.ui
+    gui/Views/SettingsView.ui
+    gui/Views/Settings/MachineStatusView.ui
+    gui/Views/Settings/VersionView.ui
+    gui/Views/Settings/TemperatureView.ui
+    gui/Views/Settings/UpdateSoftwareView.ui
+    gui/Views/Settings/ScreenshotExportView.ui
+    gui/Views/Settings/LedTestView.ui
+    gui/Views/Settings/OperatingTimesView.ui
+    gui/Views/Alignment/LoadParametersView.ui
+    gui/Views/Alignment/SaveParametersView.ui
+    gui/Views/Alignment/VisualisationView.ui
+    gui/Views/Alignment/DistanceView.ui
 )
 
 qt_finalize_target(Kub3Software)

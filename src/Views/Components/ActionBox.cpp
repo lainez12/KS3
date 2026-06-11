@@ -1,7 +1,7 @@
 #include <QRegion>
 #include <QResizeEvent>
 
-#include "Views/Components/ActionBox.h"
+#include <Views/Components/ActionBox.h>
 
 ActionBox::ActionBox(QWidget *parent) : BottomCroppedCircle(parent)
 {

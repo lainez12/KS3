@@ -11,6 +11,7 @@ qt_add_executable(Kub3Tester
     src/ApplicationBuilder.cpp
     src/services/MotorTestService.cpp
     src/services/FocalTestService.cpp
+    src/views/ViewBase.cpp
     src/views/MotorTestView.cpp
     src/views/ProcedureTestView.cpp
     src/views/FocalTestView.cpp
@@ -20,6 +21,7 @@ qt_add_executable(Kub3Tester
     src/view_models/ProcedureTestViewModel.cpp
     src/view_models/MotorTestViewModel.cpp
     src/view_models/FocalTestViewModel.cpp
+
     # Headers
     include/controllers/MotorTestController.h
     include/controllers/ProcedureTestController.h
@@ -28,6 +30,7 @@ qt_add_executable(Kub3Tester
     include/ApplicationBuilder.h
     include/services/MotorTestService.h
     include/services/FocalTestService.h
+    include/views/ViewBase.h
     include/views/MotorTestView.h
     include/views/ProcedureTestView.h
     include/views/FocalTestView.h
@@ -36,6 +39,7 @@ qt_add_executable(Kub3Tester
     include/view_models/ProcedureTestViewModel.h
     include/view_models/MotorTestViewModel.h
     include/view_models/FocalTestViewModel.h
+
     # UI
     gui/resources.qrc
     gui/TesterMainWindow.ui

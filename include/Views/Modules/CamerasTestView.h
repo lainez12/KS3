@@ -23,7 +23,7 @@ namespace Kub3::UI::Modules
     {
         Q_OBJECT
     public:
-        explicit CamerasTestView(Shared<ViewModels::MachineStatusViewModel> viewModel, QWidget *parent = nullptr);
+        explicit CamerasTestView(ViewModels::MachineStatusViewModel *viewModel, QWidget *parent = nullptr);
         ~CamerasTestView() override;
 
     public slots:
@@ -41,7 +41,7 @@ namespace Kub3::UI::Modules
 
     private:
         Ui::CamerasTestView *ui;
-        Shared<ViewModels::MachineStatusViewModel> m_viewModel;
+        ViewModels::MachineStatusViewModel *m_viewModel;
     };
 
 }

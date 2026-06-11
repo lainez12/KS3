@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   id="svg2"
+   width="170"
+   height="170"
+   viewBox="0 0 170.00001 170"
+   sodipodi:docname="flood_icon.svg"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs6" />
+  <sodipodi:namedview
+     id="namedview4"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="1.7903466"
+     inkscape:cx="66.467577"
+     inkscape:cy="103.05267"
+     inkscape:window-width="1920"
+     inkscape:window-height="1008"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g10" />
+  <g
+     id="g10"
+     inkscape:groupmode="layer"
+     inkscape:label="Page 1"
+     transform="matrix(1.3333333,0,0,-1.3333333,-1095.1911,850.56461)">
+    <g
+       id="g12"
+       transform="translate(0,-3)">
+      <g
+         id="g24"
+         transform="translate(860.08903,515.43798)">
+        <path
+           d="M 0,0 H 50.27 C 82.663,13.881 97.671,51.396 83.79,83.79 69.908,116.184 32.395,131.192 0,117.311 -32.395,103.429 -47.402,65.915 -33.521,33.521 -27.065,18.458 -15.063,6.455 0,0"
+           style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           id="path26" />
+      </g>
+    </g>
+  </g>
+</svg>

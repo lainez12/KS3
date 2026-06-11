@@ -1,6 +1,6 @@
 #include <QPainter>
 
-#include "Views/Components/BottomCroppedCircle.h"
+#include <Views/Components/BottomCroppedCircle.h>
 
 BottomCroppedCircle::BottomCroppedCircle(QWidget *parent) : QWidget(parent) {}
 

@@ -1,7 +1,81 @@
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<!-- Uploaded to: SVG Repo, www.svgrepo.com, Transformed by: SVG Repo Mixer Tools -->
-<svg fill="#ffffff" width="800px" height="800px" viewBox="0 0 256 256" id="Flat" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff">
-<g id="SVGRepo_bgCarrier" stroke-width="0"/>
-<g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
-<g id="SVGRepo_iconCarrier"> <path d="M35.61523,134.41724a15.79789,15.79789,0,0,1,2.90039-17.26978l77.72657-84.20532h.001a15.99956,15.99956,0,0,1,23.51368,0l77.72851,84.20532A16.0003,16.0003,0,0,1,205.72852,144H50.27148A15.79772,15.79772,0,0,1,35.61523,134.41724ZM208,160H48a16.01833,16.01833,0,0,0-16,16v24a16.01833,16.01833,0,0,0,16,16H208a16.01833,16.01833,0,0,0,16-16V176A16.01833,16.01833,0,0,0,208,160Z"/> </g>
-</svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   id="svg2"
+   width="145.94"
+   height="140.02454"
+   viewBox="0 0 145.94001 140.02454"
+   sodipodi:docname="open-close-enabled.ai"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs6">
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath18">
+      <path
+         d="M 0,768 H 1366 V 0 H 0 Z"
+         id="path16" />
+    </clipPath>
+  </defs>
+  <sodipodi:namedview
+     id="namedview4"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false" />
+  <g
+     id="g10"
+     inkscape:groupmode="layer"
+     inkscape:label="Page 1"
+     transform="matrix(1.3333333,0,0,-1.3333333,-879.58036,642.79401)">
+    <g
+       id="g12">
+      <g
+         id="g14"
+         clip-path="url(#clipPath18)">
+        <g
+           id="g20"
+           transform="rotate(180,367.98165,241.04776)"
+           inkscape:export-filename="../../../../../../../media/kloekubuntu/Data/svn/gitea_romainbr/KUB3Software/gui/icons/g20.svg"
+           inkscape:export-xdpi="96"
+           inkscape:export-ydpi="96">
+          <path
+             d="M 43.101,-6.7337993e-8 H 0 C -27.775,11.902007 -40.642,44.067007 -28.74,71.842007 -16.837,99.616007 15.327,112.483 43.101,100.582 70.876,88.680007 83.743,56.515007 71.841,28.740007 66.307,15.826007 56.016,5.5350069 43.101,-6.7337993e-8"
+             style="fill:none;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path22"
+             inkscape:export-filename="../../../../../../../media/kloekubuntu/Data/svn/gitea_romainbr/KUB3Software/gui/icons/insert.svg"
+             inkscape:export-xdpi="96"
+             inkscape:export-ydpi="96" />
+        </g>
+        <g
+           id="g24"
+           transform="rotate(180,341.10325,221.22596)">
+          <path
+             d="m 0,0 h -64.546 l 32.355,43.418 z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path26" />
+        </g>
+        <g
+           id="g28"
+           transform="rotate(180,343.27315,224.81411)">
+          <path
+             d="m 0,0 h -60.207 v -7.041 c 0.009,-2.393 1.947,-4.331 4.34,-4.339 H 0 c 2.394,0.007 4.333,1.946 4.34,4.339 V 0 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path30" />
+        </g>
+        <g
+           id="g48"
+           transform="translate(709.6367,349.3281)" />
+      </g>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,7 @@
+#define PURPLE_COLOR       "#7D20E8"
+#define BLUE_COLOR         "#0070DB"
+#define TURQUOISE_COLOR    "#00BCD1"
+#define BLUE_COLOR_SHADOW  "#B2D4F4"
+#define GREEN_COLOR        "#52AE32"
+#define GREEN_COLOR_SHADOW "#CBE7C1"
+#define ORANGE_COLOR       "#E85420"

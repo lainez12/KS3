@@ -8,7 +8,7 @@ namespace Kub3::UI::ViewModels
     class BaseViewModel
     {
     public:
-        ~BaseViewModel();
+        virtual ~BaseViewModel();
 
         template <typename Sender, typename Signal, typename Slot>
         void bindConnection(Sender *sender, Signal signal, Slot slot, Qt::ConnectionType type = Qt::QueuedConnection)
