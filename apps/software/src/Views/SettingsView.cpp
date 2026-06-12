@@ -9,8 +9,7 @@
 
 SettingsView::SettingsView(Unique<SettingsViewModel> viewModel, QWidget *parent) :
     ViewBase(std::move(viewModel), parent),
-    ui(new Ui::SettingsView)
-{
+    ui(new Ui::SettingsView) {
     ui->setupUi(this);
 
     createNavButtonsConfigs();
@@ -28,6 +27,8 @@ SettingsView::SettingsView(Unique<SettingsViewModel> viewModel, QWidget *parent)
     ui->ledTestBtn->setSize(BUTTONS_SIZE);
     ui->updateSoftBtn->setup("Update software", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/usb-software.svg");
     ui->updateSoftBtn->setSize(BUTTONS_SIZE);
+    ui->machineSettingsBtn->setup("Machine settings", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/select-all.svg");
+    ui->machineSettingsBtn->setSize(BUTTONS_SIZE);
 
     connect(ui->aboutBtn, &NavButton::clicked, this, [this]() { emit s_openView(Kub3::UI::ViewId::SETTINGS_ABOUT_VIEW); });
     connect(ui->temperatureBtn, &NavButton::clicked, this, [this]() { emit s_openView(Kub3::UI::ViewId::SETTINGS_TEMPERATURE_VIEW); });
@@ -35,19 +36,17 @@ SettingsView::SettingsView(Unique<SettingsViewModel> viewModel, QWidget *parent)
     connect(ui->screenshootBtn, &NavButton::clicked, this, [this]() { emit s_openView(Kub3::UI::ViewId::SETTINGS_SCREENSHOT_EXPORT_VIEW); });
     connect(ui->ledTestBtn, &NavButton::clicked, this, [this]() { emit s_openView(Kub3::UI::ViewId::SETTINGS_LED_TEST_VIEW); });
     connect(ui->updateSoftBtn, &NavButton::clicked, this, [this]() { emit s_openView(Kub3::UI::ViewId::SETTINGS_UPDATE_SOFTWARE_VIEW); });
+    connect(ui->machineSettingsBtn, &NavButton::clicked, this, [this]() { emit s_openView(Kub3::UI::ViewId::MACHINE_STATUS_VIEW); });
 }
-SettingsView::~SettingsView()
-{
+SettingsView::~SettingsView() {
 }
 
-void SettingsView::resizeEvent(QResizeEvent *ev)
-{
+void SettingsView::resizeEvent(QResizeEvent *ev) {
     QWidget::resizeEvent(ev);
     ui->buttonsLayout->setSpacing(this->width() * 0.03); // 7% of window width
 }
 
-void SettingsView::createNavButtonsConfigs()
-{
+void SettingsView::createNavButtonsConfigs() {
     NavButtonConfig homeBtn(
         "Home",
         ":/icons/home.svg",
@@ -55,8 +54,7 @@ void SettingsView::createNavButtonsConfigs()
         std::bind(&SettingsView::onHomeButtonClicked, this, std::placeholders::_1));
     addNavButton("left", homeBtn);
 }
-void SettingsView::configTitleBar()
-{
+void SettingsView::configTitleBar() {
     setTitleBar(TitleBarConfig{
         .viewTitle      = "Parameters",
         .textColor      = QColor("#FFF"),
@@ -68,7 +66,6 @@ void SettingsView::configTitleBar()
     });
 }
 
-void SettingsView::onHomeButtonClicked(const QString &buttonId)
-{
+void SettingsView::onHomeButtonClicked(const QString &buttonId) {
     emit s_openView(Kub3::UI::ViewId::HOME_VIEW);
 }
