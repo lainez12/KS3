@@ -83,6 +83,12 @@ namespace Kub3::UI::Views
         {
             return m_showCentralLogo;
         }
+
+        bool shadowedBoxStyle() const
+        {
+            return m_shadowedBoxStyle;
+        }
+
         const NavButtonManager &getNavButtonManager() const
         {
             return m_buttonManager;
@@ -157,6 +163,7 @@ namespace Kub3::UI::Views
     protected:
         Unique<ViewModels::BaseViewModel> m_viewModel;
         bool m_showCentralLogo;
+        bool m_shadowedBoxStyle = true;
         NavButtonManager m_buttonManager;
         Unique<MessageOverlay> m_messages = std::make_unique<MessageOverlay>(this);
 

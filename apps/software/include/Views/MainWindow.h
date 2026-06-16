@@ -32,13 +32,11 @@
 #include <Views/SettingsView.h>
 #include <Views/ViewBase.h>
 
-namespace Ui
-{
+namespace Ui {
     class MainWindow;
 }
 
-class MainWindow : public QMainWindow
-{
+class MainWindow : public QMainWindow {
     Q_OBJECT
 
 public:
@@ -72,6 +70,8 @@ private:
 
     void connectViewSignals(Kub3::UI::Views::ViewBase *view);
     void disconnectViewSignals(Kub3::UI::Views::ViewBase *view);
+
+    void switchShadow(bool enabled);
 
 private:
     Ui::MainWindow *ui;

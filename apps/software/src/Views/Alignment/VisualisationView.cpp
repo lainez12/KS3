@@ -22,6 +22,9 @@ VisualisationView::VisualisationView(Unique<VisualisationViewModel> viewModel, Q
     m_keyboard.setupKeyboardConnections(this, "_g");
     setDefaultTitleBar("Visualisation");
     createNavButtonsConfigs();
+
+    m_shadowedBoxStyle = false;
+
     setNavButtonEnabled(ID_BTN_VALIDATE, true);
 
     ui->speedCamRight->setup("Cam. Speed", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/speed-motor-low.svg");
