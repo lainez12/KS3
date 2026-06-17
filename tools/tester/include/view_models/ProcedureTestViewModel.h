@@ -47,7 +47,10 @@ namespace Kub3::Tools::Tester
         void uiRequestDrawerOperation(DrawerTarget target, bool eject);
         void uiRequestStowage(int targetInt);
         void uiRequestUnstowage(int targetInt);
-        void uiRequestInitialization(int targetInt);
+        void uiRequestInitialization(void);
+        void uiRequestInitCameras(void);
+        void uiRequestInitDeck(void);
+        void uiRequestInitVision(void);
         void uiRequestAutolevel(void);
 
         // Inbound Service Updates (from Logic Tier)
@@ -69,7 +72,10 @@ namespace Kub3::Tools::Tester
         void cmdRunDrawerOperation(DrawerTarget target, bool eject);
         void cmdRunStowage(int targetInt);
         void cmdRunUnstowage(int targetInt);
-        void cmdRunInitialization(int targetInt);
+        void cmdRunInitialization(void);
+        void cmdRunInitCameras(void);
+        void cmdRunInitDeck(void);
+        void cmdRunInitVision(void);
         void cmdRunAutolevel(void);
 
     private:

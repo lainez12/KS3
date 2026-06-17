@@ -58,7 +58,7 @@
        <item>
         <widget class="QTabWidget" name="tabWidget">
          <property name="currentIndex">
-          <number>2</number>
+          <number>3</number>
          </property>
          <widget class="QWidget" name="tab">
           <attribute name="title">
@@ -1064,6 +1064,201 @@
               </size>
              </property>
             </spacer>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="tab_4">
+          <attribute name="title">
+           <string>Cameras/Deck</string>
+          </attribute>
+          <layout class="QGridLayout" name="gridLayout_9" columnstretch="0,1,2,2">
+           <item row="0" column="3">
+            <widget class="QLabel" name="label_53">
+             <property name="text">
+              <string>Right Camera</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2">
+            <widget class="QLabel" name="lblLeftCamYPos">
+             <property name="text">
+              <string>N.D.</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="3">
+            <widget class="QGroupBox" name="groupBox_5">
+             <property name="title">
+              <string>Limits</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_11">
+              <item row="0" column="1">
+               <widget class="QLabel" name="lblRightCamYBackLimit">
+                <property name="text">
+                 <string>Y Back Limit</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignmentFlag::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="lblRightCamXLeftLimit">
+                <property name="text">
+                 <string>X Left Limit</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignmentFlag::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="2">
+               <widget class="QLabel" name="lblRightCamXRightLimit">
+                <property name="text">
+                 <string>X Right Limit</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignmentFlag::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QLabel" name="lblRightCamYFrontLimit">
+                <property name="text">
+                 <string>Y Front Limit</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignmentFlag::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="6" column="1" colspan="3">
+            <widget class="QPushButton" name="btnInitAllVision">
+             <property name="text">
+              <string>Initialize Both</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1" colspan="3">
+            <widget class="QPushButton" name="btnInitCameras">
+             <property name="text">
+              <string>Initialize Cameras</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="2">
+            <widget class="QGroupBox" name="groupBox_4">
+             <property name="title">
+              <string>Limits</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_10">
+              <item row="0" column="1">
+               <widget class="QLabel" name="lblLeftCamYBackLimit">
+                <property name="text">
+                 <string>Y Back Limit</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignmentFlag::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="lblLeftCamXLeftLimit">
+                <property name="text">
+                 <string>X Left Limit</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignmentFlag::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="2">
+               <widget class="QLabel" name="lblLeftCamXRightLimit">
+                <property name="text">
+                 <string>X Right Limit</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignmentFlag::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QLabel" name="lblLeftCamYFrontLimit">
+                <property name="text">
+                 <string>Y Front Limit</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignmentFlag::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="2" column="3">
+            <widget class="QLabel" name="lblRightCamYPos">
+             <property name="text">
+              <string>N.D.</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QLabel" name="label_52">
+             <property name="text">
+              <string>Left Camera</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QLabel" name="lblLeftCamXPos">
+             <property name="text">
+              <string>N.D.</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="3">
+            <widget class="QLabel" name="lblRightCamXPos">
+             <property name="text">
+              <string>N.D.</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1" colspan="3">
+            <widget class="QPushButton" name="btnInitDeck">
+             <property name="text">
+              <string>Initialize Deck</string>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="1" colspan="3">
+            <spacer name="verticalSpacer_8">
+             <property name="orientation">
+              <enum>Qt::Orientation::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLabel" name="label_47">
+             <property name="text">
+              <string>Y Position (encoder)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLabel" name="label_49">
+             <property name="text">
+              <string>X Position (encoder)</string>
+             </property>
+            </widget>
            </item>
           </layout>
          </widget>

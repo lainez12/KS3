@@ -47,10 +47,28 @@ namespace Kub3::Tools::Tester
             emit cmdRunUnstowage(targetInt);
     }
 
-    void ProcedureTestViewModel::uiRequestInitialization(int targetInt)
+    void ProcedureTestViewModel::uiRequestInitialization(void)
     {
         if (!m_isRunning)
-            emit cmdRunInitialization(targetInt);
+            emit cmdRunInitialization();
+    }
+
+    void ProcedureTestViewModel::uiRequestInitCameras(void)
+    {
+        if (!m_isRunning)
+            emit cmdRunInitCameras();
+    }
+
+    void ProcedureTestViewModel::uiRequestInitDeck(void)
+    {
+        if (!m_isRunning)
+            emit cmdRunInitDeck();
+    }
+
+    void ProcedureTestViewModel::uiRequestInitVision(void)
+    {
+        if (!m_isRunning)
+            emit cmdRunInitVision();
     }
 
     void ProcedureTestViewModel::uiRequestAutolevel(void)

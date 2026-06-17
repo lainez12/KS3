@@ -142,6 +142,25 @@ namespace Kub3::Tools::Tester
         }
     }
 
+    void ProcedureTestController::ps_runInitCameras(void)
+    {
+        m_homingService->initializeGranular(Services::HomingTarget::CAMERAS);
+        startServiceRoutine(m_homingService.get(), "Cameras Initialization Sequence");
+    }
+
+    void ProcedureTestController::ps_runInitDeck(void)
+    {
+        m_homingService->initializeGranular(Services::HomingTarget::DECK);
+        startServiceRoutine(m_homingService.get(), "Deck Initialization Sequence");
+    }
+
+    void ProcedureTestController::ps_runInitVision(void)
+    {
+        m_homingService->initializeGranular(
+            static_cast<Services::HomingTarget::Type>(Services::HomingTarget::CAMERAS | Services::HomingTarget::DECK));
+        startServiceRoutine(m_homingService.get(), "Vision Initialization Sequence");
+    }
+
     void ProcedureTestController::ps_runHoming(int targetBits)
     {
         auto target = static_cast<Services::HomingTarget::Type>(targetBits);

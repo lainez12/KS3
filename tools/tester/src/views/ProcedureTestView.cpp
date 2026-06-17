@@ -24,6 +24,11 @@ namespace Kub3::Tools::Tester
         m_intSensorsMap.emplace(QStringLiteral(X_STAGE_ENCODER), ui->xStagePosValue);
         m_intSensorsMap.emplace(QStringLiteral(Y_STAGE_ENCODER), ui->yStagePosValue);
         m_intSensorsMap.emplace(QStringLiteral(THETA_STAGE_ENCODER), ui->thetaStagePosValue);
+        // Alignment stages position (encoder)
+        m_intSensorsMap.emplace(QStringLiteral(LEFT_CAMERA_X_ENCODER), ui->lblLeftCamXPos);
+        m_intSensorsMap.emplace(QStringLiteral(LEFT_CAMERA_Y_ENCODER), ui->lblLeftCamYPos);
+        m_intSensorsMap.emplace(QStringLiteral(RIGHT_CAMERA_X_ENCODER), ui->lblRightCamXPos);
+        m_intSensorsMap.emplace(QStringLiteral(RIGHT_CAMERA_Y_ENCODER), ui->lblRightCamYPos);
 
         // Wafer conveyor limits
         m_boolSensorsMap.emplace(QStringLiteral(CW0), ui->cw0Value);
@@ -41,6 +46,15 @@ namespace Kub3::Tools::Tester
         m_boolSensorsMap.emplace(QStringLiteral(Y_STAGE_BACK_LIMIT), ui->yBackLimitValue);
         m_boolSensorsMap.emplace(QStringLiteral(THETA_STAGE_CLOCKWISE_LIMIT), ui->thetaCWLimitValue);
         m_boolSensorsMap.emplace(QStringLiteral(THETA_STAGE_ANTI_CLOCKWISE_LIMIT), ui->thetaACWLimitValue);
+        // Cameras / Deck limits
+        m_boolSensorsMap.emplace(QStringLiteral(LEFT_CAMERA_X_LEFT_LIMIT), ui->lblLeftCamXLeftLimit);
+        m_boolSensorsMap.emplace(QStringLiteral(LEFT_CAMERA_X_RIGHT_LIMIT), ui->lblLeftCamXRightLimit);
+        m_boolSensorsMap.emplace(QStringLiteral(LEFT_CAMERA_Y_FRONT_LIMIT), ui->lblLeftCamYFrontLimit);
+        m_boolSensorsMap.emplace(QStringLiteral(LEFT_CAMERA_Y_BACK_LIMIT), ui->lblLeftCamYBackLimit);
+        m_boolSensorsMap.emplace(QStringLiteral(RIGHT_CAMERA_X_LEFT_LIMIT), ui->lblRightCamXLeftLimit);
+        m_boolSensorsMap.emplace(QStringLiteral(RIGHT_CAMERA_X_RIGHT_LIMIT), ui->lblRightCamXRightLimit);
+        m_boolSensorsMap.emplace(QStringLiteral(RIGHT_CAMERA_Y_FRONT_LIMIT), ui->lblRightCamYFrontLimit);
+        m_boolSensorsMap.emplace(QStringLiteral(RIGHT_CAMERA_Y_BACK_LIMIT), ui->lblRightCamYBackLimit);
 
         bindViewModel();
     }
@@ -99,6 +113,17 @@ namespace Kub3::Tools::Tester
         // --- Z Elevator ---
         connect(ui->btnStartAutolevel, &QPushButton::clicked, this, [this]() {
             m_procedureViewModel->uiRequestAutolevel();
+        });
+
+        // --- Cameras / Deck ---
+        connect(ui->btnInitCameras, &QPushButton::clicked, this, [this]() {
+            m_procedureViewModel->uiRequestInitCameras();
+        });
+        connect(ui->btnInitDeck, &QPushButton::clicked, this, [this]() {
+            m_procedureViewModel->uiRequestInitDeck();
+        });
+        connect(ui->btnInitAllVision, &QPushButton::clicked, this, [this]() {
+            // m_procedureViewModel->uiRequestInitVision();
         });
 
         // =====================================

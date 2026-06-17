@@ -1,3 +1,4 @@
+#include <HAL/MachineStatus/actuators_labels.h>
 #include <HAL/MachineStatus/sensors_labels.h>
 #include <HAL/MachineStatus/utils.h>
 #include <Services/Homing/tasks/Initialization/CamerasInitTask.h>
@@ -7,58 +8,56 @@ namespace Kub3::Services
 
     CamerasInitTask::CamerasInitTask(Shared<HAL::MS::IMachineStatusRepo> repo,
                                      const Config::process_config_t &processConfig,
-                                     Shared<HAL::Act::IPositionMotor> leftCamXMotor,
-                                     Shared<HAL::Act::IPositionMotor> leftCamYMotor,
-                                     Shared<HAL::Act::IPositionMotor> rightCamXMotor,
-                                     Shared<HAL::Act::IPositionMotor> rightCamYMotor,
-                                     Config::kinematic_profile_t kinematicProfile) :
+                                     init_cam_bundle_t leftCamXBundle,
+                                     init_cam_bundle_t leftCamYBundle,
+                                     init_cam_bundle_t rightCamXBundle,
+                                     init_cam_bundle_t rightCamYBundle) :
         m_repo(std::move(repo)),
         m_processConf(processConfig),
-        m_leftCamXMotor(std::move(leftCamXMotor)),
-        m_leftCamYMotor(std::move(leftCamYMotor)),
-        m_rightCamXMotor(std::move(rightCamXMotor)),
-        m_rightCamYMotor(std::move(rightCamYMotor)),
-        m_kinematicProfile(std::move(kinematicProfile)) {}
+        m_leftCamXBundle(std::move(leftCamXBundle)),
+        m_leftCamYBundle(std::move(leftCamYBundle)),
+        m_rightCamXBundle(std::move(rightCamXBundle)),
+        m_rightCamYBundle(std::move(rightCamYBundle)) {}
 
     void CamerasInitTask::start(void)
     {
+        qDebug() << "[CamerasInitTask] start";
         const bool leftCamXLimitVal  = HAL::MS::readBool(m_repo, LEFT_CAMERA_X_LEFT_LIMIT);
         const bool leftCamYLimitVal  = HAL::MS::readBool(m_repo, LEFT_CAMERA_X_RIGHT_LIMIT);
         const bool rightCamXLimitVal = HAL::MS::readBool(m_repo, LEFT_CAMERA_Y_FRONT_LIMIT);
         const bool rightCamYLimitVal = HAL::MS::readBool(m_repo, LEFT_CAMERA_Y_BACK_LIMIT);
 
         // Ensure motors are stopped
-        stopMotorIfMoving(m_leftCamXMotor);
-        stopMotorIfMoving(m_leftCamYMotor);
-        stopMotorIfMoving(m_rightCamXMotor);
-        stopMotorIfMoving(m_rightCamYMotor);
-
-        // Start moving if needed
-        handleSingleMotorLogic(m_leftCamXMotor, leftCamXLimitVal);
-        handleSingleMotorLogic(m_leftCamYMotor, leftCamYLimitVal);
-        handleSingleMotorLogic(m_rightCamXMotor, rightCamXLimitVal);
-        handleSingleMotorLogic(m_rightCamYMotor, rightCamYLimitVal);
+        stopMotorIfMoving(m_leftCamXBundle.motor);
+        stopMotorIfMoving(m_leftCamYBundle.motor);
+        stopMotorIfMoving(m_rightCamXBundle.motor);
+        stopMotorIfMoving(m_rightCamYBundle.motor);
     }
 
     bool CamerasInitTask::tick(void)
     {
         const bool leftCamXLimitVal  = HAL::MS::readBool(m_repo, LEFT_CAMERA_X_LEFT_LIMIT);
-        const bool leftCamYLimitVal  = HAL::MS::readBool(m_repo, LEFT_CAMERA_X_RIGHT_LIMIT);
-        const bool rightCamXLimitVal = HAL::MS::readBool(m_repo, LEFT_CAMERA_Y_FRONT_LIMIT);
-        const bool rightCamYLimitVal = HAL::MS::readBool(m_repo, LEFT_CAMERA_Y_BACK_LIMIT);
+        const bool leftCamYLimitVal  = HAL::MS::readBool(m_repo, LEFT_CAMERA_Y_FRONT_LIMIT);
+        const bool rightCamXLimitVal = HAL::MS::readBool(m_repo, RIGHT_CAMERA_X_RIGHT_LIMIT);
+        const bool rightCamYLimitVal = HAL::MS::readBool(m_repo, RIGHT_CAMERA_Y_FRONT_LIMIT);
+        qDebug() << QString("[CamerasInitTask] tick LX: %1, LY: %2, RX: %3, RY: %4")
+                        .arg(leftCamXLimitVal)
+                        .arg(leftCamYLimitVal)
+                        .arg(rightCamXLimitVal)
+                        .arg(rightCamYLimitVal);
 
-        handleSingleMotorLogic(m_leftCamXMotor, leftCamXLimitVal);
-        handleSingleMotorLogic(m_leftCamYMotor, leftCamYLimitVal);
-        handleSingleMotorLogic(m_rightCamXMotor, rightCamXLimitVal);
-        handleSingleMotorLogic(m_rightCamYMotor, rightCamYLimitVal);
+        handleSingleMotorLogic(m_leftCamXBundle, leftCamXLimitVal);
+        handleSingleMotorLogic(m_leftCamYBundle, leftCamYLimitVal);
+        handleSingleMotorLogic(m_rightCamXBundle, rightCamXLimitVal);
+        handleSingleMotorLogic(m_rightCamYBundle, rightCamYLimitVal);
 
         // Initialization limits reached and motors stopped, reset encoders using config values (in mm)
         if (leftCamXLimitVal && leftCamYLimitVal && rightCamXLimitVal && rightCamYLimitVal)
         {
-            m_leftCamXMotor->resetEncoder(m_processConf.vision.left_cam_x_reset_pos_mm);
-            m_leftCamYMotor->resetEncoder(m_processConf.vision.left_cam_y_reset_pos_mm);
-            m_rightCamXMotor->resetEncoder(m_processConf.vision.right_cam_x_reset_pos_mm);
-            m_rightCamYMotor->resetEncoder(m_processConf.vision.right_cam_y_reset_pos_mm);
+            m_leftCamXBundle.motor->resetEncoder(m_processConf.vision.left_cam_x_reset_pos_mm);
+            m_leftCamYBundle.motor->resetEncoder(m_processConf.vision.left_cam_y_reset_pos_mm);
+            m_rightCamXBundle.motor->resetEncoder(m_processConf.vision.right_cam_x_reset_pos_mm);
+            m_rightCamYBundle.motor->resetEncoder(m_processConf.vision.right_cam_y_reset_pos_mm);
             return true;
         }
         return false;
@@ -72,22 +71,30 @@ namespace Kub3::Services
 
     // Stops motor if `motor->isMoving()` returns `true` and `limitValue` is `true`.
     // Starts motor if not `limitValue` is `false` and `motor->isMoving()` returns `false`.
-    void CamerasInitTask::handleSingleMotorLogic(Shared<HAL::Act::IPositionMotor> motor, bool limitValue)
+    void CamerasInitTask::handleSingleMotorLogic(const init_cam_bundle_t &bundle, bool limitValue)
     {
-        if (!motor)
+        if (!bundle.motor)
             return;
 
         // - limit reached AND motor moving => needs to stop
         // - limit not reached AND motor not moving => needs to move
-        const bool actionNeeded = (motor->isMoving() == limitValue); // true if states differ
+        const bool actionNeeded = (bundle.motor->isMoving() == limitValue); // true if states differ
 
         if (!actionNeeded)
             return; // nothing to do
 
         if (limitValue)
-            motor->emergencyStop();
+            bundle.motor->emergencyStop();
         else
-            motor->moveDirection(HAL::Act::MotorDirection::Positive, m_kinematicProfile);
+        {
+            auto motorId = bundle.motor->getId();
+            // X motors init on their positive limit (external) while Y motor init on their negative limit (front)
+            // TODO: update MCU code to reflect mechanical reality of the encoder
+            auto direction =
+                (motorId == LEFT_CAMERA_X_MOTOR || motorId == RIGHT_CAMERA_X_MOTOR) ? HAL::Act::MotorDirection::Positive : HAL::Act::MotorDirection::Negative;
+
+            bundle.motor->moveDirection(HAL::Act::MotorDirection::Negative, bundle.kinematicProfile);
+        }
     }
 
 }

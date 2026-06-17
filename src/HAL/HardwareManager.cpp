@@ -236,7 +236,12 @@ namespace Kub3::HAL
         arduino1Driver->moveToThread(thread.get());
 
         // Wire MCUDriver connection status signals -> Machine Status Repo value update
-        QObject::connect(arduino1Driver.get(), &MCUDriver::s_connected, [&]() { m_repo->setValueRaw(MCU_ARDUINO1_READY, true); });
+        QObject::connect(arduino1Driver.get(), &MCUDriver::s_connected, [&, driver = arduino1Driver]() {
+            m_repo->setValueRaw(MCU_ARDUINO1_READY, true);
+            // TODO: refactor MCU code to have one command to send all values at once
+            driver->sendCommand(QByteArray("?S"));
+            driver->sendCommand(QByteArray("?C"));
+        });
         QObject::connect(arduino1Driver.get(), &MCUDriver::s_connectionLost, [&]() { m_repo->setValueRaw(MCU_ARDUINO1_READY, false); });
         // Wire MCUDriver -> Router
         QObject::connect(arduino1Driver.get(), &MCUDriver::s_packetReady, router.get(), &Com::PacketRouter::ps_routePacket);
@@ -284,20 +289,20 @@ namespace Kub3::HAL
 
         // Register sensors
         // --- Limit switches
-        this->registerSensor(router, "\x00"s, std::move(leftCameraXLeftLimit));
-        this->registerSensor(router, "\x01"s, std::move(leftCameraXRightLimit));
-        this->registerSensor(router, "\x02"s, std::move(leftCameraYFrontLimit));
-        this->registerSensor(router, "\x03"s, std::move(leftCameraYBackLimit));
-        this->registerSensor(router, "\x04"s, std::move(rightCameraXLeftLimit));
-        this->registerSensor(router, "\x05"s, std::move(rightCameraXRightLimit));
-        this->registerSensor(router, "\x06"s, std::move(rightCameraYFrontLimit));
-        this->registerSensor(router, "\x07"s, std::move(rightCameraYBackLimit));
-        this->registerSensor(router, "\x08"s, std::move(xStageLeftLimit));
-        this->registerSensor(router, "\x09"s, std::move(xStageRightLimit));
-        this->registerSensor(router, "\x0A"s, std::move(yStageFrontLimit));
-        this->registerSensor(router, "\x0B"s, std::move(yStageBackLimit));
-        this->registerSensor(router, "\x0C"s, std::move(thetaStageClockwiseLimit));
-        this->registerSensor(router, "\x0D"s, std::move(thetaStageAntiClockwiseLimit));
+        this->registerSensor(router, "S\x00"s, std::move(leftCameraXLeftLimit));
+        // this->registerSensor(router, "S\x01"s, std::move(leftCameraXRightLimit));
+        this->registerSensor(router, "S\x01"s, std::move(leftCameraYFrontLimit));
+        // this->registerSensor(router, "S\x03"s, std::move(leftCameraYBackLimit));
+        this->registerSensor(router, "S\x02"s, std::move(rightCameraXRightLimit));
+        // this->registerSensor(router, "S\x05"s, std::move(rightCameraXLeftLimit));
+        this->registerSensor(router, "S\x03"s, std::move(rightCameraYFrontLimit));
+        // this->registerSensor(router, "S\x07"s, std::move(rightCameraYBackLimit));
+        // this->registerSensor(router, "S\x08"s, std::move(xStageLeftLimit));
+        // this->registerSensor(router, "S\x09"s, std::move(xStageRightLimit));
+        // this->registerSensor(router, "S\x0A"s, std::move(yStageFrontLimit));
+        // this->registerSensor(router, "S\x0B"s, std::move(yStageBackLimit));
+        // this->registerSensor(router, "S\x0C"s, std::move(thetaStageClockwiseLimit));
+        // this->registerSensor(router, "S\x0D"s, std::move(thetaStageAntiClockwiseLimit));
         // --- Encoders
         this->registerSensor(router, "1"s, std::move(leftCameraXEncoder));
         this->registerSensor(router, "2"s, std::move(leftCameraYEncoder));
@@ -377,7 +382,12 @@ namespace Kub3::HAL
         arduino2Driver->moveToThread(thread.get());
 
         // Wire MCUDriver connection status signals -> Machine Status Repo value update
-        QObject::connect(arduino2Driver.get(), &MCUDriver::s_connected, [&]() { m_repo->setValueRaw(MCU_ARDUINO2_READY, true); });
+        QObject::connect(arduino2Driver.get(), &MCUDriver::s_connected, [&, driver = arduino2Driver]() {
+            m_repo->setValueRaw(MCU_ARDUINO2_READY, true);
+            // TODO: refactor MCU code to have one command to send all values at once
+            driver->sendCommand(QByteArray("?C"));
+            driver->sendCommand(QByteArray("?K"));
+        });
         QObject::connect(arduino2Driver.get(), &MCUDriver::s_connectionLost, [&]() { m_repo->setValueRaw(MCU_ARDUINO2_READY, false); });
         // Wire MCUDriver -> Router
         QObject::connect(arduino2Driver.get(), &MCUDriver::s_packetReady, router.get(), &Com::PacketRouter::ps_routePacket);

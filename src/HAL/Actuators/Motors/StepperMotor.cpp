@@ -3,6 +3,7 @@
 #include <QMetaObject>
 #include <stdexcept>
 
+#include <Config/helper.h>
 #include <HAL/Actuators/Motors/StepperMotor.h>
 
 #define CONTROL_TIMER_VALUE_MS 20 // 50Hz
@@ -44,7 +45,7 @@ namespace Kub3::HAL::Act
                 // Clamp to safety limits
                 const double safeVel     = std::min(profile.targetVelocityMmS, m_hwConfig.maxVelocityMmS);
                 const double safeAcc     = std::min(profile.accelerationMmS2, m_hwConfig.maxAccelerationMmS2);
-                const double precisionMm = this->computePrecisionMm(profile);
+                const double precisionMm = this->getPrecisionMm(profile);
 
                 // Extract step fraction safely
                 uint8_t stepFrac = 1;
@@ -80,7 +81,7 @@ namespace Kub3::HAL::Act
                 // Clamp to safety limits
                 const double safeVel     = std::min(profile.targetVelocityMmS, m_hwConfig.maxVelocityMmS);
                 const double safeAcc     = std::min(profile.accelerationMmS2, m_hwConfig.maxAccelerationMmS2);
-                const double precisionMm = this->computePrecisionMm(profile);
+                const double precisionMm = this->getPrecisionMm(profile);
 
                 // Extract step fraction safely
                 uint8_t stepFrac = 1;
@@ -114,6 +115,9 @@ namespace Kub3::HAL::Act
 
     void StepperMotor::moveDirection(MotorDirection dir, Config::kinematic_profile_t profile)
     {
+        // qDebug().noquote() << QString("[StepperMotor::moveDirection] Dir %1 with kinematics:\n%2")
+        //                           .arg(static_cast<int>(dir) ? "Negative" : "Positive")
+        //                           .arg(Config::toString(profile));
         QMetaObject::invokeMethod(
             this,
             [this, dir, profile]() {
@@ -264,7 +268,7 @@ namespace Kub3::HAL::Act
         }
     }
 
-    double StepperMotor::computePrecisionMm(const Config::kinematic_profile_t &profile)
+    double StepperMotor::getPrecisionMm(const Config::kinematic_profile_t &profile)
     {
         uint8_t stepFrac = 1; // Default to full step
 

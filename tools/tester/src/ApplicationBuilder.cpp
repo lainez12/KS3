@@ -122,21 +122,25 @@ namespace Kub3::Tools::Tester
         // ==========================================
         // PROCEDURE TESTER WIRING
         // ==========================================
+        auto procVM = m_procedureTestViewModel.get();
 
         // ViewModel (Main Thread) -> Controller (Logic Thread)
-        QObject::connect(m_procedureTestViewModel.get(), &ProcedureTestViewModel::cmdEmergencyStop, m_procedureTestController, &ProcedureTestController::ps_emergencyStop, Qt::QueuedConnection);
-        QObject::connect(m_procedureTestViewModel.get(), &ProcedureTestViewModel::cmdRunHoming, m_procedureTestController, &ProcedureTestController::ps_runHoming, Qt::QueuedConnection);
-        QObject::connect(m_procedureTestViewModel.get(), &ProcedureTestViewModel::cmdRunDrawerOperation, m_procedureTestController, &ProcedureTestController::ps_runDrawerOperation, Qt::QueuedConnection);
-        QObject::connect(m_procedureTestViewModel.get(), &ProcedureTestViewModel::cmdRunStowage, m_procedureTestController, &ProcedureTestController::ps_runStowage, Qt::QueuedConnection);
-        QObject::connect(m_procedureTestViewModel.get(), &ProcedureTestViewModel::cmdRunUnstowage, m_procedureTestController, &ProcedureTestController::ps_runUnstowage, Qt::QueuedConnection);
-        QObject::connect(m_procedureTestViewModel.get(), &ProcedureTestViewModel::cmdRunAutolevel, m_procedureTestController, &ProcedureTestController::ps_runAutolevel, Qt::QueuedConnection);
+        QObject::connect(procVM, &ProcedureTestViewModel::cmdEmergencyStop, m_procedureTestController, &ProcedureTestController::ps_emergencyStop, Qt::QueuedConnection);
+        QObject::connect(procVM, &ProcedureTestViewModel::cmdRunInitCameras, m_procedureTestController, &ProcedureTestController::ps_runInitCameras, Qt::QueuedConnection);
+        QObject::connect(procVM, &ProcedureTestViewModel::cmdRunInitDeck, m_procedureTestController, &ProcedureTestController::ps_runInitDeck, Qt::QueuedConnection);
+        QObject::connect(procVM, &ProcedureTestViewModel::cmdRunInitVision, m_procedureTestController, &ProcedureTestController::ps_runInitVision, Qt::QueuedConnection);
+        QObject::connect(procVM, &ProcedureTestViewModel::cmdRunHoming, m_procedureTestController, &ProcedureTestController::ps_runHoming, Qt::QueuedConnection);
+        QObject::connect(procVM, &ProcedureTestViewModel::cmdRunDrawerOperation, m_procedureTestController, &ProcedureTestController::ps_runDrawerOperation, Qt::QueuedConnection);
+        QObject::connect(procVM, &ProcedureTestViewModel::cmdRunStowage, m_procedureTestController, &ProcedureTestController::ps_runStowage, Qt::QueuedConnection);
+        QObject::connect(procVM, &ProcedureTestViewModel::cmdRunUnstowage, m_procedureTestController, &ProcedureTestController::ps_runUnstowage, Qt::QueuedConnection);
+        QObject::connect(procVM, &ProcedureTestViewModel::cmdRunAutolevel, m_procedureTestController, &ProcedureTestController::ps_runAutolevel, Qt::QueuedConnection);
 
         // Controller (Logic Thread) -> ViewModel (Main Thread)
-        QObject::connect(m_procedureTestController, &ProcedureTestController::s_procedureStarted, m_procedureTestViewModel.get(), &ProcedureTestViewModel::onProcedureStarted, Qt::QueuedConnection);
-        QObject::connect(m_procedureTestController, &ProcedureTestController::s_procedureCompleted, m_procedureTestViewModel.get(), &ProcedureTestViewModel::onProcedureCompleted, Qt::QueuedConnection);
-        QObject::connect(m_procedureTestController, &ProcedureTestController::s_procedureFailed, m_procedureTestViewModel.get(), &ProcedureTestViewModel::onProcedureFailed, Qt::QueuedConnection);
+        QObject::connect(m_procedureTestController, &ProcedureTestController::s_procedureStarted, procVM, &ProcedureTestViewModel::onProcedureStarted, Qt::QueuedConnection);
+        QObject::connect(m_procedureTestController, &ProcedureTestController::s_procedureCompleted, procVM, &ProcedureTestViewModel::onProcedureCompleted, Qt::QueuedConnection);
+        QObject::connect(m_procedureTestController, &ProcedureTestController::s_procedureFailed, procVM, &ProcedureTestViewModel::onProcedureFailed, Qt::QueuedConnection);
         // HAL -> ViewModel
-        QObject::connect(m_repo.get(), &HAL::MS::IMachineStatusRepo::s_machineValueChanged, m_procedureTestViewModel.get(), &ProcedureTestViewModel::onHandleSensorValueChanged, Qt::QueuedConnection);
+        QObject::connect(m_repo.get(), &HAL::MS::IMachineStatusRepo::s_machineValueChanged, procVM, &ProcedureTestViewModel::onHandleSensorValueChanged, Qt::QueuedConnection);
 
         // ==========================================
         // FOCAL TESTER WIRING

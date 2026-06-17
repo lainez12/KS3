@@ -23,6 +23,7 @@ namespace Kub3::Services
 
         void initialize(void) override;
         void home(HomingTarget::Type target = HomingTarget::ALL) override;
+        void initializeGranular(HomingTarget::Type target) override;
 
     protected:
         void onStop(void) override;
@@ -30,6 +31,10 @@ namespace Kub3::Services
     private:
         void stopAllMotors(void);
         void loadMotorsKinematicProfiles(void);
+
+        // Lanes build helpers
+        void buildCamerasSequence(bool init, uint8_t lane = 0);
+        void buildDeckSequence(bool init, uint8_t lane = 0);
 
     private: // TODO: Could be general and defined in a `utils` ?
         enum class CameraMotorIdArg
@@ -39,7 +44,7 @@ namespace Kub3::Services
             RightX,
             RightY
         };
-        Result<camera_motor_bundle_t, std::string> buildCameraMotorBundle(CameraMotorIdArg arg);
+        Result<homing_cam_bundle_t, std::string> buildCameraHomingMotorBundle(CameraMotorIdArg arg);
 
         enum class ZMotorIdArg
         {

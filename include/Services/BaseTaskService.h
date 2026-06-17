@@ -161,6 +161,22 @@ namespace Kub3::Services
         }
 
         /**
+         * @brief Constructs and enqueues a task into a dynamically specified execution lane in-place.
+         *
+         * @tparam _Tp The type of the task to instantiate.
+         * @tparam _Args Variadic template types for the constructor arguments.
+         * @param lane The zero-based index of the execution lane (runtime parameter).
+         * @param __args Arguments forwarded to the constructor of `_Tp`.
+         */
+        template <typename _Tp, typename... _Args>
+        void enqueueTaskOnLane(uint8_t lane, _Args &&...__args)
+        {
+            auto task = std::make_unique<_Tp>(std::forward<_Args>(__args)...);
+
+            enqueueTask(std::move(task), lane);
+        }
+
+        /**
          * @brief Initializes and starts the execution sequence.
          *
          * Prepares the watchdog timer, sets the state to Running, and triggers

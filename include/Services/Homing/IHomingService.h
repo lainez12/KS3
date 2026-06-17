@@ -48,6 +48,7 @@ namespace Kub3::Services
 
         virtual void initialize()                                        = 0;
         virtual void home(HomingTarget::Type target = HomingTarget::ALL) = 0;
+        virtual void initializeGranular(HomingTarget::Type target)       = 0;
     };
 
 }

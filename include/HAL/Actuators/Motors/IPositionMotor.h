@@ -19,11 +19,9 @@ namespace Kub3::HAL::Act
         virtual void moveRelative(double distance_mm, Config::kinematic_profile_t profile) = 0;
         virtual void resetEncoder(const double offsetMm = 0.0)                             = 0;
 
-        [[nodiscard]] virtual std::string_view getEncoderId(void) const = 0;
-        [[nodiscard]] virtual double getEncoderPositionMm(void) const   = 0;
-
-    private:
-        virtual double computePrecisionMm(const Config::kinematic_profile_t &profile) = 0;
+        [[nodiscard]] virtual std::string_view getEncoderId(void) const                         = 0;
+        [[nodiscard]] virtual double getEncoderPositionMm(void) const                           = 0;
+        [[nodiscard]] virtual double getPrecisionMm(const Config::kinematic_profile_t &profile) = 0;
     };
 
 } // namespace KUB3::HAL

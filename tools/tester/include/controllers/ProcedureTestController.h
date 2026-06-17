@@ -41,7 +41,10 @@ namespace Kub3::Tools::Tester
         void stop();
 
         // Commands from ViewModel
-        void ps_emergencyStop();
+        void ps_emergencyStop(void);
+        void ps_runInitCameras(void);
+        void ps_runInitDeck(void);
+        void ps_runInitVision(void);
         void ps_runHoming(int targetBits);
         void ps_runDrawerOperation(DrawerTarget target, bool eject);
         void ps_runStowage(int targetInt);

@@ -21,8 +21,8 @@ namespace Kub3::Config
     typedef struct kinematic_profile_s {
         std::string id;
         double initialVelocityMmS = 0.0;
-        double targetVelocityMmS;
-        double accelerationMmS2;
+        double targetVelocityMmS  = 0.0;
+        double accelerationMmS2   = 0.0;
         // Motor specific payload
         MotorKinematicsParams params = std::monostate{};
     } kinematic_profile_t;

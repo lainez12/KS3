@@ -10,7 +10,7 @@ BLUE='\033[0;34m'
 NC='\033[0m'
 
 usage() {
-    echo -e "${BLUE}Usage:${NC} $0 [4|6|8]"
+    echo -e "${BLUE}Usage:${NC} $0 [4|6|8] [--debug]"
     exit 1
 }
 
@@ -20,6 +20,25 @@ if [ -z "$1" ]; then
 fi
 
 MODEL=$1
+shift # Shift to check for additional arguments
+
+# Default to production; change if --debug is provided
+DEBUG_SUFFIX=""
+DEPLOY_TYPE="production"
+
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        -d|--debug)
+            DEBUG_SUFFIX="-dbg"
+            DEPLOY_TYPE="debug"
+            ;;
+        *)
+            echo -e "${RED}Error:${NC} Unknown parameter passed: $1"
+            usage
+            ;;
+    esac
+    shift
+done
 
 # 1. Read and sanitize version from .version file
 if [ ! -f ".version" ]; then
@@ -28,29 +47,36 @@ if [ ! -f ".version" ]; then
 fi
 VERSION=$(cat .version | tr -d '\r' | xargs)
 
-echo -e "${BLUE}==>${NC} Starting production deployment for ${GREEN}KUB3-$MODEL (Version: $VERSION)${NC}..."
+echo -e "${BLUE}==>${NC} Starting ${DEPLOY_TYPE} deployment for ${GREEN}KUB3-$MODEL (Version: $VERSION)${NC}..."
+
+# Setup dynamic names based on deployment type
+PRESET="kub3-$MODEL-production$DEBUG_SUFFIX"
+BUILD_DIR="build/kub$MODEL-production$DEBUG_SUFFIX"
+DIST_FOLDER="kub$MODEL-production$DEBUG_SUFFIX"
+TAR_NAME="kub$MODEL-v$VERSION-production$DEBUG_SUFFIX.tar.gz"
 
 # 2. Configure & Build
 NPROC=$(( $(nproc 2>/dev/null || echo 1) - 1 ))
 [ "$NPROC" -lt 1 ] && NPROC=1
-cmake --preset "kub3-$MODEL-production"
-cmake --build --preset "kub3-$MODEL-production" -j $NPROC
+
+echo -e "${BLUE}==>${NC} Configuring and building preset: ${GREEN}$PRESET${NC}"
+cmake --preset "$PRESET"
+cmake --build --preset "$PRESET" -j $NPROC
 
 # 3. Install into dist
-cmake --install "build/kub$MODEL-production"
+echo -e "${BLUE}==>${NC} Installing from build directory: ${GREEN}$BUILD_DIR${NC}"
+cmake --install "$BUILD_DIR"
 
 # 4. Create Versioned Tarball
-# We name it kubX-vX.X.X-production.tar.gz
-TAR_NAME="kub$MODEL-v$VERSION-production.tar.gz"
 echo -e "${BLUE}==>${NC} Archiving bundle to ${GREEN}$TAR_NAME${NC}..."
 
 cd dist
-# We zip the folder but name the archive with the version
-tar -czf "$TAR_NAME" "kub$MODEL-production"
+# Zip the targeted folder using the dynamically generated names
+tar -czf "$TAR_NAME" "$DIST_FOLDER"
 cp ../scripts/setup.sh .
 cd ..
 
 echo -e "--------------------------------------------------------"
-echo -e "${GREEN}SUCCESS!${NC} Deployment package created:"
+echo -e "${GREEN}SUCCESS!${NC} $DEPLOY_TYPE deployment package created:"
 echo -e "${BLUE}dist/$TAR_NAME${NC}"
 echo -e "--------------------------------------------------------"

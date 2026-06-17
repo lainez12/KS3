@@ -20,8 +20,24 @@
 #include <Services/Homing/tasks/Homing/WaferHomingTask.h>
 #include <Services/Homing/tasks/Homing/ZMotorsHomingTask.h>
 
+#include <Config/helper.h>
+
 #define CAMERAS_TASKS_QUEUE_LANE 1
 #define DECK_TASKS_QUEUE_LANE    2
+
+namespace
+{
+    using namespace Kub3::Services;
+
+    // Local conversion fonction
+    init_cam_bundle_t _conv(const homing_cam_bundle_t &input)
+    {
+        return init_cam_bundle_t{
+            .motor            = input.motor,
+            .kinematicProfile = input.kinematicProfile,
+        };
+    }
+}
 
 namespace Kub3::Services
 {
@@ -33,6 +49,7 @@ namespace Kub3::Services
         m_repo(std::move(repo)),
         m_processConf(processConf)
     {
+        loadMotorsKinematicProfiles();
     }
 
     void HomingService::initialize(void)
@@ -89,27 +106,9 @@ namespace Kub3::Services
             enqueueTask<WaferConveyorInitTask>(m_repo, waferConvMotor, m_waferConveyorFastProfile, m_waferConveyorFineProfile);
         }
         // CAMERAS TASKS LANE BUILD
-        {
-            UNWRAP_OR_ABORT(leftCamXBundle, buildCameraMotorBundle(CameraMotorIdArg::LeftX));
-            UNWRAP_OR_ABORT(leftCamYBundle, buildCameraMotorBundle(CameraMotorIdArg::LeftY));
-            UNWRAP_OR_ABORT(rightCamXBundle, buildCameraMotorBundle(CameraMotorIdArg::RightX));
-            UNWRAP_OR_ABORT(rightCamYBundle, buildCameraMotorBundle(CameraMotorIdArg::RightY));
-
-            enqueueTask<CamerasInitTask, CAMERAS_TASKS_QUEUE_LANE>(
-                m_repo, m_processConf,
-                leftCamXBundle.motor, leftCamYBundle.motor, rightCamXBundle.motor, rightCamYBundle.motor,
-                m_leftCameraXKineProfile);
-            enqueueTask<CamerasHomingTask, CAMERAS_TASKS_QUEUE_LANE>(
-                m_repo, leftCamXBundle, leftCamYBundle, rightCamXBundle, rightCamYBundle,
-                m_leftCameraXKineProfile);
-        }
+        buildCamerasSequence(true, CAMERAS_TASKS_QUEUE_LANE);
         // DECK TASKS LANE BUILD
-        {
-            UNWRAP_OR_ABORT(deckMotor, m_registry->get<HAL::Act::IMotor>(DECK_MOTOR));
-
-            enqueueTask<DeckInitTask, DECK_TASKS_QUEUE_LANE>(m_repo, deckMotor, m_deckKineProfile);
-            enqueueTask<DeckHomingTask, DECK_TASKS_QUEUE_LANE>(m_repo, deckMotor, m_deckKineProfile);
-        }
+        buildDeckSequence(true, DECK_TASKS_QUEUE_LANE);
 #endif
 
         this->startSequence();
@@ -249,12 +248,12 @@ namespace Kub3::Services
         // Cameras homing
         if (target & HomingTarget::CAMERAS)
         {
-            UNWRAP_OR_ABORT(leftCamXBundle, buildCameraMotorBundle(CameraMotorIdArg::LeftX));
-            UNWRAP_OR_ABORT(leftCamYBundle, buildCameraMotorBundle(CameraMotorIdArg::LeftY));
-            UNWRAP_OR_ABORT(rightCamXBundle, buildCameraMotorBundle(CameraMotorIdArg::RightX));
-            UNWRAP_OR_ABORT(rightCamYBundle, buildCameraMotorBundle(CameraMotorIdArg::RightY));
+            UNWRAP_OR_ABORT(leftCamXBundle, buildCameraHomingMotorBundle(CameraMotorIdArg::LeftX));
+            UNWRAP_OR_ABORT(leftCamYBundle, buildCameraHomingMotorBundle(CameraMotorIdArg::LeftY));
+            UNWRAP_OR_ABORT(rightCamXBundle, buildCameraHomingMotorBundle(CameraMotorIdArg::RightX));
+            UNWRAP_OR_ABORT(rightCamYBundle, buildCameraHomingMotorBundle(CameraMotorIdArg::RightY));
             enqueueTask<CamerasHomingTask, CAMERAS_TASKS_QUEUE_LANE>(
-                m_repo, leftCamXBundle, leftCamYBundle, rightCamXBundle, rightCamYBundle, m_leftCameraXKineProfile);
+                m_repo, leftCamXBundle, leftCamYBundle, rightCamXBundle, rightCamYBundle);
         }
 
         // Deck homing
@@ -264,6 +263,36 @@ namespace Kub3::Services
             enqueueTask<DeckHomingTask, DECK_TASKS_QUEUE_LANE>(m_repo, deckMotor, m_deckKineProfile);
         }
 #endif
+
+        this->startSequence();
+    }
+
+    void HomingService::initializeGranular(HomingTarget::Type target)
+    {
+        this->clearTasks();
+
+        switch (target)
+        {
+        case HomingTarget::CAMERAS:
+        {
+            buildCamerasSequence(true);
+            break;
+        }
+        case HomingTarget::DECK:
+        {
+            buildDeckSequence(true);
+            break;
+        }
+        case HomingTarget::CAMERAS | HomingTarget::DECK:
+        {
+            buildCamerasSequence(true, CAMERAS_TASKS_QUEUE_LANE);
+            buildDeckSequence(true, DECK_TASKS_QUEUE_LANE);
+            break;
+        }
+        default:
+            qWarning() << QStringLiteral("[HomingService] Invalid target %1 for method `initializeGranular`. Skipping.").arg(target);
+            return; // Invalid target, skipping request.
+        }
 
         this->startSequence();
     }
@@ -317,35 +346,70 @@ namespace Kub3::Services
         m_rightCameraYKineProfile = m_processConf.getKinematicProfile(RIGHT_CAMERA_Y_MOTOR, "normal");
     }
 
-    Result<camera_motor_bundle_t, std::string> HomingService::buildCameraMotorBundle(CameraMotorIdArg arg)
+    void HomingService::buildCamerasSequence(bool init, uint8_t lane)
+    {
+        UNWRAP_OR_ABORT(leftCamXBundle, buildCameraHomingMotorBundle(CameraMotorIdArg::LeftX));
+        UNWRAP_OR_ABORT(leftCamYBundle, buildCameraHomingMotorBundle(CameraMotorIdArg::LeftY));
+        UNWRAP_OR_ABORT(rightCamXBundle, buildCameraHomingMotorBundle(CameraMotorIdArg::RightX));
+        UNWRAP_OR_ABORT(rightCamYBundle, buildCameraHomingMotorBundle(CameraMotorIdArg::RightY));
+
+        if (init)
+        {
+            enqueueTaskOnLane<CamerasInitTask>(
+                lane, m_repo, m_processConf,
+                _conv(leftCamXBundle), _conv(leftCamYBundle), _conv(rightCamXBundle), _conv(rightCamYBundle));
+        }
+        enqueueTaskOnLane<CamerasHomingTask>(
+            lane, m_repo,
+            leftCamXBundle, leftCamYBundle, rightCamXBundle, rightCamYBundle);
+    }
+
+    void HomingService::buildDeckSequence(bool init, uint8_t lane)
+    {
+        UNWRAP_OR_ABORT(deckMotor, m_registry->get<HAL::Act::IMotor>(DECK_MOTOR));
+
+        if (init)
+            enqueueTaskOnLane<DeckInitTask>(lane, m_repo, deckMotor, m_deckKineProfile);
+        else
+            enqueueTaskOnLane<DeckHomingTask>(lane, m_repo, deckMotor, m_deckKineProfile);
+    }
+
+    Result<homing_cam_bundle_t, std::string> HomingService::buildCameraHomingMotorBundle(CameraMotorIdArg arg)
     {
         const char *motorId = nullptr;
         double centerPosMm  = 0.0;
+        Config::kinematic_profile_t profile;
 
+        // TODO: ± 30.0 are temporary just to test the algorithm, replace with config-defined values
         switch (arg)
         {
         case CameraMotorIdArg::LeftX:
             motorId     = LEFT_CAMERA_X_MOTOR;
-            centerPosMm = m_processConf.vision.left_cam_x_reset_pos_mm;
+            centerPosMm = m_processConf.vision.left_cam_x_reset_pos_mm + 30.0;
+            profile     = m_leftCameraXKineProfile;
             break;
         case CameraMotorIdArg::LeftY:
             motorId     = LEFT_CAMERA_Y_MOTOR;
-            centerPosMm = m_processConf.vision.left_cam_y_reset_pos_mm;
+            centerPosMm = m_processConf.vision.left_cam_y_reset_pos_mm + 30.0;
+            profile     = m_leftCameraYKineProfile;
             break;
         case CameraMotorIdArg::RightX:
             motorId     = RIGHT_CAMERA_X_MOTOR;
-            centerPosMm = m_processConf.vision.right_cam_x_reset_pos_mm;
+            centerPosMm = m_processConf.vision.right_cam_x_reset_pos_mm + 30.0;
+            profile     = m_rightCameraXKineProfile;
             break;
         case CameraMotorIdArg::RightY:
             motorId     = RIGHT_CAMERA_Y_MOTOR;
-            centerPosMm = m_processConf.vision.right_cam_y_reset_pos_mm;
+            centerPosMm = m_processConf.vision.right_cam_y_reset_pos_mm + 30.0;
+            profile     = m_rightCameraYKineProfile;
             break;
         }
 
         auto buildBundle = [=](auto motor) {
-            return camera_motor_bundle_t{
+            return homing_cam_bundle_t{
                 .motor            = motor,
                 .centerPositionMm = centerPosMm,
+                .kinematicProfile = profile,
             };
         };
 

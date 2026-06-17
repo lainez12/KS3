@@ -8,24 +8,18 @@ namespace Kub3::Services
 {
 
     CamerasHomingTask::CamerasHomingTask(Shared<HAL::MS::IMachineStatusRepo> repo,
-                                         camera_motor_bundle_t leftCamXBundle,
-                                         camera_motor_bundle_t leftCamYBundle,
-                                         camera_motor_bundle_t rightCamXBundle,
-                                         camera_motor_bundle_t rightCamYBundle,
-                                         Config::kinematic_profile_t kinematicProfile) :
+                                         homing_cam_bundle_t leftCamXBundle,
+                                         homing_cam_bundle_t leftCamYBundle,
+                                         homing_cam_bundle_t rightCamXBundle,
+                                         homing_cam_bundle_t rightCamYBundle) :
         m_repo(std::move(repo)),
         m_leftCamXBundle(std::move(leftCamXBundle)),
         m_leftCamYBundle(std::move(leftCamYBundle)),
         m_rightCamXBundle(std::move(rightCamXBundle)),
-        m_rightCamYBundle(std::move(rightCamYBundle)),
-        m_kinematicProfile(kinematicProfile) {}
+        m_rightCamYBundle(std::move(rightCamYBundle)) {}
 
     void CamerasHomingTask::start(void)
     {
-        handleSingleMotorLogic(m_leftCamXBundle);
-        handleSingleMotorLogic(m_leftCamYBundle);
-        handleSingleMotorLogic(m_rightCamXBundle);
-        handleSingleMotorLogic(m_rightCamYBundle);
     }
 
     bool CamerasHomingTask::tick(void)
@@ -38,11 +32,17 @@ namespace Kub3::Services
         return leftCamXCentered && leftCamYCentered && rightCamXCentered && rightCamYCentered;
     }
 
-    bool CamerasHomingTask::handleSingleMotorLogic(const camera_motor_bundle_t &bundle)
+    bool CamerasHomingTask::handleSingleMotorLogic(const homing_cam_bundle_t &bundle)
     {
         const double currentPosMm = bundle.motor->getEncoderPositionMm();
-        const bool centered       = fabs(currentPosMm - bundle.centerPositionMm) < POSITION_TOLERANCE_MM;
+        const bool centered       = fabs(currentPosMm - bundle.centerPositionMm) < bundle.motor->getPrecisionMm(bundle.kinematicProfile);
         const bool actionNeeded   = (centered == bundle.motor->isMoving());
+
+        qDebug().noquote() << QString("[CamerasHomingTask] %1 centered: %2 (current pos: %3, target pos: %4)")
+                                  .arg(bundle.motor->getId().data())
+                                  .arg(centered)
+                                  .arg(currentPosMm)
+                                  .arg(bundle.centerPositionMm);
 
         if (!actionNeeded)
             return centered;
@@ -50,7 +50,7 @@ namespace Kub3::Services
         if (centered)
             bundle.motor->emergencyStop();
         else
-            bundle.motor->moveAbsolute(bundle.centerPositionMm, m_kinematicProfile);
+            bundle.motor->moveAbsolute(bundle.centerPositionMm, bundle.kinematicProfile);
 
         return centered;
     }
