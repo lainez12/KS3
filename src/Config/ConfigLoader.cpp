@@ -213,11 +213,18 @@ namespace Kub3::Config
         // LOAD CAMERAS DATA
         // =============================
         settings.beginGroup(CONF_PROCESS_CAMERAS);
-        config.vision.min_camera_distance_mm   = getRequiredValue(settings, CONF_PROCESS_MIN_CAMERA_DISTANCE_MM).toDouble();
+        config.vision.min_camera_distance_mm = getRequiredValue(settings, CONF_PROCESS_MIN_CAMERA_DISTANCE_MM).toDouble();
+        // --- Cameras' init
         config.vision.left_cam_x_reset_pos_mm  = getRequiredValue(settings, CONF_PROCESS_LEFT_CAM_X_RESET_POS_MM).toDouble();
         config.vision.left_cam_y_reset_pos_mm  = getRequiredValue(settings, CONF_PROCESS_LEFT_CAM_Y_RESET_POS_MM).toDouble();
         config.vision.right_cam_x_reset_pos_mm = getRequiredValue(settings, CONF_PROCESS_RIGHT_CAM_X_RESET_POS_MM).toDouble();
         config.vision.right_cam_y_reset_pos_mm = getRequiredValue(settings, CONF_PROCESS_RIGHT_CAM_Y_RESET_POS_MM).toDouble();
+        // --- Cameras' homing
+        config.vision.left_cam_x_home_pos_mm  = getRequiredValue(settings, CONF_PROCESS_LEFT_CAM_X_HOME_POS_MM).toDouble();
+        config.vision.left_cam_y_home_pos_mm  = getRequiredValue(settings, CONF_PROCESS_LEFT_CAM_Y_HOME_POS_MM).toDouble();
+        config.vision.right_cam_x_home_pos_mm = getRequiredValue(settings, CONF_PROCESS_RIGHT_CAM_X_HOME_POS_MM).toDouble();
+        config.vision.right_cam_y_home_pos_mm = getRequiredValue(settings, CONF_PROCESS_RIGHT_CAM_Y_HOME_POS_MM).toDouble();
+        // --- Focals
         {
             settings.beginGroup(CONF_PROCESS_LEFT_FOCAL);
             config.vision.left_focal_conf = {
@@ -226,8 +233,6 @@ namespace Kub3::Config
                 .max_value     = getRequiredValue(settings, CONF_PROCESS_FOCAL_MAX_VALUE).toUInt(),
             };
             settings.endGroup();
-        }
-        {
             settings.beginGroup(CONF_PROCESS_RIGHT_FOCAL);
             config.vision.right_focal_conf = {
                 .default_value = getRequiredValue(settings, CONF_PROCESS_FOCAL_DEFAULT_VALUE).toUInt(),

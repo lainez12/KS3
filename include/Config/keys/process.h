@@ -25,6 +25,10 @@
 #define CONF_PROCESS_LEFT_CAM_Y_RESET_POS_MM  "left_cam_y_reset_pos_mm"
 #define CONF_PROCESS_RIGHT_CAM_X_RESET_POS_MM "right_cam_x_reset_pos_mm"
 #define CONF_PROCESS_RIGHT_CAM_Y_RESET_POS_MM "right_cam_y_reset_pos_mm"
+#define CONF_PROCESS_LEFT_CAM_X_HOME_POS_MM   "left_cam_x_home_pos_mm"
+#define CONF_PROCESS_LEFT_CAM_Y_HOME_POS_MM   "left_cam_y_home_pos_mm"
+#define CONF_PROCESS_RIGHT_CAM_X_HOME_POS_MM  "right_cam_x_home_pos_mm"
+#define CONF_PROCESS_RIGHT_CAM_Y_HOME_POS_MM  "right_cam_y_home_pos_mm"
 // Focals
 #define CONF_PROCESS_LEFT_FOCAL          "left_focal"  // --- Upper left camera focal
 #define CONF_PROCESS_RIGHT_FOCAL         "right_focal" // --- Upper right camera focal

@@ -7,38 +7,42 @@ qt_add_executable(Kub3Tester
     src/main.cpp
     src/controllers/ProcedureTestController.cpp
     src/controllers/MotorTestController.cpp
-    src/controllers/FocalTestController.cpp
+    src/controllers/CameraTestController.cpp
     src/ApplicationBuilder.cpp
     src/services/MotorTestService.cpp
     src/services/FocalTestService.cpp
+    src/services/LightingTestService.cpp
     src/views/ViewBase.cpp
     src/views/MotorTestView.cpp
     src/views/ProcedureTestView.cpp
-    src/views/FocalTestView.cpp
+    src/views/CameraTestView.cpp
     src/views/components/RealTimeCurveWidget.cpp
     src/views/components/FocalTestModule.cpp
+    src/views/components/CamLightTestModule.cpp
     src/TesterMainWindow.cpp
     src/view_models/ProcedureTestViewModel.cpp
     src/view_models/MotorTestViewModel.cpp
-    src/view_models/FocalTestViewModel.cpp
+    src/view_models/CameraTestViewModel.cpp
 
     # Headers
     include/controllers/MotorTestController.h
     include/controllers/ProcedureTestController.h
-    include/controllers/FocalTestController.h
+    include/controllers/CameraTestController.h
     include/TesterMainWindow.h
     include/ApplicationBuilder.h
     include/services/MotorTestService.h
     include/services/FocalTestService.h
+    include/services/LightingTestService.h
     include/views/ViewBase.h
     include/views/MotorTestView.h
     include/views/ProcedureTestView.h
-    include/views/FocalTestView.h
+    include/views/CameraTestView.h
     include/views/components/RealTimeCurveWidget.h
     include/views/components/FocalTestModule.h
+    include/views/components/CamLightTestModule.h
     include/view_models/ProcedureTestViewModel.h
     include/view_models/MotorTestViewModel.h
-    include/view_models/FocalTestViewModel.h
+    include/view_models/CameraTestViewModel.h
 
     # UI
     gui/resources.qrc

@@ -380,27 +380,26 @@ namespace Kub3::Services
         double centerPosMm  = 0.0;
         Config::kinematic_profile_t profile;
 
-        // TODO: ± 30.0 are temporary just to test the algorithm, replace with config-defined values
         switch (arg)
         {
         case CameraMotorIdArg::LeftX:
             motorId     = LEFT_CAMERA_X_MOTOR;
-            centerPosMm = m_processConf.vision.left_cam_x_reset_pos_mm + 30.0;
+            centerPosMm = m_processConf.vision.left_cam_x_home_pos_mm;
             profile     = m_leftCameraXKineProfile;
             break;
         case CameraMotorIdArg::LeftY:
             motorId     = LEFT_CAMERA_Y_MOTOR;
-            centerPosMm = m_processConf.vision.left_cam_y_reset_pos_mm + 30.0;
+            centerPosMm = m_processConf.vision.left_cam_y_home_pos_mm;
             profile     = m_leftCameraYKineProfile;
             break;
         case CameraMotorIdArg::RightX:
             motorId     = RIGHT_CAMERA_X_MOTOR;
-            centerPosMm = m_processConf.vision.right_cam_x_reset_pos_mm + 30.0;
+            centerPosMm = m_processConf.vision.right_cam_x_home_pos_mm;
             profile     = m_rightCameraXKineProfile;
             break;
         case CameraMotorIdArg::RightY:
             motorId     = RIGHT_CAMERA_Y_MOTOR;
-            centerPosMm = m_processConf.vision.right_cam_y_reset_pos_mm + 30.0;
+            centerPosMm = m_processConf.vision.right_cam_y_home_pos_mm;
             profile     = m_rightCameraYKineProfile;
             break;
         }

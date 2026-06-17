@@ -51,6 +51,10 @@ namespace Kub3::HAL
         {
             return m_registeredFocalIds;
         }
+        [[nodiscard]] const std::vector<std::string> &getRegisteredLightIds() const
+        {
+            return m_registeredLightIds;
+        }
 
     signals:
         void s_hardwarePowerOffSent(void);
@@ -103,6 +107,7 @@ namespace Kub3::HAL
         // Registered actuators ids
         std::vector<std::string> m_registeredMotorIds;
         std::vector<std::string> m_registeredFocalIds;
+        std::vector<std::string> m_registeredLightIds;
     };
 
 }

@@ -362,6 +362,8 @@ namespace Kub3::HAL
         /// --- Cameras lighting leds
         m_actuatorRegistry->registerActuator(std::move(leftCameraLight));
         m_actuatorRegistry->registerActuator(std::move(rightCameraLight));
+        m_registeredLightIds.push_back(LEFT_CAMERA_LIGHT);
+        m_registeredLightIds.push_back(RIGHT_CAMERA_LIGHT);
     }
 
     // --- Arduino 2 HAL instanciation helpers

@@ -8,7 +8,7 @@
 #include <controllers/ProcedureTestController.h>
 #include <view_models/MotorTestViewModel.h>
 #include <view_models/ProcedureTestViewModel.h>
-#include <views/FocalTestView.h>
+#include <views/CameraTestView.h>
 #include <views/MotorTestView.h>
 #include <views/ProcedureTestView.h>
 
@@ -42,12 +42,12 @@ namespace Kub3::Tools::Tester
         // Create Qt Controller wrappers and Thread
         m_logicThread             = new QThread(qApp);
         m_motorTestController     = new MotorTestController(registry, m_hwManager->getRegisteredMotorIds());
-        m_focalTestController     = new FocalTestController(registry, m_hwManager->getRegisteredFocalIds());
+        m_camerasTestController   = new CameraTestController(registry, m_hwManager->getRegisteredFocalIds(), m_hwManager->getRegisteredLightIds());
         m_procedureTestController = new ProcedureTestController(registry, m_repo, m_processConfig, m_hwConfig);
 
         // Move to Tier 2 execution thread
         m_motorTestController->moveToThread(m_logicThread);
-        m_focalTestController->moveToThread(m_logicThread);
+        m_camerasTestController->moveToThread(m_logicThread);
         m_procedureTestController->moveToThread(m_logicThread);
     }
 
@@ -60,21 +60,22 @@ namespace Kub3::Tools::Tester
         // Create ViewModels
         m_motorTestViewModel     = std::make_shared<MotorTestViewModel>();
         m_procedureTestViewModel = std::make_shared<ProcedureTestViewModel>(m_repo);
-        m_focalTestViewModel     = std::make_shared<FocalTestViewModel>();
+        m_cameraTestViewModel    = std::make_shared<CameraTestViewModel>();
 
         // Create Views and Inject ViewModels
         auto *motorTestView     = new MotorTestView(m_motorTestViewModel, m_mainWindow.get());
         auto *procedureTestView = new ProcedureTestView(m_procedureTestViewModel, m_mainWindow.get());
-        auto *focalTestView     = new FocalTestView(m_focalTestViewModel, m_mainWindow.get());
+        auto *cameraTestView    = new CameraTestView(m_cameraTestViewModel, m_mainWindow.get());
 
         // Register Views as Tabs
         m_mainWindow->addView("Single Motor", motorTestView);
-        m_mainWindow->addView("Focals", focalTestView);
+        m_mainWindow->addView("Cameras", cameraTestView);
         m_mainWindow->addView("Procedures", procedureTestView);
 
         // Populate catalog
         QList<QPair<QString, bool>> availableMotors;
         QList<QString> availableFocals;
+        QList<QString> availableLights;
 
         for (const std::string &motorKey : m_hwManager->getRegisteredMotorIds())
         {
@@ -88,7 +89,10 @@ namespace Kub3::Tools::Tester
         m_motorTestViewModel->setAvailableMotors(availableMotors);
         for (const auto &focalKey : m_hwManager->getRegisteredFocalIds())
             availableFocals.push_back(QString::fromStdString(focalKey));
-        m_focalTestViewModel->setAvailableFocals(availableFocals);
+        m_cameraTestViewModel->setAvailableFocals(availableFocals);
+        for (const auto &lightKey : m_hwManager->getRegisteredLightIds())
+            availableLights.push_back(QString::fromStdString(lightKey));
+        m_cameraTestViewModel->setAvailableLights(availableLights);
     }
 
     void ApplicationBuilder::wireArchitecture()
@@ -98,7 +102,7 @@ namespace Kub3::Tools::Tester
         // Wire the Global Emergency-Stop to ALL ViewModels
         QObject::connect(m_mainWindow.get(), &TesterMainWindow::s_globalEmergencyStopRequested, m_motorTestViewModel.get(), &MotorTestViewModel::uiEmergencyStop);
         QObject::connect(m_mainWindow.get(), &TesterMainWindow::s_globalEmergencyStopRequested, m_procedureTestViewModel.get(), &ProcedureTestViewModel::uiEmergencyStop);
-        QObject::connect(m_mainWindow.get(), &TesterMainWindow::s_globalEmergencyStopRequested, m_focalTestViewModel.get(), &FocalTestViewModel::uiEmergencyStop);
+        QObject::connect(m_mainWindow.get(), &TesterMainWindow::s_globalEmergencyStopRequested, m_cameraTestViewModel.get(), &CameraTestViewModel::uiEmergencyStop);
 
         // ==========================================
         // SINGLE MOTOR TESTER WIRING
@@ -143,13 +147,15 @@ namespace Kub3::Tools::Tester
         QObject::connect(m_repo.get(), &HAL::MS::IMachineStatusRepo::s_machineValueChanged, procVM, &ProcedureTestViewModel::onHandleSensorValueChanged, Qt::QueuedConnection);
 
         // ==========================================
-        // FOCAL TESTER WIRING
+        // CAMERAS TESTER WIRING
         // ==========================================
 
         // ViewModel (Main Thread) -> Controller (Logic Thread)
-        QObject::connect(m_focalTestViewModel.get(), &FocalTestViewModel::cmdToggleFocal, m_focalTestController, &FocalTestController::ps_toggleFocal, Qt::QueuedConnection);
-        QObject::connect(m_focalTestViewModel.get(), &FocalTestViewModel::cmdUpdateFocalValue, m_focalTestController, &FocalTestController::ps_updateFocalValue, Qt::QueuedConnection);
-        QObject::connect(m_focalTestViewModel.get(), &FocalTestViewModel::cmdEmergencyStop, m_focalTestController, &FocalTestController::ps_emergencyStop, Qt::QueuedConnection);
+        QObject::connect(m_cameraTestViewModel.get(), &CameraTestViewModel::cmdToggleFocal, m_camerasTestController, &CameraTestController::ps_toggleFocal, Qt::QueuedConnection);
+        QObject::connect(m_cameraTestViewModel.get(), &CameraTestViewModel::cmdUpdateFocalValue, m_camerasTestController, &CameraTestController::ps_updateFocalValue, Qt::QueuedConnection);
+        QObject::connect(m_cameraTestViewModel.get(), &CameraTestViewModel::cmdToggleLight, m_camerasTestController, &CameraTestController::ps_toggleLight, Qt::QueuedConnection);
+        QObject::connect(m_cameraTestViewModel.get(), &CameraTestViewModel::cmdUpdateLightValue, m_camerasTestController, &CameraTestController::ps_updateLightValue, Qt::QueuedConnection);
+        QObject::connect(m_cameraTestViewModel.get(), &CameraTestViewModel::cmdEmergencyStop, m_camerasTestController, &CameraTestController::ps_emergencyStop, Qt::QueuedConnection);
 
         // ==========================================
         // THREAD LIFECYCLE WIRING
@@ -157,13 +163,13 @@ namespace Kub3::Tools::Tester
 
         QObject::connect(m_logicThread, &QThread::started, m_motorTestController, &MotorTestController::start);
         QObject::connect(m_logicThread, &QThread::started, m_procedureTestController, &ProcedureTestController::start);
-        QObject::connect(m_logicThread, &QThread::started, m_focalTestController, &FocalTestController::start);
+        QObject::connect(m_logicThread, &QThread::started, m_camerasTestController, &CameraTestController::start);
 
         QObject::connect(qApp, &QCoreApplication::aboutToQuit, m_logicThread, &QThread::quit);
 
         QObject::connect(m_logicThread, &QThread::finished, m_motorTestController, &QObject::deleteLater);
         QObject::connect(m_logicThread, &QThread::finished, m_procedureTestController, &QObject::deleteLater);
-        QObject::connect(m_logicThread, &QThread::finished, m_focalTestController, &QObject::deleteLater);
+        QObject::connect(m_logicThread, &QThread::finished, m_camerasTestController, &QObject::deleteLater);
         QObject::connect(m_logicThread, &QThread::finished, m_logicThread, &QObject::deleteLater);
     }
 

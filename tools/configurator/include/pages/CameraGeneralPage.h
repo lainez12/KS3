@@ -29,11 +29,17 @@ namespace Kub3::Components
         QVBoxLayout *m_layout = nullptr;
 
         // Position & Clearance Limits
-        QDoubleSpinBox *m_minCamDist        = nullptr;
+        QDoubleSpinBox *m_minCamDist = nullptr;
+        // Initialization
         QDoubleSpinBox *m_leftCamXResetPos  = nullptr;
         QDoubleSpinBox *m_leftCamYResetPos  = nullptr;
         QDoubleSpinBox *m_rightCamXResetPos = nullptr;
         QDoubleSpinBox *m_rightCamYResetPos = nullptr;
+        // Homing
+        QDoubleSpinBox *m_leftCamXHomePos  = nullptr;
+        QDoubleSpinBox *m_leftCamYHomePos  = nullptr;
+        QDoubleSpinBox *m_rightCamXHomePos = nullptr;
+        QDoubleSpinBox *m_rightCamYHomePos = nullptr;
 
         // Left Focal Configuration
         QSpinBox *m_leftFocalMin     = nullptr;

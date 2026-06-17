@@ -161,10 +161,17 @@ namespace Kub3::Config
             // SAVE CAMERAS DATA
             settings.beginGroup(CONF_PROCESS_CAMERAS);
             settings.setValue(CONF_PROCESS_MIN_CAMERA_DISTANCE_MM, config.vision.min_camera_distance_mm);
+            // --- Cameras' init
             settings.setValue(CONF_PROCESS_LEFT_CAM_X_RESET_POS_MM, config.vision.left_cam_x_reset_pos_mm);
             settings.setValue(CONF_PROCESS_LEFT_CAM_Y_RESET_POS_MM, config.vision.left_cam_y_reset_pos_mm);
             settings.setValue(CONF_PROCESS_RIGHT_CAM_X_RESET_POS_MM, config.vision.right_cam_x_reset_pos_mm);
             settings.setValue(CONF_PROCESS_RIGHT_CAM_Y_RESET_POS_MM, config.vision.right_cam_y_reset_pos_mm);
+            // --- Cameras' homing
+            settings.setValue(CONF_PROCESS_LEFT_CAM_X_HOME_POS_MM, config.vision.left_cam_x_home_pos_mm);
+            settings.setValue(CONF_PROCESS_LEFT_CAM_Y_HOME_POS_MM, config.vision.left_cam_y_home_pos_mm);
+            settings.setValue(CONF_PROCESS_RIGHT_CAM_X_HOME_POS_MM, config.vision.right_cam_x_home_pos_mm);
+            settings.setValue(CONF_PROCESS_RIGHT_CAM_Y_HOME_POS_MM, config.vision.right_cam_y_home_pos_mm);
+            // --- Focals
             {
                 settings.beginGroup(CONF_PROCESS_LEFT_FOCAL);
                 settings.setValue(CONF_PROCESS_FOCAL_DEFAULT_VALUE, config.vision.left_focal_conf.default_value);

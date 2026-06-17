@@ -458,6 +458,7 @@ target_link_libraries(Kub3Software PRIVATE
 # ==============================================================================
 add_subdirectory(tools/configurator)
 add_subdirectory(tools/tester)
+add_subdirectory(tools/config_generator)
 
 # ==============================================================================
 # 7. TESTS

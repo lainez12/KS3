@@ -70,6 +70,11 @@ namespace Kub3::Config
         double left_cam_y_reset_pos_mm  = 0.0;
         double right_cam_x_reset_pos_mm = 0.0;
         double right_cam_y_reset_pos_mm = 0.0;
+        // Home positions
+        double left_cam_x_home_pos_mm  = 0.0;
+        double left_cam_y_home_pos_mm  = 0.0;
+        double right_cam_x_home_pos_mm = 0.0;
+        double right_cam_y_home_pos_mm = 0.0;
         // Focals
         focal_conf_t left_focal_conf;
         focal_conf_t right_focal_conf;

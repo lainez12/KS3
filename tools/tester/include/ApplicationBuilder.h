@@ -4,10 +4,10 @@
 #include <QThread>
 
 #include "./TesterMainWindow.h"
-#include "./controllers/FocalTestController.h"
+#include "./controllers/CameraTestController.h"
 #include "./controllers/MotorTestController.h"
 #include "./controllers/ProcedureTestController.h"
-#include "./view_models/FocalTestViewModel.h"
+#include "./view_models/CameraTestViewModel.h"
 #include "./view_models/MotorTestViewModel.h"
 #include "./view_models/ProcedureTestViewModel.h"
 #include <Config/ConfigLoader.h>
@@ -43,13 +43,13 @@ namespace Kub3::Tools::Tester
         QThread *m_logicThread                             = nullptr;
         MotorTestController *m_motorTestController         = nullptr;
         ProcedureTestController *m_procedureTestController = nullptr;
-        FocalTestController *m_focalTestController         = nullptr;
+        CameraTestController *m_camerasTestController      = nullptr;
 
         // Tier 1
         Unique<TesterMainWindow> m_mainWindow;
         Shared<MotorTestViewModel> m_motorTestViewModel;
         Shared<ProcedureTestViewModel> m_procedureTestViewModel;
-        Shared<FocalTestViewModel> m_focalTestViewModel;
+        Shared<CameraTestViewModel> m_cameraTestViewModel;
     };
 
 }

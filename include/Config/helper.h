@@ -291,13 +291,21 @@ namespace Kub3::Config
                        "%1  - Left Cam X Reset Position: %3 mm\n"
                        "%1  - Left Cam Y Reset Position: %4 mm\n"
                        "%1  - Right Cam X Reset Position: %5 mm\n"
-                       "%1  - Right Cam Y Reset Position: %6 mm")
+                       "%1  - Right Cam Y Reset Position: %6 mm\n"
+                       "%1  - Left Cam X Home Position: %7 mm\n"
+                       "%1  - Left Cam Y Home Position: %8 mm\n"
+                       "%1  - Right Cam X Home Position: %9 mm\n"
+                       "%1  - Right Cam Y Home Position: %10 mm\n")
             .arg(ind)
             .arg(config.min_camera_distance_mm)
             .arg(config.left_cam_x_reset_pos_mm)
             .arg(config.left_cam_y_reset_pos_mm)
             .arg(config.right_cam_x_reset_pos_mm)
-            .arg(config.right_cam_y_reset_pos_mm);
+            .arg(config.right_cam_y_reset_pos_mm)
+            .arg(config.left_cam_x_home_pos_mm)
+            .arg(config.left_cam_y_home_pos_mm)
+            .arg(config.right_cam_x_home_pos_mm)
+            .arg(config.right_cam_y_home_pos_mm);
     }
 
     inline QString toString(const alignment_process_config_t &config, int indent = 0)

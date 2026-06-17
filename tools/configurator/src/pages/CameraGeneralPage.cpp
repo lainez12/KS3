@@ -39,16 +39,25 @@ namespace Kub3::Components
         auto *positionsTab    = new QWidget();
         auto *positionsLayout = new QFormLayout(positionsTab);
 
-        m_minCamDist = createDoubleSpinBox(0.0, 10000.0, 2);
-        positionsLayout->addRow("Minimum Camera Distance (mm):", m_minCamDist);
-        m_leftCamXResetPos = createDoubleSpinBox(-100000.0, 100000.0, 2);
-        positionsLayout->addRow("Left Camera X Reset Position (mm):", m_leftCamXResetPos);
-        m_leftCamYResetPos = createDoubleSpinBox(-100000.0, 100000.0, 2);
-        positionsLayout->addRow("Left Camera Y Reset Position (mm):", m_leftCamYResetPos);
+        m_minCamDist        = createDoubleSpinBox(0.0, 10000.0, 2);
+        m_leftCamXResetPos  = createDoubleSpinBox(-100000.0, 100000.0, 2);
+        m_leftCamYResetPos  = createDoubleSpinBox(-100000.0, 100000.0, 2);
         m_rightCamXResetPos = createDoubleSpinBox(-100000.0, 100000.0, 2);
-        positionsLayout->addRow("Right Camera X Reset Position (mm):", m_rightCamXResetPos);
         m_rightCamYResetPos = createDoubleSpinBox(-100000.0, 100000.0, 2);
+        m_leftCamXHomePos   = createDoubleSpinBox(-100000.0, 100000.0, 2);
+        m_leftCamYHomePos   = createDoubleSpinBox(-100000.0, 100000.0, 2);
+        m_rightCamXHomePos  = createDoubleSpinBox(-100000.0, 100000.0, 2);
+        m_rightCamYHomePos  = createDoubleSpinBox(-100000.0, 100000.0, 2);
+
+        positionsLayout->addRow("Minimum Camera Distance (mm):", m_minCamDist);
+        positionsLayout->addRow("Left Camera X Reset Position (mm):", m_leftCamXResetPos);
+        positionsLayout->addRow("Left Camera Y Reset Position (mm):", m_leftCamYResetPos);
+        positionsLayout->addRow("Right Camera X Reset Position (mm):", m_rightCamXResetPos);
         positionsLayout->addRow("Right Camera Y Reset Position (mm):", m_rightCamYResetPos);
+        positionsLayout->addRow("Left Camera X Home Position (mm):", m_leftCamXHomePos);
+        positionsLayout->addRow("Left Camera Y Home Position (mm):", m_leftCamYHomePos);
+        positionsLayout->addRow("Right Camera X Home Position (mm):", m_rightCamXHomePos);
+        positionsLayout->addRow("Right Camera Y Home Position (mm):", m_rightCamYHomePos);
 
         tabs->addTab(positionsTab, "Positions and Clearances");
 
@@ -100,6 +109,10 @@ namespace Kub3::Components
         m_leftCamYResetPos->setValue(conf.left_cam_y_reset_pos_mm);
         m_rightCamXResetPos->setValue(conf.right_cam_x_reset_pos_mm);
         m_rightCamYResetPos->setValue(conf.right_cam_y_reset_pos_mm);
+        m_leftCamXHomePos->setValue(conf.left_cam_x_home_pos_mm);
+        m_leftCamYHomePos->setValue(conf.left_cam_y_home_pos_mm);
+        m_rightCamXHomePos->setValue(conf.right_cam_x_home_pos_mm);
+        m_rightCamYHomePos->setValue(conf.right_cam_y_home_pos_mm);
 
         // Block signals locally to safely push the initial structural values without
         // triggering intermediate auto-clamping limits.
@@ -124,16 +137,24 @@ namespace Kub3::Components
 
     void CameraGeneralPage::pullDataToStruct(Kub3::Config::vision_process_config_t &out) const
     {
-        out.min_camera_distance_mm   = m_minCamDist->value();
+        // Cameras minimal distance to avoid collision
+        out.min_camera_distance_mm = m_minCamDist->value();
+        // Reset positions (positions of the cameras when meeting their initialization limit)
         out.left_cam_x_reset_pos_mm  = m_leftCamXResetPos->value();
         out.left_cam_y_reset_pos_mm  = m_leftCamYResetPos->value();
         out.right_cam_x_reset_pos_mm = m_rightCamXResetPos->value();
         out.right_cam_y_reset_pos_mm = m_rightCamYResetPos->value();
-
+        // Home positions (positions the cameras have to reach when homing)
+        out.left_cam_x_home_pos_mm  = m_leftCamXHomePos->value();
+        out.left_cam_y_home_pos_mm  = m_leftCamYHomePos->value();
+        out.right_cam_x_home_pos_mm = m_rightCamXHomePos->value();
+        out.right_cam_y_home_pos_mm = m_rightCamYHomePos->value();
+        // Focals limits
+        // --- Left
         out.left_focal_conf.min_value     = m_leftFocalMin->value();
         out.left_focal_conf.max_value     = m_leftFocalMax->value();
         out.left_focal_conf.default_value = m_leftFocalDefault->value();
-
+        // --- Right
         out.right_focal_conf.min_value     = m_rightFocalMin->value();
         out.right_focal_conf.max_value     = m_rightFocalMax->value();
         out.right_focal_conf.default_value = m_rightFocalDefault->value();
