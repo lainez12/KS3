@@ -3,6 +3,7 @@
 
 #include <Algorithms/Kinematic/IKinematicGenerator.h>
 #include <HAL/Actuators/Focal/Focal.h>
+#include <HAL/Actuators/Lights/CameraLightingLed.h>
 #include <HAL/Actuators/Lights/UVExposureHead.h>
 #include <HAL/Actuators/Valves/SolenoidValve.h>
 #include <HAL/Com/LengthBasedParser.h>
@@ -332,6 +333,9 @@ namespace Kub3::HAL
         /// --- Focals
         auto leftCameraFocal  = std::make_shared<Act::Focal>(LEFT_CAMERA_FOCAL, 'L', driver);
         auto rightCameraFocal = std::make_shared<Act::Focal>(RIGHT_CAMERA_FOCAL, 'R', driver);
+        // --- Cameras lighting leds
+        auto leftCameraLight  = std::make_shared<Act::CameraLightingLed>(LEFT_CAMERA_LIGHT, 'L', driver);
+        auto rightCameraLight = std::make_shared<Act::CameraLightingLed>(RIGHT_CAMERA_LIGHT, 'R', driver);
 
         /* FEEDBACK HANDLING */
         router->registerRoute("SS\x00"s, Act::StepperMotor::createFeedbackHandler(leftCameraXMotor));
@@ -355,6 +359,9 @@ namespace Kub3::HAL
         m_actuatorRegistry->registerActuator(std::move(rightCameraFocal));
         m_registeredFocalIds.push_back(LEFT_CAMERA_FOCAL);
         m_registeredFocalIds.push_back(RIGHT_CAMERA_FOCAL);
+        /// --- Cameras lighting leds
+        m_actuatorRegistry->registerActuator(std::move(leftCameraLight));
+        m_actuatorRegistry->registerActuator(std::move(rightCameraLight));
     }
 
     // --- Arduino 2 HAL instanciation helpers

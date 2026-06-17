@@ -6,7 +6,7 @@
 
 #include <Config/kinematics.h>
 
-#include "../IActuator.h"
+#include <HAL/Actuators/IActuator.h>
 
 #define POSITIVE_INFINITE INT32_MAX
 #define NEGATIVE_INFINITE INT32_MAX

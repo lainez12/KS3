@@ -26,3 +26,7 @@
 // Focals
 #define LEFT_CAMERA_FOCAL  "leftCameraFocal"
 #define RIGHT_CAMERA_FOCAL "rightCameraFocal"
+
+// Lighting leds
+#define LEFT_CAMERA_LIGHT  "leftCameraLightingLed"
+#define RIGHT_CAMERA_LIGHT "rightCameraLightingLed"

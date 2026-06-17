@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../IActuator.h"
+#include <HAL/Actuators/IActuator.h>
 
 namespace Kub3::HAL::Act
 {

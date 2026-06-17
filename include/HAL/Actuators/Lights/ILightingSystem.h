@@ -7,10 +7,10 @@
 namespace Kub3::HAL::Act
 {
 
-    class IFocal : public IActuator
+    class ILightingSystem : public IActuator
     {
     public:
-        virtual ~IFocal() = default;
+        virtual ~ILightingSystem() = default;
 
         virtual void enable()               = 0;
         virtual void disable()              = 0;

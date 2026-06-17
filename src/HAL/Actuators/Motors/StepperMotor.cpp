@@ -1,6 +1,7 @@
 #include <QDebug>
-
 #include <QMetaObject>
+
+#include <algorithm>
 #include <stdexcept>
 
 #include <Config/helper.h>
@@ -275,8 +276,17 @@ namespace Kub3::HAL::Act
         if (auto *p = std::get_if<Config::stepper_kinematics_params_t>(&profile.params))
             stepFrac = p->stepFraction;
 
-        qInfo() << "[StepperMotor] Computed precision (mm):" << (m_hwConfig.screwPitchMm / (m_hwConfig.stepsPerRev * stepFrac));
-        return (m_hwConfig.screwPitchMm / (m_hwConfig.stepsPerRev * stepFrac));
+        // The true positional precision of the system is bottlenecked by the coarser
+        // resolution between what the motor can command and what the encoder can measure.
+        // - If the encoder has a lower resolution than the microstepped motor, we cannot verify tiny movements.
+        // - If the motor operates in coarse steps, we cannot physically position it at the fine increments the encoder can see.
+        // By taking the minimum of the two (std::min), we identify the system's limiting resolution per revolution.
+        // Dividing the lead screw pitch by this bottleneck gives the smallest reliable linear movement in mm.
+        const uint32_t steps_count = m_hwConfig.stepsPerRev * stepFrac;
+        const uint32_t divisor     = std::min<uint32_t>(steps_count, m_hwConfig.encoderTopsPerRev);
+
+        qInfo() << "[StepperMotor] Computed precision (mm):" << (m_hwConfig.screwPitchMm / divisor);
+        return (m_hwConfig.screwPitchMm / divisor);
     }
 
     uint16_t StepperMotor::computeFrequencyHz(double velocityMmS, uint8_t stepFraction) const

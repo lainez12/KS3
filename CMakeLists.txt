@@ -119,6 +119,7 @@ qt_add_library(Kub3Core STATIC
     src/HAL/Com/LengthBasedParser.cpp
     src/HAL/Com/PacketRouter.cpp
     src/HAL/Vision/HikrobotCamera/HikrobotCamera.cpp
+    src/HAL/Actuators/Lights/CameraLightingLed.cpp
     src/HAL/Actuators/Lights/UVExposureHead.cpp
     src/HAL/Actuators/Motors/StepperMotor.cpp
     src/HAL/Actuators/Motors/DirectCurrentMotor.cpp
@@ -234,6 +235,8 @@ qt_add_library(Kub3Core STATIC
     include/HAL/Vision/Hikrobot/HikrobotCamera.h
     include/HAL/Actuators/ActuatorRegistry.h
     include/HAL/Actuators/IActuator.h
+    include/HAL/Actuators/Lights/ILightingSystem.h
+    include/HAL/Actuators/Lights/CameraLightingLed.h
     include/HAL/Actuators/Lights/IExposureSystem.h
     include/HAL/Actuators/Lights/UVExposureHead.h
     include/HAL/Actuators/Motors/IMotor.h
