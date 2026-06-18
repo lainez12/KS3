@@ -1,6 +1,7 @@
-#include "CameraStreamWidget.h"
 #include <QPainter>
 #include <QRect>
+
+#include <Views/Components/CameraStreamWidget.h>
 
 CameraStreamWidget::CameraStreamWidget(QWidget *parent) : QWidget(parent)
 {

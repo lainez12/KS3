@@ -1,6 +1,12 @@
 # ==============================================================================
 # CONFIGURATOR EXECUTABLE: Kub3Configurator
 # ==============================================================================
+
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC_SEARCH_PATHS "gui")
+
 qt_add_executable(Kub3Configurator
     MANUAL_FINALIZATION
     # Sources

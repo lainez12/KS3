@@ -1,6 +1,12 @@
 # ==============================================================================
 # MOTOR TESTER EXECUTABLE: Kub3Tester
 # ==============================================================================
+
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC_SEARCH_PATHS "gui;gui/Views;gui/Components")
+
 qt_add_executable(Kub3Tester
     MANUAL_FINALIZATION
     # Sources

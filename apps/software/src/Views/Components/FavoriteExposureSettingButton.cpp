@@ -1,9 +1,10 @@
-#include "FavoriteExposureSettingButton.h"
 #include <QHBoxLayout>
 #include <QLabel>
 
-FavoriteExposureSettingButton::FavoriteExposureSettingButton(const QString &titleText, const QString &detailsText, QWidget *parent) : QPushButton(parent) {
+#include <Views/Components/FavoriteExposureSettingButton.h>
 
+FavoriteExposureSettingButton::FavoriteExposureSettingButton(const QString &titleText, const QString &detailsText, QWidget *parent) : QPushButton(parent)
+{
     QHBoxLayout *layout = new QHBoxLayout(this);
 
     QLabel *titleLabel   = new QLabel(titleText, this);
