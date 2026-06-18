@@ -6,6 +6,7 @@
 #include <ViewModels/Alignment/VisualisationViewModel.h>
 #include <Views/AlignmentViewBase.h>
 
+#include <Views/Components/RealPositionCameras.h>
 #include <Views/KeyboardConnections.h>
 #include <Views/ViewBase.h>
 
@@ -51,8 +52,8 @@ namespace Kub3::UI::Views::ViewsAlignment
         Ui::VisualisationView *ui;
         KeyboardConnections m_keyboard;
         QWidget *m_maskingDistanceWidget;
+        RealPositionCameras *m_realPositionCameras;
         QLabel *m_labelText;
-        QLabel *m_labelValue;
     };
 
 } // namespace Kub3::UI::Views

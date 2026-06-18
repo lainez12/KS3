@@ -5,6 +5,11 @@
 #include <QEvent>
 #include <QResizeEvent>
 
+namespace Ui
+{
+    class RealPositionCameras;
+} // namespace Ui
+
 class RealPositionCameras : public QWidget {
     Q_OBJECT
 public:
@@ -14,6 +19,7 @@ protected:
     void paintEvent(QPaintEvent *event) override;
 
 private:
+    Ui::RealPositionCameras *ui;
     QString m_text;
 };
 

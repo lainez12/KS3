@@ -10,6 +10,12 @@
     <height>818</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
   <property name="minimumSize">
    <size>
     <width>1920</width>
@@ -19,7 +25,7 @@
   <property name="maximumSize">
    <size>
     <width>1920</width>
-    <height>818</height>
+    <height>1080</height>
    </size>
   </property>
   <property name="styleSheet">
@@ -32,7 +38,7 @@
     <number>0</number>
    </property>
    <property name="sizeConstraint">
-    <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
+    <enum>QLayout::SizeConstraint::SetNoConstraint</enum>
    </property>
    <property name="leftMargin">
     <number>0</number>
@@ -989,6 +995,9 @@ font-family: arial;</string>
      </item>
      <item row="1" column="0" colspan="2">
       <layout class="QHBoxLayout" name="maskingDistanceLayout">
+       <property name="spacing">
+        <number>0</number>
+       </property>
        <item>
         <widget class="QLabel" name="label_9">
          <property name="sizePolicy">
@@ -999,8 +1008,8 @@ font-family: arial;</string>
          </property>
          <property name="maximumSize">
           <size>
-           <width>350</width>
-           <height>16777215</height>
+           <width>381</width>
+           <height>73</height>
           </size>
          </property>
          <property name="styleSheet">

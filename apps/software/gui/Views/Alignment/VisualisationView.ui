@@ -19,7 +19,7 @@
   <property name="maximumSize">
    <size>
     <width>1920</width>
-    <height>819</height>
+    <height>190000</height>
    </size>
   </property>
   <property name="styleSheet">
@@ -344,6 +344,12 @@ font-size: 20px;</string>
       </item>
       <item row="1" column="0">
        <widget class="QWidget" name="visioLeft" native="true">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="styleSheet">
          <string notr="true"/>
         </property>
@@ -393,7 +399,7 @@ font-size: 20px;</string>
            <x>829</x>
            <y>0</y>
            <width>131</width>
-           <height>651</height>
+           <height>701</height>
           </rect>
          </property>
          <property name="styleSheet">
@@ -1110,6 +1116,12 @@ height: 50px;
       </item>
       <item row="1" column="1">
        <widget class="QWidget" name="visioRight" native="true">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="styleSheet">
          <string notr="true"/>
         </property>
@@ -1162,7 +1174,7 @@ height: 50px;
            <x>0</x>
            <y>0</y>
            <width>131</width>
-           <height>651</height>
+           <height>701</height>
           </rect>
          </property>
          <property name="styleSheet">
