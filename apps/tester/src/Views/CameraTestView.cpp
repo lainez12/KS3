@@ -1,5 +1,5 @@
-#include <views/CameraTestView.h>
-#include <views/components/FocalTestModule.h>
+#include <Views/CameraTestView.h>
+#include <Views/Components/FocalTestModule.h>
 
 namespace Kub3::Tools::Tester
 {

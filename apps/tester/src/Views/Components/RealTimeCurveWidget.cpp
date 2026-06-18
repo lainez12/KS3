@@ -1,4 +1,4 @@
-#include <views/components/RealTimeCurveWidget.h>
+#include <Views/Components/RealTimeCurveWidget.h>
 
 #include <QDateTime>
 #include <QPainter>

@@ -278,7 +278,7 @@
   <customwidget>
    <class>Kub3::Tools::Tester::RealTimeCurveWidget</class>
    <extends>QWidget</extends>
-   <header location="global">views/components/RealTimeCurveWidget.h</header>
+   <header location="global">Views/Components/RealTimeCurveWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

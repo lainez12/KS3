@@ -7,7 +7,7 @@
 #include <string>
 
 #include <HAL/Actuators/Motors/IMotor.h>
-#include <services/MotorTestService.h>
+#include <Services/MotorTestService.h>
 #include <utils.h>
 
 namespace Kub3::Tools::Tester

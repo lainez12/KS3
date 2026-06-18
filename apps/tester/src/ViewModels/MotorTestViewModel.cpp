@@ -1,4 +1,4 @@
-#include "view_models/MotorTestViewModel.h"
+#include <ViewModels/MotorTestViewModel.h>
 
 namespace Kub3::Tools::Tester
 {

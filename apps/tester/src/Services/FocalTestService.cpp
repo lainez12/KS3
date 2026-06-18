@@ -1,7 +1,7 @@
 #include <QDebug>
 
 #include <HAL/Actuators/Focal/IFocal.h>
-#include <services/FocalTestService.h>
+#include <Services/FocalTestService.h>
 
 namespace Kub3::Tools::Tester
 {

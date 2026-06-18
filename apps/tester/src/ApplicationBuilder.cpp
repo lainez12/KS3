@@ -4,13 +4,13 @@
 #include <Config/helper.h>
 
 // Include the Controllers and ViewModels
-#include <controllers/MotorTestController.h>
-#include <controllers/ProcedureTestController.h>
-#include <view_models/MotorTestViewModel.h>
-#include <view_models/ProcedureTestViewModel.h>
-#include <views/CameraTestView.h>
-#include <views/MotorTestView.h>
-#include <views/ProcedureTestView.h>
+#include <Controllers/MotorTestController.h>
+#include <Controllers/ProcedureTestController.h>
+#include <ViewModels/MotorTestViewModel.h>
+#include <ViewModels/ProcedureTestViewModel.h>
+#include <Views/CameraTestView.h>
+#include <Views/MotorTestView.h>
+#include <Views/ProcedureTestView.h>
 
 namespace Kub3::Tools::Tester
 {

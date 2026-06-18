@@ -1,4 +1,4 @@
-#include <views/components/CamLightTestModule.h>
+#include <Views/Components/CamLightTestModule.h>
 
 #include "ui_CamLightTestModule.h"
 

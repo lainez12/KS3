@@ -1,6 +1,6 @@
 #include <QDebug>
 
-#include <services/LightingTestService.h>
+#include <Services/LightingTestService.h>
 #include <stdexcept>
 
 namespace Kub3::Tools::Tester

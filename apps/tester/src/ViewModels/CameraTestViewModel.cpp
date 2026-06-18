@@ -1,4 +1,4 @@
-#include <view_models/CameraTestViewModel.h>
+#include <ViewModels/CameraTestViewModel.h>
 
 namespace Kub3::Tools::Tester
 {

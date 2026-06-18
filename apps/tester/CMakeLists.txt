@@ -9,46 +9,47 @@ set(CMAKE_AUTOUIC_SEARCH_PATHS "gui;gui/Views;gui/Components")
 
 qt_add_executable(Kub3Tester
     MANUAL_FINALIZATION
+
     # Sources
     src/main.cpp
-    src/controllers/ProcedureTestController.cpp
-    src/controllers/MotorTestController.cpp
-    src/controllers/CameraTestController.cpp
+    src/Controllers/ProcedureTestController.cpp
+    src/Controllers/MotorTestController.cpp
+    src/Controllers/CameraTestController.cpp
     src/ApplicationBuilder.cpp
-    src/services/MotorTestService.cpp
-    src/services/FocalTestService.cpp
-    src/services/LightingTestService.cpp
-    src/views/ViewBase.cpp
-    src/views/MotorTestView.cpp
-    src/views/ProcedureTestView.cpp
-    src/views/CameraTestView.cpp
-    src/views/components/RealTimeCurveWidget.cpp
-    src/views/components/FocalTestModule.cpp
-    src/views/components/CamLightTestModule.cpp
+    src/Services/MotorTestService.cpp
+    src/Services/FocalTestService.cpp
+    src/Services/LightingTestService.cpp
+    src/Views/ViewBase.cpp
+    src/Views/MotorTestView.cpp
+    src/Views/ProcedureTestView.cpp
+    src/Views/CameraTestView.cpp
+    src/Views/Components/RealTimeCurveWidget.cpp
+    src/Views/Components/FocalTestModule.cpp
+    src/Views/Components/CamLightTestModule.cpp
     src/TesterMainWindow.cpp
-    src/view_models/ProcedureTestViewModel.cpp
-    src/view_models/MotorTestViewModel.cpp
-    src/view_models/CameraTestViewModel.cpp
+    src/ViewModels/ProcedureTestViewModel.cpp
+    src/ViewModels/MotorTestViewModel.cpp
+    src/ViewModels/CameraTestViewModel.cpp
 
     # Headers
-    include/controllers/MotorTestController.h
-    include/controllers/ProcedureTestController.h
-    include/controllers/CameraTestController.h
+    include/Controllers/MotorTestController.h
+    include/Controllers/ProcedureTestController.h
+    include/Controllers/CameraTestController.h
     include/TesterMainWindow.h
     include/ApplicationBuilder.h
-    include/services/MotorTestService.h
-    include/services/FocalTestService.h
-    include/services/LightingTestService.h
-    include/views/ViewBase.h
-    include/views/MotorTestView.h
-    include/views/ProcedureTestView.h
-    include/views/CameraTestView.h
-    include/views/components/RealTimeCurveWidget.h
-    include/views/components/FocalTestModule.h
-    include/views/components/CamLightTestModule.h
-    include/view_models/ProcedureTestViewModel.h
-    include/view_models/MotorTestViewModel.h
-    include/view_models/CameraTestViewModel.h
+    include/Services/MotorTestService.h
+    include/Services/FocalTestService.h
+    include/Services/LightingTestService.h
+    include/Views/ViewBase.h
+    include/Views/MotorTestView.h
+    include/Views/ProcedureTestView.h
+    include/Views/CameraTestView.h
+    include/Views/Components/RealTimeCurveWidget.h
+    include/Views/Components/FocalTestModule.h
+    include/Views/Components/CamLightTestModule.h
+    include/ViewModels/ProcedureTestViewModel.h
+    include/ViewModels/MotorTestViewModel.h
+    include/ViewModels/CameraTestViewModel.h
 
     # UI
     gui/resources.qrc

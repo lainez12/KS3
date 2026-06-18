@@ -2,8 +2,8 @@
 
 #include <HAL/MachineStatus/sensors_labels.h>
 #include <TesterMainWindow.h>
-#include <view_models/MotorTestViewModel.h>
-#include <view_models/ProcedureTestViewModel.h>
+#include <ViewModels/MotorTestViewModel.h>
+#include <ViewModels/ProcedureTestViewModel.h>
 
 #define SUCCESS_QLABEL_STYLESHEET "QLabel{ background: green; color : white; }"
 #define FAILURE_QLABEL_STYLESHEET "QLabel{ background: red; color : white; }"

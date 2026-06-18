@@ -1,7 +1,7 @@
 #include <cmath>
 
 #include <HAL/MachineStatus/utils.h>
-#include <services/MotorTestService.h>
+#include <Services/MotorTestService.h>
 
 namespace Kub3::Tools::Tester
 {

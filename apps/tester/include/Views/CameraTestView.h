@@ -5,9 +5,9 @@
 #include <QVBoxLayout>
 #include <memory>
 
+#include <ViewModels/CameraTestViewModel.h>
+#include <Views/ViewBase.h>
 #include <utils.h>
-#include <view_models/CameraTestViewModel.h>
-#include <views/ViewBase.h>
 
 namespace Kub3::Tools::Tester
 {

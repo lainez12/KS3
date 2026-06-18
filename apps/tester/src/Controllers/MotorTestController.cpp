@@ -1,6 +1,6 @@
 #include <QThread>
 
-#include <controllers/MotorTestController.h>
+#include <Controllers/MotorTestController.h>
 
 namespace Kub3::Tools::Tester
 {

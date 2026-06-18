@@ -3,16 +3,16 @@
 #include <QApplication>
 #include <QThread>
 
-#include "./TesterMainWindow.h"
-#include "./controllers/CameraTestController.h"
-#include "./controllers/MotorTestController.h"
-#include "./controllers/ProcedureTestController.h"
-#include "./view_models/CameraTestViewModel.h"
-#include "./view_models/MotorTestViewModel.h"
-#include "./view_models/ProcedureTestViewModel.h"
 #include <Config/ConfigLoader.h>
+#include <Controllers/CameraTestController.h>
+#include <Controllers/MotorTestController.h>
+#include <Controllers/ProcedureTestController.h>
 #include <HAL/HardwareManager.h>
 #include <HAL/MachineStatus/MachineStatusRepo.h>
+#include <TesterMainWindow.h>
+#include <ViewModels/CameraTestViewModel.h>
+#include <ViewModels/MotorTestViewModel.h>
+#include <ViewModels/ProcedureTestViewModel.h>
 #include <utils.h>
 
 namespace Kub3::Tools::Tester

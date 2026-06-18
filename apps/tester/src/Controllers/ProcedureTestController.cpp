@@ -1,13 +1,13 @@
 #include <QDebug>
 #include <QThread>
 
+#include <Controllers/ProcedureTestController.h>
 #include <Services/Alignment/AlignmentService.h>
 #include <Services/Contact/ContactService.h>
 #include <Services/Exposure/ExposureService.h>
 #include <Services/Homing/HomingService.h>
 #include <Services/Stowage/StowageService.h>
 #include <Services/Vision/VisionService.h>
-#include <controllers/ProcedureTestController.h>
 
 #if defined(KUB_MODEL_4) || defined(KUB_MODEL_6)
 #include <Services/Drawers/SingleConveyorDrawerService.h>

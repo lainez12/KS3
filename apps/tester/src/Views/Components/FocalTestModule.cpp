@@ -1,4 +1,4 @@
-#include <views/components/FocalTestModule.h>
+#include <Views/Components/FocalTestModule.h>
 
 #include "ui_FocalTestModule.h"
 

@@ -1,7 +1,7 @@
 #include "ui_ProcedureTestView.h"
 
 #include <HAL/MachineStatus/sensors_labels.h>
-#include <views/ProcedureTestView.h>
+#include <Views/ProcedureTestView.h>
 
 #define SUCCESS_QLABEL_STYLESHEET "QLabel{ background: green; color : white; font-weight: bold; padding: 2px; }"
 #define FAILURE_QLABEL_STYLESHEET "QLabel{ background: red; color : white; font-weight: bold; padding: 2px; }"

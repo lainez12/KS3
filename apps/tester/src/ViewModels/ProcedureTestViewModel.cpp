@@ -2,7 +2,7 @@
 
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
 #include <HAL/MachineStatus/sensors_labels.h>
-#include <view_models/ProcedureTestViewModel.h>
+#include <ViewModels/ProcedureTestViewModel.h>
 
 namespace Kub3::Tools::Tester
 {

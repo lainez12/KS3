@@ -1,6 +1,6 @@
 #include <QThread>
 
-#include <controllers/CameraTestController.h>
+#include <Controllers/CameraTestController.h>
 
 namespace Kub3::Tools::Tester
 {

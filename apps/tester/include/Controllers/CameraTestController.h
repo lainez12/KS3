@@ -7,8 +7,8 @@
 #include <vector>
 
 #include <HAL/Actuators/ActuatorRegistry.h>
-#include <services/FocalTestService.h>
-#include <services/LightingTestService.h>
+#include <Services/FocalTestService.h>
+#include <Services/LightingTestService.h>
 #include <utils.h>
 
 namespace Kub3::Tools::Tester

@@ -4,8 +4,8 @@
 
 #include <memory>
 
-#include <view_models/MotorTestViewModel.h>
-#include <views/ViewBase.h>
+#include <ViewModels/MotorTestViewModel.h>
+#include <Views/ViewBase.h>
 
 namespace Kub3::Tools::Tester
 {

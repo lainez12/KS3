@@ -4,9 +4,9 @@
 #include <memory>
 #include <unordered_map>
 
+#include <ViewModels/ProcedureTestViewModel.h>
+#include <Views/ViewBase.h>
 #include <utils.h>
-#include <view_models/ProcedureTestViewModel.h>
-#include <views/ViewBase.h>
 
 namespace Ui
 {
