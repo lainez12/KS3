@@ -52,12 +52,10 @@ VisualisationView::VisualisationView(Unique<VisualisationViewModel> viewModel, Q
     connect(ui->configCamLeftCheck, &QCheckBox::toggled, this, &VisualisationView::leftCamConfigToggled);
     connect(ui->configCamRightCheck, &QCheckBox::toggled, this, &VisualisationView::rightCamConfigToggled);
 
-    connect(ui->moveCamLeft, &NavButton::clicked, [this]()
-            {
+    connect(ui->moveCamLeft, &NavButton::clicked, [this]() {
         ui->moveCamLeft->switchColor(ui->moveLeftCamWidget->isVisible());
         ui->moveLeftCamWidget->setVisible(!ui->moveLeftCamWidget->isVisible()); });
-    connect(ui->moveCamRight, &NavButton::clicked, [this]()
-            {
+    connect(ui->moveCamRight, &NavButton::clicked, [this]() {
         ui->moveCamRight->switchColor(ui->moveRightCamWidget->isVisible());
         ui->moveRightCamWidget->setVisible(!ui->moveRightCamWidget->isVisible()); });
 
@@ -69,8 +67,10 @@ VisualisationView::VisualisationView(Unique<VisualisationViewModel> viewModel, Q
     m_labelText->setStyleSheet("color: white; font-weight: bold; font-size: 20px;");
     m_labelText->setAlignment(Qt::AlignCenter);
 
-    m_realPositionCameras = new RealPositionCameras(this);
-    m_realPositionCameras->raise();
+    m_mapPositionCameras = new RealPositionCameras(this);
+
+    connect(m_mapPositionCameras, &RealPositionCameras::s_openMap, this, &VisualisationView::mapPositionCamerasOpenMap);
+    connect(m_mapPositionCameras, &RealPositionCameras::s_closeMap, this, &VisualisationView::mapPositionCamerasCloseMap);
     setNewNavButtonsConfigs();
 }
 
@@ -123,16 +123,16 @@ void VisualisationView::resizeEvent(QResizeEvent *ev)
     ui->pickUpRight->setGeometry(pickUpRightX, buttonY, BUTTON_SIZE, BUTTON_SIZE);
     ui->gotoRight->setGeometry(gotoRightX, buttonY, BUTTON_SIZE, BUTTON_SIZE);
 
-    const int CONFIG_FRAME_WIDTH = 130; // Icon size (105) + spacer (25)
+    const int CONFIG_FRAME_WIDTH = 190; // Icon size (105) + spacer (25)
 
     // Position configCamLeftFrame: top right corner of visioLeft
     int configLeftFrameHeight = visioLeftHeight - (BUTTON_SIZE * 1.25);
     int configLeftFrameX      = visioLeftWidth - CONFIG_FRAME_WIDTH;
-    ui->configCamLeftFrame->setGeometry(configLeftFrameX, 0, CONFIG_FRAME_WIDTH, configLeftFrameHeight);
+    // ui->configCamLeftFrame->setGeometry(configLeftFrameX, 0, CONFIG_FRAME_WIDTH, configLeftFrameHeight);
 
     // Position configCamRightFrame: top left corner of visioRight
     int configRightFrameHeight = visioRightHeight - (BUTTON_SIZE * 1.25);
-    ui->configCamRightFrame->setGeometry(0, 0, CONFIG_FRAME_WIDTH, configRightFrameHeight);
+    // ui->configCamRightFrame->setGeometry(0, 0, CONFIG_FRAME_WIDTH, configRightFrameHeight);
 
     // Position moveLeftCamWidget: left side of visioLeft, full height
     ui->moveLeftCamWidget->setGeometry(0, 0, ui->moveLeftCamWidget->width(), visioLeftHeight);
@@ -147,10 +147,26 @@ void VisualisationView::resizeEvent(QResizeEvent *ev)
     int maskingWidgetX      = (width() - maskingWidgetWidth) / 2;
     int maskingWidgetY      = height() - maskingWidgetHeight;
     m_maskingDistanceWidget->setGeometry(maskingWidgetX, maskingWidgetY, maskingWidgetWidth, maskingWidgetHeight);
-    m_realPositionCameras->setGeometry(maskingWidgetX, 500, maskingWidgetWidth, maskingWidgetHeight);
+    int mapCamY = 563;
+    m_mapPositionCameras->setGeometry(maskingWidgetX, mapCamY, maskingWidgetWidth, maskingWidgetHeight);
 
     // Position labels horizontally inside the widget
     m_labelText->setGeometry(-2, 13, 381, 43);
+}
+
+void VisualisationView::mapPositionCamerasOpenMap(void)
+{
+    int mapCamY = 563 - 145;
+    m_mapPositionCameras->setGeometry(m_mapPositionCameras->x(), mapCamY, m_mapPositionCameras->width(), m_mapPositionCameras->height());
+    ui->configCamRightCheck->setChecked(false);
+    ui->configCamLeftCheck->setChecked(false);
+
+}
+
+void VisualisationView::mapPositionCamerasCloseMap(void)
+{
+    int mapCamY = 563;
+    m_mapPositionCameras->setGeometry(m_mapPositionCameras->x(), mapCamY, m_mapPositionCameras->width(), m_mapPositionCameras->height());
 }
 
 void VisualisationView::setNewNavButtonsConfigs()
@@ -225,6 +241,7 @@ void VisualisationView::leftCamConfigToggled(bool checked)
     if (checked)
     {
         ui->configCamLeftCheck->setIcon(QIcon(":/icons/cam-settings-right-checked.svg"));
+        m_mapPositionCameras->closeMap();
     }
     else
     {
@@ -238,6 +255,7 @@ void VisualisationView::rightCamConfigToggled(bool checked)
     if (checked)
     {
         ui->configCamRightCheck->setIcon(QIcon(":/icons/cam-settings-left-checked.svg"));
+        m_mapPositionCameras->closeMap();
     }
     else
     {

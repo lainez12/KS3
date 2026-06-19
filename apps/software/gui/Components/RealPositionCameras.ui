@@ -23,7 +23,8 @@
    </size>
   </property>
   <property name="styleSheet">
-   <string notr="true">QCheckBox::indicator {
+   <string notr="true">background-color: #f4f;
+QCheckBox::indicator {
     width: 0px;
     height: 0px;
     border: none;

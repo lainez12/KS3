@@ -30,6 +30,10 @@ namespace Kub3::UI::Views::ViewsAlignment
     public:
         void resizeEvent(QResizeEvent *event) override;
 
+    public slots:
+        void mapPositionCamerasOpenMap(void);
+        void mapPositionCamerasCloseMap(void);
+
     private slots:
         void leftCamConfigToggled(bool checked);
         void rightCamConfigToggled(bool checked);
@@ -52,7 +56,7 @@ namespace Kub3::UI::Views::ViewsAlignment
         Ui::VisualisationView *ui;
         KeyboardConnections m_keyboard;
         QWidget *m_maskingDistanceWidget;
-        RealPositionCameras *m_realPositionCameras;
+        RealPositionCameras *m_mapPositionCameras;
         QLabel *m_labelText;
     };
 
