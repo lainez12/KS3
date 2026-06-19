@@ -86,6 +86,11 @@ namespace Kub3::Config
                 settings.setValue(CONF_HW_MAX_GAIN_DB, camera.maxGainDb);
                 settings.setValue(CONF_HW_DEFAULT_GAIN_DB, camera.defaultGainDb);
                 settings.setValue(CONF_HW_FRAMERATE, camera.framerate);
+
+                // Optional associated hardware
+                settings.setValue(CONF_HW_ASSOCIATED_FOCAL_ID, camera.associatedFocalId.value_or(""));
+                settings.setValue(CONF_HW_ASSOCIATED_LIGHT_ID, camera.associatedLightId.value_or(""));
+
                 settings.endGroup(); // camera.id
             }
             settings.endGroup(); // CONF_HW_CAMERAS

@@ -63,19 +63,11 @@ namespace Kub3::Services
         setupCameraMotor(VisionMotor::UpperRightCameraY, RIGHT_CAMERA_Y_MOTOR, processConf);
         UNWRAP_OR_THROW(leftFocal, m_registry->get<HAL::Act::IFocal>(LEFT_CAMERA_FOCAL), "[VisionService] Failed to load upper left camera focal: ");
         UNWRAP_OR_THROW(rightFocal, m_registry->get<HAL::Act::IFocal>(RIGHT_CAMERA_FOCAL), "[VisionService] Failed to load upper right camera focal: ");
+        UNWRAP_OR_THROW(deckMotorRes, m_registry->get<HAL::Act::IMotor>(DECK_MOTOR), "[VisionService] Failed to load Camera's Deck Motor: ");
 
-        auto deckMotorRes = m_registry->get<HAL::Act::IMotor>(DECK_MOTOR);
-
-        if (!deckMotorRes)
-        {
-            auto err = std::string("[VisionService] Failed to load Camera's Deck Motor: ") + deckMotorRes.unwrap_err();
-
-            qCritical().noquote() << err;
-            throw std::runtime_error(err);
-        }
-        m_deckMotor   = deckMotorRes.unwrap();
+        // Load camera's deck motor & config
+        m_deckMotor   = deckMotorRes;
         m_deckProfile = processConf.getKinematicProfile(DECK_MOTOR, "normal");
-
         // Load focal configurations
         m_focalConfs.emplace(LEFT_CAMERA_FOCAL, m_conf.left_focal_conf);
         m_focalConfs.emplace(RIGHT_CAMERA_FOCAL, m_conf.right_focal_conf);
@@ -293,7 +285,7 @@ namespace Kub3::Services
                 auto conf        = it->second;
                 uint16_t safeVal = std::clamp(val, (uint16_t)(conf.min_value), (uint16_t)(conf.max_value));
 
-                focal->setValue(safeVal);
+                focal->setValueFraction(safeVal);
             }
             else
             {

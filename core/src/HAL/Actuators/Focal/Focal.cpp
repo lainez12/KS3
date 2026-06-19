@@ -5,9 +5,10 @@
 namespace Kub3::HAL::Act
 {
 
-    Focal::Focal(std::string id, uint8_t byteId, Weak<MCUDriver> driver) :
+    Focal::Focal(std::string id, uint8_t byteId, uint16_t maximumValue, Weak<MCUDriver> driver) :
         m_id(std::move(id)),
         m_byteId(byteId),
+        m_maximumValue(maximumValue),
         m_driver(std::move(driver)) {}
 
     void Focal::enable()
@@ -22,9 +23,9 @@ namespace Kub3::HAL::Act
         this->sendCommand();
     }
 
-    void Focal::setValue(uint16_t val)
+    void Focal::setValueFraction(double val)
     {
-        m_value = val;
+        m_valueFraction = std::clamp(val, 0.0, 1.0);
         this->sendCommand();
     }
 
@@ -49,7 +50,7 @@ namespace Kub3::HAL::Act
         command.append(m_byteId);
         command.append('F');
         command.append(enableByte);
-        command.append(QByteArray::number(m_value));
+        command.append(QByteArray::number(static_cast<uint32_t>(m_valueFraction * m_maximumValue)));
 
 #if defined(BUILD_DEBUG)
         qDebug() << "Focal sending (Hex):" << command.toHex(' ') << "| (ASCII):" << command;

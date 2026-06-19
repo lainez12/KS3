@@ -1,4 +1,5 @@
 #include "ui_CamerasTestView.h"
+
 #include <HAL/Vision/identifiers.h>
 #include <ViewModels/Settings/MachineStatusViewModel.h>
 #include <Views/Components/DoubleRatioSlider.h>
@@ -46,16 +47,16 @@ namespace Kub3::UI::Modules
         setMinimumSize(800, 480);                // Ensure the modal has a decent minimum size
 
         // TODO: design a way for viewModels to provide current data to view
+        // TODO: wtf, why did I write that ? :thinking:
 
         // Frame reception
-        connect(m_viewModel,
-                &ViewModels::MachineStatusViewModel::s_upperLeftCameraFrameReady,
-                ui->leftCameraWidget,
-                &CameraStreamWidget::ps_onFrameUpdated);
-        connect(m_viewModel,
-                &ViewModels::MachineStatusViewModel::s_upperRightCameraFrameReady,
-                ui->rightCameraWidget,
-                &CameraStreamWidget::ps_onFrameUpdated);
+        connect(m_viewModel, &ViewModels::MachineStatusViewModel::s_frameReady, this,
+                [this](const QString &cameraId, const QImage &frame) {
+                    if (cameraId == UPPER_LEFT_CAMERA)
+                        ui->leftCameraWidget->ps_onFrameUpdated(frame);
+                    else if (cameraId == UPPER_RIGHT_CAMERA)
+                        ui->rightCameraWidget->ps_onFrameUpdated(frame);
+                });
 
         setupExposureComponents();
         setupGainComponents();

@@ -22,14 +22,15 @@ qt_add_executable(Kub3Tester
     src/Views/ViewBase.cpp
     src/Views/MotorTestView.cpp
     src/Views/ProcedureTestView.cpp
-    src/Views/CameraTestView.cpp
+    src/Views/CamerasTestView.cpp
     src/Views/Components/RealTimeCurveWidget.cpp
     src/Views/Components/FocalTestModule.cpp
     src/Views/Components/CamLightTestModule.cpp
+    src/Views/Components/CameraTestModule.cpp
     src/TesterMainWindow.cpp
     src/ViewModels/ProcedureTestViewModel.cpp
     src/ViewModels/MotorTestViewModel.cpp
-    src/ViewModels/CameraTestViewModel.cpp
+    src/ViewModels/CamerasTestViewModel.cpp
 
     # Headers
     include/Controllers/MotorTestController.h
@@ -43,13 +44,14 @@ qt_add_executable(Kub3Tester
     include/Views/ViewBase.h
     include/Views/MotorTestView.h
     include/Views/ProcedureTestView.h
-    include/Views/CameraTestView.h
+    include/Views/CamerasTestView.h
     include/Views/Components/RealTimeCurveWidget.h
     include/Views/Components/FocalTestModule.h
     include/Views/Components/CamLightTestModule.h
+    include/Views/Components/CameraTestModule.h
     include/ViewModels/ProcedureTestViewModel.h
     include/ViewModels/MotorTestViewModel.h
-    include/ViewModels/CameraTestViewModel.h
+    include/ViewModels/CamerasTestViewModel.h
 
     # UI
     gui/resources.qrc

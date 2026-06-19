@@ -13,11 +13,11 @@ namespace Kub3::HAL::Act
     class CameraLightingLed final : public ILightingSystem
     {
     public:
-        CameraLightingLed(std::string id, uint8_t byteId, Weak<MCUDriver> driver);
+        CameraLightingLed(std::string id, uint8_t byteId, uint16_t maximumValue, Weak<MCUDriver> driver);
 
         void enable(void) override;
         void disable(void) override;
-        void setValue(uint16_t val) override;
+        void setValueFraction(double val) override;
         void emergencyStop(void) override;
 
         [[nodiscard]] std::string_view getId(void) const noexcept override
@@ -28,9 +28,9 @@ namespace Kub3::HAL::Act
         {
             return m_enabled;
         }
-        [[nodiscard]] uint16_t getValue(void) const override
+        [[nodiscard]] double getValueFraction(void) const override
         {
-            return m_value;
+            return m_valueFraction;
         }
 
     private:
@@ -39,10 +39,11 @@ namespace Kub3::HAL::Act
     private:
         const std::string m_id;
         const uint8_t m_byteId;
+        const uint16_t m_maximumValue;
         Weak<MCUDriver> m_driver;
         // State vars
-        std::atomic<bool> m_enabled   = false;
-        std::atomic<uint16_t> m_value = 0;
+        std::atomic<bool> m_enabled         = false;
+        std::atomic<double> m_valueFraction = 0.0; // Percentage of maximum value
     };
 
 }

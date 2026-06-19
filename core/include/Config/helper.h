@@ -140,14 +140,19 @@ namespace Kub3::Config
     {
         QString ind = getIndent(indent);
         return QString("%1Camera ID: %2\n"
-                       "%1  - Serial: %3\n"
-                       "%1  - Max Exposure: %4 us\n"
-                       "%1  - Default Exposure: %5 us\n"
-                       "%1  - Max Gain: %6 dB\n"
-                       "%1  - Default Gain: %7 dB")
+                       "%1  - Display Name: %3\n"
+                       "%1  - Serial: %4\n"
+                       "%1  - Associated Focal ID: %5\n"
+                       "%1  - Associated Light ID: %6\n"
+                       "%1  - Max Exposure: %7 us\n"
+                       "%1  - Default Exposure: %8 us\n"
+                       "%1  - Max Gain: %9 dB\n"
+                       "%1  - Default Gain: %10 dB")
             .arg(ind)
             .arg(QString::fromStdString(config.id))
             .arg(QString::fromStdString(config.serialNumber))
+            .arg(config.associatedFocalId.value_or("None (std::nullopt)"))
+            .arg(config.associatedLightId.value_or("None (std::nullopt)"))
             .arg(config.maxExposureUs)
             .arg(config.defaultExposureUs)
             .arg(config.maxGainDb)

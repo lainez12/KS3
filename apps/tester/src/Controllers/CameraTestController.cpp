@@ -37,12 +37,38 @@ namespace Kub3::Tools::Tester
             m_lightingTestService->stop();
     }
 
+    // --- Camera Wrappers ---
+    void CameraTestController::ps_requestExposureUpdate(const QString &camId, double exposureRatio)
+    {
+        emit s_cameraUpdate(camId, HAL::Vision::CameraParamKind::EXPOSURE, exposureRatio);
+    }
+
+    void CameraTestController::ps_requestGainUpdate(const QString &camId, double gainRatio)
+    {
+        emit s_cameraUpdate(camId, HAL::Vision::CameraParamKind::GAIN, gainRatio);
+    }
+    void CameraTestController::ps_requestFrameRateUpdate(const QString &camId, double framerate)
+    {
+        emit s_cameraUpdate(camId, HAL::Vision::CameraParamKind::FRAMERATE, framerate);
+    }
+
+    void CameraTestController::ps_requestCenteredZoomUpdate(const QString &camId, double zoomFactor)
+    {
+        emit s_cameraUpdate(camId, HAL::Vision::CameraParamKind::CENTERED_ZOOM, zoomFactor);
+    }
+
+    void CameraTestController::ps_requestROIUpdate(const QString &camId, const QRect &roi)
+    {
+        // Converting QRect to the internal Param payload
+        emit s_cameraUpdate(camId, HAL::Vision::CameraParamKind::REGION_OF_INTEREST, roi);
+    }
+
     void CameraTestController::ps_toggleFocal(const QString &focalId, bool enabled)
     {
         m_focalTestService->toggleFocal(focalId.toStdString(), enabled);
     }
 
-    void CameraTestController::ps_updateFocalValue(const QString &focalId, uint16_t value)
+    void CameraTestController::ps_updateFocalValue(const QString &focalId, double value)
     {
         m_focalTestService->updateFocalValue(focalId.toStdString(), value);
     }
@@ -52,7 +78,7 @@ namespace Kub3::Tools::Tester
         m_lightingTestService->toggleLight(lightId.toStdString(), enabled);
     }
 
-    void CameraTestController::ps_updateLightValue(const QString &lightId, uint16_t value)
+    void CameraTestController::ps_updateLightValue(const QString &lightId, double value)
     {
         m_lightingTestService->updateLightValue(lightId.toStdString(), value);
     }

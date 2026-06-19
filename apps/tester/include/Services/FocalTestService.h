@@ -33,7 +33,7 @@ namespace Kub3::Tools::Tester
 
         // --- Focal Specific API ---
         void toggleFocal(const std::string &focalId, bool enabled);
-        void updateFocalValue(const std::string &focalId, uint16_t value);
+        void updateFocalValue(const std::string &focalId, double value);
 
         [[nodiscard]] const std::vector<std::string> &getAvailableFocals() const;
 

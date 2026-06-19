@@ -35,7 +35,6 @@ namespace Kub3::Tools::Tester
 
     void LightingTestService::toggleLight(const std::string &lightId, bool enabled)
     {
-        qInfo() << "[LightingTestService] Toggling light" << QString::fromStdString(lightId) << (enabled ? "ON" : "OFF");
         auto light = m_registry->get<HAL::Act::ILightingSystem>(lightId);
 
         if (!!light)
@@ -54,15 +53,13 @@ namespace Kub3::Tools::Tester
         }
     }
 
-    void LightingTestService::updateLightValue(const std::string &lightId, uint16_t value)
+    void LightingTestService::updateLightValue(const std::string &lightId, double value)
     {
-        qInfo() << "[LightingTestService] Setting light" << QString::fromStdString(lightId) << "to" << value;
-
         auto light = m_registry->get<HAL::Act::ILightingSystem>(lightId);
 
         if (light)
         {
-            light->setValue(value);
+            light->setValueFraction(value);
             m_status = Services::ServiceStatus::Success;
         }
         else

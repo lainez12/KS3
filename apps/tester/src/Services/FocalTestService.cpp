@@ -40,7 +40,6 @@ namespace Kub3::Tools::Tester
 
     void FocalTestService::toggleFocal(const std::string &focalId, bool enabled)
     {
-        qInfo() << "[FocalTestService] Toggling focal" << QString::fromStdString(focalId) << (enabled ? "ON" : "OFF");
         auto focal = m_registry->get<HAL::Act::IFocal>(focalId);
 
         if (!!focal)
@@ -59,15 +58,13 @@ namespace Kub3::Tools::Tester
         }
     }
 
-    void FocalTestService::updateFocalValue(const std::string &focalId, uint16_t value)
+    void FocalTestService::updateFocalValue(const std::string &focalId, double value)
     {
-        qInfo() << "[FocalTestService] Setting focal" << QString::fromStdString(focalId) << "to" << value;
-
         auto focal = m_registry->get<HAL::Act::IFocal>(focalId);
 
         if (focal)
         {
-            focal->setValue(value);
+            focal->setValueFraction(value);
             m_status = Services::ServiceStatus::Success;
         }
         else

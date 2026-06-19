@@ -34,7 +34,7 @@ namespace Kub3::Tools::Tester
 
         // --- Lights Specific API ---
         void toggleLight(const std::string &lightId, bool enabled);
-        void updateLightValue(const std::string &lightId, uint16_t value);
+        void updateLightValue(const std::string &lightId, double value);
 
         [[nodiscard]] const std::vector<std::string> &getAvailableLights() const;
 

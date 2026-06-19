@@ -330,12 +330,13 @@ namespace Kub3::HAL
         auto xStageMotor       = createStepperMotor(config, X_STAGE_MOTOR, '5', Kinematics::TRAPEZOIDAL, driver, X_STAGE_ENCODER);
         auto yStageMotor       = createStepperMotor(config, Y_STAGE_MOTOR, '6', Kinematics::TRAPEZOIDAL, driver, Y_STAGE_ENCODER);
         auto thetaStageMotor   = createStepperMotor(config, THETA_STAGE_MOTOR, '7', Kinematics::TRAPEZOIDAL, driver, THETA_STAGE_ENCODER);
+        // TODO: Replace magic value `4095` with config based value
         /// --- Focals
-        auto leftCameraFocal  = std::make_shared<Act::Focal>(LEFT_CAMERA_FOCAL, 'L', driver);
-        auto rightCameraFocal = std::make_shared<Act::Focal>(RIGHT_CAMERA_FOCAL, 'R', driver);
-        // --- Cameras lighting leds
-        auto leftCameraLight  = std::make_shared<Act::CameraLightingLed>(LEFT_CAMERA_LIGHT, 'L', driver);
-        auto rightCameraLight = std::make_shared<Act::CameraLightingLed>(RIGHT_CAMERA_LIGHT, 'R', driver);
+        auto leftCameraFocal  = std::make_shared<Act::Focal>(LEFT_CAMERA_FOCAL, 'L', 4095, driver);
+        auto rightCameraFocal = std::make_shared<Act::Focal>(RIGHT_CAMERA_FOCAL, 'R', 4095, driver);
+        /// --- Cameras lighting leds
+        auto leftCameraLight  = std::make_shared<Act::CameraLightingLed>(LEFT_CAMERA_LIGHT, 'L', 4095, driver);
+        auto rightCameraLight = std::make_shared<Act::CameraLightingLed>(RIGHT_CAMERA_LIGHT, 'R', 4095, driver);
 
         /* FEEDBACK HANDLING */
         router->registerRoute("SS\x00"s, Act::StepperMotor::createFeedbackHandler(leftCameraXMotor));

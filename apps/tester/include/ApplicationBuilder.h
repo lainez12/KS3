@@ -10,7 +10,7 @@
 #include <HAL/HardwareManager.h>
 #include <HAL/MachineStatus/MachineStatusRepo.h>
 #include <TesterMainWindow.h>
-#include <ViewModels/CameraTestViewModel.h>
+#include <ViewModels/CamerasTestViewModel.h>
 #include <ViewModels/MotorTestViewModel.h>
 #include <ViewModels/ProcedureTestViewModel.h>
 #include <utils.h>
@@ -49,7 +49,7 @@ namespace Kub3::Tools::Tester
         Unique<TesterMainWindow> m_mainWindow;
         Shared<MotorTestViewModel> m_motorTestViewModel;
         Shared<ProcedureTestViewModel> m_procedureTestViewModel;
-        Shared<CameraTestViewModel> m_cameraTestViewModel;
+        Shared<CamerasTestViewModel> m_cameraTestViewModel;
     };
 
 }

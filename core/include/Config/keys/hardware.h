@@ -35,6 +35,8 @@
 #define CONF_HW_MAX_GAIN_DB         "max_gain_db"
 #define CONF_HW_DEFAULT_GAIN_DB     "default_gain_db"
 #define CONF_HW_FRAMERATE           "default_framerate"
+#define CONF_HW_ASSOCIATED_FOCAL_ID "associated_focal_id"
+#define CONF_HW_ASSOCIATED_LIGHT_ID "associated_light_id"
 
 // CONF_HW_FORCE_SENSORS inner keys
 #define CONF_HW_ADC_TO_GRAM_FORCE_FACTOR "adc_to_gram_force_factor"

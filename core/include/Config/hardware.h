@@ -5,6 +5,8 @@
 #include <unordered_map>
 #include <variant>
 
+#include "../utils.h"
+
 #define MCU_COUNT 4
 
 namespace Kub3::Config
@@ -52,6 +54,10 @@ namespace Kub3::Config
         double maxGainDb;
         double defaultGainDb;
         double framerate = 30.0;
+
+        // Optional peripheral mappings
+        Optional<QString> associatedFocalId;
+        Optional<QString> associatedLightId;
     } camera_config_t;
 
     // Top level struct for hardware config

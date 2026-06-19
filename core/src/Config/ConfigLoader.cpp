@@ -139,7 +139,23 @@ namespace Kub3::Config
                 .maxGainDb         = getRequiredValue(settings, CONF_HW_MAX_GAIN_DB).toDouble(),
                 .defaultGainDb     = getRequiredValue(settings, CONF_HW_DEFAULT_GAIN_DB).toDouble(),
                 .framerate         = getRequiredValue(settings, CONF_HW_FRAMERATE).toDouble(),
+                .associatedFocalId = std::nullopt,
+                .associatedLightId = std::nullopt,
             };
+
+            // Optional bindings parsing (leaves as std::nullopt if missing/empty in INI)
+            if (settings.contains(CONF_HW_ASSOCIATED_FOCAL_ID))
+            {
+                QString val = settings.value(CONF_HW_ASSOCIATED_FOCAL_ID).toString();
+                if (!val.isEmpty())
+                    camera.associatedFocalId = val;
+            }
+            if (settings.contains(CONF_HW_ASSOCIATED_LIGHT_ID))
+            {
+                QString val = settings.value(CONF_HW_ASSOCIATED_LIGHT_ID).toString();
+                if (!val.isEmpty())
+                    camera.associatedLightId = val;
+            }
 
             config.cameras.emplace(group, camera);
             settings.endGroup(); // group

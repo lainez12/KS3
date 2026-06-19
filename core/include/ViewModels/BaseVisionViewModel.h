@@ -19,11 +19,8 @@ namespace Kub3::UI::ViewModels
         void ps_onCameraFrameReceived(const QString &cameraId, const QImage &frame);
 
     signals:
-        void s_upperLeftCameraFrameReady(const QImage &frame);
-        void s_upperRightCameraFrameReady(const QImage &frame);
-
-    private:
-        std::unordered_map<std::string, void (BaseVisionViewModel::*)(const QImage &)> m_signalsMap;
+        // Generic signal emitting the camera ID alongside the frame
+        void s_frameReady(const QString &cameraId, const QImage &frame);
     };
 
 } // Kub3::UI::ViewModels

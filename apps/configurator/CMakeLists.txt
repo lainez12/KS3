@@ -5,7 +5,7 @@
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC_SEARCH_PATHS "gui")
+set(CMAKE_AUTOUIC_SEARCH_PATHS "gui;gui/pages")
 
 qt_add_executable(Kub3Configurator
     MANUAL_FINALIZATION
@@ -39,6 +39,7 @@ qt_add_executable(Kub3Configurator
     # UI
     gui/resources.qrc
     gui/ConfigWindow.ui
+    gui/pages/CameraConfigPage.ui
 )
 
 qt_finalize_target(Kub3Configurator)

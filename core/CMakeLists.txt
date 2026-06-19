@@ -13,6 +13,8 @@ qt_add_library(Kub3Core STATIC
     src/utils.cpp
     src/Config/ConfigLoader.cpp
     src/Config/ConfigSaver.cpp
+    src/Views/Components/CameraStreamWidget.cpp
+    src/Views/Components/DoubleRatioSlider.cpp
     src/ViewModels/BaseViewModel.cpp
     src/ViewModels/BaseVisionViewModel.cpp
     src/MFSM/MasterFSM.actions.cpp
@@ -82,6 +84,8 @@ qt_add_library(Kub3Core STATIC
     include/Config/helper.h
     include/Config/keys/hardware.h
     include/Config/keys/process.h
+    include/Views/Components/CameraStreamWidget.h
+    include/Views/Components/DoubleRatioSlider.h
     include/ViewModels/BaseViewModel.h
     include/ViewModels/BaseVisionViewModel.h
     include/MFSM/events.h
@@ -177,7 +181,7 @@ target_include_directories(Kub3Core PUBLIC
 )
 
 # Core dependencies (Shared downward)
-target_link_libraries(Kub3Core PUBLIC Qt6::Core Qt6::SerialPort Qt6::Gui)
+target_link_libraries(Kub3Core PUBLIC Qt6::Core Qt6::SerialPort Qt6::Gui Qt6::Widgets)
 
 if(MVS_LIBRARY)
     target_link_libraries(Kub3Core PUBLIC ${MVS_LIBRARY})
