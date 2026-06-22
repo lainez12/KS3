@@ -23,8 +23,7 @@
    </size>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: #f4f;
-QCheckBox::indicator {
+   <string notr="true">QCheckBox::indicator {
     width: 0px;
     height: 0px;
     border: none;
@@ -98,6 +97,12 @@ position cameras</string>
    </item>
    <item>
     <widget class="QWidget" name="backgroundWafer" native="true">
+     <property name="minimumSize">
+      <size>
+       <width>381</width>
+       <height>381</height>
+      </size>
+     </property>
      <widget class="QLabel" name="label">
       <property name="geometry">
        <rect>
