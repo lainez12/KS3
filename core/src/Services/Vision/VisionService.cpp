@@ -285,7 +285,7 @@ namespace Kub3::Services
                 auto conf        = it->second;
                 uint16_t safeVal = std::clamp(val, (uint16_t)(conf.min_value), (uint16_t)(conf.max_value));
 
-                focal->setValueFraction(safeVal);
+                focal->setValueFraction(static_cast<double>(safeVal) / conf.max_value);
             }
             else
             {

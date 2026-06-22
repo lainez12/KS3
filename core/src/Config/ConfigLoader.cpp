@@ -106,10 +106,8 @@ namespace Kub3::Config
                 hw.screwPitchMm        = getRequiredValue(settings, CONF_HW_SCREW_PITCH_MM).toDouble();
                 hw.maxVelocityMmS      = getRequiredValue(settings, CONF_HW_MAX_VELOCITY_MM_S).toDouble();
                 hw.maxAccelerationMmS2 = getRequiredValue(settings, CONF_HW_MAX_ACCELERATION_MM_S2).toDouble();
-                hw.encoderTopsPerRev   = getRequiredValue(settings, CONF_HW_ENCODER_TOPS_PER_REV).toUInt();
 
                 CHECK_CONFIG_VALUE(hw.screwPitchMm == 0.0, motor.id, hw.screwPitchMm, "screw pitch");
-                CHECK_CONFIG_VALUE(hw.encoderTopsPerRev == 0.0, motor.id, hw.encoderTopsPerRev, "encoder tops per revolution");
 
                 motor.hwProperties = hw;
             }

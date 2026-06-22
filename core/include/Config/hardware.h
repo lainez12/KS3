@@ -33,7 +33,6 @@ namespace Kub3::Config
         double screwPitchMm;
         double maxVelocityMmS;
         double maxAccelerationMmS2;
-        uint16_t encoderTopsPerRev;
     } dc_motor_hw_properties_t;
 
     using motor_hw_properties_t = std::variant<
@@ -44,6 +43,7 @@ namespace Kub3::Config
     typedef struct motor_config_s {
         std::string id;
         motor_hw_properties_t hwProperties;
+        // TODO: add optional encoder hw props instead of integrating it into the specific motor hw props
     } motor_config_t;
 
     typedef struct camera_config_s {

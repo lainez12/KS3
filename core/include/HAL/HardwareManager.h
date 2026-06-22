@@ -7,6 +7,7 @@
 #include <Algorithms/Kinematic/utils.h>
 #include <Config/ConfigLoader.h>
 #include <HAL/Actuators/ActuatorRegistry.h>
+#include <HAL/Actuators/Motors/DirectCurrentMotor.h>
 #include <HAL/Actuators/Motors/StepperMotor.h>
 #include <HAL/Com/PacketRouter.h>
 #include <HAL/MCUDriver.h>
@@ -95,6 +96,13 @@ namespace Kub3::HAL
             Algorithms::Kinematic::KinematicGeneratorKind kineGenKind,
             const std::shared_ptr<MCUDriver> &driver,
             const std::string &encoderId);
+
+        Shared<Act::DirectCurrentMotor> createDCMotor(
+            const Config::hardware_config_t &config,
+            const QString &motorId,
+            uint8_t byteId,
+            Algorithms::Kinematic::KinematicGeneratorKind kineGenKind,
+            const std::shared_ptr<MCUDriver> &driver);
 
     private:
         Shared<MS::IMachineStatusRepo> m_repo;

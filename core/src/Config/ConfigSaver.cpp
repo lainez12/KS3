@@ -68,7 +68,6 @@ namespace Kub3::Config
                     settings.setValue(CONF_HW_SCREW_PITCH_MM, hw.screwPitchMm);
                     settings.setValue(CONF_HW_MAX_VELOCITY_MM_S, hw.maxVelocityMmS);
                     settings.setValue(CONF_HW_MAX_ACCELERATION_MM_S2, hw.maxAccelerationMmS2);
-                    settings.setValue(CONF_HW_ENCODER_TOPS_PER_REV, hw.encoderTopsPerRev);
                 }
 
                 settings.endGroup(); // motor.id

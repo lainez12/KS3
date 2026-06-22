@@ -27,8 +27,6 @@ namespace Kub3::HAL::Act
             uint8_t motorByteId,
             Weak<MCUDriver> driver,
             Config::dc_motor_hw_properties_t hwConfig,
-            std::function<double()> positionGetter,
-            std::string encoderId,
             Unique<IKinematicGenerator> kinematicEngine,
             QObject *parent = nullptr);
 
@@ -55,9 +53,6 @@ namespace Kub3::HAL::Act
         const uint8_t m_motorByteId;
         const Config::dc_motor_hw_properties_t m_hwConfig;
         Weak<MCUDriver> m_driver;
-        const std::string m_encoderId;
-        std::function<double()> m_encoderValueGetter;
-
         Unique<IKinematicGenerator> m_kinematicEngine;
 
         // --- Timers & Caches

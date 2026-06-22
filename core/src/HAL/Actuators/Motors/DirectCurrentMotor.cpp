@@ -1,10 +1,9 @@
 #include <QDebug>
 #include <QMetaObject>
-#include <QString>
 #include <algorithm>
 #include <stdexcept>
 
-#include "HAL/Actuators/Motors/DirectCurrentMotor.h"
+#include <HAL/Actuators/Motors/DirectCurrentMotor.h>
 
 #define CONTROL_TIMER_VALUE_MS 20 // 50Hz
 
@@ -15,8 +14,6 @@ namespace Kub3::HAL::Act
                                            uint8_t motorByteId,
                                            Weak<MCUDriver> driver,
                                            Config::dc_motor_hw_properties_t hwConfig,
-                                           std::function<double()> posGetter,
-                                           std::string encoderId,
                                            Unique<IKinematicGenerator> kinematicEngine,
                                            QObject *parent) :
         QObject(parent),
@@ -24,8 +21,6 @@ namespace Kub3::HAL::Act
         m_motorByteId(motorByteId),
         m_hwConfig(std::move(hwConfig)),
         m_driver(std::move(driver)),
-        m_encoderId(std::move(encoderId)),
-        m_encoderValueGetter(std::move(posGetter)),
         m_kinematicEngine(std::move(kinematicEngine)),
         m_controlTimer(this)
     {
@@ -56,37 +51,47 @@ namespace Kub3::HAL::Act
     // TODO: profile could be a const reference ?
     void DirectCurrentMotor::moveDirection(MotorDirection dir, Config::kinematic_profile_t profile)
     {
-        const double safeVel = std::min(profile.targetVelocityMmS, m_hwConfig.maxVelocityMmS);
-        const double safeAcc = std::min(profile.accelerationMmS2, m_hwConfig.maxAccelerationMmS2);
-        const double sign    = (dir == MotorDirection::Positive) ? 1.0 : -1.0;
+        QMetaObject::invokeMethod(
+            this,
+            [this, dir, profile]() {
+                const double safeVel = std::min(profile.targetVelocityMmS, m_hwConfig.maxVelocityMmS);
+                const double safeAcc = std::min(profile.accelerationMmS2, m_hwConfig.maxAccelerationMmS2);
+                const double sign    = (dir == MotorDirection::Positive) ? 1.0 : -1.0;
 
-        m_lastSentPwm.reset();
-        m_lastSentDir.reset();
+                m_lastSentPwm.reset();
+                m_lastSentDir.reset();
 
-        if (!m_controlTimer.isActive())
-        {
-            m_kinematicEngine->startVelocityMove(0.0, sign, safeVel, safeAcc);
+                if (!m_controlTimer.isActive())
+                {
+                    m_kinematicEngine->startVelocityMove(0.0, sign, safeVel, safeAcc);
 
-            m_lastTickNsecs = 0;
-            m_dtTimer.start();
-            m_controlTimer.start(CONTROL_TIMER_VALUE_MS);
-        }
-        else
-        {
-            m_kinematicEngine->updateVelocityMove(sign, safeVel, safeAcc);
-        }
+                    m_lastTickNsecs = 0;
+                    m_dtTimer.start();
+                    m_controlTimer.start(CONTROL_TIMER_VALUE_MS);
+                }
+                else
+                {
+                    m_kinematicEngine->updateVelocityMove(sign, safeVel, safeAcc);
+                }
+            });
     }
 
     void DirectCurrentMotor::emergencyStop(void)
     {
-        m_controlTimer.stop();
-        m_lastSentPwm.reset();
-        m_lastSentDir.reset();
-        m_lastTickNsecs = 0;
+        QMetaObject::invokeMethod(
+            this,
+            [this]() {
+                m_controlTimer.stop();
+                m_lastSentPwm.reset();
+                m_lastSentDir.reset();
+                m_lastTickNsecs = 0;
 
-        // Command format: C<MOTOR>S
-        QString command = QString("C%1S").arg(m_motorByteId);
-        sendPayload(command.toUtf8());
+                // Command format: C<MOTOR>S
+                const char tmpCmd[] = {'C', static_cast<char>(m_motorByteId), 'S'};
+                QByteArray cmd(tmpCmd, sizeof(tmpCmd));
+                sendPayload(cmd);
+            },
+            Qt::AutoConnection);
     }
 
     bool DirectCurrentMotor::isMoving(void) const
@@ -118,9 +123,17 @@ namespace Kub3::HAL::Act
             !m_lastSentDir.has_value() || m_lastSentDir.value() != dir)
         {
             // Command format: C<MOTOR><SENS><VITESSE>
-            QString command = QString("C%1%2%3").arg(m_motorByteId).arg(dir).arg(QString::number(pwm));
+            const QByteArray pwmBytes = QByteArray::number(pwm); // pwm stringified (ASCII digits)
+            QByteArray command;
 
-            sendPayload(command.toUtf8());
+            command.reserve(3 + pwmBytes.size());
+            // "C" + m_motorByteId + dir + pwm(as ASCII bytes)
+            command.append(static_cast<char>('C'));
+            command.append(static_cast<char>(m_motorByteId));
+            command.append(static_cast<char>(dir));
+            command.append(pwmBytes);
+
+            sendPayload(command);
 
             m_lastSentPwm = pwm;
             m_lastSentDir = dir;

@@ -480,7 +480,7 @@ namespace Kub3::HAL
         // ===========================================
 
         /// --- Motors
-        auto camerasDeckMotor = createStepperMotor(config, DECK_MOTOR, 'F', Kinematics::TRAPEZOIDAL, driver, DECK_MOTOR_ENCODER);
+        auto camerasDeckMotor = createDCMotor(config, DECK_MOTOR, 'F', Kinematics::TRAPEZOIDAL, driver);
         /// --- Valves
         auto maskVacuumValve         = std::make_shared<Act::SolenoidValve>(MASK_VACUUM_VALVE, "VEM14095", "VEM00", driver);
         auto waferVacuumValve        = std::make_shared<Act::SolenoidValve>(WAFER_VACUUM_VALVE, "VEW14095", "VEW00", driver);
@@ -699,11 +699,15 @@ namespace Kub3::HAL
         const std::string &encoderId)
     {
         auto it = config.motors.find(motorId);
+
         if (it == config.motors.end())
             throw std::runtime_error(std::format("Hardware configuration not found for key: '{}'", motorId.toStdString()));
+
         auto *hwProps = std::get_if<Config::stepper_hw_properties_t>(&it->second.hwProperties);
+
         if (!hwProps)
             throw std::runtime_error(std::format("'{}' configuration doesn't match expected type (stepper)", motorId.toStdString()));
+
         auto kinematicEngine = Algorithms::Kinematic::buildKinematicGenerator(kineGenKind);
         auto encoderGetter   = [repo = m_repo, encoderId]() { return HAL::MS::readInt32(repo, encoderId); };
 
@@ -712,6 +716,29 @@ namespace Kub3::HAL
             it->second.id, byteId, driver, *hwProps,
             std::move(encoderGetter), encoderId,
             std::move(kinematicEngine));
+    }
+
+    Shared<Act::DirectCurrentMotor> HardwareManager::createDCMotor(
+        const Config::hardware_config_t &config,
+        const QString &motorId,
+        uint8_t byteId,
+        Algorithms::Kinematic::KinematicGeneratorKind kineGenKind,
+        const Shared<MCUDriver> &driver)
+    {
+        auto it = config.motors.find(motorId);
+
+        if (it == config.motors.end())
+            throw std::runtime_error(std::format("Hardware configuration not found for key: '{}'", motorId.toStdString()));
+
+        auto *hwProps = std::get_if<Config::dc_motor_hw_properties_t>(&it->second.hwProperties);
+
+        if (!hwProps)
+            throw std::runtime_error(std::format("'{}' configuration doesn't match expected type (direct current)", motorId.toStdString()));
+
+        auto kinematicEngine = Algorithms::Kinematic::buildKinematicGenerator(kineGenKind);
+
+        m_registeredMotorIds.push_back(motorId.toStdString());
+        return std::make_shared<Act::DirectCurrentMotor>(it->second.id, byteId, driver, *hwProps, std::move(kinematicEngine));
     }
 
 } // namespace Kub3::HAL

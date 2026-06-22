@@ -186,7 +186,6 @@ namespace Kub3::Components
             m_dcScrewPitch->setValue(dc.screwPitchMm);
             m_dcMaxVel->setValue(dc.maxVelocityMmS);
             m_dcMaxAcc->setValue(dc.maxAccelerationMmS2);
-            m_dcEncTops->setValue(dc.encoderTopsPerRev);
         }
     }
 
@@ -404,10 +403,9 @@ namespace Kub3::Components
         else if (currentType == CONF_HW_MOTOR_TYPE_DC)
         {
             Kub3::Config::dc_motor_hw_properties_t dc;
-            dc.screwPitchMm        = m_stepScrewPitch->value();
-            dc.maxVelocityMmS      = m_stepMaxVel->value();
-            dc.maxAccelerationMmS2 = m_stepMaxAcc->value();
-            dc.encoderTopsPerRev   = static_cast<uint16_t>(m_stepEncTops->value());
+            dc.screwPitchMm        = m_dcScrewPitch->value();
+            dc.maxVelocityMmS      = m_dcMaxVel->value();
+            dc.maxAccelerationMmS2 = m_dcMaxAcc->value();
             outHw.hwProperties     = dc;
         }
 

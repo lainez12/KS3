@@ -102,13 +102,11 @@ namespace Kub3::Config
         return QString("%1DC Motor Properties:\n"
                        "%1  - Screw Pitch: %2 mm\n"
                        "%1  - Max Velocity: %3 mm/s\n"
-                       "%1  - Max Acceleration: %4 mm/s²\n"
-                       "%1  - Encoder Tops per Rev: %5")
+                       "%1  - Max Acceleration: %4 mm/s²")
             .arg(ind)
             .arg(config.screwPitchMm)
             .arg(config.maxVelocityMmS)
-            .arg(config.maxAccelerationMmS2)
-            .arg(config.encoderTopsPerRev);
+            .arg(config.maxAccelerationMmS2);
     }
 
     inline QString toString(const motor_hw_properties_t &config, int indent = 0)
