@@ -70,6 +70,11 @@ VisualisationView::VisualisationView(Unique<VisualisationViewModel> viewModel, Q
 
     connect(m_mapPositionCameras, &RealPositionCameras::s_openMap, this, &VisualisationView::mapPositionCamerasOpenMap);
     connect(m_mapPositionCameras, &RealPositionCameras::s_closeMap, this, &VisualisationView::mapPositionCamerasCloseMap);
+
+    m_hardForceContactForm = new HardForceContactForm(this);
+
+    m_hardForceContactForm->setVisible(false);
+
     setNewNavButtonsConfigs();
 }
 

@@ -6,6 +6,7 @@
 #include <ViewModels/Alignment/VisualisationViewModel.h>
 #include <Views/AlignmentViewBase.h>
 
+#include <Views/Components/HardForceContactForm.h>
 #include <Views/Components/NavButton.h>
 #include <Views/Components/RealPositionCameras.h>
 #include <Views/KeyboardConnections.h>
@@ -59,6 +60,7 @@ namespace Kub3::UI::Views::ViewsAlignment
         KeyboardConnections m_keyboard;
         QWidget *m_maskingDistanceWidget;
         RealPositionCameras *m_mapPositionCameras;
+        HardForceContactForm *m_hardForceContactForm;
         QLabel *m_labelText;
     };
 
