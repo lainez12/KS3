@@ -120,6 +120,15 @@ namespace Kub3::UI::Views
             }
         }
 
+        void switchColorNavButton(const QString &buttonId, bool enabled)
+        {
+            NavButtonConfig *button = m_buttonManager.getButton(buttonId);
+            if (button)
+            {
+                emit s_switchColorButton(buttonId, enabled);
+            }
+        }
+
         void setNavButtonVisible(const QString &buttonId, bool visible)
         {
             if (m_buttonManager.setButtonVisible(buttonId, visible))
@@ -154,6 +163,7 @@ namespace Kub3::UI::Views
 
         void s_buttonStateChanged(const QString &buttonId, bool newState);
         void s_buttonTextChanged(const QString &buttonId, const QString &newText);
+        void s_switchColorButton(const QString &buttonId, bool EnabledColor);
 
     protected:
         void showEvent(QShowEvent *event) override;

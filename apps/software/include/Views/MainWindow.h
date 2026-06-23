@@ -56,6 +56,7 @@ public slots:
 private slots:
     void onViewButtonConfigsUpdated();
     void onViewButtonStateChanged(const QString &buttonId, bool newState);
+    void changeButtonColor(const QString &buttonId, bool EnabledColor);
     void onViewButtonTextChanged(const QString &buttonId, const QString &newText);
 
 protected:

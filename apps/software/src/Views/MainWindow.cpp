@@ -92,6 +92,8 @@ void MainWindow::connectViewSignals(Kub3::UI::Views::ViewBase *view) {
 
     connect(view, &Kub3::UI::Views::ViewBase::s_buttonStateChanged, this, &MainWindow::onViewButtonStateChanged);
 
+    connect(view, &Kub3::UI::Views::ViewBase::s_switchColorButton, this, &MainWindow::changeButtonColor);
+
     connect(view, &Kub3::UI::Views::ViewBase::s_buttonTextChanged, this, &MainWindow::onViewButtonTextChanged);
 }
 
@@ -215,6 +217,13 @@ void MainWindow::onViewButtonStateChanged(const QString &buttonId, bool newState
     auto it = m_bottomBarButtons.find(buttonId);
     if (it != m_bottomBarButtons.end() && it.value().button) {
         it.value().button->setEnabledNavButton(newState);
+    }
+}
+
+void MainWindow::changeButtonColor(const QString &buttonId, bool EnabledColor) {
+    auto it = m_bottomBarButtons.find(buttonId);
+    if (it != m_bottomBarButtons.end() && it.value().button) {
+        it.value().button->switchColor(EnabledColor);
     }
 }
 

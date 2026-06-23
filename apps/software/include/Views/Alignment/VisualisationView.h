@@ -6,6 +6,7 @@
 #include <ViewModels/Alignment/VisualisationViewModel.h>
 #include <Views/AlignmentViewBase.h>
 
+#include <Views/Components/NavButton.h>
 #include <Views/Components/RealPositionCameras.h>
 #include <Views/KeyboardConnections.h>
 #include <Views/ViewBase.h>
@@ -37,6 +38,7 @@ namespace Kub3::UI::Views::ViewsAlignment
     private slots:
         void leftCamConfigToggled(bool checked);
         void rightCamConfigToggled(bool checked);
+        void navButtonToggled(NavButton *button, QWidget *widget);
 
     private:
         void setNewNavButtonsConfigs();

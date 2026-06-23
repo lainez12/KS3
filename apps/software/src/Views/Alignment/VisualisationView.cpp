@@ -44,6 +44,9 @@ VisualisationView::VisualisationView(Unique<VisualisationViewModel> viewModel, Q
     ui->moveLeftCamWidget->setVisible(false);
     ui->moveRightCamWidget->setVisible(false);
 
+    ui->visualMarkLeft->setVisible(false);
+    ui->visualMarkRight->setVisible(false);
+
     QIcon camIconLeft(":/icons/cam-settings-left.svg");
     QIcon camIconRight(":/icons/cam-settings-right.svg");
     QIcon camIconLeftChecked(":/icons/cam-settings-left-checked.svg");
@@ -52,12 +55,8 @@ VisualisationView::VisualisationView(Unique<VisualisationViewModel> viewModel, Q
     connect(ui->configCamLeftCheck, &QCheckBox::toggled, this, &VisualisationView::leftCamConfigToggled);
     connect(ui->configCamRightCheck, &QCheckBox::toggled, this, &VisualisationView::rightCamConfigToggled);
 
-    connect(ui->moveCamLeft, &NavButton::clicked, [this]() {
-        ui->moveCamLeft->switchColor(ui->moveLeftCamWidget->isVisible());
-        ui->moveLeftCamWidget->setVisible(!ui->moveLeftCamWidget->isVisible()); });
-    connect(ui->moveCamRight, &NavButton::clicked, [this]() {
-        ui->moveCamRight->switchColor(ui->moveRightCamWidget->isVisible());
-        ui->moveRightCamWidget->setVisible(!ui->moveRightCamWidget->isVisible()); });
+    connect(ui->moveCamLeft, &NavButton::clicked, [this]() { navButtonToggled(ui->moveCamLeft, ui->moveRightCamWidget); });
+    connect(ui->moveCamRight, &NavButton::clicked, [this]() { navButtonToggled(ui->moveCamRight, ui->moveRightCamWidget); });
 
     // Create masking distance widget
     m_maskingDistanceWidget = new QWidget(this);
@@ -160,7 +159,6 @@ void VisualisationView::mapPositionCamerasOpenMap(void)
     m_mapPositionCameras->setGeometry(m_mapPositionCameras->x(), mapCamY, m_mapPositionCameras->width(), m_mapPositionCameras->height());
     ui->configCamRightCheck->setChecked(false);
     ui->configCamLeftCheck->setChecked(false);
-
 }
 
 void VisualisationView::mapPositionCamerasCloseMap(void)
@@ -208,6 +206,8 @@ void VisualisationView::setNewNavButtonsConfigs()
 
     NavButtonConfig maskingDistance(
         "Masking dist.",
+        QColor(BLUE_COLOR),
+        QColor(TURQUOISE_COLOR),
         ":/icons/masking-distance.svg",
         "M",
         std::bind(&VisualisationView::onMaskingDistanceButtonClicked, this, std::placeholders::_1));
@@ -215,6 +215,8 @@ void VisualisationView::setNewNavButtonsConfigs()
 
     NavButtonConfig antiCollision(
         "Anti-Collision cam.",
+        QColor(BLUE_COLOR),
+        QColor(TURQUOISE_COLOR),
         ":/icons/anti-collision.svg",
         "A",
         std::bind(&VisualisationView::onAntiCollisionButtonClicked, this, std::placeholders::_1));
@@ -222,6 +224,8 @@ void VisualisationView::setNewNavButtonsConfigs()
 
     NavButtonConfig visualMark(
         "Visual Mark",
+        QColor(BLUE_COLOR),
+        QColor(TURQUOISE_COLOR),
         ":/icons/visual-mark.svg",
         "I",
         std::bind(&VisualisationView::onVisualMarkButtonClicked, this, std::placeholders::_1));
@@ -303,8 +307,20 @@ void VisualisationView::onAntiCollisionButtonClicked(const QString &buttonId)
 
 void VisualisationView::onVisualMarkButtonClicked(const QString &buttonId)
 {
+    switchColorNavButton(buttonId, ui->visualMarkLeft->isVisible());
+    ui->visualMarkLeft->setVisible(!ui->visualMarkLeft->isVisible());
+    ui->visualMarkRight->setVisible(!ui->visualMarkRight->isVisible());
 }
 
 void VisualisationView::onMeasurementButtonClicked(const QString &buttonId)
 {
+}
+
+void VisualisationView::navButtonToggled(NavButton *button, QWidget *widget)
+{
+    if (widget)
+    {
+        button->switchColor(widget->isVisible());
+        widget->setVisible(!widget->isVisible());
+    }
 }
