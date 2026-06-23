@@ -79,7 +79,6 @@ namespace Kub3::Components
         QListWidget *m_profileList   = nullptr;
         QWidget *m_profileFormWidget = nullptr;
 
-        QDoubleSpinBox *m_kinInitVel   = nullptr;
         QDoubleSpinBox *m_kinTargetVel = nullptr;
         QDoubleSpinBox *m_kinAcc       = nullptr;
 

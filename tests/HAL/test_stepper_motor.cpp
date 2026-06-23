@@ -144,11 +144,10 @@ TEST_CASE("StepperMotor Thread-Safe Dispatch & Queued Connections", "[actuators]
     SECTION("Generates Move Commands and resolves with a Stop Command over the Event Loop")
     {
         kinematic_profile_t kinProfile = {
-            .id                 = "dummyProfile",
-            .initialVelocityMmS = 0.0,
-            .targetVelocityMmS  = 10.0,
-            .accelerationMmS2   = 10.0,
-            .params             = stepper_kinematics_params_t{16},
+            .id                = "dummyProfile",
+            .targetVelocityMmS = 10.0,
+            .accelerationMmS2  = 10.0,
+            .params            = stepper_kinematics_params_t{16},
         };
 
         // Initiate a tiny movement

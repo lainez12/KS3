@@ -1,5 +1,6 @@
 #include <Services/Contact/tasks/AdmittanceControlTask.h>
 
+#include <QDebug>
 #include <algorithm>
 #include <cmath>
 
@@ -112,6 +113,10 @@ namespace Kub3::Services
             dyn_profile.targetVelocityMmS = std::abs(velocity);
             motor->moveDirection(dir, dyn_profile);
         };
+
+        qDebug().noquote() << "Admittance velocities_mm_s:" << math_out.velocities_mm_s[0]
+                           << math_out.velocities_mm_s[1]
+                           << math_out.velocities_mm_s[2];
 
         applyVelocity(m_motors[0], math_out.velocities_mm_s[0]);
         applyVelocity(m_motors[1], math_out.velocities_mm_s[1]);

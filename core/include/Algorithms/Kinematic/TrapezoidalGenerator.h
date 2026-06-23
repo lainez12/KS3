@@ -68,4 +68,4 @@ namespace Kub3::Algorithms::Kinematic
         bool m_stopRequested = false;
     };
 
-} // namespace Kub3::HAL::Act
+} // namespace Kub3::Algorithms::Kinematic

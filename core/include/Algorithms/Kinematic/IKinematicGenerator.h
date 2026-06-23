@@ -1,6 +1,6 @@
 #pragma once
 
-#define DEFAULT_PRECISION_MM 0.01
+#define DEFAULT_PRECISION_MM 1.0
 
 namespace Kub3::Algorithms::Kinematic
 {

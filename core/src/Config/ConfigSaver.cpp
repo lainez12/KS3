@@ -141,7 +141,6 @@ namespace Kub3::Config
                 {
                     settings.beginGroup(QString::fromStdString(profileId));
 
-                    settings.setValue(CONF_PROCESS_INITIAL_VELOCITY_MM_S, profile.initialVelocityMmS);
                     settings.setValue(CONF_PROCESS_TARGET_VELOCITY_MM_S, profile.targetVelocityMmS);
                     settings.setValue(CONF_PROCESS_ACCELERATION_MM_S, profile.accelerationMmS2); // Note: Loader uses acceleration_mm_s
 
@@ -219,6 +218,7 @@ namespace Kub3::Config
             // SAVE ADMITTANCE TUNING VALUES
             settings.beginGroup(CONF_PROCESS_ADMITTANCE_TUNING);
             settings.setValue(CONF_PROCESS_ADMITTANCE_MAX_STEP_MM_PER_TICK, config.contact.admittance.max_step_mm_per_tick);
+            settings.setValue(CONF_PROCESS_ADMITTANCE_DEADBAND_VELOCITY_MM_S, config.contact.admittance.deadband_velocity_mm_s);
             settings.setValue(CONF_PROCESS_ADMITTANCE_TRANSLATION_GAIN_LOW_FORCE, config.contact.admittance.translational_gain_low_force);
             settings.setValue(CONF_PROCESS_ADMITTANCE_TRANSLATION_GAIN_HIGH_FORCE, config.contact.admittance.translational_gain_high_force);
             settings.setValue(CONF_PROCESS_ADMITTANCE_ROTATION_GAIN_LOW_FORCE, config.contact.admittance.rotational_gain_low_force);

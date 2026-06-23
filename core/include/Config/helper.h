@@ -55,13 +55,11 @@ namespace Kub3::Config
     {
         QString ind = getIndent(indent);
         return QString("%1- Profile ID: %2\n"
-                       "%1- Initial Velocity: %3 mm/s\n"
                        "%1- Target Velocity: %4 mm/s\n"
                        "%1- Acceleration: %5 mm/s²\n"
                        "%6")
             .arg(ind)
             .arg(QString::fromStdString(profile.id))
-            .arg(profile.initialVelocityMmS)
             .arg(profile.targetVelocityMmS)
             .arg(profile.accelerationMmS2)
             .arg(toString(profile.params, indent));
@@ -245,7 +243,8 @@ namespace Kub3::Config
     {
         QString ind = getIndent(indent);
         return QString("%1Admittance Tuning:\n"
-                       "%1  - Max Step/Tick: %2 mm\n"
+                       "%1  - Max Distance per Step/Tick: %2 mm\n"
+                       "%1  - Deadband velocity: %7 mm/s\n"
                        "%1  - Translational Gain (Low Force): %3 mm/s/gf\n"
                        "%1  - Translational Gain (High Force): %4 mm/s/gf\n"
                        "%1  - Rotational Gain (Low Force): %5 mm/s/gf\n"
@@ -255,7 +254,8 @@ namespace Kub3::Config
             .arg(config.translational_gain_low_force)
             .arg(config.translational_gain_high_force)
             .arg(config.rotational_gain_low_force)
-            .arg(config.rotational_gain_high_force);
+            .arg(config.rotational_gain_high_force)
+            .arg(config.deadband_velocity_mm_s);
     }
 
     inline QString toString(const contact_process_config_t &config, int indent = 0)

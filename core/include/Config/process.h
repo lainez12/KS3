@@ -22,7 +22,8 @@ namespace Kub3::Config
     // Z-Axis Admittance / WEC Tuning
     // ------------------------------------------
     typedef struct admittance_tuning_config_s {
-        double max_step_mm_per_tick; // Safety limit: max blind distance per 20ms evaluation
+        double max_step_mm_per_tick;   // Safety limit: max blind distance per 20ms evaluation
+        double deadband_velocity_mm_s; // Minimum velocity (deadband entered)
 
         // Translational (Elevator) Gains
         double translational_gain_low_force;  // Mapped to k_mean_max (mm/s/gf) - Fast approach

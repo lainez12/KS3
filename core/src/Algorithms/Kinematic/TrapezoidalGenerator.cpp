@@ -226,4 +226,4 @@ namespace Kub3::Algorithms::Kinematic
         }
     }
 
-} // namespace Kub3::HAL::Act
+} // namespace Kub3::Algorithms::Kinematic

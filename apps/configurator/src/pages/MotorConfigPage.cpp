@@ -126,11 +126,9 @@ namespace Kub3::Components
         m_profileFormWidget = new QWidget();
         auto *formLayout    = new QFormLayout(m_profileFormWidget);
 
-        m_kinInitVel   = createDoubleSpinBox();
         m_kinTargetVel = createDoubleSpinBox();
         m_kinAcc       = createDoubleSpinBox();
 
-        formLayout->addRow("Initial Velocity (mm/s):", m_kinInitVel);
         formLayout->addRow("Target Velocity (mm/s):", m_kinTargetVel);
         formLayout->addRow("Acceleration (mm/s²):", m_kinAcc);
 
@@ -278,7 +276,6 @@ namespace Kub3::Components
             return;
         const auto &p = it->second;
 
-        m_kinInitVel->setValue(p.initialVelocityMmS);
         m_kinTargetVel->setValue(p.targetVelocityMmS);
         m_kinAcc->setValue(p.accelerationMmS2);
 
@@ -305,9 +302,8 @@ namespace Kub3::Components
             return;
         auto &p = it->second;
 
-        p.initialVelocityMmS = m_kinInitVel->value();
-        p.targetVelocityMmS  = m_kinTargetVel->value();
-        p.accelerationMmS2   = m_kinAcc->value();
+        p.targetVelocityMmS = m_kinTargetVel->value();
+        p.accelerationMmS2  = m_kinAcc->value();
 
         // Save specific params based on strictly what Hardware Type is selected right now.
         QString hwType = m_typeSelector->currentData().toString();

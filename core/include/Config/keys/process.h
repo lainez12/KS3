@@ -10,12 +10,11 @@
 #define CONF_PROCESS_ELEVATOR_POSITIONS  "zElevator"
 
 // CONF_PROCESS_KINEMATICS inner keys
-#define CONF_PROCESS_INITIAL_VELOCITY_MM_S "initial_velocity_mm_s"
-#define CONF_PROCESS_TARGET_VELOCITY_MM_S  "target_velocity_mm_s"
-#define CONF_PROCESS_ACCELERATION_MM_S     "acceleration_mm_s"
-#define CONF_PROCESS_PARAMS_TYPE           "params_type"
-#define CONF_PROCESS_PARAMS_TYPE_STEPPER   "stepper"
-#define CONF_PROCESS_PARAMS_TYPE_GENERIC   "generic"
+#define CONF_PROCESS_TARGET_VELOCITY_MM_S "target_velocity_mm_s"
+#define CONF_PROCESS_ACCELERATION_MM_S    "acceleration_mm_s"
+#define CONF_PROCESS_PARAMS_TYPE          "params_type"
+#define CONF_PROCESS_PARAMS_TYPE_STEPPER  "stepper"
+#define CONF_PROCESS_PARAMS_TYPE_GENERIC  "generic"
 // --- Steppers
 #define CONF_PROCESS_STEP_FRACTION "step_fraction"
 
@@ -56,6 +55,7 @@
 
 // CONF_PROCESS_ADMITTANCE_TUNING inner key
 #define CONF_PROCESS_ADMITTANCE_MAX_STEP_MM_PER_TICK        "max_step_mm_per_tick"
+#define CONF_PROCESS_ADMITTANCE_DEADBAND_VELOCITY_MM_S      "deadband_velocity_mm_s"
 #define CONF_PROCESS_ADMITTANCE_TRANSLATION_GAIN_LOW_FORCE  "translation_gain_low_force"
 #define CONF_PROCESS_ADMITTANCE_TRANSLATION_GAIN_HIGH_FORCE "translation_gain_high_force"
 #define CONF_PROCESS_ADMITTANCE_ROTATION_GAIN_LOW_FORCE     "rotation_gain_low_force"
