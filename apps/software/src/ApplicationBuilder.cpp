@@ -209,6 +209,8 @@ namespace Kub3
                              msvm, &VM::BaseVisionViewModel::ps_onCameraFrameReceived);
         msvm->bindConnection(m_repo.get(), &HAL::MS::IMachineStatusRepo::s_machineValueChanged,
                              msvm, &VM::MachineStatusViewModel::ps_handleSensorValueChanged);
+        m_visualisationVM->bindConnection(m_hwManager.get(), &HAL::HardwareManager::s_cameraFrameReady,
+                                          m_visualisationVM.get(), &VM::BaseVisionViewModel::ps_onCameraFrameReceived);
 
         return *this;
     }

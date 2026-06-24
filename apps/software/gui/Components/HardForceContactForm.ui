@@ -106,7 +106,7 @@ font-weight: bold;</string>
      <item>
       <widget class="QWidget" name="widget_2" native="true">
        <property name="styleSheet">
-        <string notr="true">background-color: transparent;</string>
+        <string notr="true"/>
        </property>
        <widget class="QSpinBox" name="spinBox">
         <property name="geometry">
@@ -168,10 +168,18 @@ opacity: 1;</string>
           </widget>
          </item>
          <item>
-          <widget class="NavButton" name="gramBtn" native="true"/>
+          <widget class="NavButton" name="gramBtn" native="true">
+           <property name="styleSheet">
+            <string notr="true">background-color: transparent;</string>
+           </property>
+          </widget>
          </item>
          <item>
-          <widget class="NavButton" name="newtonBtn" native="true"/>
+          <widget class="NavButton" name="newtonBtn" native="true">
+           <property name="styleSheet">
+            <string notr="true">background-color: transparent;</string>
+           </property>
+          </widget>
          </item>
         </layout>
        </widget>
@@ -249,7 +257,7 @@ opacity: 1;</string>
          </rect>
         </property>
         <property name="styleSheet">
-         <string notr="true"/>
+         <string notr="true">background-color: transparent;</string>
         </property>
        </widget>
        <widget class="NavButton" name="gotoBtn" native="true">
@@ -260,6 +268,9 @@ opacity: 1;</string>
           <width>91</width>
           <height>81</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: transparent;</string>
         </property>
        </widget>
       </widget>

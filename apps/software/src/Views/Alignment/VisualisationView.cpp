@@ -28,6 +28,20 @@ VisualisationView::VisualisationView(Unique<VisualisationViewModel> viewModel, Q
 
     setNavButtonEnabled(ID_BTN_VALIDATE, true);
 
+    // Frame reception from cameras
+    auto *vm = dynamic_cast<VisualisationViewModel *>(m_viewModel.get());
+    if (vm)
+    {
+        connect(vm,
+                &Kub3::UI::ViewModels::BaseVisionViewModel::s_upperLeftCameraFrameReady,
+                ui->visioLeft,
+                &CameraStreamWidget::ps_onFrameUpdated);
+        connect(vm,
+                &Kub3::UI::ViewModels::BaseVisionViewModel::s_upperRightCameraFrameReady,
+                ui->visioRight,
+                &CameraStreamWidget::ps_onFrameUpdated);
+    }
+
     ui->speedCamRight->setup("Cam. Speed", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/speed-motor-low.svg");
     ui->speedCamLeft->setup("Cam. Speed", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/speed-motor-low.svg");
     ui->pickUpRight->setup("Go to X/Y", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/go-to.svg");

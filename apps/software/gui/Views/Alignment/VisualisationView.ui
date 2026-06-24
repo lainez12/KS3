@@ -359,7 +359,7 @@ font-size: 20px;</string>
        </layout>
       </item>
       <item row="1" column="0">
-       <widget class="QWidget" name="visioLeft" native="true">
+       <widget class="CameraStreamWidget" name="visioLeft" native="true">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
           <horstretch>0</horstretch>
@@ -1177,7 +1177,7 @@ opacity: 1;</string>
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QWidget" name="visioRight" native="true">
+       <widget class="CameraStreamWidget" name="visioRight" native="true">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
           <horstretch>0</horstretch>
@@ -2010,6 +2010,12 @@ height: 50px;
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>CameraStreamWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">Views/Components/CameraStreamWidget.h</header>
+   <container>1</container>
+  </customwidget>
   <customwidget>
    <class>NavButton</class>
    <extends>QWidget</extends>
