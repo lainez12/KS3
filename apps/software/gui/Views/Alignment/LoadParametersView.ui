@@ -86,7 +86,7 @@ font-weight: 700;
 font-family: arial;</string>
          </property>
          <property name="text">
-          <string>Reaname</string>
+          <string>Rename</string>
          </property>
         </widget>
        </item>

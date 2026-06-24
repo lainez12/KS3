@@ -16,8 +16,3 @@ HardForceContactForm::HardForceContactForm(QWidget *parent) :
     ui->gramBtn->setup("Gram", QColor(BLUE_COLOR), QColor(BLUE_COLOR_SHADOW), ":/icons/gram.svg");
     ui->newtonBtn->setup("Newton", QColor(BLUE_COLOR), QColor(BLUE_COLOR_SHADOW), ":/icons/newton.svg");
 }
-
-void HardForceContactForm::paintEvent(QPaintEvent *event)
-{
-    QPainter painter(this);
-}

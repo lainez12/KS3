@@ -15,11 +15,6 @@ RealPositionCameras::RealPositionCameras(QWidget *parent) :
     connect(ui->btnOpenClose, &QCheckBox::toggled, this, &RealPositionCameras::onBtnOpenCloseToggled);
 }
 
-void RealPositionCameras::paintEvent(QPaintEvent *event)
-{
-    QPainter painter(this);
-}
-
 void RealPositionCameras::openMap(void)
 {
     ui->btnOpenClose->setChecked(true);

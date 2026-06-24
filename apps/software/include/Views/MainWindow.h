@@ -61,6 +61,7 @@ private slots:
 
 protected:
     void paintEvent(QPaintEvent *event) override;
+    void resizeEvent(QResizeEvent *event) override;
 
 private:
     void updateTopBar(Kub3::UI::Views::ViewBase *view);

@@ -17,8 +17,6 @@ public:
     explicit RealPositionCameras(QWidget *parent = nullptr);
 
 protected:
-    void paintEvent(QPaintEvent *event) override;
-
 public slots:
     void openMap(void);
     void closeMap(void);

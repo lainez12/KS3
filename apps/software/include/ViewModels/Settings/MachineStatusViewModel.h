@@ -16,7 +16,6 @@ namespace Kub3::UI::ViewModels
         explicit MachineStatusViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent = nullptr);
 
         void loadConnections(void) override;
-        void setAvailableFocals(const QList<QString> &focals);
 
     signals:
         void s_booleanSensorUpdate(const QString &key, bool val);

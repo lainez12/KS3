@@ -6,7 +6,6 @@
 #include <QWidget>
 #include <Views/KeyboardConnections.h>
 
-
 namespace Ui
 {
     class HardForceContactForm;
@@ -19,8 +18,6 @@ public:
     explicit HardForceContactForm(QWidget *parent = nullptr);
 
 protected:
-    void paintEvent(QPaintEvent *event) override;
-
 public slots:
 
 private slots:
