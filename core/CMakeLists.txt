@@ -191,7 +191,7 @@ endif()
 # Global build definitions applied to everyone interacting with Core
 target_compile_definitions(Kub3Core PUBLIC KUB_MODEL_${KUB_MODEL} KUB_MODEL_STR="${KUB_MODEL}")
 
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND NOT CMAKE_PRODUCTION_BUILD)
     target_compile_definitions(Kub3Core PUBLIC BUILD_DEBUG)
     target_compile_definitions(Kub3Core PUBLIC
         KUB3_HARDWARE_CONFIG_PATH="${CMAKE_SOURCE_DIR}/tests/hardware.ini"

@@ -229,10 +229,11 @@ namespace Kub3::HAL::Act
         const kinematic_state_t state = m_kinematicEngine->computeNext(dt, getEncoderPositionMm());
 
 #if defined(BUILD_DEBUG)
-        // qDebug() << "===============================";
-        // qDebug() << "Current position" << getEncoderPositionMm();
-        // qDebug() << "Computed next position (mm):" << state.position;
-        // qDebug() << "Computed velocity (mm/s):" << state.velocity;
+        qDebug() << "===============================";
+        qDebug() << "Current position (mm, encoder):" << getEncoderPositionMm();
+        qDebug() << "Computed next position (mm, generator state):" << state.position;
+        qDebug() << "Computed velocity (mm/s, generator state):" << state.velocity;
+        qDebug() << "Is finished (generator state):" << state.isFinished;
 #endif
 
         if (state.isFinished) // Shutdown if complete

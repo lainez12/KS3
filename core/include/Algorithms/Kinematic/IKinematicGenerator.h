@@ -6,9 +6,10 @@ namespace Kub3::Algorithms::Kinematic
 {
 
     typedef struct kinematic_state_s {
-        double position = 0.0;
-        double velocity = 0.0;
-        bool isFinished = true;
+        double position    = 0.0;
+        double velocity    = 0.0;
+        bool isApproaching = false;
+        bool isFinished    = true;
     } kinematic_state_t;
 
     enum class Mode
