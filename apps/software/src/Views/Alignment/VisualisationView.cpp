@@ -296,6 +296,7 @@ void VisualisationView::onSaveButtonClicked(const QString &buttonId)
 
 void VisualisationView::onLoadButtonClicked(const QString &buttonId)
 {
+    emit s_openView(Kub3::UI::ViewId::ALIGNMENT_LOAD_PARAMETERS_VIEW);
 }
 
 void VisualisationView::onScreenshotButtonClicked(const QString &buttonId)
@@ -306,8 +307,12 @@ void VisualisationView::onHardForceContButtonClicked(const QString &buttonId)
 {
     bool isHardForceContactFormVisible = m_hardForceContactForm->isVisible();
     m_mapPositionCameras->closeMap();
-    rightCamConfigToggled(isHardForceContactFormVisible);
-    leftCamConfigToggled(isHardForceContactFormVisible);
+    if (!isHardForceContactFormVisible)
+    {
+
+        leftCamConfigToggled(false);
+        rightCamConfigToggled(false);
+    }
     m_mapPositionCameras->setVisible(isHardForceContactFormVisible);
     switchColorNavButton(buttonId, isHardForceContactFormVisible);
     m_hardForceContactForm->setVisible(!isHardForceContactFormVisible);
