@@ -4,6 +4,8 @@
 #include <QPainter>
 #include <QResizeEvent>
 #include <QWidget>
+#include <Views/KeyboardConnections.h>
+
 
 namespace Ui
 {
@@ -27,5 +29,5 @@ signals:
 
 private:
     Ui::HardForceContactForm *ui;
-    QString m_text;
+    Kub3::UI::Views::KeyboardConnections m_keyboard;
 };

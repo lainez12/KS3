@@ -55,7 +55,7 @@ VisualisationView::VisualisationView(Unique<VisualisationViewModel> viewModel, Q
     connect(ui->configCamLeftCheck, &QCheckBox::toggled, this, &VisualisationView::leftCamConfigToggled);
     connect(ui->configCamRightCheck, &QCheckBox::toggled, this, &VisualisationView::rightCamConfigToggled);
 
-    connect(ui->moveCamLeft, &NavButton::clicked, [this]() { navButtonToggled(ui->moveCamLeft, ui->moveRightCamWidget); });
+    connect(ui->moveCamLeft, &NavButton::clicked, [this]() { navButtonToggled(ui->moveCamLeft, ui->moveLeftCamWidget); });
     connect(ui->moveCamRight, &NavButton::clicked, [this]() { navButtonToggled(ui->moveCamRight, ui->moveRightCamWidget); });
 
     // Create masking distance widget
@@ -153,6 +153,8 @@ void VisualisationView::resizeEvent(QResizeEvent *ev)
     m_maskingDistanceWidget->setGeometry(maskingWidgetX, maskingWidgetY, maskingWidgetWidth, maskingWidgetHeight);
     int mapCamY = 563;
     m_mapPositionCameras->setGeometry(maskingWidgetX, mapCamY, maskingWidgetWidth, maskingWidgetHeight);
+    int hardForceContactFormY = 100;
+    m_hardForceContactForm->setGeometry(maskingWidgetX, hardForceContactFormY, m_hardForceContactForm->width(), m_hardForceContactForm->height());
 
     // Position labels horizontally inside the widget
     m_labelText->setGeometry(-2, 13, 381, 43);
@@ -197,6 +199,8 @@ void VisualisationView::setNewNavButtonsConfigs()
 
     NavButtonConfig hardForceCont(
         "Hard Force Cont.",
+        QColor(BLUE_COLOR),
+        QColor(TURQUOISE_COLOR),
         ":/icons/hard-force-contact.svg",
         "F",
         std::bind(&VisualisationView::onHardForceContButtonClicked, this, std::placeholders::_1));
@@ -204,6 +208,8 @@ void VisualisationView::setNewNavButtonsConfigs()
 
     NavButtonConfig speedMotorSubst(
         "Subst. Speed",
+        QColor(BLUE_COLOR),
+        QColor(TURQUOISE_COLOR),
         ":/icons/speed-motor-subst.svg",
         "U",
         std::bind(&VisualisationView::onSpeedMotorSubstButtonClicked, this, std::placeholders::_1));
@@ -251,6 +257,7 @@ void VisualisationView::leftCamConfigToggled(bool checked)
     {
         ui->configCamLeftCheck->setIcon(QIcon(":/icons/cam-settings-right-checked.svg"));
         m_mapPositionCameras->closeMap();
+        closeHardForceContactFormIfNeeded();
     }
     else
     {
@@ -265,6 +272,7 @@ void VisualisationView::rightCamConfigToggled(bool checked)
     {
         ui->configCamRightCheck->setIcon(QIcon(":/icons/cam-settings-left-checked.svg"));
         m_mapPositionCameras->closeMap();
+        closeHardForceContactFormIfNeeded();
     }
     else
     {
@@ -296,6 +304,13 @@ void VisualisationView::onScreenshotButtonClicked(const QString &buttonId)
 
 void VisualisationView::onHardForceContButtonClicked(const QString &buttonId)
 {
+    bool isHardForceContactFormVisible = m_hardForceContactForm->isVisible();
+    m_mapPositionCameras->closeMap();
+    rightCamConfigToggled(isHardForceContactFormVisible);
+    leftCamConfigToggled(isHardForceContactFormVisible);
+    m_mapPositionCameras->setVisible(isHardForceContactFormVisible);
+    switchColorNavButton(buttonId, isHardForceContactFormVisible);
+    m_hardForceContactForm->setVisible(!isHardForceContactFormVisible);
 }
 
 void VisualisationView::onSpeedMotorSubstButtonClicked(const QString &buttonId)
@@ -319,6 +334,16 @@ void VisualisationView::onVisualMarkButtonClicked(const QString &buttonId)
 
 void VisualisationView::onMeasurementButtonClicked(const QString &buttonId)
 {
+}
+
+void VisualisationView::closeHardForceContactFormIfNeeded(void)
+{
+    if (m_hardForceContactForm->isVisible())
+    {
+        m_mapPositionCameras->setVisible(true);
+        m_hardForceContactForm->setVisible(false);
+        switchColorNavButton("F", true);
+    }
 }
 
 void VisualisationView::navButtonToggled(NavButton *button, QWidget *widget)

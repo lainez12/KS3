@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>381</width>
-    <height>682</height>
+    <height>683</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -29,12 +29,7 @@
    </size>
   </property>
   <property name="styleSheet">
-   <string notr="true">QCheckBox::indicator {
-    width: 0px;
-    height: 0px;
-    border: none;
-    background: none;
-}</string>
+   <string notr="true">background-color: #fff;</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
@@ -110,6 +105,9 @@ font-weight: bold;</string>
     <layout class="QVBoxLayout" name="verticalLayout_4" stretch="35,75">
      <item>
       <widget class="QWidget" name="widget_2" native="true">
+       <property name="styleSheet">
+        <string notr="true">background-color: transparent;</string>
+       </property>
        <widget class="QSpinBox" name="spinBox">
         <property name="geometry">
          <rect>
@@ -118,6 +116,12 @@ font-weight: bold;</string>
           <width>101</width>
           <height>41</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">text-align: left;
+font: normal normal bold 25px/29px Arial;
+letter-spacing: 0px;
+color: #E85420;</string>
         </property>
         <property name="buttonSymbols">
          <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
@@ -128,9 +132,16 @@ font-weight: bold;</string>
          <rect>
           <x>150</x>
           <y>30</y>
-          <width>41</width>
-          <height>21</height>
+          <width>91</width>
+          <height>31</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">text-align: left;
+font: normal normal bold 20px/20px Arial;
+letter-spacing: 0px;
+color: #E85420;
+opacity: 1;</string>
         </property>
         <property name="text">
          <string>grams</string>
@@ -141,13 +152,16 @@ font-weight: bold;</string>
          <rect>
           <x>260</x>
           <y>10</y>
-          <width>111</width>
-          <height>171</height>
+          <width>91</width>
+          <height>191</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_5">
          <item>
           <widget class="QLabel" name="label_4">
+           <property name="styleSheet">
+            <string notr="true">color: #0070DB;</string>
+           </property>
            <property name="text">
             <string>Unit</string>
            </property>
@@ -170,6 +184,9 @@ font-weight: bold;</string>
           <height>16</height>
          </rect>
         </property>
+        <property name="styleSheet">
+         <string notr="true">color: #0070DB;</string>
+        </property>
         <property name="text">
          <string>Tol:</string>
         </property>
@@ -182,6 +199,9 @@ font-weight: bold;</string>
           <width>81</width>
           <height>16</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: #0070DB;</string>
         </property>
         <property name="text">
          <string>+/- 50 grams</string>
@@ -196,6 +216,9 @@ font-weight: bold;</string>
           <height>20</height>
          </rect>
         </property>
+        <property name="styleSheet">
+         <string notr="true">color: #0070DB;</string>
+        </property>
         <property name="text">
          <string>Max:</string>
         </property>
@@ -209,6 +232,9 @@ font-weight: bold;</string>
           <height>20</height>
          </rect>
         </property>
+        <property name="styleSheet">
+         <string notr="true">color: #0070DB;</string>
+        </property>
         <property name="text">
          <string>800 grams</string>
         </property>
@@ -218,9 +244,12 @@ font-weight: bold;</string>
          <rect>
           <x>20</x>
           <y>110</y>
-          <width>71</width>
-          <height>61</height>
+          <width>91</width>
+          <height>81</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
         </property>
        </widget>
        <widget class="NavButton" name="gotoBtn" native="true">
@@ -228,8 +257,8 @@ font-weight: bold;</string>
          <rect>
           <x>120</x>
           <y>110</y>
-          <width>71</width>
-          <height>61</height>
+          <width>91</width>
+          <height>81</height>
          </rect>
         </property>
        </widget>
@@ -299,7 +328,7 @@ font-weight: bold;</string>
           </widget>
          </item>
          <item row="3" column="2">
-          <widget class="QPushButton" name="btnBPoint_d">
+          <widget class="QPushButton" name="btnBPoint">
            <property name="focusPolicy">
             <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
@@ -429,7 +458,7 @@ font-weight: bold;</string>
           </widget>
          </item>
          <item row="1" column="3">
-          <widget class="QPushButton" name="btnClear_d_2">
+          <widget class="QPushButton" name="btnClear">
            <property name="focusPolicy">
             <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
@@ -454,6 +483,9 @@ font-weight: bold;</string>
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>spinBox</tabstop>
+ </tabstops>
  <resources>
   <include location="../resources.qrc"/>
  </resources>

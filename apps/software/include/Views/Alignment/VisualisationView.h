@@ -54,6 +54,7 @@ namespace Kub3::UI::Views::ViewsAlignment
         void onAntiCollisionButtonClicked(const QString &buttonId);
         void onVisualMarkButtonClicked(const QString &buttonId);
         void onMeasurementButtonClicked(const QString &buttonId);
+        void closeHardForceContactFormIfNeeded(void);
 
     private:
         Ui::VisualisationView *ui;
