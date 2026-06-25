@@ -18,6 +18,7 @@
 #include <MFSM/MasterFSM.h>
 // --- UI
 #include <ViewModels/Exposure/SaveExposureSettingsViewModel.h>
+#include <ViewModels/ExposureMenuViewModel.h>
 #include <ViewModels/HomeViewModel.h>
 #include <ViewModels/Settings/MachineStatusViewModel.h>
 #include <ViewModels/SettingsViewModel.h>
@@ -78,6 +79,7 @@ namespace Kub3
         QPointer<UI::ViewModels::HomeViewModel> m_homeVM;
         QPointer<UI::ViewModels::HomeViewModel> m_homeEightVM;
         QPointer<UI::ViewModels::SettingsViewModel> m_settingsVM;
+        QPointer<UI::ViewModels::ExposureMenuViewModel> m_exposureMenuVM;
         QPointer<UI::ViewModels::Exposure::SaveExposureSettingsViewModel> m_saveExposureSettingsVM;
         QPointer<UI::ViewModels::Exposure::ExposureSettingsViewModel> m_exposureSettingsVM;
         QPointer<UI::ViewModels::Exposure::FavoriteExposureSettingsViewModel> m_favoriteExposureSettingsVM;

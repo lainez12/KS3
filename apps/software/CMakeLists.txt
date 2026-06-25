@@ -12,6 +12,7 @@ qt_add_executable(Kub3Software
     src/ApplicationBuilder.cpp
     src/ViewModels/HomeViewModel.cpp
     src/ViewModels/SettingsViewModel.cpp
+    src/ViewModels/ExposureMenuViewModel.cpp
     src/ViewModels/Exposure/ExposureSettingsViewModel.cpp
     src/ViewModels/Exposure/FavoriteExposureSettingsViewModel.cpp
     src/ViewModels/Exposure/RecapExposureSettingsViewModel.cpp
@@ -43,6 +44,7 @@ qt_add_executable(Kub3Software
     src/Views/ExposureViewBase.cpp
     src/Views/HomeView.cpp
     src/Views/HomeEightView.cpp
+    src/Views/ExposureMenuView.cpp
     src/Views/SettingsView.cpp
     src/Views/Settings/MachineStatusView.cpp
     src/Views/Settings/VersionView.cpp
@@ -72,6 +74,7 @@ qt_add_executable(Kub3Software
     include/ApplicationBuilder.h
     include/ViewModels/HomeViewModel.h
     include/ViewModels/SettingsViewModel.h
+    include/ViewModels/ExposureMenuViewModel.h
     include/ViewModels/Exposure/ExposureSettingsViewModel.h
     include/ViewModels/Exposure/FavoriteExposureSettingsViewModel.h
     include/ViewModels/Exposure/RecapExposureSettingsViewModel.h
@@ -104,6 +107,7 @@ qt_add_executable(Kub3Software
     include/Views/ExposureViewBase.h
     include/Views/HomeView.h
     include/Views/HomeEightView.h
+    include/Views/ExposureMenuView.h
     include/Views/SettingsView.h
     include/Views/Settings/MachineStatusView.h
     include/Views/Settings/TemperatureView.h
@@ -138,6 +142,7 @@ qt_add_executable(Kub3Software
     gui/Views/Exposure/ProgressExposureView.ui
     gui/Views/HomeView.ui
     gui/Views/HomeEightView.ui
+    gui/Views/ExposureMenuView.ui
     gui/Views/SettingsView.ui
     gui/Views/Settings/MachineStatusView.ui
     gui/Views/Settings/VersionView.ui

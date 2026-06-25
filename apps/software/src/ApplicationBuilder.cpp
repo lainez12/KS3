@@ -108,6 +108,7 @@ namespace Kub3
             ASSIGN_VIEW_MODEL(UI::ViewModels::HomeViewModel, homeEightVM, m_homeEightVM, m_repo);
             ASSIGN_VIEW_MODEL(UI::ViewModels::MachineStatusViewModel, machineStatusVM, m_machineStatusVM, m_repo);
             ASSIGN_VIEW_MODEL(UI::ViewModels::SettingsViewModel, settingsVM, m_settingsVM, m_repo);
+            ASSIGN_VIEW_MODEL(UI::ViewModels::ExposureMenuViewModel, exposureMenuVM, m_exposureMenuVM, m_repo);
             ASSIGN_VIEW_MODEL(UI::ViewModels::Exposure::ExposureSettingsViewModel, exposureSettingsVM, m_exposureSettingsVM, m_repo);
             ASSIGN_VIEW_MODEL(UI::ViewModels::Exposure::FavoriteExposureSettingsViewModel, favoriteExposureSettingsVM, m_favoriteExposureSettingsVM, m_repo);
             ASSIGN_VIEW_MODEL(UI::ViewModels::Exposure::RecapExposureSettingsViewModel, recapExposureSettingsVM, m_recapExposureSettingsVM, m_repo);
@@ -129,6 +130,7 @@ namespace Kub3
             auto *homeView                     = new HomeView(std::move(homeVM), m_mainWindow.get());
             auto *homeEightView                = new HomeEightView(std::move(homeEightVM), m_mainWindow.get());
             auto *machineStatusView            = new MachineStatusView(std::move(machineStatusVM), m_mainWindow.get());
+            auto *exposureMenuView             = new ExposureMenuView(std::move(exposureMenuVM), m_mainWindow.get());
             auto *settingsView                 = new SettingsView(std::move(settingsVM), m_mainWindow.get());
             auto *exposureSettingsView         = new ExposureSettingsView(std::move(exposureSettingsVM), m_mainWindow.get());
             auto *favoriteExposureSettingsView = new FavoriteExposureSettingsView(std::move(favoriteExposureSettingsVM), m_mainWindow.get());
@@ -149,6 +151,7 @@ namespace Kub3
 
             m_mainWindow->addView(Kub3::UI::ViewId::HOME_VIEW, homeView);
             m_mainWindow->addView(Kub3::UI::ViewId::HOME_EIGHT_VIEW, homeEightView);
+            m_mainWindow->addView(Kub3::UI::ViewId::EXPOSURE_MENU_VIEW, exposureMenuView);
             m_mainWindow->addView(Kub3::UI::ViewId::MACHINE_STATUS_VIEW, machineStatusView);
             m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_VIEW, settingsView);
             m_mainWindow->addView(Kub3::UI::ViewId::EXPOSURE_SETTINGS_VIEW, exposureSettingsView);

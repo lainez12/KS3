@@ -29,6 +29,7 @@
 #include <Views/Settings/TemperatureView.h>
 #include <Views/Settings/UpdateSoftwareView.h>
 #include <Views/Settings/VersionView.h>
+#include <Views/ExposureMenuView.h>
 #include <Views/SettingsView.h>
 #include <Views/ViewBase.h>
 
