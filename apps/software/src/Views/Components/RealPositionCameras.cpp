@@ -11,7 +11,11 @@ RealPositionCameras::RealPositionCameras(QWidget *parent) :
     // ui->backgroundWafer->hide();
     ui->backgroundWafer->setVisible(false);
 
-    ui->backgroundWafer->setStyleSheet("background-image: url(:/icons/wafer6pouce.png); background-repeat: no-repeat; background-position: center; background-size: contain;");
+    ui->backgroundWafer->setStyleSheet(
+        "background-image: url(:/icons/wafer6pouce.png);"
+        "background-repeat: no-repeat;"
+        "background-position: center;"
+        "background-size: contain;");
     connect(ui->btnOpenClose, &QCheckBox::toggled, this, &RealPositionCameras::onBtnOpenCloseToggled);
 }
 
