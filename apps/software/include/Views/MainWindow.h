@@ -8,6 +8,7 @@
 #include <QPixmap>
 #include <QPointer>
 
+#include <Views/Alignment/ContactSelectionView.h>
 #include <Views/Alignment/DistanceView.h>
 #include <Views/Alignment/LoadParametersView.h>
 #include <Views/Alignment/SaveParametersView.h>
@@ -20,6 +21,7 @@
 #include <Views/Exposure/ProgressExposureView.h>
 #include <Views/Exposure/RecapExposureSettingsView.h>
 #include <Views/Exposure/SaveExposureSettingsView.h>
+#include <Views/ExposureMenuView.h>
 #include <Views/HomeEightView.h>
 #include <Views/HomeView.h>
 #include <Views/Settings/LedTestView.h>
@@ -29,15 +31,16 @@
 #include <Views/Settings/TemperatureView.h>
 #include <Views/Settings/UpdateSoftwareView.h>
 #include <Views/Settings/VersionView.h>
-#include <Views/ExposureMenuView.h>
 #include <Views/SettingsView.h>
 #include <Views/ViewBase.h>
 
-namespace Ui {
+namespace Ui
+{
     class MainWindow;
 }
 
-class MainWindow : public QMainWindow {
+class MainWindow : public QMainWindow
+{
     Q_OBJECT
 
 public:

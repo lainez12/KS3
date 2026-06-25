@@ -30,6 +30,7 @@ qt_add_executable(Kub3Software
     src/ViewModels/Alignment/SaveParametersViewModel.cpp
     src/ViewModels/Alignment/VisualisationViewModel.cpp
     src/ViewModels/Alignment/DistanceViewModel.cpp
+    src/ViewModels/Alignment/ContactSelectionViewModel.cpp
     src/Views/Exposure/ExposureSettingsView.cpp
     src/Views/Exposure/FavoriteExposureSettingsView.cpp
     src/Views/Exposure/RecapExposureSettingsView.cpp
@@ -57,6 +58,7 @@ qt_add_executable(Kub3Software
     src/Views/Alignment/SaveParametersView.cpp
     src/Views/Alignment/VisualisationView.cpp
     src/Views/Alignment/DistanceView.cpp
+    src/Views/Alignment/ContactSelectionView.cpp
     src/Views/Components/FavoriteExposureSettingButton.cpp
     src/Views/Components/HardForceContactForm.cpp
     src/Views/Components/RealPositionCameras.cpp
@@ -92,6 +94,7 @@ qt_add_executable(Kub3Software
     include/ViewModels/Alignment/SaveParametersViewModel.h
     include/ViewModels/Alignment/VisualisationViewModel.h
     include/ViewModels/Alignment/DistanceViewModel.h
+    include/ViewModels/Alignment/ContactSelectionViewModel.h
     include/Views/Modules/CamerasTestView.h
     include/Views/Exposure/ExposureSettingsView.h
     include/Views/Exposure/FavoriteExposureSettingsView.h
@@ -120,6 +123,7 @@ qt_add_executable(Kub3Software
     include/Views/Alignment/SaveParametersView.h
     include/Views/Alignment/VisualisationView.h
     include/Views/Alignment/DistanceView.h
+    include/Views/Alignment/ContactSelectionView.h
     include/Views/Components/FavoriteExposureSettingButton.h
     include/Views/Components/NavButtonManager.h
     include/Views/Components/HardForceContactForm.h
@@ -155,6 +159,7 @@ qt_add_executable(Kub3Software
     gui/Views/Alignment/SaveParametersView.ui
     gui/Views/Alignment/VisualisationView.ui
     gui/Views/Alignment/DistanceView.ui
+    gui/Views/Alignment/ContactSelectionView.ui
     gui/Components/HardForceContactForm.ui
     gui/Components/RealPositionCameras.ui
     gui/Components/NavButton.ui

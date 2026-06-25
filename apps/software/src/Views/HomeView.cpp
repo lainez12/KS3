@@ -86,5 +86,5 @@ void HomeView::onFloodExposureClicked()
 
 void HomeView::onMaskAlignmentClicked()
 {
-    emit s_openView(Kub3::UI::ViewId::ALIGNMENT_DISTANCE_VIEW);
+    emit s_openView(Kub3::UI::ViewId::ALIGNMENT_CONTACT_SELECTION_VIEW);
 }

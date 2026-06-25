@@ -93,6 +93,7 @@ namespace Kub3
         QPointer<UI::ViewModels::Settings::LedTestViewModel> m_ledTestVM;
         QPointer<UI::ViewModels::Settings::UpdateSoftwareViewModel> m_updateSoftwareVM;
         QPointer<UI::ViewModels::Alignment::DistanceViewModel> m_distanceVM;
+        QPointer<UI::ViewModels::Alignment::ContactSelectionViewModel> m_contactSelectionVM;
         QPointer<UI::ViewModels::Alignment::VisualisationViewModel> m_visualisationVM;
         QPointer<UI::ViewModels::Alignment::LoadParametersViewModel> m_loadParametersVM;
         QPointer<UI::ViewModels::Alignment::SaveParametersViewModel> m_saveParametersVM;

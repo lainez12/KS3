@@ -22,9 +22,6 @@ DistanceView::DistanceView(Unique<DistanceViewModel> viewModel, QWidget *parent)
 DistanceView::~DistanceView() {
 }
 
-void DistanceView::resizeEvent(QResizeEvent *ev) {
-    QWidget::resizeEvent(ev);
-}
 
 void DistanceView::setNewNavButtonsConfigs() {
 }
