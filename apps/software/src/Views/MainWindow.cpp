@@ -277,7 +277,6 @@ void MainWindow::ps_stateChanged(const QString &stateName)
 void MainWindow::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
-    /*
     int scaledWidth = this->width() * 0.9;                                                     // Calculate the scaled width for bg image
     QPixmap scaled  = m_backgroundPixmap.scaledToWidth(scaledWidth, Qt::SmoothTransformation);
     // Draw at the very bottom right of the ENTIRE window
@@ -287,7 +286,6 @@ void MainWindow::paintEvent(QPaintEvent *event)
     painter.setRenderHint(QPainter::SmoothPixmapTransform);
     painter.fillRect(this->rect(), Qt::white); // Draw the base white background for the whole window
     painter.drawPixmap(x, y, scaled);          // Draw the background image scaled pixmap
-    */
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event)
@@ -298,13 +296,4 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     // 2. Perform geometry and layout calculations
     int margin = this->width() * 0.05;                       // 5% margin on the left and right
     ui->bottomBar->setContentsMargins(margin, 0, margin, 0); // Apply the margin to the bottom bar
-
-    /* // PRO TIP: If you uncomment your background code in the future,
-    // calculate and cache the scaled pixmap and its coordinates here too!
-    // Example:
-    // int scaledWidth = this->width() * 0.9;
-    // m_cachedPixmap = m_backgroundPixmap.scaledToWidth(scaledWidth, Qt::SmoothTransformation);
-    // m_bgX = this->width() - m_cachedPixmap.width();
-    // m_bgY = this->height() - m_cachedPixmap.height();
-    */
 }

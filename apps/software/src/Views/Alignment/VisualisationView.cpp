@@ -146,11 +146,9 @@ void VisualisationView::resizeEvent(QResizeEvent *ev)
     // Position configCamLeftFrame: top right corner of visioLeft
     int configLeftFrameHeight = visioLeftHeight - (BUTTON_SIZE * 1.25);
     int configLeftFrameX      = visioLeftWidth - CONFIG_FRAME_WIDTH;
-    // ui->configCamLeftFrame->setGeometry(configLeftFrameX, 0, CONFIG_FRAME_WIDTH, configLeftFrameHeight);
 
     // Position configCamRightFrame: top left corner of visioRight
     int configRightFrameHeight = visioRightHeight - (BUTTON_SIZE * 1.25);
-    // ui->configCamRightFrame->setGeometry(0, 0, CONFIG_FRAME_WIDTH, configRightFrameHeight);
 
     // Position moveLeftCamWidget: left side of visioLeft, full height
     ui->moveLeftCamWidget->setGeometry(0, 0, ui->moveLeftCamWidget->width(), visioLeftHeight);
