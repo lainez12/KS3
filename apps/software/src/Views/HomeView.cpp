@@ -5,6 +5,7 @@
 #define ID_BTN_SETTINGS "S"
 #define ID_BTN_OPEN     "O"
 #define ID_BTN_CLOSE    "C"
+#define ID_BTN_BACK     "B"
 
 HomeView::HomeView(Unique<HomeViewModel> viewModel, QWidget *parent) :
     ViewBase(std::move(viewModel), parent),
@@ -59,59 +60,23 @@ void HomeView::updateMachineLogo(int h)
 
 void HomeView::createNavButtonsConfigs()
 {
-    NavButtonConfig settingsBtn(
-        "settings",
+    NavButtonConfig backBtn(
+        "Back",
         QColor("#0072BA"),
         QColor("#B2D4F4"),
-        ":/icons/settings.svg",
-        ID_BTN_SETTINGS,
-        std::bind(&HomeView::onSettingsButtonClicked, this, std::placeholders::_1));
-    addNavButton("left", settingsBtn);
-
-    NavButtonConfig openBtn(
-        "open",
-        QColor("#0072BA"),
-        QColor("#B2D4F4"),
-        ":/icons/eject.svg",
-        ID_BTN_OPEN,
-        std::bind(&HomeView::onOpenButtonClicked, this, std::placeholders::_1));
-    addNavButton("right", openBtn);
+        ":/icons/back.svg",
+        ID_BTN_BACK,
+        std::bind(&HomeView::onBackButtonClicked, this, std::placeholders::_1));
+    addNavButton("left", backBtn);
 }
 void HomeView::configTitleBar()
 {
     setTitleBar(TitleBarConfig{});
 }
 
-void HomeView::onSettingsButtonClicked(const QString &buttonId)
+void HomeView::onBackButtonClicked(const QString &buttonId)
 {
-    emit s_openView(Kub3::UI::ViewId::SETTINGS_VIEW);
-}
-void HomeView::onOpenButtonClicked(const QString &buttonId)
-{
-    setNavButtonEnabled(ID_BTN_SETTINGS, false);
-    removeNavButton(ID_BTN_OPEN);
-    NavButtonConfig closeBtn(
-        "close",
-        QColor("#0072BA"),
-        QColor("#B2D4F4"),
-        ":/icons/insert.svg",
-        ID_BTN_CLOSE,
-        std::bind(&HomeView::onCloseButtonCliked, this, std::placeholders::_1));
-    addNavButton("right", closeBtn);
-}
-
-void HomeView::onCloseButtonCliked(const QString &buttonId)
-{
-    setNavButtonEnabled(ID_BTN_SETTINGS, true);
-    m_buttonManager.removeButton(ID_BTN_CLOSE);
-    NavButtonConfig openBtn(
-        "open",
-        QColor("#0072BA"),
-        QColor("#B2D4F4"),
-        ":/icons/eject.svg",
-        ID_BTN_OPEN,
-        std::bind(&HomeView::onOpenButtonClicked, this, std::placeholders::_1));
-    addNavButton("right", openBtn);
+    emit s_openView(Kub3::UI::ViewId::EXPOSURE_MENU_VIEW);
 }
 
 void HomeView::onFloodExposureClicked()

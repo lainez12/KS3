@@ -18,7 +18,7 @@ HomeEightView::HomeEightView(Unique<HomeViewModel> viewModel, QWidget *parent) :
 
     this->updateMachineLogo(this->height());
 
-    connect(ui->mainSubmenuExposureBtn, &QPushButton::clicked, this, &HomeEightView::onFloodExposureClicked);
+    connect(ui->mainSubmenuExposureBtn, &QPushButton::clicked, this, &HomeEightView::onExposureMenuClicked);
 }
 
 HomeEightView::~HomeEightView()
@@ -60,15 +60,6 @@ void HomeEightView::createNavButtonsConfigs()
         ID_BTN_SETTINGS,
         std::bind(&HomeEightView::onSettingsButtonClicked, this, std::placeholders::_1));
     addNavButton("left", settingsBtn);
-
-    NavButtonConfig openBtn(
-        "open",
-        QColor("#0072BA"),
-        QColor("#B2D4F4"),
-        ":/icons/eject.svg",
-        ID_BTN_OPEN,
-        std::bind(&HomeEightView::onOpenButtonClicked, this, std::placeholders::_1));
-    addNavButton("right", openBtn);
 }
 void HomeEightView::configTitleBar()
 {
@@ -79,37 +70,10 @@ void HomeEightView::onSettingsButtonClicked(const QString &buttonId)
 {
     emit s_openView(Kub3::UI::ViewId::SETTINGS_VIEW);
 }
-void HomeEightView::onOpenButtonClicked(const QString &buttonId)
-{
-    setNavButtonEnabled(ID_BTN_SETTINGS, false);
-    removeNavButton(ID_BTN_OPEN);
-    NavButtonConfig closeBtn(
-        "close",
-        QColor("#0072BA"),
-        QColor("#B2D4F4"),
-        ":/icons/insert.svg",
-        ID_BTN_CLOSE,
-        std::bind(&HomeEightView::onCloseButtonCliked, this, std::placeholders::_1));
-    addNavButton("right", closeBtn);
-}
 
-void HomeEightView::onCloseButtonCliked(const QString &buttonId)
+void HomeEightView::onExposureMenuClicked()
 {
-    setNavButtonEnabled(ID_BTN_SETTINGS, true);
-    m_buttonManager.removeButton(ID_BTN_CLOSE);
-    NavButtonConfig openBtn(
-        "open",
-        QColor("#0072BA"),
-        QColor("#B2D4F4"),
-        ":/icons/eject.svg",
-        ID_BTN_OPEN,
-        std::bind(&HomeEightView::onOpenButtonClicked, this, std::placeholders::_1));
-    addNavButton("right", openBtn);
-}
-
-void HomeEightView::onFloodExposureClicked()
-{
-    emit s_openView(Kub3::UI::ViewId::HOME_VIEW);
+    emit s_openView(Kub3::UI::ViewId::EXPOSURE_MENU_VIEW);
 }
 
 void HomeEightView::onMaskAlignmentClicked()

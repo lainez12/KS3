@@ -41,9 +41,7 @@ namespace Kub3::UI::Views
         void createNavButtonsConfigs();
         void configTitleBar();
 
-        void onSettingsButtonClicked(const QString &buttonId);
-        void onOpenButtonClicked(const QString &buttonId);
-        void onCloseButtonCliked(const QString &buttonId);
+        void onBackButtonClicked(const QString &buttonId);
 
     private:
         Ui::HomeView *ui;

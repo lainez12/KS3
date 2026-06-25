@@ -9,7 +9,8 @@
 
 SettingsView::SettingsView(Unique<SettingsViewModel> viewModel, QWidget *parent) :
     ViewBase(std::move(viewModel), parent),
-    ui(new Ui::SettingsView) {
+    ui(new Ui::SettingsView)
+{
     ui->setupUi(this);
 
     createNavButtonsConfigs();
@@ -38,15 +39,18 @@ SettingsView::SettingsView(Unique<SettingsViewModel> viewModel, QWidget *parent)
     connect(ui->updateSoftBtn, &NavButton::clicked, this, [this]() { emit s_openView(Kub3::UI::ViewId::SETTINGS_UPDATE_SOFTWARE_VIEW); });
     connect(ui->machineSettingsBtn, &NavButton::clicked, this, [this]() { emit s_openView(Kub3::UI::ViewId::MACHINE_STATUS_VIEW); });
 }
-SettingsView::~SettingsView() {
+SettingsView::~SettingsView()
+{
 }
 
-void SettingsView::resizeEvent(QResizeEvent *ev) {
+void SettingsView::resizeEvent(QResizeEvent *ev)
+{
     QWidget::resizeEvent(ev);
     ui->buttonsLayout->setSpacing(this->width() * 0.03); // 7% of window width
 }
 
-void SettingsView::createNavButtonsConfigs() {
+void SettingsView::createNavButtonsConfigs()
+{
     NavButtonConfig homeBtn(
         "Home",
         ":/icons/home.svg",
@@ -54,7 +58,8 @@ void SettingsView::createNavButtonsConfigs() {
         std::bind(&SettingsView::onHomeButtonClicked, this, std::placeholders::_1));
     addNavButton("left", homeBtn);
 }
-void SettingsView::configTitleBar() {
+void SettingsView::configTitleBar()
+{
     setTitleBar(TitleBarConfig{
         .viewTitle      = "Parameters",
         .textColor      = QColor("#FFF"),
@@ -66,6 +71,7 @@ void SettingsView::configTitleBar() {
     });
 }
 
-void SettingsView::onHomeButtonClicked(const QString &buttonId) {
-    emit s_openView(Kub3::UI::ViewId::HOME_VIEW);
+void SettingsView::onHomeButtonClicked(const QString &buttonId)
+{
+    emit s_openView(Kub3::UI::ViewId::HOME_EIGHT_VIEW);
 }

@@ -29,7 +29,7 @@ namespace Kub3::UI::Views
     signals:
 
     public slots:
-        void onFloodExposureClicked();
+        void onExposureMenuClicked();
         void onMaskAlignmentClicked();
     private slots:
 
@@ -42,8 +42,6 @@ namespace Kub3::UI::Views
         void configTitleBar();
 
         void onSettingsButtonClicked(const QString &buttonId);
-        void onOpenButtonClicked(const QString &buttonId);
-        void onCloseButtonCliked(const QString &buttonId);
 
     private:
         Ui::HomeEightView *ui;

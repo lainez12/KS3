@@ -11,6 +11,8 @@ ExposureMenuView::ExposureMenuView(Unique<ExposureMenuViewModel> viewModel, QWid
 
     createNavButtonsConfigs();
     configTitleBar();
+
+    connect(ui->exposureModeBtn, &QPushButton::clicked, this, [this]() { emit s_openView(Kub3::UI::ViewId::HOME_VIEW); });
 }
 
 ExposureMenuView::~ExposureMenuView()
