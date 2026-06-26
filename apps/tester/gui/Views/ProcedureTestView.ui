@@ -60,7 +60,7 @@
          <property name="currentIndex">
           <number>3</number>
          </property>
-         <widget class="QWidget" name="tab">
+         <widget class="QWidget" name="conveyorsTab">
           <attribute name="title">
            <string>Conveyors</string>
           </attribute>
@@ -370,7 +370,7 @@
            </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="tab_2">
+         <widget class="QWidget" name="alignmentTab">
           <attribute name="title">
            <string>Alignment Stages</string>
           </attribute>
@@ -745,7 +745,7 @@
            </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="tab_3">
+         <widget class="QWidget" name="zElevatorsTab">
           <attribute name="title">
            <string>Z Elevators</string>
           </attribute>
@@ -1067,7 +1067,7 @@
            </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="tab_4">
+         <widget class="QWidget" name="camerasDeckTab">
           <attribute name="title">
            <string>Cameras/Deck</string>
           </attribute>

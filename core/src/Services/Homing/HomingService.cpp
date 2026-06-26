@@ -24,6 +24,7 @@
 
 #define CAMERAS_TASKS_QUEUE_LANE 1
 #define DECK_TASKS_QUEUE_LANE    2
+#define INITIALIZATION_TIMEOUT   90000 // ms (1m30s)
 
 namespace
 {
@@ -111,7 +112,7 @@ namespace Kub3::Services
         buildDeckSequence(true, DECK_TASKS_QUEUE_LANE);
 #endif
 
-        this->startSequence();
+        this->startSequence(INITIALIZATION_TIMEOUT);
     }
 
     void HomingService::home(HomingTarget::Type target)
@@ -294,7 +295,7 @@ namespace Kub3::Services
             return; // Invalid target, skipping request.
         }
 
-        this->startSequence();
+        this->startSequence(INITIALIZATION_TIMEOUT);
     }
 
     void HomingService::onStop(void)

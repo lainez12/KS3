@@ -50,6 +50,7 @@ namespace Kub3::Tools::Tester
         void ps_runStowage(int targetInt);
         void ps_runUnstowage(int targetInt);
         void ps_runAutolevel(void);
+        void ps_runCameraMovement(CameraId camId, CameraMovementKind kind, CameraDirection dir);
 
     signals:
         // Pushed to ViewModel
@@ -61,7 +62,7 @@ namespace Kub3::Tools::Tester
         void onTick();
 
     private:
-        void startServiceRoutine(Services::IService *service, const QString &procedureName);
+        void startServiceRoutine(Services::IService *service, const QString &procedureName, bool noEmit = false);
 
         QTimer m_tickTimer;
         Services::IService *m_activeService = nullptr;
@@ -80,6 +81,12 @@ namespace Kub3::Tools::Tester
         Shared<HAL::MS::IMachineStatusRepo> m_repo;
         Config::process_config_t m_processConfig;
         Config::hardware_config_t m_hwConfig;
+
+        struct CameraMovement {
+            Services::VisionMotor motor;
+            Services::VisionDirection dir;
+        };
+        std::vector<CameraMovement> m_activeCameraMoves;
     };
 
 } // namespace Kub3::Tools::Tester

@@ -214,40 +214,29 @@ namespace Kub3::Services
     void VisionService::stopManual(VisionMotor motor)
     {
         auto it = m_cameraMotors.find(motor);
+
         if (it == m_cameraMotors.end() || !it->second.motor)
+        {
             return;
+        }
 
         const VisionDirection lastDir = it->second.currentDir;
 
+        // If the motor is currently being pushed by the other camera, ignore the stop command.
+        // It must continue moving to avoid a hardware collision. It stops when the pushing motor stops.
+        if (isMotorBeingPushed(motor, lastDir))
+        {
+            return;
+        }
+
+        // Stop the requested motor immediately
         it->second.watchdogTicks = 0;
         it->second.motor->emergencyStop();
 
-        // ANTI-COASTING SAFETY: If we were pushing the other camera, stop it simultaneously
-        if (m_pushingModeEnabled)
+        // If this motor was actively pushing another, soft-stop the pushed partner (anti-coasting safety)
+        if (auto pushedPair = getAssociatedPushedMotor(motor, lastDir))
         {
-            VisionMotor pushedMotor;
-            VisionDirection pushedDir;
-
-            if (motor == VisionMotor::UpperLeftCameraX && lastDir == VisionDirection::UpperLeftCamXRight && inCollisionZone(motor, lastDir))
-            {
-                pushedMotor = VisionMotor::UpperRightCameraX;
-                pushedDir   = VisionDirection::UpperRightCamXRight;
-            }
-            else if (motor == VisionMotor::UpperRightCameraX && lastDir == VisionDirection::UpperRightCamXLeft && inCollisionZone(motor, lastDir))
-            {
-                pushedMotor = VisionMotor::UpperLeftCameraX;
-                pushedDir   = VisionDirection::UpperLeftCamXLeft;
-            }
-            else
-                return; // Not pushing anything, safe to exit
-
-            // Halt the pushed motor immediately to prevent making the gap larger
-            auto targetIt = m_cameraMotors.find(pushedMotor);
-            if (targetIt != m_cameraMotors.end() && targetIt->second.currentDir == pushedDir)
-            {
-                targetIt->second.watchdogTicks = 0;
-                targetIt->second.motor->emergencyStop();
-            }
+            applyAntiCoastingStop(pushedPair->first, pushedPair->second);
         }
     }
 
@@ -314,7 +303,7 @@ namespace Kub3::Services
     }
 
     // ==========================================
-    // ANTI-COLLISION LOGIC
+    // ANTI-COLLISION & ANTI-COASTING HELPERS
     // ==========================================
 
     bool VisionService::inCollisionZone(VisionMotor motor, VisionDirection dir) const
@@ -328,7 +317,9 @@ namespace Kub3::Services
 
         if (itLeft == m_cameraMotors.end() || !itLeft->second.motor ||
             itRight == m_cameraMotors.end() || !itRight->second.motor)
-            return true; // Hardware missing, fake collision risk
+        {
+            return true; // Hardware missing, fake collision risk for safety
+        }
 
         // Fetch current positions & compute distance in mm
         const double posLeftX          = itLeft->second.motor->getEncoderPositionMm();
@@ -377,11 +368,80 @@ namespace Kub3::Services
 
         // Start motor if not already moving
         if (conf.watchdogTicks == 0)
+        {
             conf.motor->moveDirection(static_cast<HAL::Act::MotorDirection>(pushedDir), conf.fineMode ? conf.fineProfile : conf.fastProfile);
+        }
 
         // Feed the watchdog synchronously with the pushing motor
         conf.watchdogTicks = VISION_WATCHDOG_TIMEOUT_TICKS;
     }
+
+    bool VisionService::isMotorBeingPushed(VisionMotor motor, VisionDirection lastDir) const
+    {
+        if (!m_pushingModeEnabled)
+        {
+            return false;
+        }
+
+        // Left camera moving left can be pushed by Right camera moving left
+        if (motor == VisionMotor::UpperLeftCameraX && lastDir == VisionDirection::UpperLeftCamXLeft)
+        {
+            auto rightIt = m_cameraMotors.find(VisionMotor::UpperRightCameraX);
+            return (rightIt != m_cameraMotors.end() &&
+                    rightIt->second.watchdogTicks > 0 &&
+                    rightIt->second.currentDir == VisionDirection::UpperRightCamXLeft &&
+                    inCollisionZone(VisionMotor::UpperRightCameraX, VisionDirection::UpperRightCamXLeft));
+        }
+
+        // Right camera moving right can be pushed by Left camera moving right
+        if (motor == VisionMotor::UpperRightCameraX && lastDir == VisionDirection::UpperRightCamXRight)
+        {
+            auto leftIt = m_cameraMotors.find(VisionMotor::UpperLeftCameraX);
+            return (leftIt != m_cameraMotors.end() &&
+                    leftIt->second.watchdogTicks > 0 &&
+                    leftIt->second.currentDir == VisionDirection::UpperLeftCamXRight &&
+                    inCollisionZone(VisionMotor::UpperLeftCameraX, VisionDirection::UpperLeftCamXRight));
+        }
+
+        return false;
+    }
+
+    std::optional<std::pair<VisionMotor, VisionDirection>> VisionService::getAssociatedPushedMotor(VisionMotor motor, VisionDirection lastDir) const
+    {
+        if (!m_pushingModeEnabled)
+        {
+            return std::nullopt;
+        }
+
+        // If Left camera moving right hits collision zone, it is pushing the Right camera
+        if (motor == VisionMotor::UpperLeftCameraX && lastDir == VisionDirection::UpperLeftCamXRight && inCollisionZone(motor, lastDir))
+        {
+            return std::make_pair(VisionMotor::UpperRightCameraX, VisionDirection::UpperRightCamXRight);
+        }
+
+        // If Right camera moving left hits collision zone, it is pushing the Left camera
+        if (motor == VisionMotor::UpperRightCameraX && lastDir == VisionDirection::UpperRightCamXLeft && inCollisionZone(motor, lastDir))
+        {
+            return std::make_pair(VisionMotor::UpperLeftCameraX, VisionDirection::UpperLeftCamXLeft);
+        }
+
+        return std::nullopt;
+    }
+
+    void VisionService::applyAntiCoastingStop(VisionMotor pushedMotor, VisionDirection pushedDir)
+    {
+        auto targetIt = m_cameraMotors.find(pushedMotor);
+
+        if (targetIt != m_cameraMotors.end() && targetIt->second.currentDir == pushedDir)
+        {
+            targetIt->second.watchdogTicks = 0;
+            targetIt->second.motor->emergencyStop();
+        }
+    }
+
+    // ==========================================
+    // DECK MOVEMENT HELPER
+    // ==========================================
 
     bool VisionService::deckVisualisationLimitReached(void) const
     {

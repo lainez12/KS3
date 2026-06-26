@@ -150,6 +150,7 @@ namespace Kub3::Tools::Tester
         QObject::connect(procVM, &ProcedureTestViewModel::cmdRunStowage, m_procedureTestController, &ProcedureTestController::ps_runStowage, Qt::QueuedConnection);
         QObject::connect(procVM, &ProcedureTestViewModel::cmdRunUnstowage, m_procedureTestController, &ProcedureTestController::ps_runUnstowage, Qt::QueuedConnection);
         QObject::connect(procVM, &ProcedureTestViewModel::cmdRunAutolevel, m_procedureTestController, &ProcedureTestController::ps_runAutolevel, Qt::QueuedConnection);
+        QObject::connect(procVM, &ProcedureTestViewModel::cmdRunCameraMovement, m_procedureTestController, &ProcedureTestController::ps_runCameraMovement, Qt::QueuedConnection);
 
         // Controller (Logic Thread) -> ViewModel (Main Thread)
         QObject::connect(m_procedureTestController, &ProcedureTestController::s_procedureStarted, procVM, &ProcedureTestViewModel::onProcedureStarted, Qt::QueuedConnection);
