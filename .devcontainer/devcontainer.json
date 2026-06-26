@@ -4,6 +4,7 @@
         "dockerfile": "Dockerfile"
     },
     "runArgs": [
+        "--network=host",
         // Gives access to the host devices (like /dev/ttyUSB0 or /dev/ttyACM0 for Arduino)
         "--privileged",
         "--group-add",
