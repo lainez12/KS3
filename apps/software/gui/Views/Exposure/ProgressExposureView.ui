@@ -33,7 +33,7 @@
     <number>0</number>
    </property>
    <item>
-    <layout class="QGridLayout" name="gridLayout">
+    <layout class="QGridLayout" name="gridLayout" columnstretch="1,3,6,0">
      <property name="spacing">
       <number>0</number>
      </property>
@@ -125,7 +125,7 @@ color: #E85420;</string>
          <rect>
           <x>10</x>
           <y>260</y>
-          <width>500</width>
+          <width>1041</width>
           <height>70</height>
          </rect>
         </property>
@@ -140,7 +140,7 @@ color: #E85420;</string>
          <number>75</number>
         </property>
         <property name="alignment">
-         <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+         <set>Qt::AlignmentFlag::AlignCenter</set>
         </property>
         <property name="textVisible">
          <bool>true</bool>

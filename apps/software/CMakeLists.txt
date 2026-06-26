@@ -64,13 +64,14 @@ qt_add_executable(Kub3Software
     src/Views/Components/RealPositionCameras.cpp
     src/Views/Components/MessageOverlay.cpp
     src/Views/Components/NavButtonManager.cpp
-    src/Views/Modules/CamerasTestView.cpp
     src/Views/Components/CameraStreamWidget.cpp
     src/Views/Components/NavButton.cpp
     src/Views/Components/UpBar.cpp
     src/Views/Components/ActionBox.cpp
     src/Views/Components/BottomCroppedCircle.cpp
     src/Views/Components/DoubleRatioSlider.cpp
+    src/Views/Components/ScreenshotThumbnailWidget.cpp
+    src/Views/Modules/CamerasTestView.cpp
 
     # Headers
     include/ApplicationBuilder.h
@@ -135,6 +136,7 @@ qt_add_executable(Kub3Software
     include/Views/Components/ActionBox.h
     include/Views/Components/BottomCroppedCircle.h
     include/Views/Components/DoubleRatioSlider.h
+    include/Views/Components/ScreenshotThumbnailWidget.h
 
     # UI
     gui/resources.qrc
