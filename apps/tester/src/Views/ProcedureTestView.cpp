@@ -198,7 +198,6 @@ namespace Kub3::Tools::Tester
             break;
         }
 
-        qDebug().noquote() << camera << "camera\t" << move << "movement requested \tin direction:\t" << direction;
         m_procedureViewModel->uiRequestCameraMovement(camId, kind, dir);
     }
 
