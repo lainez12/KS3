@@ -73,8 +73,8 @@ QFrame#navBtnIconCircle {
 }
 
 
-///* Main Window Styles */
-//* Upper Bar */
+/* Main Window Styles */
+/* Upper Bar */
 
 #upBar
 {
