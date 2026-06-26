@@ -757,7 +757,7 @@ font-weight: 700;</string>
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>311</width>
+           <width>391</width>
            <height>751</height>
           </rect>
          </property>
@@ -823,14 +823,14 @@ opacity: 1;</string>
             <item>
              <widget class="QSpinBox" name="spinBox">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
               <property name="maximumSize">
                <size>
-                <width>63</width>
+                <width>80</width>
                 <height>35</height>
                </size>
               </property>
@@ -884,14 +884,14 @@ opacity: 1;</string>
             <item>
              <widget class="QSpinBox" name="spinBox_2">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
               <property name="maximumSize">
                <size>
-                <width>63</width>
+                <width>80</width>
                 <height>35</height>
                </size>
               </property>
@@ -940,8 +940,8 @@ opacity: 1;</string>
               <rect>
                <x>10</x>
                <y>10</y>
-               <width>281</width>
-               <height>281</height>
+               <width>351</width>
+               <height>361</height>
               </rect>
              </property>
              <layout class="QGridLayout" name="gridLayout_2">
@@ -1573,9 +1573,9 @@ font-weight: 700;</string>
         <widget class="QWidget" name="moveRightCamWidget" native="true">
          <property name="geometry">
           <rect>
-           <x>650</x>
+           <x>570</x>
            <y>0</y>
-           <width>311</width>
+           <width>391</width>
            <height>751</height>
           </rect>
          </property>
@@ -1641,14 +1641,14 @@ opacity: 1;</string>
             <item>
              <widget class="QSpinBox" name="spinBox_3">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
               <property name="maximumSize">
                <size>
-                <width>63</width>
+                <width>80</width>
                 <height>35</height>
                </size>
               </property>
@@ -1702,14 +1702,14 @@ opacity: 1;</string>
             <item>
              <widget class="QSpinBox" name="spinBox_4">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
               <property name="maximumSize">
                <size>
-                <width>63</width>
+                <width>80</width>
                 <height>35</height>
                </size>
               </property>
@@ -1768,8 +1768,8 @@ height: 50px;
               <rect>
                <x>10</x>
                <y>10</y>
-               <width>281</width>
-               <height>281</height>
+               <width>361</width>
+               <height>361</height>
               </rect>
              </property>
              <layout class="QGridLayout" name="gridLayout_3">
