@@ -16,6 +16,24 @@ MainWindow::MainWindow(QWidget *parent) :
     m_topBar           = ui->upBar;
     m_topBar->hide();
 
+    // Ensure stackedWidget takes all available space and bottomBar stays at bottom
+    QWidget *centralWidget = this->centralWidget();
+    if (centralWidget)
+    {
+        QVBoxLayout *centralLayout = qobject_cast<QVBoxLayout *>(centralWidget->layout());
+        if (centralLayout)
+        {
+            // Find the index of the bottomBar in the layout
+            int bottomBarIndex = centralLayout->indexOf(ui->bottomBar);
+            if (bottomBarIndex > 0)
+            {
+                // Insert a vertical spacer before the bottomBar to push it to the bottom
+                centralLayout->insertStretch(bottomBarIndex, 1);
+                centralLayout->insertStretch(bottomBarIndex, 1);
+            }
+        }
+    }
+
     QHBoxLayout *mainLayout = qobject_cast<QHBoxLayout *>(ui->bottomBar->layout());
     if (mainLayout)
     {
@@ -49,6 +67,14 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::switchShadow(bool enabled)
+{
+    if (ui->bottomBar->graphicsEffect())
+    {
+        ui->bottomBar->graphicsEffect()->setEnabled(enabled);
+    }
+}
+
 void MainWindow::addView(Kub3::UI::ViewId viewId, Kub3::UI::Views::ViewBase *view)
 {
     if (!view)
@@ -78,6 +104,8 @@ void MainWindow::connectViewSignals(Kub3::UI::Views::ViewBase *view)
 
     connect(view, &Kub3::UI::Views::ViewBase::s_buttonStateChanged, this, &MainWindow::onViewButtonStateChanged);
 
+    connect(view, &Kub3::UI::Views::ViewBase::s_switchColorButton, this, &MainWindow::changeButtonColor);
+
     connect(view, &Kub3::UI::Views::ViewBase::s_buttonTextChanged, this, &MainWindow::onViewButtonTextChanged);
 }
 
@@ -96,6 +124,7 @@ void MainWindow::ps_openView(Kub3::UI::ViewId viewId)
 
     updateTopBar(view);
     updateBottomBar(view);
+    switchShadow(view->shadowedBoxStyle());
 
     ui->stackedWidget->setCurrentWidget(view);
     m_currentView = view;
@@ -176,7 +205,10 @@ void MainWindow::clearBottomBar()
         while ((item = layout->takeAt(0)))
         {
             if (item->widget())
+            {
+                item->widget()->setParent(nullptr);
                 item->widget()->deleteLater();
+            }
             delete item;
         }
     };
@@ -219,6 +251,15 @@ void MainWindow::onViewButtonStateChanged(const QString &buttonId, bool newState
     }
 }
 
+void MainWindow::changeButtonColor(const QString &buttonId, bool EnabledColor)
+{
+    auto it = m_bottomBarButtons.find(buttonId);
+    if (it != m_bottomBarButtons.end() && it.value().button)
+    {
+        it.value().button->switchColor(EnabledColor);
+    }
+}
+
 void MainWindow::onViewButtonTextChanged(const QString &buttonId, const QString &newText)
 {
     auto it = m_bottomBarButtons.find(buttonId);
@@ -237,7 +278,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
     int scaledWidth = this->width() * 0.9;                                                     // Calculate the scaled width for bg image
-    QPixmap scaled  = m_backgroundPixmap.scaledToWidth(scaledWidth, Qt::SmoothTransformation); // Scale while keeping the aspect ratio
+    QPixmap scaled  = m_backgroundPixmap.scaledToWidth(scaledWidth, Qt::SmoothTransformation);
     // Draw at the very bottom right of the ENTIRE window
     int x = this->width() - scaled.width();
     int y = this->height() - scaled.height();
@@ -245,7 +286,14 @@ void MainWindow::paintEvent(QPaintEvent *event)
     painter.setRenderHint(QPainter::SmoothPixmapTransform);
     painter.fillRect(this->rect(), Qt::white); // Draw the base white background for the whole window
     painter.drawPixmap(x, y, scaled);          // Draw the background image scaled pixmap
+}
 
+void MainWindow::resizeEvent(QResizeEvent *event)
+{
+    // 1. Always call the base class implementation first
+    QMainWindow::resizeEvent(event); // Use QWidget::resizeEvent(event) if inheriting QWidget directly
+
+    // 2. Perform geometry and layout calculations
     int margin = this->width() * 0.05;                       // 5% margin on the left and right
     ui->bottomBar->setContentsMargins(margin, 0, margin, 0); // Apply the margin to the bottom bar
 }

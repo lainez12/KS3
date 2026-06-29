@@ -18,6 +18,7 @@ namespace Kub3::UI
     {
         HOME_VIEW,
         HOME_EIGHT_VIEW,
+        EXPOSURE_MENU_VIEW,
         EXPOSURE_SETTINGS_VIEW,
         FAVORITE_EXPOSURE_SETTINGS_VIEW,
         COMPLETE_EXPOSURE_VIEW,
@@ -32,6 +33,7 @@ namespace Kub3::UI
         SETTINGS_LED_TEST_VIEW,
         SETTINGS_UPDATE_SOFTWARE_VIEW,
         ALIGNMENT_DISTANCE_VIEW,
+        ALIGNMENT_CONTACT_SELECTION_VIEW,
         ALIGNMENT_VISUALISATION_VIEW,
         ALIGNMENT_LOAD_PARAMETERS_VIEW,
         ALIGNMENT_SAVE_PARAMETERS_VIEW,
@@ -83,6 +85,12 @@ namespace Kub3::UI::Views
         {
             return m_showCentralLogo;
         }
+
+        bool shadowedBoxStyle() const
+        {
+            return m_shadowedBoxStyle;
+        }
+
         const NavButtonManager &getNavButtonManager() const
         {
             return m_buttonManager;
@@ -111,6 +119,15 @@ namespace Kub3::UI::Views
             if (m_buttonManager.setButtonEnabled(buttonId, enabled))
             {
                 emit s_buttonStateChanged(buttonId, enabled);
+            }
+        }
+
+        void switchColorNavButton(const QString &buttonId, bool enabled)
+        {
+            NavButtonConfig *button = m_buttonManager.getButton(buttonId);
+            if (button)
+            {
+                emit s_switchColorButton(buttonId, enabled);
             }
         }
 
@@ -148,6 +165,7 @@ namespace Kub3::UI::Views
 
         void s_buttonStateChanged(const QString &buttonId, bool newState);
         void s_buttonTextChanged(const QString &buttonId, const QString &newText);
+        void s_switchColorButton(const QString &buttonId, bool EnabledColor);
 
     protected:
         void showEvent(QShowEvent *event) override;
@@ -157,6 +175,7 @@ namespace Kub3::UI::Views
     protected:
         Unique<ViewModels::BaseViewModel> m_viewModel;
         bool m_showCentralLogo;
+        bool m_shadowedBoxStyle = true;
         NavButtonManager m_buttonManager;
         Unique<MessageOverlay> m_messages = std::make_unique<MessageOverlay>(this);
 

@@ -2,13 +2,12 @@
 #define VISUALISATIONVIEWMODEL_H
 
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
-#include <QObject>
-#include <ViewModels/BaseViewModel.h>
+#include <ViewModels/BaseVisionViewModel.h>
 
 namespace Kub3::UI::ViewModels::Alignment
 {
 
-    class VisualisationViewModel final : public QObject, public BaseViewModel
+    class VisualisationViewModel final : public BaseVisionViewModel
     {
         Q_OBJECT
 

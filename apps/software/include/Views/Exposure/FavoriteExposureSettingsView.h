@@ -1,8 +1,11 @@
 #ifndef FAVORITEEXPOSURESETTINGSVIEW_H
 #define FAVORITEEXPOSURESETTINGSVIEW_H
 
+#include <QList>
 #include <QWidget>
 #include <ViewModels/Exposure/FavoriteExposureSettingsViewModel.h>
+
+class FavoriteExposureSettingButton;
 
 #include <Views/ExposureViewBase.h>
 
@@ -23,11 +26,10 @@ namespace Kub3::UI::Views::ViewsExposure
         explicit FavoriteExposureSettingsView(Unique<FavoriteExposureSettingsViewModel> viewModel, QWidget *parent = nullptr);
         ~FavoriteExposureSettingsView();
 
-    public:
-        void resizeEvent(QResizeEvent *event) override;
-
     private:
         void setNewNavButtonsConfigs();
+        void populateStackedFavorite(const QList<FavoriteExposureSettingButton *> &favoriteButtons);
+        void updateFavoritePageNavigation();
         void onBackButtonClicked(const QString &buttonId);
         void onValidateButtonClicked(const QString &buttonId) override;
 

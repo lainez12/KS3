@@ -3,18 +3,30 @@
 
 #include <Views/Components/FavoriteExposureSettingButton.h>
 
-FavoriteExposureSettingButton::FavoriteExposureSettingButton(const QString &titleText, const QString &detailsText, QWidget *parent) : QPushButton(parent)
+FavoriteExposureSettingButton::FavoriteExposureSettingButton(const QString &titleText, const QString &detailsText, QWidget *parent) : QPushButton(parent), m_titleText(titleText), m_detailsText(detailsText)
+{
+    setupUi();
+}
+
+FavoriteExposureSettingButton::FavoriteExposureSettingButton(const FavoriteExposureSettingButton &other) : QPushButton(other.parentWidget()), m_titleText(other.m_titleText), m_detailsText(other.m_detailsText)
+{
+    setStyleSheet(other.styleSheet());
+    setMinimumHeight(other.minimumHeight());
+    setupUi();
+}
+
+void FavoriteExposureSettingButton::setupUi()
 {
     QHBoxLayout *layout = new QHBoxLayout(this);
 
-    QLabel *titleLabel   = new QLabel(titleText, this);
-    QLabel *detailsLabel = new QLabel(detailsText, this);
+    QLabel *titleLabel   = new QLabel(m_titleText, this);
+    QLabel *detailsLabel = new QLabel(m_detailsText, this);
 
     titleLabel->setAttribute(Qt::WA_TransparentForMouseEvents);
     detailsLabel->setAttribute(Qt::WA_TransparentForMouseEvents);
 
-    titleLabel->setStyleSheet("color: #0078D7; font-size: 18px; font-weight: bold; text-decoration: underline; border: none;");
-    detailsLabel->setStyleSheet("color: #E25B22; font-size: 14px; font-weight: bold; border: none;");
+    titleLabel->setStyleSheet("color: #0078D7; font-size: 25px; font-weight: bold; text-decoration: underline; border: none;");
+    detailsLabel->setStyleSheet("color: #E25B22; font-size: 20px; font-weight: bold; border: none;");
 
     detailsLabel->setWordWrap(true);
 
@@ -22,7 +34,7 @@ FavoriteExposureSettingButton::FavoriteExposureSettingButton(const QString &titl
     layout->addStretch();
     layout->addWidget(detailsLabel, 0, Qt::AlignRight | Qt::AlignVCenter);
 
-    layout->setContentsMargins(20, 10, 20, 10);
+    layout->setContentsMargins(8, 4, 8, 4);
 
     this->setStyleSheet(
         "QPushButton {"

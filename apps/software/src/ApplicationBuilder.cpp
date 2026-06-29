@@ -108,6 +108,7 @@ namespace Kub3
             ASSIGN_VIEW_MODEL(UI::ViewModels::HomeViewModel, homeEightVM, m_homeEightVM, m_repo);
             ASSIGN_VIEW_MODEL(UI::ViewModels::MachineStatusViewModel, machineStatusVM, m_machineStatusVM, m_repo);
             ASSIGN_VIEW_MODEL(UI::ViewModels::SettingsViewModel, settingsVM, m_settingsVM, m_repo);
+            ASSIGN_VIEW_MODEL(UI::ViewModels::ExposureMenuViewModel, exposureMenuVM, m_exposureMenuVM, m_repo);
             ASSIGN_VIEW_MODEL(UI::ViewModels::Exposure::ExposureSettingsViewModel, exposureSettingsVM, m_exposureSettingsVM, m_repo);
             ASSIGN_VIEW_MODEL(UI::ViewModels::Exposure::FavoriteExposureSettingsViewModel, favoriteExposureSettingsVM, m_favoriteExposureSettingsVM, m_repo);
             ASSIGN_VIEW_MODEL(UI::ViewModels::Exposure::RecapExposureSettingsViewModel, recapExposureSettingsVM, m_recapExposureSettingsVM, m_repo);
@@ -121,6 +122,7 @@ namespace Kub3
             ASSIGN_VIEW_MODEL(UI::ViewModels::Settings::LedTestViewModel, ledTestVM, m_ledTestVM, m_repo);
             ASSIGN_VIEW_MODEL(UI::ViewModels::Settings::UpdateSoftwareViewModel, updateSoftwareVM, m_updateSoftwareVM, m_repo);
             ASSIGN_VIEW_MODEL(UI::ViewModels::Alignment::DistanceViewModel, distanceVM, m_distanceVM, m_repo);
+            ASSIGN_VIEW_MODEL(UI::ViewModels::Alignment::ContactSelectionViewModel, contactSelectionVM, m_contactSelectionVM, m_repo);
             ASSIGN_VIEW_MODEL(UI::ViewModels::Alignment::VisualisationViewModel, visualisationVM, m_visualisationVM, m_repo);
             ASSIGN_VIEW_MODEL(UI::ViewModels::Alignment::LoadParametersViewModel, loadParametersVM, m_loadParametersVM, m_repo);
             ASSIGN_VIEW_MODEL(UI::ViewModels::Alignment::SaveParametersViewModel, saveParametersVM, m_saveParametersVM, m_repo);
@@ -129,6 +131,7 @@ namespace Kub3
             auto *homeView                     = new HomeView(std::move(homeVM), m_mainWindow.get());
             auto *homeEightView                = new HomeEightView(std::move(homeEightVM), m_mainWindow.get());
             auto *machineStatusView            = new MachineStatusView(std::move(machineStatusVM), m_mainWindow.get());
+            auto *exposureMenuView             = new ExposureMenuView(std::move(exposureMenuVM), m_mainWindow.get());
             auto *settingsView                 = new SettingsView(std::move(settingsVM), m_mainWindow.get());
             auto *exposureSettingsView         = new ExposureSettingsView(std::move(exposureSettingsVM), m_mainWindow.get());
             auto *favoriteExposureSettingsView = new FavoriteExposureSettingsView(std::move(favoriteExposureSettingsVM), m_mainWindow.get());
@@ -143,12 +146,14 @@ namespace Kub3
             auto *ledTestView                  = new LedTestView(std::move(ledTestVM), m_mainWindow.get());
             auto *updateSoftwareView           = new UpdateSoftwareView(std::move(updateSoftwareVM), m_mainWindow.get());
             auto *distanceView                 = new DistanceView(std::move(distanceVM), m_mainWindow.get());
+            auto *contactSelectionView         = new ContactSelectionView(std::move(contactSelectionVM), m_mainWindow.get());
             auto *visualisationView            = new VisualisationView(std::move(visualisationVM), m_mainWindow.get());
             auto *loadParametersView           = new LoadParametersView(std::move(loadParametersVM), m_mainWindow.get());
             auto *saveParametersView           = new SaveParametersView(std::move(saveParametersVM), m_mainWindow.get());
 
             m_mainWindow->addView(Kub3::UI::ViewId::HOME_VIEW, homeView);
             m_mainWindow->addView(Kub3::UI::ViewId::HOME_EIGHT_VIEW, homeEightView);
+            m_mainWindow->addView(Kub3::UI::ViewId::EXPOSURE_MENU_VIEW, exposureMenuView);
             m_mainWindow->addView(Kub3::UI::ViewId::MACHINE_STATUS_VIEW, machineStatusView);
             m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_VIEW, settingsView);
             m_mainWindow->addView(Kub3::UI::ViewId::EXPOSURE_SETTINGS_VIEW, exposureSettingsView);
@@ -164,6 +169,7 @@ namespace Kub3
             m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_LED_TEST_VIEW, ledTestView);
             m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_UPDATE_SOFTWARE_VIEW, updateSoftwareView);
             m_mainWindow->addView(Kub3::UI::ViewId::ALIGNMENT_DISTANCE_VIEW, distanceView);
+            m_mainWindow->addView(Kub3::UI::ViewId::ALIGNMENT_CONTACT_SELECTION_VIEW, contactSelectionView);
             m_mainWindow->addView(Kub3::UI::ViewId::ALIGNMENT_VISUALISATION_VIEW, visualisationView);
             m_mainWindow->addView(Kub3::UI::ViewId::ALIGNMENT_LOAD_PARAMETERS_VIEW, loadParametersView);
             m_mainWindow->addView(Kub3::UI::ViewId::ALIGNMENT_SAVE_PARAMETERS_VIEW, saveParametersView);
@@ -209,6 +215,8 @@ namespace Kub3
                              msvm, &VM::BaseVisionViewModel::ps_onCameraFrameReceived);
         msvm->bindConnection(m_repo.get(), &HAL::MS::IMachineStatusRepo::s_machineValueChanged,
                              msvm, &VM::MachineStatusViewModel::ps_handleSensorValueChanged);
+        m_visualisationVM->bindConnection(m_hwManager.get(), &HAL::HardwareManager::s_cameraFrameReady,
+                                          m_visualisationVM.get(), &VM::BaseVisionViewModel::ps_onCameraFrameReceived);
 
         return *this;
     }

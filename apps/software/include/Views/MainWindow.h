@@ -8,6 +8,7 @@
 #include <QPixmap>
 #include <QPointer>
 
+#include <Views/Alignment/ContactSelectionView.h>
 #include <Views/Alignment/DistanceView.h>
 #include <Views/Alignment/LoadParametersView.h>
 #include <Views/Alignment/SaveParametersView.h>
@@ -20,6 +21,7 @@
 #include <Views/Exposure/ProgressExposureView.h>
 #include <Views/Exposure/RecapExposureSettingsView.h>
 #include <Views/Exposure/SaveExposureSettingsView.h>
+#include <Views/ExposureMenuView.h>
 #include <Views/HomeEightView.h>
 #include <Views/HomeView.h>
 #include <Views/Settings/LedTestView.h>
@@ -58,10 +60,12 @@ public slots:
 private slots:
     void onViewButtonConfigsUpdated();
     void onViewButtonStateChanged(const QString &buttonId, bool newState);
+    void changeButtonColor(const QString &buttonId, bool EnabledColor);
     void onViewButtonTextChanged(const QString &buttonId, const QString &newText);
 
 protected:
     void paintEvent(QPaintEvent *event) override;
+    void resizeEvent(QResizeEvent *event) override;
 
 private:
     void updateTopBar(Kub3::UI::Views::ViewBase *view);
@@ -72,6 +76,8 @@ private:
 
     void connectViewSignals(Kub3::UI::Views::ViewBase *view);
     void disconnectViewSignals(Kub3::UI::Views::ViewBase *view);
+
+    void switchShadow(bool enabled);
 
 private:
     Ui::MainWindow *ui;

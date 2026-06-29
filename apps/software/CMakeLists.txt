@@ -12,6 +12,7 @@ qt_add_executable(Kub3Software
     src/ApplicationBuilder.cpp
     src/ViewModels/HomeViewModel.cpp
     src/ViewModels/SettingsViewModel.cpp
+    src/ViewModels/ExposureMenuViewModel.cpp
     src/ViewModels/Exposure/ExposureSettingsViewModel.cpp
     src/ViewModels/Exposure/FavoriteExposureSettingsViewModel.cpp
     src/ViewModels/Exposure/RecapExposureSettingsViewModel.cpp
@@ -29,6 +30,7 @@ qt_add_executable(Kub3Software
     src/ViewModels/Alignment/SaveParametersViewModel.cpp
     src/ViewModels/Alignment/VisualisationViewModel.cpp
     src/ViewModels/Alignment/DistanceViewModel.cpp
+    src/ViewModels/Alignment/ContactSelectionViewModel.cpp
     src/Views/Exposure/ExposureSettingsView.cpp
     src/Views/Exposure/FavoriteExposureSettingsView.cpp
     src/Views/Exposure/RecapExposureSettingsView.cpp
@@ -43,6 +45,7 @@ qt_add_executable(Kub3Software
     src/Views/ExposureViewBase.cpp
     src/Views/HomeView.cpp
     src/Views/HomeEightView.cpp
+    src/Views/ExposureMenuView.cpp
     src/Views/SettingsView.cpp
     src/Views/Settings/MachineStatusView.cpp
     src/Views/Settings/VersionView.cpp
@@ -55,19 +58,26 @@ qt_add_executable(Kub3Software
     src/Views/Alignment/SaveParametersView.cpp
     src/Views/Alignment/VisualisationView.cpp
     src/Views/Alignment/DistanceView.cpp
+    src/Views/Alignment/ContactSelectionView.cpp
     src/Views/Components/FavoriteExposureSettingButton.cpp
+    src/Views/Components/HardForceContactForm.cpp
+    src/Views/Components/RealPositionCameras.cpp
     src/Views/Components/MessageOverlay.cpp
     src/Views/Components/NavButtonManager.cpp
-    src/Views/Modules/CamerasTestView.cpp
+    src/Views/Components/CameraStreamWidget.cpp
     src/Views/Components/NavButton.cpp
     src/Views/Components/UpBar.cpp
     src/Views/Components/ActionBox.cpp
     src/Views/Components/BottomCroppedCircle.cpp
+    src/Views/Components/DoubleRatioSlider.cpp
+    src/Views/Components/ScreenshotThumbnailWidget.cpp
+    src/Views/Modules/CamerasTestView.cpp
 
     # Headers
     include/ApplicationBuilder.h
     include/ViewModels/HomeViewModel.h
     include/ViewModels/SettingsViewModel.h
+    include/ViewModels/ExposureMenuViewModel.h
     include/ViewModels/Exposure/ExposureSettingsViewModel.h
     include/ViewModels/Exposure/FavoriteExposureSettingsViewModel.h
     include/ViewModels/Exposure/RecapExposureSettingsViewModel.h
@@ -85,6 +95,8 @@ qt_add_executable(Kub3Software
     include/ViewModels/Alignment/SaveParametersViewModel.h
     include/ViewModels/Alignment/VisualisationViewModel.h
     include/ViewModels/Alignment/DistanceViewModel.h
+    include/ViewModels/Alignment/ContactSelectionViewModel.h
+    include/Views/Modules/CamerasTestView.h
     include/Views/Exposure/ExposureSettingsView.h
     include/Views/Exposure/FavoriteExposureSettingsView.h
     include/Views/Exposure/RecapExposureSettingsView.h
@@ -99,6 +111,7 @@ qt_add_executable(Kub3Software
     include/Views/ExposureViewBase.h
     include/Views/HomeView.h
     include/Views/HomeEightView.h
+    include/Views/ExposureMenuView.h
     include/Views/SettingsView.h
     include/Views/Settings/MachineStatusView.h
     include/Views/Settings/TemperatureView.h
@@ -111,14 +124,19 @@ qt_add_executable(Kub3Software
     include/Views/Alignment/SaveParametersView.h
     include/Views/Alignment/VisualisationView.h
     include/Views/Alignment/DistanceView.h
+    include/Views/Alignment/ContactSelectionView.h
     include/Views/Components/FavoriteExposureSettingButton.h
     include/Views/Components/NavButtonManager.h
+    include/Views/Components/HardForceContactForm.h
+    include/Views/Components/RealPositionCameras.h
     include/Views/Components/MessageOverlay.h
-    include/Views/Modules/CamerasTestView.h
+    include/Views/Components/CameraStreamWidget.h
     include/Views/Components/NavButton.h
     include/Views/Components/UpBar.h
     include/Views/Components/ActionBox.h
     include/Views/Components/BottomCroppedCircle.h
+    include/Views/Components/DoubleRatioSlider.h
+    include/Views/Components/ScreenshotThumbnailWidget.h
 
     # UI
     gui/resources.qrc
@@ -130,6 +148,7 @@ qt_add_executable(Kub3Software
     gui/Views/Exposure/ProgressExposureView.ui
     gui/Views/HomeView.ui
     gui/Views/HomeEightView.ui
+    gui/Views/ExposureMenuView.ui
     gui/Views/SettingsView.ui
     gui/Views/Settings/MachineStatusView.ui
     gui/Views/Settings/VersionView.ui
@@ -142,6 +161,10 @@ qt_add_executable(Kub3Software
     gui/Views/Alignment/SaveParametersView.ui
     gui/Views/Alignment/VisualisationView.ui
     gui/Views/Alignment/DistanceView.ui
+    gui/Views/Alignment/ContactSelectionView.ui
+    gui/Components/HardForceContactForm.ui
+    gui/Components/RealPositionCameras.ui
+    gui/Components/NavButton.ui
 )
 
 qt_finalize_target(Kub3Software)
