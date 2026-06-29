@@ -45,6 +45,18 @@ namespace Kub3::Config
         s.endGroup();
     }
 
+    // Helper: Populates a Direct Current motor
+    static void setDefaultDC(QSettings &s, const QString &id, double maxAcc, double maxVel, double pitch, int encoderTops, int &filledCount)
+    {
+        s.beginGroup(id);
+        setDefault(s, CONF_HW_MOTOR_TYPE, CONF_HW_MOTOR_TYPE_DC, filledCount);
+        setDefault(s, CONF_HW_SCREW_PITCH_MM, pitch, filledCount);
+        setDefault(s, CONF_HW_MAX_VELOCITY_MM_S, maxVel, filledCount);
+        setDefault(s, CONF_HW_MAX_ACCELERATION_MM_S2, maxAcc, filledCount);
+        setDefault(s, CONF_HW_ENCODER_TOPS_PER_REV, encoderTops, filledCount); // TODO: remove
+        s.endGroup();
+    }
+
     // Helper: Populates a Kinematic profile
     static void setDefaultKinematic(QSettings &s, const QString &motorId, const QString &profileId, double acc, double targetVel, int stepFrac, int &filledCount)
     {
@@ -126,7 +138,7 @@ namespace Kub3::Config
 
             // -- Motors --
             hw.beginGroup(CONF_HW_MOTORS);
-            setDefaultStepper(hw, "deckMotor", 400.0, 40.0, 3.175, 400, 400, filledCount);
+            setDefaultDC(hw, "deckMotor", 400.0, 40.0, 3.175, 1, filledCount);
             setDefaultStepper(hw, "leftCameraXMotor", 400.0, 40.0, 3.175, 400, 400, filledCount);
             setDefaultStepper(hw, "leftCameraYMotor", 400.0, 40.0, 3.175, 400, 400, filledCount);
             setDefaultStepper(hw, "maskDrawerMotor", 400.0, 40.0, 3.175, 400, 400, filledCount);
