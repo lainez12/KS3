@@ -32,14 +32,16 @@ VisualisationView::VisualisationView(Unique<VisualisationViewModel> viewModel, Q
     auto *vm = dynamic_cast<VisualisationViewModel *>(m_viewModel.get());
     if (vm)
     {
-        connect(vm,
-                &Kub3::UI::ViewModels::BaseVisionViewModel::s_upperLeftCameraFrameReady,
-                ui->visioLeft,
-                &CameraStreamWidget::ps_onFrameUpdated);
-        connect(vm,
-                &Kub3::UI::ViewModels::BaseVisionViewModel::s_upperRightCameraFrameReady,
-                ui->visioRight,
-                &CameraStreamWidget::ps_onFrameUpdated);
+        connect(
+            vm,
+            &Kub3::UI::ViewModels::BaseVisionViewModel::s_frameReady,
+            this,
+            [this](const QString &cameraId, const QImage &frame) {
+                if (cameraId == UPPER_LEFT_CAMERA)
+                    ui->visioLeft->ps_onFrameUpdated(frame);
+                else if (cameraId == UPPER_RIGHT_CAMERA)
+                    ui->visioRight->ps_onFrameUpdated(frame);
+            });
     }
 
     ui->speedCamRight->setup("Cam. Speed", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/speed-motor-low.svg");
