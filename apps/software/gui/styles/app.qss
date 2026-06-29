@@ -71,11 +71,7 @@ QLabel {
 QFrame#navBtnIconCircle {
     background-color: rgb(0, 114, 186);
 }
-
-
-/* Main Window Styles */
-/* Upper Bar */
-
+/* 
 #upBar
 {
     background-color: @blue;
@@ -120,3 +116,5 @@ QCheckBox {
     height: 50px;
     background-color: #e85420;
 }
+
+*/
