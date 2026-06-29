@@ -174,7 +174,7 @@ namespace Kub3::UI::Views
 
     protected:
         Unique<ViewModels::BaseViewModel> m_viewModel;
-        bool m_showCentralLogo;
+        bool m_showCentralLogo  = false;
         bool m_shadowedBoxStyle = true;
         NavButtonManager m_buttonManager;
         Unique<MessageOverlay> m_messages = std::make_unique<MessageOverlay>(this);

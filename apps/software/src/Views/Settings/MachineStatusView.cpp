@@ -15,7 +15,6 @@ MachineStatusView::MachineStatusView(Unique<MachineStatusViewModel> viewModel, Q
 {
     ui->setupUi(this);
 
-    m_showCentralLogo = false;
     configTitleBar();
     createNavButtonsConfigs();
 

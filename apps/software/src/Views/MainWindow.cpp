@@ -191,7 +191,7 @@ void MainWindow::showLogoIfNeeded(Kub3::UI::Views::ViewBase *view)
     if (view->showCentralLogo())
     {
         QLabel *logo = new QLabel();
-        logo->setPixmap(QPixmap(":/icons/logoKloe.png").scaledToHeight(80));
+        logo->setPixmap(QPixmap(":/icons/logoKloe.svg").scaledToHeight(48));
         logo->setAlignment(Qt::AlignCenter);
         m_bottomBarCenter->addWidget(logo);
     }
@@ -277,7 +277,7 @@ void MainWindow::ps_stateChanged(const QString &stateName)
 void MainWindow::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
-    int scaledWidth = this->width() * 0.9;                                                     // Calculate the scaled width for bg image
+    int scaledWidth = this->width() * 0.9; // Calculate the scaled width for bg image
     QPixmap scaled  = m_backgroundPixmap.scaledToWidth(scaledWidth, Qt::SmoothTransformation);
     // Draw at the very bottom right of the ENTIRE window
     int x = this->width() - scaled.width();
