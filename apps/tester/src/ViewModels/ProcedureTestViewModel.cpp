@@ -77,6 +77,12 @@ namespace Kub3::Tools::Tester
             emit cmdRunAutolevel();
     }
 
+    void ProcedureTestViewModel::uiRequestCameraMovement(CameraId camId, CameraMovementKind kind, CameraDirection dir)
+    {
+        if (!m_isRunning)
+            emit cmdRunCameraMovement(camId, kind, dir);
+    }
+
     // ==========================================
     // CONTROLLER UPDATES -> UI STATE
     // ==========================================

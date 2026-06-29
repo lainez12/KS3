@@ -30,7 +30,7 @@ namespace Kub3::Algorithms::Control
         // Safely bounds the requested velocity against hardware and dt limits
         inline double clampVelocity(double v, double dt, const admittance_config_t &config) noexcept
         {
-            if (std::abs(v) < config.min_profile_speed_mm_s)
+            if (std::abs(v) < config.deadband_velocity_mm_s)
                 return 0.0;
 
             // Protection against division-by-zero or negative time travel:

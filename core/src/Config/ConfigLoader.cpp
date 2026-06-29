@@ -199,10 +199,9 @@ namespace Kub3::Config
                 settings.beginGroup(profileGroup);
                 kinematic_profile_t profile;
 
-                profile.id                 = profileGroup.toStdString();
-                profile.initialVelocityMmS = getRequiredValue(settings, CONF_PROCESS_INITIAL_VELOCITY_MM_S).toDouble();
-                profile.targetVelocityMmS  = getRequiredValue(settings, CONF_PROCESS_TARGET_VELOCITY_MM_S).toDouble();
-                profile.accelerationMmS2   = getRequiredValue(settings, CONF_PROCESS_ACCELERATION_MM_S).toDouble();
+                profile.id                = profileGroup.toStdString();
+                profile.targetVelocityMmS = getRequiredValue(settings, CONF_PROCESS_TARGET_VELOCITY_MM_S).toDouble();
+                profile.accelerationMmS2  = getRequiredValue(settings, CONF_PROCESS_ACCELERATION_MM_S).toDouble();
 
                 QString paramsType = getRequiredValue(settings, CONF_PROCESS_PARAMS_TYPE).toString();
 
@@ -294,6 +293,7 @@ namespace Kub3::Config
         settings.beginGroup(CONF_PROCESS_ADMITTANCE_TUNING);
         config.contact.admittance = {
             .max_step_mm_per_tick          = getRequiredValue(settings, CONF_PROCESS_ADMITTANCE_MAX_STEP_MM_PER_TICK).toDouble(),
+            .deadband_velocity_mm_s        = getRequiredValue(settings, CONF_PROCESS_ADMITTANCE_DEADBAND_VELOCITY_MM_S).toDouble(),
             .translational_gain_low_force  = getRequiredValue(settings, CONF_PROCESS_ADMITTANCE_TRANSLATION_GAIN_LOW_FORCE).toDouble(),
             .translational_gain_high_force = getRequiredValue(settings, CONF_PROCESS_ADMITTANCE_TRANSLATION_GAIN_HIGH_FORCE).toDouble(),
             .rotational_gain_low_force     = getRequiredValue(settings, CONF_PROCESS_ADMITTANCE_ROTATION_GAIN_LOW_FORCE).toDouble(),

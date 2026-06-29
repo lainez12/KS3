@@ -1,6 +1,7 @@
 #include "ui_ProcedureTestView.h"
 
 #include <HAL/MachineStatus/sensors_labels.h>
+#include <Views/Components/KeyboardFilter.h>
 #include <Views/ProcedureTestView.h>
 
 #define SUCCESS_QLABEL_STYLESHEET "QLabel{ background: green; color : white; font-weight: bold; padding: 2px; }"
@@ -15,189 +16,242 @@ namespace Kub3::Tools::Tester
         m_procedureViewModel(std::move(viewModel))
     {
         ui->setupUi(this);
+        this->setFocusPolicy(Qt::StrongFocus);
 
-        // Wafer conveyor position (encoder)
-        m_intSensorsMap.emplace(QStringLiteral(WAFER_ENCODER), ui->waferPosValue);
-        // Mask conveyor position (encoder)
-        m_intSensorsMap.emplace(QStringLiteral(MASK_ENCODER), ui->maskPosValue);
-        // Alignment stages position (encoder)
-        m_intSensorsMap.emplace(QStringLiteral(X_STAGE_ENCODER), ui->xStagePosValue);
-        m_intSensorsMap.emplace(QStringLiteral(Y_STAGE_ENCODER), ui->yStagePosValue);
-        m_intSensorsMap.emplace(QStringLiteral(THETA_STAGE_ENCODER), ui->thetaStagePosValue);
-        // Alignment stages position (encoder)
-        m_intSensorsMap.emplace(QStringLiteral(LEFT_CAMERA_X_ENCODER), ui->lblLeftCamXPos);
-        m_intSensorsMap.emplace(QStringLiteral(LEFT_CAMERA_Y_ENCODER), ui->lblLeftCamYPos);
-        m_intSensorsMap.emplace(QStringLiteral(RIGHT_CAMERA_X_ENCODER), ui->lblRightCamXPos);
-        m_intSensorsMap.emplace(QStringLiteral(RIGHT_CAMERA_Y_ENCODER), ui->lblRightCamYPos);
+        initializeSensorMaps();
+        setupButtonBindings();
+        setupViewModelBindings();
 
-        // Wafer conveyor limits
-        m_boolSensorsMap.emplace(QStringLiteral(CW0), ui->cw0Value);
-        m_boolSensorsMap.emplace(QStringLiteral(CW1), ui->cw1Value);
-        m_boolSensorsMap.emplace(QStringLiteral(CW2), ui->cw2Value);
-        // Mask conveyor limits
-        m_boolSensorsMap.emplace(QStringLiteral(CM0), ui->cm0Value);
-        m_boolSensorsMap.emplace(QStringLiteral(CM1), ui->cm1Value);
-        m_boolSensorsMap.emplace(QStringLiteral(CM2), ui->cm2Value);
-        m_boolSensorsMap.emplace(QStringLiteral(CM3), ui->cm3Value);
-        // Alignment stages limits
-        m_boolSensorsMap.emplace(QStringLiteral(X_STAGE_LEFT_LIMIT), ui->xLeftLimitValue);
-        m_boolSensorsMap.emplace(QStringLiteral(X_STAGE_RIGHT_LIMIT), ui->xRightLimitValue);
-        m_boolSensorsMap.emplace(QStringLiteral(Y_STAGE_FRONT_LIMIT), ui->yFrontLimitValue);
-        m_boolSensorsMap.emplace(QStringLiteral(Y_STAGE_BACK_LIMIT), ui->yBackLimitValue);
-        m_boolSensorsMap.emplace(QStringLiteral(THETA_STAGE_CLOCKWISE_LIMIT), ui->thetaCWLimitValue);
-        m_boolSensorsMap.emplace(QStringLiteral(THETA_STAGE_ANTI_CLOCKWISE_LIMIT), ui->thetaACWLimitValue);
-        // Cameras / Deck limits
-        m_boolSensorsMap.emplace(QStringLiteral(LEFT_CAMERA_X_LEFT_LIMIT), ui->lblLeftCamXLeftLimit);
-        m_boolSensorsMap.emplace(QStringLiteral(LEFT_CAMERA_X_RIGHT_LIMIT), ui->lblLeftCamXRightLimit);
-        m_boolSensorsMap.emplace(QStringLiteral(LEFT_CAMERA_Y_FRONT_LIMIT), ui->lblLeftCamYFrontLimit);
-        m_boolSensorsMap.emplace(QStringLiteral(LEFT_CAMERA_Y_BACK_LIMIT), ui->lblLeftCamYBackLimit);
-        m_boolSensorsMap.emplace(QStringLiteral(RIGHT_CAMERA_X_LEFT_LIMIT), ui->lblRightCamXLeftLimit);
-        m_boolSensorsMap.emplace(QStringLiteral(RIGHT_CAMERA_X_RIGHT_LIMIT), ui->lblRightCamXRightLimit);
-        m_boolSensorsMap.emplace(QStringLiteral(RIGHT_CAMERA_Y_FRONT_LIMIT), ui->lblRightCamYFrontLimit);
-        m_boolSensorsMap.emplace(QStringLiteral(RIGHT_CAMERA_Y_BACK_LIMIT), ui->lblRightCamYBackLimit);
-
-        bindViewModel();
+        // Setup Application-wide Keyboard Filter mapped to this view
+        auto *keyboardFilter = new UI::Views::KeyboardFilter(this, this);
+        connect(keyboardFilter, &UI::Views::KeyboardFilter::keyPressed, this, &ProcedureTestView::handleKeyPressed);
+        connect(keyboardFilter, &UI::Views::KeyboardFilter::keyHeld, this, &ProcedureTestView::handleKeyHeld);
+        connect(keyboardFilter, &UI::Views::KeyboardFilter::keyReleased, this, &ProcedureTestView::handleKeyReleased);
     }
 
     ProcedureTestView::~ProcedureTestView() = default;
 
-    void ProcedureTestView::bindViewModel()
+    void ProcedureTestView::showEvent(QShowEvent *event)
+    {
+        UI::Views::ViewBase::showEvent(event);
+        this->setFocus(Qt::OtherFocusReason);
+    }
+
+    void ProcedureTestView::initializeSensorMaps()
+    {
+        // Encoders (Integers)
+        m_intSensorsMap = {
+            {QStringLiteral(WAFER_ENCODER), ui->waferPosValue},
+            {QStringLiteral(MASK_ENCODER), ui->maskPosValue},
+            {QStringLiteral(X_STAGE_ENCODER), ui->xStagePosValue},
+            {QStringLiteral(Y_STAGE_ENCODER), ui->yStagePosValue},
+            {QStringLiteral(THETA_STAGE_ENCODER), ui->thetaStagePosValue},
+            {QStringLiteral(LEFT_CAMERA_X_ENCODER), ui->lblLeftCamXPos},
+            {QStringLiteral(LEFT_CAMERA_Y_ENCODER), ui->lblLeftCamYPos},
+            {QStringLiteral(RIGHT_CAMERA_X_ENCODER), ui->lblRightCamXPos},
+            {QStringLiteral(RIGHT_CAMERA_Y_ENCODER), ui->lblRightCamYPos}};
+
+        // Limits and Statuses (Booleans)
+        m_boolSensorsMap = {
+            // Wafer/Mask Limits
+            {QStringLiteral(CW0), ui->cw0Value},
+            {QStringLiteral(CW1), ui->cw1Value},
+            {QStringLiteral(CW2), ui->cw2Value},
+            {QStringLiteral(CM0), ui->cm0Value},
+            {QStringLiteral(CM1), ui->cm1Value},
+            {QStringLiteral(CM2), ui->cm2Value},
+            {QStringLiteral(CM3), ui->cm3Value},
+            // Stages
+            {QStringLiteral(X_STAGE_LEFT_LIMIT), ui->xLeftLimitValue},
+            {QStringLiteral(X_STAGE_RIGHT_LIMIT), ui->xRightLimitValue},
+            {QStringLiteral(Y_STAGE_FRONT_LIMIT), ui->yFrontLimitValue},
+            {QStringLiteral(Y_STAGE_BACK_LIMIT), ui->yBackLimitValue},
+            {QStringLiteral(THETA_STAGE_CLOCKWISE_LIMIT), ui->thetaCWLimitValue},
+            {QStringLiteral(THETA_STAGE_ANTI_CLOCKWISE_LIMIT), ui->thetaACWLimitValue},
+            // Cameras
+            {QStringLiteral(LEFT_CAMERA_X_LEFT_LIMIT), ui->lblLeftCamXLeftLimit},
+            {QStringLiteral(LEFT_CAMERA_X_RIGHT_LIMIT), ui->lblLeftCamXRightLimit},
+            {QStringLiteral(LEFT_CAMERA_Y_FRONT_LIMIT), ui->lblLeftCamYFrontLimit},
+            {QStringLiteral(LEFT_CAMERA_Y_BACK_LIMIT), ui->lblLeftCamYBackLimit},
+            {QStringLiteral(RIGHT_CAMERA_X_LEFT_LIMIT), ui->lblRightCamXLeftLimit},
+            {QStringLiteral(RIGHT_CAMERA_X_RIGHT_LIMIT), ui->lblRightCamXRightLimit},
+            {QStringLiteral(RIGHT_CAMERA_Y_FRONT_LIMIT), ui->lblRightCamYFrontLimit},
+            {QStringLiteral(RIGHT_CAMERA_Y_BACK_LIMIT), ui->lblRightCamYBackLimit}};
+    }
+
+    void ProcedureTestView::setupButtonBindings()
     {
         if (!m_procedureViewModel)
             return;
 
-        // ===============================
-        // VIEW --> VIEW MODEL (Intents)
-        // ===============================
-
         // --- Mask Operations ---
-        connect(ui->btnEjectMask, &QPushButton::clicked, this, [this]() {
-            m_procedureViewModel->uiRequestDrawerOperation(DrawerTarget::Mask, true);
-        });
-        connect(ui->btnInsertMask, &QPushButton::clicked, this, [this]() {
-            m_procedureViewModel->uiRequestDrawerOperation(DrawerTarget::Mask, false);
-        });
-        connect(ui->btnExposureMask, &QPushButton::clicked, this, [this]() {
-            // TODO: m_procedureViewModel->uiRequestStowage(...);
-        });
-        connect(ui->btnInitializeMask, &QPushButton::clicked, this, [this]() {
-            // TODO: m_procedureViewModel->uiRequestInitialization(...);
-        });
-        connect(ui->btnHomeMask, &QPushButton::clicked, this, [this]() {
-            // TODO: m_procedureViewModel->uiRequestHoming(...);
-        });
+        connect(ui->btnEjectMask, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestDrawerOperation(DrawerTarget::Mask, true); });
+        connect(ui->btnInsertMask, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestDrawerOperation(DrawerTarget::Mask, false); });
+        connect(ui->btnExposureMask, &QPushButton::clicked, this, [this]() { /* TODO */ });
+        connect(ui->btnInitializeMask, &QPushButton::clicked, this, [this]() { /* TODO */ });
+        connect(ui->btnHomeMask, &QPushButton::clicked, this, [this]() { /* TODO */ });
+
         // --- Wafer Operations ---
-        connect(ui->btnEjectWafer, &QPushButton::clicked, this, [this]() {
-            m_procedureViewModel->uiRequestDrawerOperation(DrawerTarget::Wafer, true);
-        });
-        connect(ui->btnInsertWafer, &QPushButton::clicked, this, [this]() {
-            m_procedureViewModel->uiRequestDrawerOperation(DrawerTarget::Wafer, false);
-        });
-        connect(ui->btnInitializeWafer, &QPushButton::clicked, this, [this]() {
-            // TODO: m_procedureViewModel->uiRequestInitialization(...);
-        });
-        connect(ui->btnHomeWafer, &QPushButton::clicked, this, [this]() {
-            // TODO: m_procedureViewModel->uiRequestHoming(...);
-        });
+        connect(ui->btnEjectWafer, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestDrawerOperation(DrawerTarget::Wafer, true); });
+        connect(ui->btnInsertWafer, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestDrawerOperation(DrawerTarget::Wafer, false); });
+        connect(ui->btnInitializeWafer, &QPushButton::clicked, this, [this]() { /* TODO */ });
+        connect(ui->btnHomeWafer, &QPushButton::clicked, this, [this]() { /* TODO */ });
 
         // --- Alignment Stages Operations ---
-        connect(ui->btnInitXStage, &QPushButton::clicked, this, [this]() {});
-        connect(ui->btnCenterXStage, &QPushButton::clicked, this, [this]() {});
-        connect(ui->btnInitYStage, &QPushButton::clicked, this, [this]() {});
-        connect(ui->btnCenterYStage, &QPushButton::clicked, this, [this]() {});
-        connect(ui->btnInitThetaStage, &QPushButton::clicked, this, [this]() {});
-        connect(ui->btnCenterThetaStage, &QPushButton::clicked, this, [this]() {});
-        connect(ui->btnInitAllStages, &QPushButton::clicked, this, [this]() {});
-        connect(ui->btnCenterAllStages, &QPushButton::clicked, this, [this]() {});
+        connect(ui->btnInitXStage, &QPushButton::clicked, this, []() {});
+        connect(ui->btnCenterXStage, &QPushButton::clicked, this, []() {});
+        connect(ui->btnInitYStage, &QPushButton::clicked, this, []() {});
+        connect(ui->btnCenterYStage, &QPushButton::clicked, this, []() {});
+        connect(ui->btnInitThetaStage, &QPushButton::clicked, this, []() {});
+        connect(ui->btnCenterThetaStage, &QPushButton::clicked, this, []() {});
+        connect(ui->btnInitAllStages, &QPushButton::clicked, this, []() {});
+        connect(ui->btnCenterAllStages, &QPushButton::clicked, this, []() {});
 
-        // --- Z Elevator ---
-        connect(ui->btnStartAutolevel, &QPushButton::clicked, this, [this]() {
-            m_procedureViewModel->uiRequestAutolevel();
-        });
+        // --- Z Elevator & Deck ---
+        connect(ui->btnStartAutolevel, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestAutolevel(); });
+        connect(ui->btnInitCameras, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestInitCameras(); });
+        connect(ui->btnInitDeck, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestInitDeck(); });
+        connect(ui->btnInitAllVision, &QPushButton::clicked, this, [this]() { /* TODO */ });
+    }
 
-        // --- Cameras / Deck ---
-        connect(ui->btnInitCameras, &QPushButton::clicked, this, [this]() {
-            m_procedureViewModel->uiRequestInitCameras();
-        });
-        connect(ui->btnInitDeck, &QPushButton::clicked, this, [this]() {
-            m_procedureViewModel->uiRequestInitDeck();
-        });
-        connect(ui->btnInitAllVision, &QPushButton::clicked, this, [this]() {
-            // m_procedureViewModel->uiRequestInitVision();
-        });
+    void ProcedureTestView::setupViewModelBindings()
+    {
+        if (!m_procedureViewModel)
+            return;
 
-        // =====================================
-        // VIEW MODEL --> VIEW (Reactivity)
-        // =====================================
+        connect(m_procedureViewModel.get(), &ProcedureTestViewModel::s_booleanSensorUpdate, this, &ProcedureTestView::booleanSensorUpdate);
+        connect(m_procedureViewModel.get(), &ProcedureTestViewModel::s_integerSensorUpdate, this, &ProcedureTestView::integerSensorUpdate);
 
-        // Update Sensor UI
-        connect(m_procedureViewModel.get(), &ProcedureTestViewModel::s_booleanSensorUpdate,
-                this, &ProcedureTestView::ps_booleanSensorUpdate);
-        connect(m_procedureViewModel.get(), &ProcedureTestViewModel::s_integerSensorUpdate,
-                this, &ProcedureTestView::ps_integerSensorUpdate);
-
-        // Update Status Message
         connect(m_procedureViewModel.get(), &ProcedureTestViewModel::s_statusMessageChanged, this, [this]() {
             ui->lblProcStatus->setText(m_procedureViewModel->lastStatusMessage());
-            if (m_procedureViewModel->hasError())
-            {
-                ui->lblProcStatus->setStyleSheet("color: red; font-weight: bold;");
-            }
-            else
-            {
-                ui->lblProcStatus->setStyleSheet("color: #2ecc71; font-weight: bold;"); // Green
-            }
+            ui->lblProcStatus->setStyleSheet(m_procedureViewModel->hasError() ? "color: red; font-weight: bold;" : "color: #2ecc71; font-weight: bold;");
         });
 
-        // Toggle UI interactions based on running state
         connect(m_procedureViewModel.get(), &ProcedureTestViewModel::s_isRunningChanged, this, [this]() {
-            const bool isRunning = m_procedureViewModel->isRunning();
+            const bool idle = !m_procedureViewModel->isRunning();
 
-            // Disable all action buttons while a procedure is running
-            // --- Mask
-            ui->btnEjectMask->setEnabled(!isRunning);
-            ui->btnInsertMask->setEnabled(!isRunning);
-            ui->btnExposureMask->setEnabled(!isRunning);
-            ui->btnHomeMask->setEnabled(!isRunning);
-            ui->btnInitializeMask->setEnabled(!isRunning);
-            // --- Wafer
-            ui->btnEjectWafer->setEnabled(!isRunning);
-            ui->btnInsertWafer->setEnabled(!isRunning);
-            ui->btnHomeWafer->setEnabled(!isRunning);
-            ui->btnInitializeWafer->setEnabled(!isRunning);
-            // --- Alignment stages
-            ui->btnCenterXStage->setEnabled(!isRunning);
-            ui->btnCenterYStage->setEnabled(!isRunning);
-            ui->btnCenterThetaStage->setEnabled(!isRunning);
-            ui->btnCenterAllStages->setEnabled(!isRunning);
-            ui->btnInitXStage->setEnabled(!isRunning);
-            ui->btnInitYStage->setEnabled(!isRunning);
-            ui->btnInitThetaStage->setEnabled(!isRunning);
-            ui->btnInitAllStages->setEnabled(!isRunning);
+            ui->btnEjectMask->setEnabled(idle);
+            ui->btnInsertMask->setEnabled(idle);
+            ui->btnExposureMask->setEnabled(idle);
+            ui->btnHomeMask->setEnabled(idle);
+            ui->btnInitializeMask->setEnabled(idle);
+
+            ui->btnEjectWafer->setEnabled(idle);
+            ui->btnInsertWafer->setEnabled(idle);
+            ui->btnHomeWafer->setEnabled(idle);
+            ui->btnInitializeWafer->setEnabled(idle);
+
+            ui->btnCenterXStage->setEnabled(idle);
+            ui->btnCenterYStage->setEnabled(idle);
+            ui->btnCenterThetaStage->setEnabled(idle);
+            ui->btnCenterAllStages->setEnabled(idle);
+            ui->btnInitXStage->setEnabled(idle);
+            ui->btnInitYStage->setEnabled(idle);
+            ui->btnInitThetaStage->setEnabled(idle);
+            ui->btnInitAllStages->setEnabled(idle);
         });
     }
 
-    void ProcedureTestView::ps_booleanSensorUpdate(const QString &sensorId, bool value)
+    void ProcedureTestView::booleanSensorUpdate(const QString &sensorId, bool value)
     {
         if (auto it = m_boolSensorsMap.find(sensorId); it != m_boolSensorsMap.end())
-            this->updateBoolSensorsText(it->second, value);
+            updateBoolSensorsText(it->second, value);
     }
 
-    void ProcedureTestView::ps_integerSensorUpdate(const QString &sensorId, int32_t value)
+    void ProcedureTestView::integerSensorUpdate(const QString &sensorId, int32_t value)
     {
         if (auto it = m_intSensorsMap.find(sensorId); it != m_intSensorsMap.end())
-            this->updateIntSensorsText(it->second, value);
+            updateIntSensorsText(it->second, value);
     }
 
     void ProcedureTestView::updateBoolSensorsText(QLabel *label, const bool state)
     {
-        label->setText(state ? "ON" : "OFF");
         label->setStyleSheet(state ? SUCCESS_QLABEL_STYLESHEET : FAILURE_QLABEL_STYLESHEET);
     }
 
     void ProcedureTestView::updateIntSensorsText(QLabel *label, const int32_t value)
     {
         label->setText(QString::number(value));
+    }
+
+    void ProcedureTestView::cameraMovement(CameraId camId, CameraMovementKind kind, CameraDirection dir)
+    {
+        QString camera = (camId == CameraId::LEFT) ? "Left" : "Right";
+        QString move   = (kind == CameraMovementKind::CONTINUOUS) ? "continuous"
+                         : (kind == CameraMovementKind::GRANULAR) ? "granular"
+                                                                  : "stop";
+
+        QString direction;
+        switch (dir)
+        {
+        case CameraDirection::DOWN:
+            direction = "DOWN";
+            break;
+        case CameraDirection::UP:
+            direction = "UP";
+            break;
+        case CameraDirection::LEFT:
+            direction = "LEFT";
+            break;
+        case CameraDirection::RIGHT:
+            direction = "RIGHT";
+            break;
+        }
+
+        m_procedureViewModel->uiRequestCameraMovement(camId, kind, dir);
+    }
+
+    Optional<std::pair<CameraId, CameraDirection>> ProcedureTestView::mapKeyEvtToCameraCmd(Qt::Key keyCode) const
+    {
+        switch (keyCode)
+        {
+        // Left Camera
+        case Qt::Key::Key_A:
+            return std::make_pair(CameraId::LEFT, CameraDirection::UP);
+        case Qt::Key::Key_K:
+            return std::make_pair(CameraId::LEFT, CameraDirection::LEFT);
+        case Qt::Key::Key_B:
+            return std::make_pair(CameraId::LEFT, CameraDirection::DOWN);
+        case Qt::Key::Key_J:
+            return std::make_pair(CameraId::LEFT, CameraDirection::RIGHT);
+
+        // Right Camera
+        case Qt::Key::Key_H:
+            return std::make_pair(CameraId::RIGHT, CameraDirection::UP);
+        case Qt::Key::Key_N:
+            return std::make_pair(CameraId::RIGHT, CameraDirection::LEFT);
+        case Qt::Key::Key_Z:
+            return std::make_pair(CameraId::RIGHT, CameraDirection::DOWN);
+        case Qt::Key::Key_O:
+            return std::make_pair(CameraId::RIGHT, CameraDirection::RIGHT);
+
+        default:
+            return std::nullopt;
+        }
+    }
+
+    void ProcedureTestView::handleKeyPressed(Qt::Key keyCode, Qt::KeyboardModifiers modifiers)
+    {
+        if (auto cmd = mapKeyEvtToCameraCmd(keyCode))
+        {
+            cameraMovement(cmd->first, CameraMovementKind::GRANULAR, cmd->second);
+        }
+    }
+
+    void ProcedureTestView::handleKeyHeld(Qt::Key keyCode, Qt::KeyboardModifiers modifiers)
+    {
+        if (auto cmd = mapKeyEvtToCameraCmd(keyCode))
+        {
+            cameraMovement(cmd->first, CameraMovementKind::CONTINUOUS, cmd->second);
+        }
+    }
+
+    void ProcedureTestView::handleKeyReleased(Qt::Key keyCode, Qt::KeyboardModifiers modifiers)
+    {
+        if (auto cmd = mapKeyEvtToCameraCmd(keyCode))
+        {
+            cameraMovement(cmd->first, CameraMovementKind::STOP, cmd->second);
+        }
     }
 
 } // namespace Kub3::Tools::Tester

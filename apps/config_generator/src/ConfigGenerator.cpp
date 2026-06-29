@@ -46,12 +46,11 @@ namespace Kub3::Config
     }
 
     // Helper: Populates a Kinematic profile
-    static void setDefaultKinematic(QSettings &s, const QString &motorId, const QString &profileId, double acc, double initVel, double targetVel, int stepFrac, int &filledCount)
+    static void setDefaultKinematic(QSettings &s, const QString &motorId, const QString &profileId, double acc, double targetVel, int stepFrac, int &filledCount)
     {
         s.beginGroup(motorId);
         s.beginGroup(profileId);
         setDefault(s, CONF_PROCESS_PARAMS_TYPE, CONF_PROCESS_PARAMS_TYPE_STEPPER, filledCount);
-        setDefault(s, CONF_PROCESS_INITIAL_VELOCITY_MM_S, initVel, filledCount);
         setDefault(s, CONF_PROCESS_TARGET_VELOCITY_MM_S, targetVel, filledCount);
         setDefault(s, CONF_PROCESS_ACCELERATION_MM_S, acc, filledCount);
         setDefault(s, CONF_PROCESS_STEP_FRACTION, stepFrac, filledCount);
@@ -175,6 +174,7 @@ namespace Kub3::Config
             // -- Admittance --
             proc.beginGroup(CONF_PROCESS_ADMITTANCE_TUNING);
             setDefault(proc, CONF_PROCESS_ADMITTANCE_MAX_STEP_MM_PER_TICK, 0.25, filledCount);
+            setDefault(proc, CONF_PROCESS_ADMITTANCE_DEADBAND_VELOCITY_MM_S, 0.1, filledCount);
             setDefault(proc, CONF_PROCESS_ADMITTANCE_ROTATION_GAIN_HIGH_FORCE, 0.00075, filledCount);
             setDefault(proc, CONF_PROCESS_ADMITTANCE_ROTATION_GAIN_LOW_FORCE, 0.015, filledCount);
             setDefault(proc, CONF_PROCESS_ADMITTANCE_TRANSLATION_GAIN_HIGH_FORCE, 0.00075, filledCount);
@@ -225,44 +225,44 @@ namespace Kub3::Config
 
             // -- Kinematics --
             proc.beginGroup(CONF_PROCESS_KINEMATICS);
-            setDefaultKinematic(proc, "deckMotor", "normal", 400.0, 10.0, 100.0, 1, filledCount);
+            setDefaultKinematic(proc, "deckMotor", "normal", 400.0, 100.0, 1, filledCount);
 
-            setDefaultKinematic(proc, "leftCameraXMotor", "fine", 400.0, 10.0, 100.0, 8, filledCount);
-            setDefaultKinematic(proc, "leftCameraXMotor", "normal", 400.0, 10.0, 100.0, 1, filledCount);
+            setDefaultKinematic(proc, "leftCameraXMotor", "fine", 400.0, 100.0, 8, filledCount);
+            setDefaultKinematic(proc, "leftCameraXMotor", "normal", 400.0, 100.0, 1, filledCount);
 
-            setDefaultKinematic(proc, "leftCameraYMotor", "fine", 400.0, 10.0, 100.0, 8, filledCount);
-            setDefaultKinematic(proc, "leftCameraYMotor", "normal", 400.0, 10.0, 100.0, 1, filledCount);
+            setDefaultKinematic(proc, "leftCameraYMotor", "fine", 400.0, 100.0, 8, filledCount);
+            setDefaultKinematic(proc, "leftCameraYMotor", "normal", 400.0, 100.0, 1, filledCount);
 
-            setDefaultKinematic(proc, "maskDrawerMotor", "contact", 0.0, 1.0, 1.0, 16, filledCount);
-            setDefaultKinematic(proc, "maskDrawerMotor", "fine", 400.0, 2.5, 25.0, 8, filledCount);
-            setDefaultKinematic(proc, "maskDrawerMotor", "normal", 400.0, 10.0, 100.0, 1, filledCount);
+            setDefaultKinematic(proc, "maskDrawerMotor", "contact", 0.0, 1.0, 16, filledCount);
+            setDefaultKinematic(proc, "maskDrawerMotor", "fine", 400.0, 25.0, 8, filledCount);
+            setDefaultKinematic(proc, "maskDrawerMotor", "normal", 400.0, 100.0, 1, filledCount);
 
-            setDefaultKinematic(proc, "rightCameraXMotor", "fine", 400.0, 10.0, 100.0, 1, filledCount);
-            setDefaultKinematic(proc, "rightCameraXMotor", "normal", 410.0, 10.0, 100.0, 1, filledCount);
+            setDefaultKinematic(proc, "rightCameraXMotor", "fine", 400.0, 100.0, 1, filledCount);
+            setDefaultKinematic(proc, "rightCameraXMotor", "normal", 410.0, 100.0, 1, filledCount);
 
-            setDefaultKinematic(proc, "rightCameraYMotor", "fine", 400.0, 10.0, 100.0, 8, filledCount);
-            setDefaultKinematic(proc, "rightCameraYMotor", "normal", 400.0, 10.0, 100.0, 1, filledCount);
+            setDefaultKinematic(proc, "rightCameraYMotor", "fine", 400.0, 100.0, 8, filledCount);
+            setDefaultKinematic(proc, "rightCameraYMotor", "normal", 400.0, 100.0, 1, filledCount);
 
-            setDefaultKinematic(proc, "thetaStageMotor", "fine", 400.0, 10.0, 100.0, 8, filledCount);
-            setDefaultKinematic(proc, "thetaStageMotor", "normal", 400.0, 10.0, 100.0, 1, filledCount);
+            setDefaultKinematic(proc, "thetaStageMotor", "fine", 400.0, 100.0, 8, filledCount);
+            setDefaultKinematic(proc, "thetaStageMotor", "normal", 400.0, 100.0, 1, filledCount);
 
-            setDefaultKinematic(proc, "waferDrawerMotor", "fine", 400.0, 2.5, 25.0, 1, filledCount);
-            setDefaultKinematic(proc, "waferDrawerMotor", "normal", 400.0, 10.0, 100.0, 16, filledCount);
+            setDefaultKinematic(proc, "waferDrawerMotor", "fine", 400.0, 25.0, 1, filledCount);
+            setDefaultKinematic(proc, "waferDrawerMotor", "normal", 400.0, 100.0, 16, filledCount);
 
-            setDefaultKinematic(proc, "xStageMotor", "fine", 400.0, 10.0, 100.0, 1, filledCount);
-            setDefaultKinematic(proc, "xStageMotor", "normal", 110.0, 11.0, 110.0, 1, filledCount);
+            setDefaultKinematic(proc, "xStageMotor", "fine", 400.0, 100.0, 1, filledCount);
+            setDefaultKinematic(proc, "xStageMotor", "normal", 110.0, 110.0, 1, filledCount);
 
-            setDefaultKinematic(proc, "yStageMotor", "fine", 400.0, 10.0, 100.0, 8, filledCount);
-            setDefaultKinematic(proc, "yStageMotor", "normal", 400.0, 10.0, 100.0, 1, filledCount);
+            setDefaultKinematic(proc, "yStageMotor", "fine", 400.0, 100.0, 8, filledCount);
+            setDefaultKinematic(proc, "yStageMotor", "normal", 400.0, 100.0, 1, filledCount);
 
-            setDefaultKinematic(proc, "zBackMotor", "fine", 1.0, 0.0, 0.5, 16, filledCount);
-            setDefaultKinematic(proc, "zBackMotor", "normal", 1.0, 0.0, 1.0, 8, filledCount);
+            setDefaultKinematic(proc, "zBackMotor", "fine", 1.0, 0.5, 16, filledCount);
+            setDefaultKinematic(proc, "zBackMotor", "normal", 1.0, 1.0, 8, filledCount);
 
-            setDefaultKinematic(proc, "zLeftMotor", "fine", 2.0, 0.0, 0.5, 16, filledCount);
-            setDefaultKinematic(proc, "zLeftMotor", "normal", 1.0, 0.0, 1.0, 8, filledCount);
+            setDefaultKinematic(proc, "zLeftMotor", "fine", 2.0, 0.5, 16, filledCount);
+            setDefaultKinematic(proc, "zLeftMotor", "normal", 1.0, 1.0, 8, filledCount);
 
-            setDefaultKinematic(proc, "zRightMotor", "fine", 1.0, 0.0, 0.5, 16, filledCount);
-            setDefaultKinematic(proc, "zRightMotor", "normal", 1.0, 0.0, 1.0, 8, filledCount);
+            setDefaultKinematic(proc, "zRightMotor", "fine", 1.0, 0.5, 16, filledCount);
+            setDefaultKinematic(proc, "zRightMotor", "normal", 1.0, 1.0, 8, filledCount);
             proc.endGroup(); // kinematics
 
             proc.sync();

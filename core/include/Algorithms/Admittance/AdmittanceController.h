@@ -26,7 +26,7 @@ namespace Kub3::Algorithms::Control
         // Safety Limits
         double max_step_mm_per_tick;   // E.g., 0.025 mm (25 microns)
         double max_profile_speed_mm_s; // Hardware upper limit
-        double min_profile_speed_mm_s; // Hardware digital deadband
+        double deadband_velocity_mm_s; // Hardware digital deadband
     };
 
     struct admittance_input_t {

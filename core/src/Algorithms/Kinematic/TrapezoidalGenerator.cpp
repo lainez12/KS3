@@ -8,10 +8,11 @@ namespace Kub3::Algorithms::Kinematic
 
     void TrapezoidalGenerator::startPositionMove(double currentPosition, double targetPosition, double maxVelocity, double acceleration, double precisionMm)
     {
-        m_mode             = Mode::Position;
-        m_state.position   = currentPosition;
-        m_state.velocity   = 0.0;
-        m_state.isFinished = false;
+        m_mode                = Mode::Position;
+        m_state.position      = currentPosition;
+        m_state.velocity      = 0.0;
+        m_state.isFinished    = false;
+        m_state.isApproaching = false;
 
         m_precisionMm    = precisionMm;
         m_targetPosition = targetPosition;
@@ -22,10 +23,11 @@ namespace Kub3::Algorithms::Kinematic
 
     void TrapezoidalGenerator::startVelocityMove(double currentPosition, double directionSign, double maxVelocity, double acceleration)
     {
-        m_mode             = Mode::Velocity;
-        m_state.position   = currentPosition;
-        m_state.velocity   = 0.0;
-        m_state.isFinished = false;
+        m_mode                = Mode::Velocity;
+        m_state.position      = currentPosition;
+        m_state.velocity      = 0.0;
+        m_state.isFinished    = false;
+        m_state.isApproaching = false;
 
         m_directionSign = (directionSign >= 0.0) ? 1.0 : -1.0;
         m_maxVelocity   = std::abs(maxVelocity);
@@ -35,8 +37,9 @@ namespace Kub3::Algorithms::Kinematic
 
     void TrapezoidalGenerator::updatePositionMove(double targetPosition, double maxVelocity, double acceleration, double precisionMm)
     {
-        m_mode             = Mode::Position;
-        m_state.isFinished = false;
+        m_mode                = Mode::Position;
+        m_state.isFinished    = false;
+        m_state.isApproaching = false;
 
         m_targetPosition = targetPosition;
         m_maxVelocity    = std::abs(maxVelocity);
@@ -46,8 +49,9 @@ namespace Kub3::Algorithms::Kinematic
 
     void TrapezoidalGenerator::updateVelocityMove(double directionSign, double maxVelocity, double acceleration)
     {
-        m_mode             = Mode::Velocity;
-        m_state.isFinished = false;
+        m_mode                = Mode::Velocity;
+        m_state.isFinished    = false;
+        m_state.isApproaching = false;
 
         m_directionSign = (directionSign >= 0.0) ? 1.0 : -1.0;
         m_maxVelocity   = std::abs(maxVelocity);
@@ -83,7 +87,7 @@ namespace Kub3::Algorithms::Kinematic
         const kinematic_state_t prevState = m_state;
         kinematic_state_t state           = this->computeNext(dt);
 
-        if (state.isFinished && m_mode == Mode::Position)
+        if (m_mode == Mode::Position && (state.isApproaching || state.isFinished))
         {
             const double absDistToTarget = std::abs(realPosition - m_targetPosition);
 
@@ -145,6 +149,7 @@ namespace Kub3::Algorithms::Kinematic
             // Calculate the physical time remaining until we hit zero speed
             const double t_stop = (2.0 * absDistanceToGo) / absVel;
 
+            m_state.isApproaching = true;
             if (t_stop <= dt)
             {
                 // The target is reached during this timestep. Land exactly on target.
@@ -180,6 +185,7 @@ namespace Kub3::Algorithms::Kinematic
             const double targetV      = m_maxVelocity * dir;
             const double prevVelocity = m_state.velocity;
 
+            m_state.isApproaching = false;
             if (m_state.velocity < targetV)
             {
                 m_state.velocity += m_acceleration * dt;
@@ -226,4 +232,4 @@ namespace Kub3::Algorithms::Kinematic
         }
     }
 
-} // namespace Kub3::HAL::Act
+} // namespace Kub3::Algorithms::Kinematic

@@ -271,7 +271,7 @@ namespace Kub3::Services
 
     Algorithms::Control::admittance_config_t ContactService::buildAdmittanceConfig(double targetForceGF, double toleranceGF) const
     {
-        qDebug() << "[Admittance configuration] Target force:" << targetForceGF << "gF, Tolerance" << toleranceGF << "gf";
+        qDebug().noquote() << "[Admittance configuration] Target force:" << targetForceGF << "gF, Tolerance" << toleranceGF << "gf, Deadband V:" << m_conf.admittance.deadband_velocity_mm_s << "mm/s";
         return Algorithms::Control::admittance_config_t{
             // Targets and Limits
             .target_force_gf      = targetForceGF,
@@ -285,9 +285,9 @@ namespace Kub3::Services
             .k_tilt_min = m_conf.admittance.rotational_gain_high_force,    // WEC twist slow
 
             // Safety Limits & Hardware capabilities
-            .max_step_mm_per_tick   = m_conf.admittance.max_step_mm_per_tick, // Max allowed blind travel per tick
-            .max_profile_speed_mm_s = m_contactProfile.targetVelocityMmS,     // Max allowed continuous speed
-            .min_profile_speed_mm_s = m_contactProfile.initialVelocityMmS,    // Hardware deadband limit (to prevent stuttering)
+            .max_step_mm_per_tick   = m_conf.admittance.max_step_mm_per_tick,   // Max allowed blind travel per tick
+            .max_profile_speed_mm_s = m_contactProfile.targetVelocityMmS,       // Max allowed continuous speed
+            .deadband_velocity_mm_s = m_conf.admittance.deadband_velocity_mm_s, // Hardware deadband limit (to prevent stuttering)
         };
     }
 

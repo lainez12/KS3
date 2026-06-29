@@ -88,12 +88,13 @@ namespace Kub3::Services
         else
         {
             auto motorId = bundle.motor->getId();
-            // X motors init on their positive limit (external) while Y motor init on their negative limit (front)
-            // TODO: update MCU code to reflect mechanical reality of the encoder
+            // Motors initialize their encoder on their external limit:
+            // - Left X has to move negative and Right X positive
+            // - Both Ys have to move negative
             auto direction =
-                (motorId == LEFT_CAMERA_X_MOTOR || motorId == RIGHT_CAMERA_X_MOTOR) ? HAL::Act::MotorDirection::Positive : HAL::Act::MotorDirection::Negative;
+                (motorId == RIGHT_CAMERA_X_MOTOR) ? HAL::Act::MotorDirection::Positive : HAL::Act::MotorDirection::Negative;
 
-            bundle.motor->moveDirection(HAL::Act::MotorDirection::Negative, bundle.kinematicProfile);
+            bundle.motor->moveDirection(direction, bundle.kinematicProfile);
         }
     }
 

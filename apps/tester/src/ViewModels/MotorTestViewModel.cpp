@@ -17,10 +17,9 @@ namespace Kub3::Tools::Tester
     Kub3::Config::kinematic_profile_t MotorTestViewModel::buildProfile(double vel, double acc, int stepFrac) const
     {
         Kub3::Config::kinematic_profile_t profile;
-        profile.id                 = "custom_test_profile";
-        profile.targetVelocityMmS  = vel;
-        profile.accelerationMmS2   = acc;
-        profile.initialVelocityMmS = 0.0;
+        profile.id                = "custom_test_profile";
+        profile.targetVelocityMmS = vel;
+        profile.accelerationMmS2  = acc;
 
         if (m_isStepper)
         {

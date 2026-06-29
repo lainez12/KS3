@@ -52,6 +52,7 @@ namespace Kub3::Tools::Tester
         void uiRequestInitDeck(void);
         void uiRequestInitVision(void);
         void uiRequestAutolevel(void);
+        void uiRequestCameraMovement(CameraId camId, CameraMovementKind kind, CameraDirection dir);
 
         // Inbound Service Updates (from Logic Tier)
         void onProcedureStarted(const QString &procedureName);
@@ -77,6 +78,7 @@ namespace Kub3::Tools::Tester
         void cmdRunInitDeck(void);
         void cmdRunInitVision(void);
         void cmdRunAutolevel(void);
+        void cmdRunCameraMovement(CameraId camId, CameraMovementKind kind, CameraDirection dir);
 
     private:
         void setStatus(const QString &msg, bool isError);

@@ -26,8 +26,8 @@ namespace Kub3::Services
         UpperLeftCamXRight  = Positive,
         UpperLeftCamYBack   = Negative,
         UpperLeftCamYFront  = Positive,
-        UpperRightCamXLeft  = Positive,
-        UpperRightCamXRight = Negative,
+        UpperRightCamXLeft  = Negative,
+        UpperRightCamXRight = Positive,
         UpperRightCamYBack  = Negative,
         UpperRightCamYFront = Positive,
         DeckBack            = Negative,
@@ -79,9 +79,17 @@ namespace Kub3::Services
         void setFocalValue(const std::string &focalId, uint16_t val) override;
 
     private:
-        [[nodiscard]] bool inCollisionZone(VisionMotor motor, VisionDirection dir) const;
-        void setupCameraMotor(VisionMotor motorId, const char *motorConfId, const Config::process_config_t &conf);
+        // Collision and pushing logic
+
         void applyPush(VisionMotor pushingMotor, bool fineMode);
+        [[nodiscard]] bool inCollisionZone(VisionMotor motor, VisionDirection dir) const;
+        [[nodiscard]] bool isMotorBeingPushed(VisionMotor motor, VisionDirection lastDir) const;
+        [[nodiscard]] std::optional<std::pair<VisionMotor, VisionDirection>> getAssociatedPushedMotor(VisionMotor motor, VisionDirection lastDir) const;
+        void applyAntiCoastingStop(VisionMotor pushedMotor, VisionDirection pushedDir);
+
+        // Misc.
+
+        void setupCameraMotor(VisionMotor motorId, const char *motorConfId, const Config::process_config_t &conf);
         bool deckVisualisationLimitReached(void) const;
 
     private:
@@ -89,7 +97,7 @@ namespace Kub3::Services
         Shared<HAL::MS::IMachineStatusRepo> m_repo;
         Config::vision_process_config_t m_conf;
 
-        bool m_pushingModeEnabled = false;
+        bool m_pushingModeEnabled = true;
         std::unordered_map<VisionMotor, vision_motor_config_t> m_cameraMotors;
         std::unordered_map<std::string, Config::focal_conf_t> m_focalConfs;
 

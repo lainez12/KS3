@@ -29,6 +29,7 @@ namespace Kub3::Components
 
         QDoubleSpinBox *m_maxZRelativeDistMm   = nullptr; // Holds value in millimeter
         QDoubleSpinBox *m_maxMovementPerTickMm = nullptr; // Holds value in millimeter
+        QDoubleSpinBox *m_deadbandVelocityMmS  = nullptr; // Holds value in mm/s
 
         QDoubleSpinBox *m_dsbKMeanLowForceMmSGF  = nullptr; // Holds value in grams Force
         QDoubleSpinBox *m_dsbKMeanHighForceMmSGF = nullptr; // Holds value in grams Force

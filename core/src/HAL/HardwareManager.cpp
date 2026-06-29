@@ -311,7 +311,7 @@ namespace Kub3::HAL
         this->registerSensor(router, "4"s, std::move(rightCameraYEncoder));
         this->registerSensor(router, "5"s, std::move(xStageEncoder));
         this->registerSensor(router, "6"s, std::move(yStageEncoder));
-        this->registerSensor(router, "7"s, std::move(thetaStageEncoder));
+        this->registerSensor(router, "8"s, std::move(thetaStageEncoder));
     }
 
     void HardwareManager::createArduino1Actuators(const Config::hardware_config_t &config, const std::shared_ptr<MCUDriver> &driver, Com::PacketRouter *router)

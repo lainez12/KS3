@@ -15,6 +15,7 @@ qt_add_library(Kub3Core STATIC
     src/Config/ConfigSaver.cpp
     src/Views/Components/CameraStreamWidget.cpp
     src/Views/Components/DoubleRatioSlider.cpp
+    src/Views/Components/KeyboardFilter.cpp
     src/ViewModels/BaseViewModel.cpp
     src/ViewModels/BaseVisionViewModel.cpp
     src/MFSM/MasterFSM.actions.cpp
@@ -86,6 +87,7 @@ qt_add_library(Kub3Core STATIC
     include/Config/keys/process.h
     include/Views/Components/CameraStreamWidget.h
     include/Views/Components/DoubleRatioSlider.h
+    include/Views/Components/KeyboardFilter.h
     include/ViewModels/BaseViewModel.h
     include/ViewModels/BaseVisionViewModel.h
     include/MFSM/events.h
@@ -191,7 +193,7 @@ endif()
 # Global build definitions applied to everyone interacting with Core
 target_compile_definitions(Kub3Core PUBLIC KUB_MODEL_${KUB_MODEL} KUB_MODEL_STR="${KUB_MODEL}")
 
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND NOT CMAKE_PRODUCTION_BUILD)
     target_compile_definitions(Kub3Core PUBLIC BUILD_DEBUG)
     target_compile_definitions(Kub3Core PUBLIC
         KUB3_HARDWARE_CONFIG_PATH="${CMAKE_SOURCE_DIR}/tests/hardware.ini"

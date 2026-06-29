@@ -19,7 +19,7 @@ static admittance_config_t getBaseConfig()
         .k_tilt_min             = 0.002,
         .max_step_mm_per_tick   = 0.025, // 25 microns max per tick
         .max_profile_speed_mm_s = 1.0,   // 1 mm/s absolute max hardware limit
-        .min_profile_speed_mm_s = 0.001  // Digital deadband
+        .deadband_velocity_mm_s = 0.001  // Digital deadband
     };
 }
 
@@ -59,7 +59,7 @@ TEST_CASE("Admittance Controller Safety Limits", "[admittance][safety]")
         // Expected vel = 0.001 * 2 = 0.002 mm/s.
 
         // Let's artificially increase the deadband to 0.010 mm/s
-        config.min_profile_speed_mm_s = 0.010;
+        config.deadband_velocity_mm_s = 0.010;
 
         // Drop the tolerance to 1GF so it does not converge, but deadband catches it.
         config.force_tolerance_gf = 1.0;
