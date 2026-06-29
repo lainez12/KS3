@@ -42,6 +42,7 @@ namespace Kub3::Tools::Tester
 
         // Commands from ViewModel
         void ps_emergencyStop(void);
+        void ps_runInitStages(void);
         void ps_runInitCameras(void);
         void ps_runInitDeck(void);
         void ps_runInitVision(void);

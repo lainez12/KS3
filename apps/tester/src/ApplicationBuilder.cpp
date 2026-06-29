@@ -142,6 +142,7 @@ namespace Kub3::Tools::Tester
 
         // ViewModel (Main Thread) -> Controller (Logic Thread)
         QObject::connect(procVM, &ProcedureTestViewModel::cmdEmergencyStop, m_procedureTestController, &ProcedureTestController::ps_emergencyStop, Qt::QueuedConnection);
+        QObject::connect(procVM, &ProcedureTestViewModel::cmdRunInitStages, m_procedureTestController, &ProcedureTestController::ps_runInitStages, Qt::QueuedConnection);
         QObject::connect(procVM, &ProcedureTestViewModel::cmdRunInitCameras, m_procedureTestController, &ProcedureTestController::ps_runInitCameras, Qt::QueuedConnection);
         QObject::connect(procVM, &ProcedureTestViewModel::cmdRunInitDeck, m_procedureTestController, &ProcedureTestController::ps_runInitDeck, Qt::QueuedConnection);
         QObject::connect(procVM, &ProcedureTestViewModel::cmdRunInitVision, m_procedureTestController, &ProcedureTestController::ps_runInitVision, Qt::QueuedConnection);
