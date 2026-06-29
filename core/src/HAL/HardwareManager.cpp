@@ -291,19 +291,19 @@ namespace Kub3::HAL
         // Register sensors
         // --- Limit switches
         this->registerSensor(router, "S\x00"s, std::move(leftCameraXLeftLimit));
-        // this->registerSensor(router, "S\x01"s, std::move(leftCameraXRightLimit));
         this->registerSensor(router, "S\x01"s, std::move(leftCameraYFrontLimit));
-        // this->registerSensor(router, "S\x03"s, std::move(leftCameraYBackLimit));
         this->registerSensor(router, "S\x02"s, std::move(rightCameraXRightLimit));
-        // this->registerSensor(router, "S\x05"s, std::move(rightCameraXLeftLimit));
         this->registerSensor(router, "S\x03"s, std::move(rightCameraYFrontLimit));
+        // this->registerSensor(router, "S\x01"s, std::move(leftCameraXRightLimit));
+        // this->registerSensor(router, "S\x03"s, std::move(leftCameraYBackLimit));
+        // this->registerSensor(router, "S\x05"s, std::move(rightCameraXLeftLimit));
         // this->registerSensor(router, "S\x07"s, std::move(rightCameraYBackLimit));
-        // this->registerSensor(router, "S\x08"s, std::move(xStageLeftLimit));
-        // this->registerSensor(router, "S\x09"s, std::move(xStageRightLimit));
-        // this->registerSensor(router, "S\x0A"s, std::move(yStageFrontLimit));
-        // this->registerSensor(router, "S\x0B"s, std::move(yStageBackLimit));
-        // this->registerSensor(router, "S\x0C"s, std::move(thetaStageClockwiseLimit));
-        // this->registerSensor(router, "S\x0D"s, std::move(thetaStageAntiClockwiseLimit));
+        this->registerSensor(router, "S\x04"s, std::move(xStageRightLimit));
+        this->registerSensor(router, "S\x05"s, std::move(yStageFrontLimit));
+        this->registerSensor(router, "S\x07"s, std::move(thetaStageAntiClockwiseLimit));
+        this->registerSensor(router, "S\x08"s, std::move(xStageLeftLimit));
+        this->registerSensor(router, "S\x09"s, std::move(yStageBackLimit));
+        this->registerSensor(router, "S\x0B"s, std::move(thetaStageClockwiseLimit));
         // --- Encoders
         this->registerSensor(router, "1"s, std::move(leftCameraXEncoder));
         this->registerSensor(router, "2"s, std::move(leftCameraYEncoder));
@@ -329,7 +329,7 @@ namespace Kub3::HAL
         auto rightCameraYMotor = createStepperMotor(config, RIGHT_CAMERA_Y_MOTOR, '4', Kinematics::TRAPEZOIDAL, driver, RIGHT_CAMERA_Y_ENCODER);
         auto xStageMotor       = createStepperMotor(config, X_STAGE_MOTOR, '5', Kinematics::TRAPEZOIDAL, driver, X_STAGE_ENCODER);
         auto yStageMotor       = createStepperMotor(config, Y_STAGE_MOTOR, '6', Kinematics::TRAPEZOIDAL, driver, Y_STAGE_ENCODER);
-        auto thetaStageMotor   = createStepperMotor(config, THETA_STAGE_MOTOR, '7', Kinematics::TRAPEZOIDAL, driver, THETA_STAGE_ENCODER);
+        auto thetaStageMotor   = createStepperMotor(config, THETA_STAGE_MOTOR, '8', Kinematics::TRAPEZOIDAL, driver, THETA_STAGE_ENCODER);
         // TODO: Replace magic value `4095` with config based value
         /// --- Focals
         auto leftCameraFocal  = std::make_shared<Act::Focal>(LEFT_CAMERA_FOCAL, 'L', 4095, driver);
