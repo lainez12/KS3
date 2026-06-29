@@ -25,9 +25,6 @@ namespace Kub3::UI::Views::ViewsAlignment
         explicit DistanceView(Unique<DistanceViewModel> viewModel, QWidget *parent = nullptr);
         ~DistanceView();
 
-    public:
-        void resizeEvent(QResizeEvent *event) override;
-
     private:
         void setNewNavButtonsConfigs();
         void onValidateButtonClicked(const QString &buttonId) override;

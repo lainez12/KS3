@@ -260,37 +260,6 @@ background-color: rgb(255, 255, 255);
       <property name="verticalSpacing">
        <number>48</number>
       </property>
-      <item row="2" column="2">
-       <widget class="QPushButton" name="mainSubmenuSettingsBtn">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>120</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>800</height>
-         </size>
-        </property>
-        <property name="styleSheet">
-         <string notr="true"/>
-        </property>
-        <property name="text">
-         <string>SETTINGS</string>
-        </property>
-        <property name="styleClass" stdset="0">
-         <string>clearradius</string>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="2">
        <widget class="QPushButton" name="mainSubmenuExposureBtn">
         <property name="sizePolicy">
@@ -316,28 +285,6 @@ background-color: rgb(255, 255, 255);
         </property>
         <property name="text">
          <string>EXPOSURE MENU</string>
-        </property>
-        <property name="styleClass" stdset="0">
-         <string>clearradius</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="2">
-       <widget class="QPushButton" name="pushButton_Initialisation">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>120</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>800</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>INITIALISATION</string>
         </property>
         <property name="styleClass" stdset="0">
          <string>clearradius</string>
@@ -493,6 +440,28 @@ background-color: rgb(255, 255, 255);
         </property>
         <property name="text">
          <string>OPEN</string>
+        </property>
+        <property name="styleClass" stdset="0">
+         <string>clearradius</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="QPushButton" name="pushButton_Initialisation">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>120</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>800</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>INITIALISATION</string>
         </property>
         <property name="styleClass" stdset="0">
          <string>clearradius</string>

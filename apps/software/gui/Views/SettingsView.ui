@@ -86,6 +86,9 @@
       <widget class="NavButton" name="updateSoftBtn" native="true"/>
      </item>
      <item>
+      <widget class="NavButton" name="machineSettingsBtn" native="true"/>
+     </item>
+     <item>
       <spacer name="rightGap">
        <property name="orientation">
         <enum>Qt::Orientation::Horizontal</enum>

@@ -6,7 +6,6 @@
         <file>icons/logoKloe.svg</file>
         <file>icons/logoKloeBlanc.svg</file>
         <file>icons/home.svg</file>
-        <file>icons/settings.svg</file>
         <file>icons/eject.svg</file>
         <file>icons/insert.svg</file>
         <file>icons/flood_icon.svg</file>
@@ -71,6 +70,7 @@
         <file>icons/screenshots-export.svg</file>
         <file>icons/select-all.svg</file>
         <file>icons/settings.svg</file>
+        <file>icons/setZero.svg</file>
         <file>icons/smile.svg</file>
         <file>icons/speed-motor-high.svg</file>
         <file>icons/speed-motor-low.svg</file>

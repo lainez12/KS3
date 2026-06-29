@@ -1,6 +1,3 @@
-#include <HAL/MachineStatus/actuators_labels.h>
-#include <HAL/MachineStatus/sensors_labels.h>
-#include <HAL/MachineStatus/utils.h>
 #include <ViewModels/HomeViewModel.h>
 
 namespace Kub3::UI::ViewModels

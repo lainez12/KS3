@@ -15,6 +15,7 @@ LoadParametersView::LoadParametersView(Unique<LoadParametersViewModel> viewModel
 {
     ui->setupUi(this);
     setDefaultTitleBar("Exposure Settings");
+    setNewNavButtonsConfigs();
 }
 LoadParametersView::~LoadParametersView()
 {
@@ -27,10 +28,17 @@ void LoadParametersView::resizeEvent(QResizeEvent *ev)
 
 void LoadParametersView::setNewNavButtonsConfigs()
 {
+    NavButtonConfig backBtn(
+        "Back",
+        ":/icons/back.svg",
+        "B",
+        std::bind(&LoadParametersView::onBackButtonClicked, this, std::placeholders::_1));
+    addNavButton("left", backBtn);
 }
 
 void LoadParametersView::onBackButtonClicked(const QString &buttonId)
 {
+    emit s_openView(Kub3::UI::ViewId::ALIGNMENT_VISUALISATION_VIEW);
 }
 
 void LoadParametersView::onValidateButtonClicked(const QString &buttonId)

@@ -7,19 +7,19 @@
     <x>0</x>
     <y>0</y>
     <width>1920</width>
-    <height>818</height>
+    <height>819</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>1920</width>
-    <height>818</height>
+    <height>819</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>1920</width>
-    <height>818</height>
+    <height>190000</height>
    </size>
   </property>
   <property name="styleSheet">
@@ -146,6 +146,22 @@ font-size: 20px;</string>
          </widget>
         </item>
         <item>
+         <spacer name="horizontalSpacer_3">
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Policy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>10</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
          <widget class="QCheckBox" name="configCamLeftCheck">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -172,8 +188,8 @@ font-size: 20px;</string>
           </property>
           <property name="iconSize">
            <size>
-            <width>105</width>
-            <height>70</height>
+            <width>145</width>
+            <height>90</height>
            </size>
           </property>
           <property name="shortcut">
@@ -200,7 +216,7 @@ font-size: 20px;</string>
           </property>
           <property name="sizeHint" stdset="0">
            <size>
-            <width>10</width>
+            <width>23</width>
             <height>20</height>
            </size>
           </property>
@@ -223,7 +239,7 @@ font-size: 20px;</string>
           </property>
           <property name="sizeHint" stdset="0">
            <size>
-            <width>10</width>
+            <width>34</width>
             <height>20</height>
            </size>
           </property>
@@ -258,8 +274,8 @@ font-size: 20px;</string>
           </property>
           <property name="iconSize">
            <size>
-            <width>105</width>
-            <height>70</height>
+            <width>145</width>
+            <height>90</height>
            </size>
           </property>
          </widget>
@@ -343,7 +359,13 @@ font-size: 20px;</string>
        </layout>
       </item>
       <item row="1" column="0">
-       <widget class="QWidget" name="visioLeft" native="true">
+       <widget class="CameraStreamWidget" name="visioLeft" native="true">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="styleSheet">
          <string notr="true"/>
         </property>
@@ -390,11 +412,23 @@ font-size: 20px;</string>
         <widget class="QFrame" name="configCamLeftFrame">
          <property name="geometry">
           <rect>
-           <x>829</x>
+           <x>770</x>
            <y>0</y>
-           <width>131</width>
-           <height>651</height>
+           <width>190</width>
+           <height>621</height>
           </rect>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>190</height>
+          </size>
          </property>
          <property name="styleSheet">
           <string notr="true">background-color: #fff;</string>
@@ -449,6 +483,9 @@ font-weight: 700;</string>
                 <width>30</width>
                 <height>30</height>
                </size>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -506,6 +543,9 @@ font-weight: 700;</string>
                 <height>30</height>
                </size>
               </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
              </widget>
             </item>
            </layout>
@@ -553,6 +593,9 @@ font-weight: 700;</string>
                 <width>30</width>
                 <height>30</height>
                </size>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -609,6 +652,9 @@ font-weight: 700;</string>
                 <width>30</width>
                 <height>30</height>
                </size>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -711,7 +757,7 @@ font-weight: 700;</string>
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>311</width>
+           <width>391</width>
            <height>751</height>
           </rect>
          </property>
@@ -777,14 +823,14 @@ opacity: 1;</string>
             <item>
              <widget class="QSpinBox" name="spinBox">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
               <property name="maximumSize">
                <size>
-                <width>63</width>
+                <width>80</width>
                 <height>35</height>
                </size>
               </property>
@@ -838,14 +884,14 @@ opacity: 1;</string>
             <item>
              <widget class="QSpinBox" name="spinBox_2">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
               <property name="maximumSize">
                <size>
-                <width>63</width>
+                <width>80</width>
                 <height>35</height>
                </size>
               </property>
@@ -887,25 +933,15 @@ opacity: 1;</string>
              <enum>Qt::LayoutDirection::LeftToRight</enum>
             </property>
             <property name="styleSheet">
-             <string notr="true">QPushButton {
-border: 2px solid #0070DB;
-background-color: #ffffff;
-color: #0070DB;
-font: 16px;
-font-weight: 700;
-font-family: arial;
-width: 50px;
-height: 50px;
-
-}</string>
+             <string notr="true">QPushButton { border: 2px solid #0070DB; background-color: #ffffff; color: #0070DB; font: 16px; font-weight: 700; font-family: arial; width: 50px; height: 50px;}</string>
             </property>
             <widget class="QWidget" name="formLayoutWidget">
              <property name="geometry">
               <rect>
                <x>10</x>
                <y>10</y>
-               <width>281</width>
-               <height>281</height>
+               <width>351</width>
+               <height>361</height>
               </rect>
              </property>
              <layout class="QGridLayout" name="gridLayout_2">
@@ -1100,16 +1136,54 @@ height: 50px;
           </item>
          </layout>
         </widget>
+        <widget class="QLabel" name="visualMarkLeft">
+         <property name="geometry">
+          <rect>
+           <x>430</x>
+           <y>312</y>
+           <width>100</width>
+           <height>100</height>
+          </rect>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>100</width>
+           <height>100</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="pixmap">
+          <pixmap resource="../../resources.qrc">:/icons/croix.svg</pixmap>
+         </property>
+         <property name="scaledContents">
+          <bool>true</bool>
+         </property>
+        </widget>
         <zorder>moveLeftCamWidget</zorder>
         <zorder>moveCamLeft</zorder>
         <zorder>speedCamLeft</zorder>
         <zorder>pickUpLeft</zorder>
         <zorder>gotoLeft</zorder>
         <zorder>configCamLeftFrame</zorder>
+        <zorder>visualMarkLeft</zorder>
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QWidget" name="visioRight" native="true">
+       <widget class="CameraStreamWidget" name="visioRight" native="true">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="styleSheet">
          <string notr="true"/>
         </property>
@@ -1161,9 +1235,21 @@ height: 50px;
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>131</width>
-           <height>651</height>
+           <width>190</width>
+           <height>621</height>
           </rect>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>190</height>
+          </size>
          </property>
          <property name="styleSheet">
           <string notr="true">background-color: #fff;</string>
@@ -1215,6 +1301,9 @@ font-weight: 700;</string>
                 <width>30</width>
                 <height>30</height>
                </size>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -1272,6 +1361,9 @@ font-weight: 700;</string>
                 <height>30</height>
                </size>
               </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
              </widget>
             </item>
            </layout>
@@ -1319,6 +1411,9 @@ font-weight: 700;</string>
                 <width>30</width>
                 <height>30</height>
                </size>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -1375,6 +1470,9 @@ font-weight: 700;</string>
                 <width>30</width>
                 <height>30</height>
                </size>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -1475,9 +1573,9 @@ font-weight: 700;</string>
         <widget class="QWidget" name="moveRightCamWidget" native="true">
          <property name="geometry">
           <rect>
-           <x>650</x>
+           <x>570</x>
            <y>0</y>
-           <width>311</width>
+           <width>391</width>
            <height>751</height>
           </rect>
          </property>
@@ -1543,14 +1641,14 @@ opacity: 1;</string>
             <item>
              <widget class="QSpinBox" name="spinBox_3">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
               <property name="maximumSize">
                <size>
-                <width>63</width>
+                <width>80</width>
                 <height>35</height>
                </size>
               </property>
@@ -1604,14 +1702,14 @@ opacity: 1;</string>
             <item>
              <widget class="QSpinBox" name="spinBox_4">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
               <property name="maximumSize">
                <size>
-                <width>63</width>
+                <width>80</width>
                 <height>35</height>
                </size>
               </property>
@@ -1670,8 +1768,8 @@ height: 50px;
               <rect>
                <x>10</x>
                <y>10</y>
-               <width>281</width>
-               <height>281</height>
+               <width>361</width>
+               <height>361</height>
               </rect>
              </property>
              <layout class="QGridLayout" name="gridLayout_3">
@@ -1866,12 +1964,44 @@ height: 50px;
           </item>
          </layout>
         </widget>
+        <widget class="QLabel" name="visualMarkRight">
+         <property name="geometry">
+          <rect>
+           <x>430</x>
+           <y>312</y>
+           <width>100</width>
+           <height>100</height>
+          </rect>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>100</width>
+           <height>100</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="pixmap">
+          <pixmap resource="../../resources.qrc">:/icons/croix.svg</pixmap>
+         </property>
+         <property name="scaledContents">
+          <bool>true</bool>
+         </property>
+        </widget>
         <zorder>moveRightCamWidget</zorder>
         <zorder>gotoRight</zorder>
         <zorder>pickUpRight</zorder>
         <zorder>speedCamRight</zorder>
         <zorder>moveCamRight</zorder>
         <zorder>configCamRightFrame</zorder>
+        <zorder>visualMarkRight</zorder>
        </widget>
       </item>
      </layout>
@@ -1880,6 +2010,12 @@ height: 50px;
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>CameraStreamWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">Views/Components/CameraStreamWidget.h</header>
+   <container>1</container>
+  </customwidget>
   <customwidget>
    <class>NavButton</class>
    <extends>QWidget</extends>

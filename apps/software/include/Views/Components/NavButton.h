@@ -6,7 +6,8 @@
 
 #include "BottomCroppedCircle.h"
 
-class NavButton : public QWidget {
+class NavButton : public QWidget
+{
     Q_OBJECT
 public:
     explicit NavButton(QWidget *parent = nullptr);
@@ -16,8 +17,8 @@ public:
     void setText(const QString &newText);
     void setEnabledNavButton(bool state);
     void setSize(const uint sizePx);
-    void getColorDisabled();
-    void getColorEnabled();
+    void changeColorToDisabled();
+    void changeColorToEnabled();
     void switchColor(bool enabled);
 
 signals:

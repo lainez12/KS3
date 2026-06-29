@@ -4,7 +4,7 @@ namespace Kub3::UI::ViewModels::Alignment
 {
 
     VisualisationViewModel::VisualisationViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent) :
-        QObject(parent),
+        BaseVisionViewModel(parent),
         m_repo(repo)
     {
     }
