@@ -153,6 +153,12 @@ namespace Kub3::Tools::Tester
         }
     }
 
+    void ProcedureTestController::ps_runInitStages(void)
+    {
+        m_homingService->initializeGranular(Services::HomingTarget::ALIGNMENT_STAGES);
+        startServiceRoutine(m_homingService.get(), "Stages Initialization Sequence");
+    }
+
     void ProcedureTestController::ps_runInitCameras(void)
     {
         m_homingService->initializeGranular(Services::HomingTarget::CAMERAS);

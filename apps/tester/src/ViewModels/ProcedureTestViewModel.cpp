@@ -53,6 +53,12 @@ namespace Kub3::Tools::Tester
             emit cmdRunInitialization();
     }
 
+    void ProcedureTestViewModel::uiRequestInitStages(void)
+    {
+        if (!m_isRunning)
+            emit cmdRunInitStages();
+    }
+
     void ProcedureTestViewModel::uiRequestInitCameras(void)
     {
         if (!m_isRunning)

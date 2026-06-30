@@ -88,13 +88,7 @@ namespace Kub3::Services
                 enqueueTask<ZMotorsReachLimitTask>(m_repo, leftZMotorBundle, rightZMotorBundle, backZMotorBundle, Z2, false);
             }
 
-            // Init X, Y, Theta
-            enqueueTask<AlignmentStagesInitTask>(
-                m_repo,
-                xStageBundle.motor, yStageBundle.motor, thetaStageBundle.motor,
-                xStageBundle.kinematic, yStageBundle.kinematic, thetaStageBundle.kinematic);
-            // Center X, Y, Theta
-            enqueueTask<AlignmentStagesHomingTask>(m_repo, xStageBundle, yStageBundle, thetaStageBundle);
+            buildStagesSequence(true);
             // Init 3Z (lower to T2MK low limits)
             enqueueTask<ZMotorsInitTask>(m_repo, leftZMotorBundle, rightZMotorBundle, backZMotorBundle);
             // TODO: Add task to tare force sensors here
@@ -274,6 +268,11 @@ namespace Kub3::Services
 
         switch (target)
         {
+        case HomingTarget::ALIGNMENT_STAGES:
+        {
+            buildStagesSequence(true);
+            break;
+        }
         case HomingTarget::CAMERAS:
         {
             buildCamerasSequence(true);
@@ -345,6 +344,23 @@ namespace Kub3::Services
         m_leftCameraYKineProfile  = m_processConf.getKinematicProfile(LEFT_CAMERA_Y_MOTOR, "normal");
         m_rightCameraXKineProfile = m_processConf.getKinematicProfile(RIGHT_CAMERA_X_MOTOR, "normal");
         m_rightCameraYKineProfile = m_processConf.getKinematicProfile(RIGHT_CAMERA_Y_MOTOR, "normal");
+    }
+
+    void HomingService::buildStagesSequence(bool init, uint8_t lane)
+    {
+        UNWRAP_OR_ABORT(xStageBundle, buildStageMotorBundle(StageMotorIdArg::XStage));
+        UNWRAP_OR_ABORT(yStageBundle, buildStageMotorBundle(StageMotorIdArg::YStage));
+        UNWRAP_OR_ABORT(thetaStageBundle, buildStageMotorBundle(StageMotorIdArg::ThetaStage));
+
+        if (init)
+        {
+            enqueueTaskOnLane<AlignmentStagesInitTask>(
+                lane, m_repo,
+                xStageBundle.motor, yStageBundle.motor, thetaStageBundle.motor,
+                xStageBundle.kinematic, yStageBundle.kinematic, thetaStageBundle.kinematic);
+        }
+
+        enqueueTaskOnLane<AlignmentStagesHomingTask>(lane, m_repo, xStageBundle, yStageBundle, thetaStageBundle);
     }
 
     void HomingService::buildCamerasSequence(bool init, uint8_t lane)

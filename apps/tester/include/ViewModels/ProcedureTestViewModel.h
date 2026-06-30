@@ -48,6 +48,7 @@ namespace Kub3::Tools::Tester
         void uiRequestStowage(int targetInt);
         void uiRequestUnstowage(int targetInt);
         void uiRequestInitialization(void);
+        void uiRequestInitStages(void);
         void uiRequestInitCameras(void);
         void uiRequestInitDeck(void);
         void uiRequestInitVision(void);
@@ -74,6 +75,7 @@ namespace Kub3::Tools::Tester
         void cmdRunStowage(int targetInt);
         void cmdRunUnstowage(int targetInt);
         void cmdRunInitialization(void);
+        void cmdRunInitStages(void);
         void cmdRunInitCameras(void);
         void cmdRunInitDeck(void);
         void cmdRunInitVision(void);

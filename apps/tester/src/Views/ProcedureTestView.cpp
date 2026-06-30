@@ -104,7 +104,7 @@ namespace Kub3::Tools::Tester
         connect(ui->btnCenterYStage, &QPushButton::clicked, this, []() {});
         connect(ui->btnInitThetaStage, &QPushButton::clicked, this, []() {});
         connect(ui->btnCenterThetaStage, &QPushButton::clicked, this, []() {});
-        connect(ui->btnInitAllStages, &QPushButton::clicked, this, []() {});
+        connect(ui->btnInitAllStages, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestInitStages(); });
         connect(ui->btnCenterAllStages, &QPushButton::clicked, this, []() {});
 
         // --- Z Elevator & Deck ---
