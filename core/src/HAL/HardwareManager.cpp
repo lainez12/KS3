@@ -763,7 +763,7 @@ static std::string_view arduino1KeyExtractor(const Kub3::HAL::Com::packet_t &pac
     }
     default:
     {
-        if ('1' <= payload[0] && payload[0] <= '7')
+        if (('1' <= payload[0] && payload[0] <= '6') || payload[0] == '8')
             return std::string_view(payload.data(), 1);
         break;
     }

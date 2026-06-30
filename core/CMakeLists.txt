@@ -202,7 +202,11 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND NOT CMAKE_PRODUCTION_BUILD)
         KUB3_ADMIN_VAULT_PATH="${CMAKE_SOURCE_DIR}/tests/admin_vault.bin"
     )
 else()
-    target_compile_definitions(Kub3Core PUBLIC BUILD_RELEASE)
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+        target_compile_definitions(Kub3Core PUBLIC BUILD_DEBUG)
+    else()
+        target_compile_definitions(Kub3Core PUBLIC BUILD_RELEASE)
+    endif()
     target_compile_definitions(Kub3Core PUBLIC
         KUB3_HARDWARE_CONFIG_PATH="/etc/kub3/hardware.ini"
         KUB3_PROCESS_CONFIG_PATH="/etc/kub3/process.ini"
