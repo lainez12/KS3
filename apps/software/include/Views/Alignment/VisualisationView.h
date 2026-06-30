@@ -15,26 +15,26 @@
 namespace Ui
 {
     class VisualisationView;
-} // namespace UI
+}
 
 namespace Kub3::UI::Views::ViewsAlignment
 {
+
     class VisualisationView final : public AlignmentViewBase
     {
         using VisualisationViewModel = Kub3::UI::ViewModels::Alignment::VisualisationViewModel;
-
         Q_OBJECT
 
     public:
         explicit VisualisationView(Unique<VisualisationViewModel> viewModel, QWidget *parent = nullptr);
         ~VisualisationView();
 
-    public:
-        void resizeEvent(QResizeEvent *event) override;
-
     public slots:
-        void mapPositionCamerasOpenMap(void);
-        void mapPositionCamerasCloseMap(void);
+        void mapPositionCamerasOpenMap();
+        void mapPositionCamerasCloseMap();
+
+    protected:
+        void resizeEvent(QResizeEvent *event) override;
 
     private slots:
         void leftCamConfigToggled(bool checked);
@@ -54,18 +54,21 @@ namespace Kub3::UI::Views::ViewsAlignment
         void onAntiCollisionButtonClicked(const QString &buttonId);
         void onVisualMarkButtonClicked(const QString &buttonId);
         void onMeasurementButtonClicked(const QString &buttonId);
-        void closeHardForceContactFormIfNeeded(void);
+        void closeHardForceContactFormIfNeeded();
+
+        // UI helpers
+        void updateOverlayPositions();
 
     private:
         Ui::VisualisationView *ui;
         KeyboardConnections m_keyboard;
-        QWidget *m_maskingDistanceWidget;
+
+        // Custom widget artifacts kept
         RealPositionCameras *m_mapPositionCameras;
         HardForceContactForm *m_hardForceContactForm;
-        QLabel *m_labelText;
     };
 
-} // namespace Kub3::UI::Views
+}
 
 using VisualisationView = Kub3::UI::Views::ViewsAlignment::VisualisationView;
 

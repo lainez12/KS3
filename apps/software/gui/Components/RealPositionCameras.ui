@@ -50,49 +50,94 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="QCheckBox" name="btnOpenClose">
-     <property name="maximumSize">
+    <widget class="QWidget" name="btnContainer" native="true">
+     <property name="minimumSize">
       <size>
-       <width>16777215</width>
-       <height>73</height>
+       <width>0</width>
+       <height>64</height>
       </size>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>15</pointsize>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="focusPolicy">
-      <enum>Qt::FocusPolicy::StrongFocus</enum>
-     </property>
-     <property name="layoutDirection">
-      <enum>Qt::LayoutDirection::RightToLeft</enum>
      </property>
      <property name="styleSheet">
       <string notr="true">background-color : #0070DB;
-color: #FFF;</string>
+color: #FFF;
+font-size: 20px;
+</string>
      </property>
-     <property name="text">
-      <string>Real time X-Y
-position cameras</string>
-     </property>
-     <property name="icon">
-      <iconset resource="../resources.qrc">
-       <normaloff>:/icons/fleche-bas.svg</normaloff>:/icons/fleche-bas.svg</iconset>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>40</width>
-       <height>40</height>
-      </size>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <property name="tristate">
-      <bool>false</bool>
-     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,0">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <property name="leftMargin">
+       <number>8</number>
+      </property>
+      <property name="topMargin">
+       <number>4</number>
+      </property>
+      <property name="rightMargin">
+       <number>8</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="label_3">
+        <property name="font">
+         <font>
+          <pointsize>-1</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Real-time X/Y
+cameras positions</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="btnOpenClose">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>-1</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::FocusPolicy::StrongFocus</enum>
+        </property>
+        <property name="layoutDirection">
+         <enum>Qt::LayoutDirection::RightToLeft</enum>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="../resources.qrc">
+          <normaloff>:/icons/fleche-bas.svg</normaloff>:/icons/fleche-bas.svg</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>40</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="tristate">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
    <item>
@@ -125,8 +170,8 @@ position cameras</string>
      <widget class="QLabel" name="label_2">
       <property name="geometry">
        <rect>
-        <x>260</x>
-        <y>90</y>
+        <x>220</x>
+        <y>100</y>
         <width>25</width>
         <height>25</height>
        </rect>

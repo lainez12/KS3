@@ -15,20 +15,24 @@ class RealPositionCameras : public QWidget
     Q_OBJECT
 public:
     explicit RealPositionCameras(QWidget *parent = nullptr);
+    ~RealPositionCameras() override;
 
-protected:
-public slots:
+public:
     void openMap(void);
     void closeMap(void);
-
-private slots:
-    void onBtnOpenCloseToggled(bool checked);
 
 signals:
     void s_openMap(void);
     void s_closeMap(void);
 
+protected:
+    void resizeEvent(QResizeEvent *ev) override;
+
+private slots:
+    void onBtnOpenCloseToggled(bool checked);
+
 private:
     Ui::RealPositionCameras *ui;
     QString m_text;
+    QPixmap m_icon;
 };
