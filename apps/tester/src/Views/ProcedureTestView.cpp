@@ -68,6 +68,13 @@ namespace Kub3::Tools::Tester
             {QStringLiteral(Y_STAGE_BACK_LIMIT), ui->yBackLimitValue},
             {QStringLiteral(THETA_STAGE_CLOCKWISE_LIMIT), ui->thetaCWLimitValue},
             {QStringLiteral(THETA_STAGE_ANTI_CLOCKWISE_LIMIT), ui->thetaACWLimitValue},
+            // Z-Axes (3Z)
+            {QStringLiteral(Z_LEFT_HIGH_LIMIT), ui->zLeftHighLimit},
+            {QStringLiteral(Z_RIGHT_HIGH_LIMIT), ui->zRightHighLimit},
+            {QStringLiteral(Z_BACK_HIGH_LIMIT), ui->zBackHighLimit},
+            {QStringLiteral(Z_LEFT_LOW_LIMIT), ui->zLeftLowLimit},
+            {QStringLiteral(Z_RIGHT_LOW_LIMIT), ui->zRightLowLimit},
+            {QStringLiteral(Z_BACK_LOW_LIMIT), ui->zBackLowLimit},
             // Cameras
             {QStringLiteral(LEFT_CAMERA_X_LEFT_LIMIT), ui->lblLeftCamXLeftLimit},
             {QStringLiteral(LEFT_CAMERA_X_RIGHT_LIMIT), ui->lblLeftCamXRightLimit},

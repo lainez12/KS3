@@ -58,7 +58,7 @@
        <item>
         <widget class="QTabWidget" name="tabWidget">
          <property name="currentIndex">
-          <number>1</number>
+          <number>2</number>
          </property>
          <widget class="QWidget" name="conveyorsTab">
           <attribute name="title">
@@ -757,7 +757,7 @@
              </property>
              <layout class="QGridLayout" name="gridLayout_6">
               <item row="0" column="1">
-               <widget class="QLabel" name="label_13">
+               <widget class="QLabel" name="zRightHighLimit">
                 <property name="text">
                  <string>N.D.</string>
                 </property>
@@ -788,7 +788,7 @@
                </widget>
               </item>
               <item row="2" column="1">
-               <widget class="QLabel" name="label_28">
+               <widget class="QLabel" name="zRightLowLimit">
                 <property name="text">
                  <string>N.D.</string>
                 </property>
@@ -821,7 +821,7 @@
                </widget>
               </item>
               <item row="1" column="1">
-               <widget class="QLabel" name="label_29">
+               <widget class="QLabel" name="zRightPos">
                 <property name="text">
                  <string>N.D.</string>
                 </property>
@@ -886,7 +886,7 @@
              </property>
              <layout class="QGridLayout" name="gridLayout_5">
               <item row="1" column="1">
-               <widget class="QLabel" name="label_25">
+               <widget class="QLabel" name="zBackPos">
                 <property name="text">
                  <string>N.D.</string>
                 </property>
@@ -917,7 +917,7 @@
                </widget>
               </item>
               <item row="0" column="1">
-               <widget class="QLabel" name="label_9">
+               <widget class="QLabel" name="zBackHighLimit">
                 <property name="text">
                  <string>N.D.</string>
                 </property>
@@ -938,7 +938,7 @@
                </widget>
               </item>
               <item row="2" column="1">
-               <widget class="QLabel" name="label_24">
+               <widget class="QLabel" name="zBackLowLimit">
                 <property name="text">
                  <string>N.D.</string>
                 </property>
@@ -991,7 +991,7 @@
                </widget>
               </item>
               <item row="0" column="1">
-               <widget class="QLabel" name="label_5">
+               <widget class="QLabel" name="zLeftHighLimit">
                 <property name="text">
                  <string>N.D.</string>
                 </property>
@@ -1010,7 +1010,7 @@
                </widget>
               </item>
               <item row="1" column="1">
-               <widget class="QLabel" name="label_18">
+               <widget class="QLabel" name="zLeftPos">
                 <property name="text">
                  <string>N.D.</string>
                 </property>
@@ -1029,7 +1029,7 @@
                </widget>
               </item>
               <item row="2" column="1">
-               <widget class="QLabel" name="label_21">
+               <widget class="QLabel" name="zLeftLowLimit">
                 <property name="text">
                  <string>N.D.</string>
                 </property>
