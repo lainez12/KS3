@@ -140,7 +140,8 @@ namespace Kub3::Tools::Tester
             [&](bool v) { emit s_booleanSensorUpdate(qKey, v); },
             [&](int32_t v) { emit s_integerSensorUpdate(qKey, v); },
             [&](uint16_t v) {},
-            [&](uint32_t v) {});
+            [&](uint32_t v) {},
+            [&](double v) {});
 
         std::visit(museum, valueOpt.value());
     }

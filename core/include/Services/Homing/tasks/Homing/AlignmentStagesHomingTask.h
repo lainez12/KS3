@@ -27,7 +27,8 @@ namespace Kub3::Services
 
     private:
         // Returns true when stage is centered (motor reached center position)
-        bool handleSingleMotorLogic(const stage_motor_bundle_t &bundle);
+        bool handleSingleMotorLogic(const stage_motor_bundle_t &bundle, const double centerPosMm);
+        double readCenterPosition(const stage_motor_bundle_t &bundle, const char *label);
 
     private:
         Shared<HAL::MS::IMachineStatusRepo> m_repo;
