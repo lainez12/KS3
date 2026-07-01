@@ -27,14 +27,13 @@ namespace Kub3::Components
 
         auto *formLayout = new QFormLayout();
 
-        // X and Y are in millimeters, Theta is in degrees
-        m_resetX     = createCoordinateSpinBox();
-        m_resetY     = createCoordinateSpinBox();
-        m_resetTheta = createCoordinateSpinBox();
+        m_xCenterMm     = createCoordinateSpinBox();
+        m_yCenterMm     = createCoordinateSpinBox();
+        m_thetaCenterMm = createCoordinateSpinBox();
 
-        formLayout->addRow("X-Axis Reset Position (mm):", m_resetX);
-        formLayout->addRow("Y-Axis Reset Position (mm):", m_resetY);
-        formLayout->addRow("Theta-Axis Reset Position (mm):", m_resetTheta);
+        formLayout->addRow("X-Axis Center Position (mm):", m_xCenterMm);
+        formLayout->addRow("Y-Axis Center Position (mm):", m_yCenterMm);
+        formLayout->addRow("Theta-Axis Center Position (mm):", m_thetaCenterMm);
 
         m_layout->addLayout(formLayout);
         m_layout->addStretch();
@@ -42,16 +41,16 @@ namespace Kub3::Components
 
     void AlignmentPositionsPage::loadInitialData(const Config::alignment_process_config_t &conf)
     {
-        m_resetX->setValue(conf.x_stage_center_pos_mm);
-        m_resetY->setValue(conf.y_stage_center_pos_mm);
-        m_resetTheta->setValue(conf.theta_stage_center_pos_mm);
+        m_xCenterMm->setValue(conf.x_stage_center_pos_mm);
+        m_yCenterMm->setValue(conf.y_stage_center_pos_mm);
+        m_thetaCenterMm->setValue(conf.theta_stage_center_pos_mm);
     }
 
     void AlignmentPositionsPage::pullDataToStruct(Config::alignment_process_config_t &out) const
     {
-        out.x_stage_center_pos_mm     = m_resetX->value();
-        out.y_stage_center_pos_mm     = m_resetY->value();
-        out.theta_stage_center_pos_mm = m_resetTheta->value();
+        out.x_stage_center_pos_mm     = m_xCenterMm->value();
+        out.y_stage_center_pos_mm     = m_yCenterMm->value();
+        out.theta_stage_center_pos_mm = m_thetaCenterMm->value();
     }
 
 } // namespace Kub3::Components

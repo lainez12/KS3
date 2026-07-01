@@ -43,6 +43,7 @@ namespace Kub3::Components
         void onRemoveProfile();
         void onExportProfile();
         void onProfileSelectionChanged(QListWidgetItem *current, QListWidgetItem *previous);
+        void stepperRecomputeFullStepSize();
 
     private:
         void setupUI(const QString &motorId);
@@ -64,11 +65,12 @@ namespace Kub3::Components
         QComboBox *m_typeSelector   = nullptr;
         QStackedWidget *m_typeStack = nullptr;
 
-        QSpinBox *m_stepPerRev           = nullptr;
-        QDoubleSpinBox *m_stepScrewPitch = nullptr;
-        QDoubleSpinBox *m_stepMaxVel     = nullptr;
-        QDoubleSpinBox *m_stepMaxAcc     = nullptr;
-        QSpinBox *m_stepEncTops          = nullptr;
+        QSpinBox *m_stepperStepsPerRev      = nullptr;
+        QDoubleSpinBox *m_stepperScrewPitch = nullptr;
+        QDoubleSpinBox *m_stepperMaxVel     = nullptr;
+        QDoubleSpinBox *m_stepperMaxAcc     = nullptr;
+        QSpinBox *m_stepperEncTops          = nullptr;
+        QLabel *m_stepperFullStepSizeRO     = nullptr; // RO at the end for read only
 
         QDoubleSpinBox *m_dcScrewPitch = nullptr;
         QDoubleSpinBox *m_dcMaxVel     = nullptr;

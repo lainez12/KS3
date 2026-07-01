@@ -66,19 +66,23 @@ namespace Kub3::Components
         m_typeStack = new QStackedWidget();
 
         // 1. Stepper Form
-        auto *stepPage   = new QWidget();
-        auto *stepForm   = new QFormLayout(stepPage);
-        m_stepPerRev     = createSpinBox();
-        m_stepScrewPitch = createDoubleSpinBox(0.01);
-        m_stepMaxVel     = createDoubleSpinBox();
-        m_stepMaxAcc     = createDoubleSpinBox();
-        m_stepEncTops    = createSpinBox();
-        stepForm->addRow("Steps Per Revolution:", m_stepPerRev);
-        stepForm->addRow("Screw Pitch (mm):", m_stepScrewPitch);
-        stepForm->addRow("Max Velocity (mm/s):", m_stepMaxVel);
-        stepForm->addRow("Max Acceleration (mm/s²):", m_stepMaxAcc);
-        stepForm->addRow("Encoder Tops Per Rev:", m_stepEncTops);
+        auto *stepPage          = new QWidget();
+        auto *stepForm          = new QFormLayout(stepPage);
+        m_stepperStepsPerRev    = createSpinBox();
+        m_stepperScrewPitch     = createDoubleSpinBox(0.01);
+        m_stepperFullStepSizeRO = new QLabel(this);
+        m_stepperMaxVel         = createDoubleSpinBox();
+        m_stepperMaxAcc         = createDoubleSpinBox();
+        m_stepperEncTops        = createSpinBox();
+        stepForm->addRow("Steps Per Revolution:", m_stepperStepsPerRev);
+        stepForm->addRow("Screw Pitch (mm):", m_stepperScrewPitch);
+        stepForm->addRow("Full step size (mm):", m_stepperFullStepSizeRO);
+        stepForm->addRow("Encoder Tops Per Rev:", m_stepperEncTops);
+        stepForm->addRow("Max Velocity (mm/s):", m_stepperMaxVel);
+        stepForm->addRow("Max Acceleration (mm/s²):", m_stepperMaxAcc);
         m_typeStack->addWidget(stepPage);
+        connect(m_stepperScrewPitch, &QDoubleSpinBox::valueChanged, this, &MotorConfigPage::stepperRecomputeFullStepSize);
+        connect(m_stepperStepsPerRev, &QSpinBox::valueChanged, this, &MotorConfigPage::stepperRecomputeFullStepSize);
 
         // 2. DC Form
         auto *dcPage   = new QWidget();
@@ -171,11 +175,12 @@ namespace Kub3::Components
         {
             m_typeSelector->setCurrentIndex(0);
             const auto &s = std::get<Kub3::Config::stepper_hw_properties_t>(hwConf.hwProperties);
-            m_stepPerRev->setValue(s.stepsPerRev);
-            m_stepScrewPitch->setValue(s.screwPitchMm);
-            m_stepMaxVel->setValue(s.maxVelocityMmS);
-            m_stepMaxAcc->setValue(s.maxAccelerationMmS2);
-            m_stepEncTops->setValue(s.encoderTopsPerRev);
+            m_stepperStepsPerRev->setValue(s.stepsPerRev);
+            m_stepperScrewPitch->setValue(s.screwPitchMm);
+            m_stepperMaxVel->setValue(s.maxVelocityMmS);
+            m_stepperMaxAcc->setValue(s.maxAccelerationMmS2);
+            m_stepperEncTops->setValue(s.encoderTopsPerRev);
+            stepperRecomputeFullStepSize();
         }
         else if (std::holds_alternative<Kub3::Config::dc_motor_hw_properties_t>(hwConf.hwProperties))
         {
@@ -229,6 +234,19 @@ namespace Kub3::Components
         {
             loadProfileForm(currentItem->text());
         }
+    }
+
+    void MotorConfigPage::stepperRecomputeFullStepSize()
+    {
+        const double stepsPerRev = m_stepperStepsPerRev->value();
+        const double screwPitch  = m_stepperScrewPitch->value();
+
+        if (stepsPerRev == 0)
+        {
+            m_stepperFullStepSizeRO->setText("INVALID");
+            return;
+        }
+        m_stepperFullStepSizeRO->setText(QString::number(screwPitch / stepsPerRev));
     }
 
     // --- KINEMATICS LOGIC ---
@@ -389,11 +407,11 @@ namespace Kub3::Components
         if (currentType == CONF_HW_MOTOR_TYPE_STEPPER)
         {
             Kub3::Config::stepper_hw_properties_t stepper;
-            stepper.stepsPerRev         = static_cast<uint16_t>(m_stepPerRev->value());
-            stepper.screwPitchMm        = m_stepScrewPitch->value();
-            stepper.maxVelocityMmS      = m_stepMaxVel->value();
-            stepper.maxAccelerationMmS2 = m_stepMaxAcc->value();
-            stepper.encoderTopsPerRev   = static_cast<uint16_t>(m_stepEncTops->value());
+            stepper.stepsPerRev         = static_cast<uint16_t>(m_stepperStepsPerRev->value());
+            stepper.screwPitchMm        = m_stepperScrewPitch->value();
+            stepper.maxVelocityMmS      = m_stepperMaxVel->value();
+            stepper.maxAccelerationMmS2 = m_stepperMaxAcc->value();
+            stepper.encoderTopsPerRev   = static_cast<uint16_t>(m_stepperEncTops->value());
             outHw.hwProperties          = stepper;
         }
         else if (currentType == CONF_HW_MOTOR_TYPE_DC)

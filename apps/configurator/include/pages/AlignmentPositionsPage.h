@@ -27,9 +27,9 @@ namespace Kub3::Components
     private:
         QVBoxLayout *m_layout = nullptr;
 
-        QDoubleSpinBox *m_resetX     = nullptr;
-        QDoubleSpinBox *m_resetY     = nullptr;
-        QDoubleSpinBox *m_resetTheta = nullptr;
+        QDoubleSpinBox *m_xCenterMm     = nullptr;
+        QDoubleSpinBox *m_yCenterMm     = nullptr;
+        QDoubleSpinBox *m_thetaCenterMm = nullptr;
     };
 
 } // namespace Kub3::Components
