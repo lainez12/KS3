@@ -23,6 +23,10 @@ if(NOT MVS_INCLUDE_DIR OR NOT MVS_LIBRARY)
     message(WARNING "MVS Hikrobot Library NOT FOUND. Vision features disabled.")
 endif()
 
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    add_compile_definitions(QT_NO_DEBUG_OUTPUT)
+endif()
+
 # Subdirectories
 add_subdirectory(core)
 add_subdirectory(apps/software)

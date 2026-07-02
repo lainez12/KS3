@@ -58,7 +58,7 @@
        <item>
         <widget class="QTabWidget" name="tabWidget">
          <property name="currentIndex">
-          <number>2</number>
+          <number>3</number>
          </property>
          <widget class="QWidget" name="conveyorsTab">
           <attribute name="title">
@@ -419,6 +419,9 @@
            </item>
            <item row="13" column="2">
             <widget class="QPushButton" name="btnCenterThetaStage">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="text">
               <string>CENTER</string>
              </property>
@@ -560,6 +563,9 @@
            </item>
            <item row="3" column="2">
             <widget class="QPushButton" name="btnCenterXStage">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="text">
               <string>CENTER</string>
              </property>
@@ -658,6 +664,9 @@
            </item>
            <item row="13" column="3">
             <widget class="QPushButton" name="btnInitThetaStage">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="text">
               <string>INITIALIZE</string>
              </property>
@@ -665,6 +674,9 @@
            </item>
            <item row="8" column="2">
             <widget class="QPushButton" name="btnCenterYStage">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="text">
               <string>CENTER</string>
              </property>
@@ -691,6 +703,9 @@
            </item>
            <item row="3" column="3">
             <widget class="QPushButton" name="btnInitXStage">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="text">
               <string>INITIALIZE</string>
              </property>
@@ -711,6 +726,9 @@
            </item>
            <item row="8" column="3">
             <widget class="QPushButton" name="btnInitYStage">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="text">
               <string>INITIALIZE</string>
              </property>
@@ -808,6 +826,9 @@
               </item>
               <item row="3" column="1">
                <widget class="QPushButton" name="pushButton_5">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
                 <property name="text">
                  <string>Home</string>
                 </property>
@@ -815,6 +836,9 @@
               </item>
               <item row="3" column="0">
                <widget class="QPushButton" name="pushButton_6">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
                 <property name="text">
                  <string>Initiliaze</string>
                 </property>
@@ -846,10 +870,17 @@
                <number>0</number>
               </property>
               <item row="2" column="1">
-               <widget class="QDoubleSpinBox" name="doubleSpinBox"/>
+               <widget class="QDoubleSpinBox" name="doubleSpinBox">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+               </widget>
               </item>
               <item row="1" column="2">
-               <widget class="QPushButton" name="pushButton_8">
+               <widget class="QPushButton" name="btnHomeAllZAxes">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
                 <property name="text">
                  <string>Home all</string>
                 </property>
@@ -870,7 +901,7 @@
                </widget>
               </item>
               <item row="1" column="0" colspan="2">
-               <widget class="QPushButton" name="pushButton_7">
+               <widget class="QPushButton" name="btnInitAllZAxes">
                 <property name="text">
                  <string>Initialize all</string>
                 </property>
@@ -925,6 +956,9 @@
               </item>
               <item row="3" column="1">
                <widget class="QPushButton" name="pushButton_3">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
                 <property name="text">
                  <string>Home</string>
                 </property>
@@ -932,6 +966,9 @@
               </item>
               <item row="3" column="0">
                <widget class="QPushButton" name="pushButton_4">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
                 <property name="text">
                  <string>Initiliaze</string>
                 </property>
@@ -1037,6 +1074,9 @@
               </item>
               <item row="3" column="0">
                <widget class="QPushButton" name="pushButton">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
                 <property name="text">
                  <string>Initiliaze</string>
                 </property>
@@ -1044,6 +1084,9 @@
               </item>
               <item row="3" column="1">
                <widget class="QPushButton" name="pushButton_2">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
                 <property name="text">
                  <string>Home</string>
                 </property>
@@ -1137,6 +1180,9 @@
            </item>
            <item row="6" column="1" colspan="3">
             <widget class="QPushButton" name="btnInitAllVision">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="text">
               <string>Initialize Both</string>
              </property>

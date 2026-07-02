@@ -23,7 +23,7 @@ namespace Kub3::Services
 
         void initialize(void) override;
         void home(HomingTarget::Type target = HomingTarget::ALL) override;
-        void initializeGranular(HomingTarget::Type target) override;
+        void runGranularAction(HomingTarget::Type target, bool initialization = true) override;
 
     protected:
         void onStop(void) override;
@@ -34,6 +34,7 @@ namespace Kub3::Services
 
         // Lanes build helpers
         void buildStagesSequence(bool init, uint8_t lane = 0);
+        void buildZMotorsSequence(bool init, uint8_t lane = 0);
         void buildCamerasSequence(bool init, uint8_t lane = 0);
         void buildDeckSequence(bool init, uint8_t lane = 0);
 

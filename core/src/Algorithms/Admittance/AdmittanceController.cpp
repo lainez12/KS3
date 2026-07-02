@@ -82,7 +82,6 @@ namespace Kub3::Algorithms::Control
                                      std::abs(e_R) <= config.force_tolerance_gf &&
                                      std::abs(e_B) <= config.force_tolerance_gf);
 
-#if defined(BUILD_DEBUG)
         qDebug().noquote()
             << QString("[AdmittanceController] Target: %1gF (tolerance: %7gF);"
                        "\n\tMean force: %2gF;"
@@ -98,13 +97,10 @@ namespace Kub3::Algorithms::Control
                    .arg(e_L)
                    .arg(e_R)
                    .arg(e_B);
-#endif
 
         if (mean_converged && tilt_converged)
         {
-#if defined(BUILD_DEBUG)
             qDebug() << "[AdmittanceController] convergence reached";
-#endif
 
             out.is_converged = true;
             return out;
@@ -121,9 +117,7 @@ namespace Kub3::Algorithms::Control
         out.velocities_mm_s[1] = clampVelocity((k_mean_active * e_mean) + (k_tilt_active * e_RRelMean), input.dt_seconds, config);
         out.velocities_mm_s[2] = clampVelocity((k_mean_active * e_mean) + (k_tilt_active * e_BRelMean), input.dt_seconds, config);
 
-#if defined(BUILD_DEBUG)
         qDebug().noquote() << QString("\t--- Stiffness ratio: %3; k_mean_active: %1 ; k_tilt_active: %2").arg(k_mean_active).arg(k_tilt_active).arg(ratio);
-#endif
 
         return out;
     }

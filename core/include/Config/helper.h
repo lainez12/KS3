@@ -6,7 +6,7 @@
 #include <type_traits>
 #include <variant>
 
-#include "conf.h"
+#include <Config/conf.h>
 
 namespace Kub3::Config
 {

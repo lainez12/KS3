@@ -59,6 +59,12 @@ namespace Kub3::Tools::Tester
             emit cmdRunInitStages();
     }
 
+    void ProcedureTestViewModel::uiRequestCenterStages(void)
+    {
+        if (!m_isRunning)
+            emit cmdRunCenterStages();
+    }
+
     void ProcedureTestViewModel::uiRequestInitCameras(void)
     {
         if (!m_isRunning)
@@ -75,6 +81,18 @@ namespace Kub3::Tools::Tester
     {
         if (!m_isRunning)
             emit cmdRunInitVision();
+    }
+
+    void ProcedureTestViewModel::uiRequestInitZAxes(void)
+    {
+        if (!m_isRunning)
+            emit cmdRunInitZAxes();
+    }
+
+    void ProcedureTestViewModel::uiRequestHomeZAxes(void)
+    {
+        if (!m_isRunning)
+            emit cmdRunHomeZAxes();
     }
 
     void ProcedureTestViewModel::uiRequestAutolevel(void)

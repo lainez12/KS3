@@ -262,7 +262,7 @@ namespace Kub3::Services
         this->startSequence();
     }
 
-    void HomingService::initializeGranular(HomingTarget::Type target)
+    void HomingService::runGranularAction(HomingTarget::Type target, bool initialization)
     {
         this->clearTasks();
 
@@ -270,27 +270,32 @@ namespace Kub3::Services
         {
         case HomingTarget::ALIGNMENT_STAGES:
         {
-            buildStagesSequence(true);
+            buildStagesSequence(initialization);
+            break;
+        }
+        case HomingTarget::Z_MOTORS:
+        {
+            buildZMotorsSequence(initialization);
             break;
         }
         case HomingTarget::CAMERAS:
         {
-            buildCamerasSequence(true);
+            buildCamerasSequence(initialization);
             break;
         }
         case HomingTarget::DECK:
         {
-            buildDeckSequence(true);
+            buildDeckSequence(initialization);
             break;
         }
         case HomingTarget::CAMERAS | HomingTarget::DECK:
         {
-            buildCamerasSequence(true, CAMERAS_TASKS_QUEUE_LANE);
-            buildDeckSequence(true, DECK_TASKS_QUEUE_LANE);
+            buildCamerasSequence(initialization, CAMERAS_TASKS_QUEUE_LANE);
+            buildDeckSequence(initialization, DECK_TASKS_QUEUE_LANE);
             break;
         }
         default:
-            qWarning() << QStringLiteral("[HomingService] Invalid target %1 for method `initializeGranular`. Skipping.").arg(target);
+            qWarning() << QStringLiteral("[HomingService] Invalid target %1 for method `runGranularAction`. Skipping.").arg(target);
             return; // Invalid target, skipping request.
         }
 
@@ -361,6 +366,18 @@ namespace Kub3::Services
         }
 
         enqueueTaskOnLane<AlignmentStagesHomingTask>(lane, m_repo, xStageBundle, yStageBundle, thetaStageBundle);
+    }
+
+    void HomingService::buildZMotorsSequence(bool init, uint8_t lane)
+    {
+        UNWRAP_OR_ABORT(leftZMotorBundle, buildZMotorBundle(ZMotorIdArg::Left));
+        UNWRAP_OR_ABORT(rightZMotorBundle, buildZMotorBundle(ZMotorIdArg::Right));
+        UNWRAP_OR_ABORT(backZMotorBundle, buildZMotorBundle(ZMotorIdArg::Back));
+
+        if (init)
+        {
+            enqueueTaskOnLane<ZMotorsInitTask>(lane, m_repo, leftZMotorBundle, rightZMotorBundle, backZMotorBundle);
+        }
     }
 
     void HomingService::buildCamerasSequence(bool init, uint8_t lane)

@@ -155,25 +155,31 @@ namespace Kub3::Tools::Tester
 
     void ProcedureTestController::ps_runInitStages(void)
     {
-        m_homingService->initializeGranular(Services::HomingTarget::ALIGNMENT_STAGES);
+        m_homingService->runGranularAction(Services::HomingTarget::ALIGNMENT_STAGES);
         startServiceRoutine(m_homingService.get(), "Stages Initialization Sequence");
+    }
+
+    void ProcedureTestController::ps_runCenterStages(void)
+    {
+        m_homingService->runGranularAction(Services::HomingTarget::ALIGNMENT_STAGES, false);
+        startServiceRoutine(m_homingService.get(), "Stages Homing Sequence");
     }
 
     void ProcedureTestController::ps_runInitCameras(void)
     {
-        m_homingService->initializeGranular(Services::HomingTarget::CAMERAS);
+        m_homingService->runGranularAction(Services::HomingTarget::CAMERAS);
         startServiceRoutine(m_homingService.get(), "Cameras Initialization Sequence");
     }
 
     void ProcedureTestController::ps_runInitDeck(void)
     {
-        m_homingService->initializeGranular(Services::HomingTarget::DECK);
+        m_homingService->runGranularAction(Services::HomingTarget::DECK);
         startServiceRoutine(m_homingService.get(), "Deck Initialization Sequence");
     }
 
     void ProcedureTestController::ps_runInitVision(void)
     {
-        m_homingService->initializeGranular(
+        m_homingService->runGranularAction(
             static_cast<Services::HomingTarget::Type>(Services::HomingTarget::CAMERAS | Services::HomingTarget::DECK));
         startServiceRoutine(m_homingService.get(), "Vision Initialization Sequence");
     }
@@ -209,6 +215,18 @@ namespace Kub3::Tools::Tester
         auto target = static_cast<Services::HomingTarget::Type>(targetInt);
         m_homingService->home(target);
         startServiceRoutine(m_homingService.get(), "Unstowage Sequence");
+    }
+
+    void ProcedureTestController::ps_runInitZAxes(void)
+    {
+        m_homingService->runGranularAction(Services::HomingTarget::Z_MOTORS);
+        startServiceRoutine(m_homingService.get(), "Z Axes Initialization Sequence");
+    }
+
+    void ProcedureTestController::ps_runHomeZAxes(void)
+    {
+        m_homingService->runGranularAction(Services::HomingTarget::Z_MOTORS, false);
+        startServiceRoutine(m_homingService.get(), "Z Axes Homing Sequence");
     }
 
     void ProcedureTestController::ps_runAutolevel(void)

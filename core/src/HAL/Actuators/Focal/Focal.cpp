@@ -52,9 +52,7 @@ namespace Kub3::HAL::Act
         command.append(enableByte);
         command.append(QByteArray::number(static_cast<uint32_t>(m_valueFraction * m_maximumValue)));
 
-#if defined(BUILD_DEBUG)
         qDebug() << "Focal sending (Hex):" << command.toHex(' ') << "| (ASCII):" << command;
-#endif
         driver->sendCommand(command);
     }
 }

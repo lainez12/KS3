@@ -55,12 +55,10 @@ namespace Kub3::Services
         else
             throw std::runtime_error("ContactService: Missing back sensor ADC to gram-force conversion factor in hardware configuration.");
 
-#if defined(BUILD_DEBUG)
         qDebug().noquote() << QString("ADC to gram-force ratios (L ; R ; B): (%1 ; %2 ; %3)")
                                   .arg(m_adcToGFLeftFactor)
                                   .arg(m_adcToGFRightFactor)
                                   .arg(m_adcToGFBackFactor);
-#endif
     }
 
     void ContactService::tick(void)
@@ -81,9 +79,7 @@ namespace Kub3::Services
                 if (this->getStatus() == ServiceStatus::Running)
                     abortSequence("CRITICAL: Z-Motors relative distance exceeded max limit. Binding protection triggered.");
 
-#if defined(BUILD_DEBUG)
                 qDebug() << QString("Positions: [L=%1; R=%2; B=%3]").arg(zL).arg(zR).arg(zB);
-#endif
                 qCritical() << "CRITICAL: Z-Motors binding protection triggered. Motors emergency stopped.";
                 return;
             }
@@ -223,10 +219,8 @@ namespace Kub3::Services
             const double fL = static_cast<double>(HAL::MS::readUInt16(m_repo, FORCE_LEFT)) * m_adcToGFLeftFactor;
             const double fR = static_cast<double>(HAL::MS::readUInt16(m_repo, FORCE_RIGHT)) * m_adcToGFRightFactor;
             const double fB = static_cast<double>(HAL::MS::readUInt16(m_repo, FORCE_BACK)) * m_adcToGFBackFactor;
-#if defined(BUILD_DEBUG)
             qDebug().nospace() << "(Current forces pre-conv) LEFT = " << static_cast<double>(HAL::MS::readUInt16(m_repo, FORCE_LEFT)) << "gF; RIGHT = " << static_cast<double>(HAL::MS::readUInt16(m_repo, FORCE_RIGHT)) << "gF; BACK = " << static_cast<double>(HAL::MS::readUInt16(m_repo, FORCE_BACK)) << "gF";
             qDebug().nospace() << "(Current forces) LEFT = " << fL << "gF; RIGHT = " << fR << "gF; BACK = " << fB << "gF";
-#endif
 
             return {fL, fR, fB, std::max({fL, fR, fB})};
         };

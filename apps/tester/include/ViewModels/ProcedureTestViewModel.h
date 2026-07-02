@@ -49,9 +49,12 @@ namespace Kub3::Tools::Tester
         void uiRequestUnstowage(int targetInt);
         void uiRequestInitialization(void);
         void uiRequestInitStages(void);
+        void uiRequestCenterStages(void);
         void uiRequestInitCameras(void);
         void uiRequestInitDeck(void);
         void uiRequestInitVision(void);
+        void uiRequestInitZAxes(void);
+        void uiRequestHomeZAxes(void);
         void uiRequestAutolevel(void);
         void uiRequestCameraMovement(CameraId camId, CameraMovementKind kind, CameraDirection dir);
 
@@ -76,9 +79,12 @@ namespace Kub3::Tools::Tester
         void cmdRunUnstowage(int targetInt);
         void cmdRunInitialization(void);
         void cmdRunInitStages(void);
+        void cmdRunCenterStages(void);
         void cmdRunInitCameras(void);
         void cmdRunInitDeck(void);
         void cmdRunInitVision(void);
+        void cmdRunInitZAxes(void);
+        void cmdRunHomeZAxes(void);
         void cmdRunAutolevel(void);
         void cmdRunCameraMovement(CameraId camId, CameraMovementKind kind, CameraDirection dir);
 

@@ -210,9 +210,7 @@ namespace Kub3::HAL::Act
             {
                 if (!payload.isEmpty())
                 {
-#if defined(BUILD_DEBUG)
                     qDebug().nospace() << "[StepperMotor](" << safeMotor->m_id << ") Received feedback: Stopped with code " << payload.toHex(' ');
-#endif
                     QMetaObject::invokeMethod(safeMotor.get(), [m = safeMotor]() { m->resetInternalState(); }, Qt::AutoConnection);
                 }
             }
@@ -228,13 +226,11 @@ namespace Kub3::HAL::Act
 
         const kinematic_state_t state = m_kinematicEngine->computeNext(dt, getEncoderPositionMm());
 
-#if defined(BUILD_DEBUG)
-        qDebug().noquote() << QString("=============== %1 ================").arg(this->m_id.c_str());
-        qDebug().noquote() << "\t- Current position (mm, encoder):" << getEncoderPositionMm();
-        qDebug().noquote() << "\t- Computed next position (mm, generator state):" << state.position;
-        qDebug().noquote() << "\t- Computed velocity (mm/s, generator state):" << state.velocity;
-        qDebug().noquote() << "\t- Is finished (generator state):" << state.isFinished;
-#endif
+        qDebug().noquote() << "===============" << this->m_id.c_str() << "================"
+                           << "\n\t- Current position (mm, encoder):" << getEncoderPositionMm()
+                           << "\n\t- Computed next position (mm, generator state):" << state.position
+                           << "\n\t- Computed velocity (mm/s, generator state):" << state.velocity
+                           << "\n\t- Is finished (generator state):" << state.isFinished;
 
         if (state.isFinished) // Shutdown if complete
         {

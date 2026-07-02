@@ -43,6 +43,7 @@ namespace Kub3::Tools::Tester
         // Commands from ViewModel
         void ps_emergencyStop(void);
         void ps_runInitStages(void);
+        void ps_runCenterStages(void);
         void ps_runInitCameras(void);
         void ps_runInitDeck(void);
         void ps_runInitVision(void);
@@ -50,6 +51,8 @@ namespace Kub3::Tools::Tester
         void ps_runDrawerOperation(DrawerTarget target, bool eject);
         void ps_runStowage(int targetInt);
         void ps_runUnstowage(int targetInt);
+        void ps_runInitZAxes(void);
+        void ps_runHomeZAxes(void);
         void ps_runAutolevel(void);
         void ps_runCameraMovement(CameraId camId, CameraMovementKind kind, CameraDirection dir);
 

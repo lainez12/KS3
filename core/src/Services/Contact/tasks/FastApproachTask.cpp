@@ -20,9 +20,7 @@ namespace Kub3::Services
 
     void FastApproachTask::start(void)
     {
-#if defined(BUILD_DEBUG)
         qDebug() << QString("=== [FastApproachTask] Starting with target: %1 gF ===").arg(m_threshold);
-#endif
 
         // Check if already beyond threshold
         if (m_currentMaxForceGetter() >= m_threshold)

@@ -131,15 +131,17 @@ namespace Kub3::Services
                                         bool fineProfileNeeded,
                                         bool profileChanged)
     {
+        const bool isMoving = bundle.motor->isMoving();
+
         if (lowLimitReached)
         {
-            if (bundle.motor->isMoving())
+            if (isMoving)
                 bundle.motor->emergencyStop();
         }
         else
         {
             // Send command if not moving OR if moving but the profile changed
-            if (!bundle.motor->isMoving() || profileChanged)
+            if (!isMoving || profileChanged)
                 bundle.motor->moveDirection(
                     HAL::Act::MotorDirection::Negative,
                     fineProfileNeeded ? bundle.fineProfile : bundle.fastProfile);
@@ -148,7 +150,9 @@ namespace Kub3::Services
 
     void ZMotorsInitTask::_climbOutOfLimit(const z_motor_bundle_t &bundle, bool limitValue)
     {
-        if (limitValue == bundle.motor->isMoving()) // No action needed
+        const bool isMoving = bundle.motor->isMoving();
+
+        if (limitValue == isMoving) // No action needed
             return;
 
         if (!limitValue)

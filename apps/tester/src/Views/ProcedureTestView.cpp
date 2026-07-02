@@ -112,10 +112,14 @@ namespace Kub3::Tools::Tester
         connect(ui->btnInitThetaStage, &QPushButton::clicked, this, []() {});
         connect(ui->btnCenterThetaStage, &QPushButton::clicked, this, []() {});
         connect(ui->btnInitAllStages, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestInitStages(); });
-        connect(ui->btnCenterAllStages, &QPushButton::clicked, this, []() {});
+        connect(ui->btnCenterAllStages, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestCenterStages(); });
 
-        // --- Z Elevator & Deck ---
+        // --- Z Elevator ---
+        connect(ui->btnInitAllZAxes, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestInitZAxes(); });
+        connect(ui->btnHomeAllZAxes, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestHomeZAxes(); });
         connect(ui->btnStartAutolevel, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestAutolevel(); });
+
+        // --- Vision (Cameras + Deck) ---
         connect(ui->btnInitCameras, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestInitCameras(); });
         connect(ui->btnInitDeck, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestInitDeck(); });
         connect(ui->btnInitAllVision, &QPushButton::clicked, this, [this]() { /* TODO */ });
