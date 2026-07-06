@@ -9,6 +9,7 @@
 #include <Services/Homing/tasks/Initialization/AlignmentStagesInitTask.h>
 #include <Services/Homing/tasks/Initialization/CamerasInitTask.h>
 #include <Services/Homing/tasks/Initialization/DeckInitTask.h>
+#include <Services/Homing/tasks/Initialization/ForceSensorsTareTask.h>
 #include <Services/Homing/tasks/Initialization/MaskConveyorInitTask.h>
 #include <Services/Homing/tasks/Initialization/WaferConveyorInitTask.h>
 #include <Services/Homing/tasks/Initialization/ZMotorsInitTask.h>
@@ -45,10 +46,12 @@ namespace Kub3::Services
 
     HomingService::HomingService(Shared<HAL::Act::ActuatorRegistry> registry,
                                  Shared<HAL::MS::IMachineStatusRepo> repo,
-                                 const Config::process_config_t &processConf) :
+                                 const Config::process_config_t &processConf,
+                                 const Config::hardware_config_t &hwConf) :
         m_registry(std::move(registry)),
         m_repo(std::move(repo)),
-        m_processConf(processConf)
+        m_processConf(processConf),
+        m_hwConf(hwConf)
     {
         loadMotorsKinematicProfiles();
     }
@@ -377,6 +380,7 @@ namespace Kub3::Services
         if (init)
         {
             enqueueTaskOnLane<ZMotorsInitTask>(lane, m_repo, leftZMotorBundle, rightZMotorBundle, backZMotorBundle);
+            enqueueTaskOnLane<ForceSensorsTareTask>(lane, m_repo);
         }
     }
 

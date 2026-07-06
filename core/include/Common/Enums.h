@@ -26,7 +26,24 @@ namespace Kub3
         RIGHT
     };
 
-    enum class CameraMovementKind : uint32_t
+    enum class AlignmentStageId : uint32_t
+    {
+        X,
+        Y,
+        THETA
+    };
+
+    enum class AlignmentStageDirection : uint32_t
+    {
+        X_LEFT,
+        X_RIGHT,
+        Y_FRONT,
+        Y_BACK,
+        THETA_CCW,
+        THETA_CW,
+    };
+
+    enum class MovementKind : uint32_t
     {
         GRANULAR,
         CONTINUOUS,

@@ -572,9 +572,9 @@ namespace Kub3::HAL
         auto leftForceEn  = std::make_shared<Sensor<bool>>(m_repo, FORCE_LEFT_EN, false, &forceSensorEnabledParser);
         auto rightForceEn = std::make_shared<Sensor<bool>>(m_repo, FORCE_RIGHT_EN, false, &forceSensorEnabledParser);
         auto backForceEn  = std::make_shared<Sensor<bool>>(m_repo, FORCE_BACK_EN, false, &forceSensorEnabledParser);
-        auto leftForce    = std::make_shared<Sensor<uint16_t>>(m_repo, FORCE_LEFT, static_cast<uint16_t>(0), &forceSensorParser);
-        auto rightForce   = std::make_shared<Sensor<uint16_t>>(m_repo, FORCE_RIGHT, static_cast<uint16_t>(0), &forceSensorParser);
-        auto backForce    = std::make_shared<Sensor<uint16_t>>(m_repo, FORCE_BACK, static_cast<uint16_t>(0), &forceSensorParser);
+        auto leftForce    = std::make_shared<Sensor<uint16_t>>(m_repo, FORCE_LEFT_ADC, static_cast<uint16_t>(0), &forceSensorParser);
+        auto rightForce   = std::make_shared<Sensor<uint16_t>>(m_repo, FORCE_RIGHT_ADC, static_cast<uint16_t>(0), &forceSensorParser);
+        auto backForce    = std::make_shared<Sensor<uint16_t>>(m_repo, FORCE_BACK_ADC, static_cast<uint16_t>(0), &forceSensorParser);
 
         // Register sensors
         // --- Encoders

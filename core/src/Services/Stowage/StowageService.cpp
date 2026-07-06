@@ -121,9 +121,9 @@ namespace Kub3::Services
     void StowageService::initializeMachineValues(void)
     {
         m_repo->setValueRaw(V_ARDKO_CONTACT_MASK_POSITION, static_cast<int32_t>(0));
-        m_repo->setValueRaw(V_TARE_FORCE_LEFT, static_cast<uint16_t>(0));
-        m_repo->setValueRaw(V_TARE_FORCE_RIGHT, static_cast<uint16_t>(0));
-        m_repo->setValueRaw(V_TARE_FORCE_BACK, static_cast<uint16_t>(0));
+        m_repo->setValueRaw(V_TARE_FORCE_LEFT_ADC, static_cast<uint16_t>(0));
+        m_repo->setValueRaw(V_TARE_FORCE_RIGHT_ADC, static_cast<uint16_t>(0));
+        m_repo->setValueRaw(V_TARE_FORCE_BACK_ADC, static_cast<uint16_t>(0));
     }
 
     void StowageService::initializeMotorsBundles(void)

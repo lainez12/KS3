@@ -8,7 +8,8 @@
 #include <pages/CameraConfigPage.h>
 #include <pages/CameraGeneralPage.h>
 #include <pages/DrawersPositionsPage.h>
-#include <pages/ForceConfigPage.h>
+#include <pages/ForceConversionsConfigPage.h>
+#include <pages/ForceThresholdsConfigPage.h>
 #include <pages/MCUConfigPage.h>
 #include <pages/MotorConfigPage.h>
 #include <pages/ZAlgorithmicLimitsPage.h>
@@ -178,11 +179,18 @@ void ConfigWindow::populateUI()
         mcuPage->pullDataToStruct(m_hwConfig);
     });
     // -------------------------------------------------------------
-    // STATIC PAGE: FORCE SETTINGS
+    // STATIC PAGE: FORCE THRESHOLDS SETTINGS
     // -------------------------------------------------------------
-    auto *forcePage = new Kub3::Components::ForceConfigPage(m_processConfig.contact);
-    int forceIndex  = addConfigPage(forcePage, [this, forcePage]() {
-        forcePage->pullDataToStruct(m_processConfig.contact);
+    auto *forceThresholdsPage = new Kub3::Components::ForceThresholdsConfigPage(m_processConfig.contact);
+    int forceThresholdsIndex  = addConfigPage(forceThresholdsPage, [this, forceThresholdsPage]() {
+        forceThresholdsPage->pullDataToStruct(m_processConfig.contact);
+    });
+    // -------------------------------------------------------------
+    // STATIC PAGE: FORCE CONVERSIONS SETTINGS
+    // -------------------------------------------------------------
+    auto *forceConversionPage = new Kub3::Components::ForceConversionsConfigPage(m_hwConfig);
+    int forceConvIndex        = addConfigPage(forceConversionPage, [this, forceConversionPage]() {
+        forceConversionPage->pullDataToStruct(m_hwConfig);
     });
     // -------------------------------------------------------------
     // STATIC PAGE: Z-AXIS SETTINGS
@@ -218,7 +226,8 @@ void ConfigWindow::populateUI()
 
     m_categoryMap[SYSTEM_CATEGORY].push_back({"Administrator", adminIdx});
     m_categoryMap[SYSTEM_CATEGORY].push_back({"Micro-controllers", mcuIdx});
-    m_categoryMap[FORCE_CATEGORY].push_back({"Process & Crash Limits", forceIndex});
+    m_categoryMap[FORCE_CATEGORY].push_back({"Limits & Thresholds", forceThresholdsIndex});
+    m_categoryMap[FORCE_CATEGORY].push_back({"Conversions", forceConvIndex});
     m_categoryMap[Z_CATEGORY].push_back({"Algorithmic Limits", zAxisIndex});
     m_categoryMap[ALIGNMENT_CATEGORY].push_back({"Calibration Positions", alignIdx});
     m_categoryMap[CONVEYORS_CATEGORY].push_back({"Calibration Positions", drawersIdx});

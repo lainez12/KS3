@@ -10,7 +10,7 @@ namespace Kub3::Services
     using Dir = HAL::Act::MotorDirection;
 
     AdmittanceControlTask::AdmittanceControlTask(std::array<Shared<HAL::Act::IPositionMotor>, 3> motors,
-                                                 std::function<ForceReadings()> forceGetter,
+                                                 std::function<force_readings_t()> forceGetter,
                                                  std::function<void(const std::string &)> abortCb,
                                                  Algorithms::Control::admittance_config_t config,
                                                  Mode mode,
@@ -47,7 +47,7 @@ namespace Kub3::Services
         }
         m_isFirstTick = false;
 
-        ForceReadings forces       = m_forceGetter(); // Sample Sensors
+        force_readings_t forces    = m_forceGetter(); // Sample Sensors
         admittance_input_t math_in = {{forces.left, forces.right, forces.back}, dt_sec};
         admittance_output_t math_out; // Algorithmic Evaluation
 

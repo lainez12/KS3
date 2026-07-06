@@ -54,7 +54,8 @@ namespace Kub3::Tools::Tester
         void ps_runInitZAxes(void);
         void ps_runHomeZAxes(void);
         void ps_runAutolevel(void);
-        void ps_runCameraMovement(CameraId camId, CameraMovementKind kind, CameraDirection dir);
+        void ps_runCameraMovement(CameraId camId, MovementKind kind, CameraDirection dir);
+        void ps_runAlignmentStageMovement(AlignmentStageId stageId, MovementKind kind, AlignmentStageDirection dir);
 
     signals:
         // Pushed to ViewModel
@@ -91,6 +92,11 @@ namespace Kub3::Tools::Tester
             Services::VisionDirection dir;
         };
         std::vector<CameraMovement> m_activeCameraMoves;
+        struct AlignmentStageMovement {
+            Services::AlignmentStage motor;
+            Services::AlignmentDirection dir;
+        };
+        std::vector<AlignmentStageMovement> m_activeAlignmentStageMoves;
     };
 
 } // namespace Kub3::Tools::Tester

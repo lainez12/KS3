@@ -66,7 +66,7 @@ namespace Kub3::Tools::Tester
 
         // Create Views and Inject ViewModels
         auto *motorTestView     = new MotorTestView(m_motorTestViewModel, m_mainWindow.get());
-        auto *procedureTestView = new ProcedureTestView(m_procedureTestViewModel, m_mainWindow.get());
+        auto *procedureTestView = new ProcedureTestView(m_procedureTestViewModel, m_hwConfig, m_mainWindow.get());
         auto *cameraTestView    = new CamerasTestView(m_cameraTestViewModel, m_mainWindow.get());
 
         // Register Views as Tabs
@@ -155,13 +155,14 @@ namespace Kub3::Tools::Tester
         QObject::connect(procVM, &ProcedureTestViewModel::cmdRunHomeZAxes, m_procedureTestController, &ProcedureTestController::ps_runHomeZAxes, Qt::QueuedConnection);
         QObject::connect(procVM, &ProcedureTestViewModel::cmdRunAutolevel, m_procedureTestController, &ProcedureTestController::ps_runAutolevel, Qt::QueuedConnection);
         QObject::connect(procVM, &ProcedureTestViewModel::cmdRunCameraMovement, m_procedureTestController, &ProcedureTestController::ps_runCameraMovement, Qt::QueuedConnection);
+        QObject::connect(procVM, &ProcedureTestViewModel::cmdRunAlignmentStageMovement, m_procedureTestController, &ProcedureTestController::ps_runAlignmentStageMovement, Qt::QueuedConnection);
 
         // Controller (Logic Thread) -> ViewModel (Main Thread)
         QObject::connect(m_procedureTestController, &ProcedureTestController::s_procedureStarted, procVM, &ProcedureTestViewModel::onProcedureStarted, Qt::QueuedConnection);
         QObject::connect(m_procedureTestController, &ProcedureTestController::s_procedureCompleted, procVM, &ProcedureTestViewModel::onProcedureCompleted, Qt::QueuedConnection);
         QObject::connect(m_procedureTestController, &ProcedureTestController::s_procedureFailed, procVM, &ProcedureTestViewModel::onProcedureFailed, Qt::QueuedConnection);
         // HAL -> ViewModel
-        QObject::connect(m_repo.get(), &HAL::MS::IMachineStatusRepo::s_machineValueChanged, procVM, &ProcedureTestViewModel::onHandleSensorValueChanged, Qt::QueuedConnection);
+        QObject::connect(m_repo.get(), &HAL::MS::IMachineStatusRepo::s_machineValueChanged, procVM, &ProcedureTestViewModel::onMachineValueChanged, Qt::QueuedConnection);
 
         // ==========================================
         // CAMERAS TESTER WIRING

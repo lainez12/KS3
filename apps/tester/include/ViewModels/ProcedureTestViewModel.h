@@ -39,6 +39,7 @@ namespace Kub3::Tools::Tester
         {
             return m_lastStatusMessage;
         }
+        [[nodiscard]] Optional<uint16_t> getADCTareValue(const QString &tareId) const noexcept;
 
     public slots:
         // UI Action Inputs (Intents)
@@ -56,13 +57,14 @@ namespace Kub3::Tools::Tester
         void uiRequestInitZAxes(void);
         void uiRequestHomeZAxes(void);
         void uiRequestAutolevel(void);
-        void uiRequestCameraMovement(CameraId camId, CameraMovementKind kind, CameraDirection dir);
+        void uiRequestCameraMovement(CameraId camId, MovementKind kind, CameraDirection dir);
+        void uiRequestAlignmentStageMovement(AlignmentStageId stageId, MovementKind kind, AlignmentStageDirection dir);
 
         // Inbound Service Updates (from Logic Tier)
         void onProcedureStarted(const QString &procedureName);
         void onProcedureCompleted(const QString &procedureName);
         void onProcedureFailed(const QString &procedureName, const QString &reason);
-        void onHandleSensorValueChanged(const std::string &key);
+        void onMachineValueChanged(const std::string &key);
 
     signals:
         // UI Property Notifiers
@@ -70,6 +72,7 @@ namespace Kub3::Tools::Tester
         void s_statusMessageChanged();
         void s_booleanSensorUpdate(const QString &key, bool val);
         void s_integerSensorUpdate(const QString &key, int32_t val);
+        void s_uint16SensorUpdate(const QString &key, uint16_t val);
 
         // Outbound Commands to Logic Thread Controller
         void cmdEmergencyStop();
@@ -86,7 +89,8 @@ namespace Kub3::Tools::Tester
         void cmdRunInitZAxes(void);
         void cmdRunHomeZAxes(void);
         void cmdRunAutolevel(void);
-        void cmdRunCameraMovement(CameraId camId, CameraMovementKind kind, CameraDirection dir);
+        void cmdRunCameraMovement(CameraId camId, MovementKind kind, CameraDirection dir);
+        void cmdRunAlignmentStageMovement(AlignmentStageId stageId, MovementKind kind, AlignmentStageDirection dir);
 
     private:
         void setStatus(const QString &msg, bool isError);

@@ -17,12 +17,12 @@
 namespace Kub3::Services
 {
 
-    struct ForceReadings {
+    typedef struct force_readings_s {
         double left;
         double right;
         double back;
         double max;
-    };
+    } force_readings_t;
 
     class AdmittanceControlTask final : public ITask
     {
@@ -34,7 +34,7 @@ namespace Kub3::Services
         };
 
         AdmittanceControlTask(std::array<Shared<HAL::Act::IPositionMotor>, 3> motors,
-                              std::function<ForceReadings()> forceGetter,
+                              std::function<force_readings_t()> forceGetter,
                               std::function<void(const std::string &)> abortCb,
                               Algorithms::Control::admittance_config_t config,
                               Mode mode,
@@ -45,7 +45,7 @@ namespace Kub3::Services
 
     private:
         std::array<Shared<HAL::Act::IPositionMotor>, 3> m_motors;
-        std::function<ForceReadings()> m_forceGetter;
+        std::function<force_readings_t()> m_forceGetter;
         std::function<void(const std::string &)> m_abortCb;
 
         Algorithms::Control::admittance_config_t m_config;

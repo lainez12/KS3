@@ -33,6 +33,11 @@ namespace Kub3::HAL::Sensors
             }
 
             T value = m_mapper(data);
+
+            // if (m_key == FORCE_BACK_ADC || m_key == FORCE_LEFT_ADC || m_key == FORCE_RIGHT_ADC)
+            // {
+            //     qInfo() << m_key << "force with val:" << value;
+            // }
             m_repo->setValue<T>(m_key, value);
         }
 

@@ -27,6 +27,26 @@ namespace Kub3::Tools::Tester
     using ConveyorDrawerService = Kub3::Services::DualConveyorDrawerService;
 #endif
 
+    static Services::AlignmentDirection convert(AlignmentStageDirection d)
+    {
+        switch (d)
+        {
+        case AlignmentStageDirection::X_LEFT:
+            return Services::AlignmentDirection::LEFT;
+        case AlignmentStageDirection::X_RIGHT:
+            return Services::AlignmentDirection::RIGHT;
+        case AlignmentStageDirection::Y_BACK:
+            return Services::AlignmentDirection::BACK;
+        case AlignmentStageDirection::Y_FRONT:
+            return Services::AlignmentDirection::FRONT;
+        case AlignmentStageDirection::THETA_CW:
+            return Services::AlignmentDirection::CLOCKWISE;
+        case AlignmentStageDirection::THETA_CCW:
+            return Services::AlignmentDirection::COUNTER_CLOCKWISE;
+        }
+        Q_UNREACHABLE();
+    }
+
     ProcedureTestController::ProcedureTestController(Shared<HAL::Act::ActuatorRegistry> registry,
                                                      Shared<HAL::MS::IMachineStatusRepo> repo,
                                                      Config::process_config_t processConfig,
@@ -53,7 +73,7 @@ namespace Kub3::Tools::Tester
     void ProcedureTestController::start()
     {
         // Create services so they are in the same thread as the controller
-        m_homingService    = std::make_shared<Services::HomingService>(m_registry, m_repo, m_processConfig);
+        m_homingService    = std::make_shared<Services::HomingService>(m_registry, m_repo, m_processConfig, m_hwConfig);
         m_drawerService    = std::make_shared<ConveyorDrawerService>(m_registry, m_repo, m_processConfig);
         m_stowageService   = std::make_shared<Services::StowageService>(m_registry, m_repo, m_processConfig);
         m_alignmentService = std::make_shared<Services::AlignmentService>(m_registry, m_repo, m_processConfig);
@@ -92,6 +112,11 @@ namespace Kub3::Tools::Tester
         {
             for (const auto &move : m_activeCameraMoves)
                 m_visionService->moveManual(move.motor, move.dir); // Feed the watchdog for active movements
+        }
+        else if (m_activeService == m_alignmentService.get())
+        {
+            for (const auto &move : m_activeAlignmentStageMoves)
+                m_alignmentService->moveStage(move.motor, move.dir); // Feed the watchdog for active movements
         }
         m_activeService->tick();
 
@@ -235,9 +260,9 @@ namespace Kub3::Tools::Tester
         startServiceRoutine(m_contactService.get(), "Autoleveling");
     }
 
-    void ProcedureTestController::ps_runCameraMovement(CameraId camId, CameraMovementKind kind, CameraDirection dir)
+    void ProcedureTestController::ps_runCameraMovement(CameraId camId, MovementKind kind, CameraDirection dir)
     {
-        if (kind == CameraMovementKind::GRANULAR)
+        if (kind == MovementKind::GRANULAR)
         {
             // TODO: implement granular movement
             qWarning().noquote() << "Granular movement not handled yet.";
@@ -280,7 +305,7 @@ namespace Kub3::Tools::Tester
 
         const auto [motor, direction] = resolveHardware(camId, dir);
 
-        if (kind == CameraMovementKind::CONTINUOUS)
+        if (kind == MovementKind::CONTINUOUS)
         {
             // Reject manual pad movement if a real automated procedure is running
             if (m_activeService && m_activeService != m_visionService.get())
@@ -319,6 +344,85 @@ namespace Kub3::Tools::Tester
             if (m_activeCameraMoves.empty() &&
                 m_activeService == m_visionService.get() &&
                 m_visionService->getStatus() == Services::ServiceStatus::Idle)
+            {
+                m_activeService = nullptr;
+                m_tickTimer.stop();
+            }
+        }
+    }
+
+    void ProcedureTestController::ps_runAlignmentStageMovement(
+        AlignmentStageId stageId, MovementKind kind, AlignmentStageDirection dir)
+    {
+        if (kind == MovementKind::GRANULAR)
+        {
+            // TODO: implement granular movement
+            qWarning().noquote() << "Granular movement not handled yet.";
+            return;
+        }
+
+        // Translates UI enums to Logic enums
+        auto resolveHardware = [](AlignmentStageId c, AlignmentStageDirection d)
+            -> std::pair<Services::AlignmentStage, Services::AlignmentDirection> {
+            auto direction = convert(d);
+
+            if (c == AlignmentStageId::X)
+            {
+                return {Services::AlignmentStage::X, direction};
+            }
+            else if (c == AlignmentStageId::Y)
+            {
+                return {Services::AlignmentStage::Y, direction};
+            }
+            else if (c == AlignmentStageId::THETA)
+            {
+                return {Services::AlignmentStage::THETA, direction};
+            }
+
+            Q_UNREACHABLE();
+        };
+
+        const auto [motor, direction] = resolveHardware(stageId, dir);
+
+        if (kind == MovementKind::CONTINUOUS)
+        {
+            // Reject manual pad movement if a real automated procedure is running
+            if (m_activeService && m_activeService != m_alignmentService.get())
+            {
+                qWarning() << "Cannot move alignment stages manually while an automated procedure is running.";
+                return;
+            }
+
+            auto it = std::find_if(
+                m_activeAlignmentStageMoves.begin(),
+                m_activeAlignmentStageMoves.end(),
+                [motor](const AlignmentStageMovement &m) { return m.motor == motor; });
+
+            // Insert the movement into our tracking list
+            if (it != m_activeAlignmentStageMoves.end())
+                it->dir = direction;
+            else
+                m_activeAlignmentStageMoves.push_back({motor, direction});
+
+            // Attach Alignment to the Tick engine if it's currently completely idle
+            startServiceRoutine(m_alignmentService.get(), "AlignmentStagePADMovement", true);
+            m_alignmentService->moveStage(motor, direction); // Initiate movement
+        }
+        else
+        {
+            // Erase the movement from the tracking list
+            m_activeAlignmentStageMoves.erase(
+                std::remove_if(
+                    m_activeAlignmentStageMoves.begin(),
+                    m_activeAlignmentStageMoves.end(),
+                    [motor](const AlignmentStageMovement &m) { return m.motor == motor; }),
+                m_activeAlignmentStageMoves.end());
+            m_alignmentService->stopStage(motor);
+
+            // Detach AlignmentService from the Tick engine if it has nothing left to do
+            if (m_activeAlignmentStageMoves.empty() &&
+                m_activeService == m_alignmentService.get() &&
+                m_alignmentService->getStatus() == Services::ServiceStatus::Idle)
             {
                 m_activeService = nullptr;
                 m_tickTimer.stop();

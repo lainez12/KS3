@@ -2,6 +2,7 @@
 
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
 #include <HAL/MachineStatus/sensors_labels.h>
+#include <HAL/MachineStatus/utils.h>
 #include <ViewModels/ProcedureTestViewModel.h>
 
 namespace Kub3::Tools::Tester
@@ -11,6 +12,11 @@ namespace Kub3::Tools::Tester
         QObject(parent),
         m_repo(std::move(repo))
     {
+    }
+
+    Optional<uint16_t> ProcedureTestViewModel::getADCTareValue(const QString &tareId) const noexcept
+    {
+        return m_repo->getValue<uint16_t>(tareId.toStdString());
     }
 
     // ==========================================
@@ -101,10 +107,19 @@ namespace Kub3::Tools::Tester
             emit cmdRunAutolevel();
     }
 
-    void ProcedureTestViewModel::uiRequestCameraMovement(CameraId camId, CameraMovementKind kind, CameraDirection dir)
+    void ProcedureTestViewModel::uiRequestCameraMovement(CameraId camId, MovementKind kind, CameraDirection dir)
     {
         if (!m_isRunning)
             emit cmdRunCameraMovement(camId, kind, dir);
+    }
+
+    void ProcedureTestViewModel::uiRequestAlignmentStageMovement(
+        AlignmentStageId stageId,
+        MovementKind kind,
+        AlignmentStageDirection dir)
+    {
+        if (!m_isRunning)
+            emit cmdRunAlignmentStageMovement(stageId, kind, dir);
     }
 
     // ==========================================
@@ -143,7 +158,7 @@ namespace Kub3::Tools::Tester
         emit s_statusMessageChanged();
     }
 
-    void ProcedureTestViewModel::onHandleSensorValueChanged(const std::string &key)
+    void ProcedureTestViewModel::onMachineValueChanged(const std::string &key)
     {
         if (!m_repo)
             return;
@@ -157,7 +172,7 @@ namespace Kub3::Tools::Tester
         auto museum = overloadedCallable(
             [&](bool v) { emit s_booleanSensorUpdate(qKey, v); },
             [&](int32_t v) { emit s_integerSensorUpdate(qKey, v); },
-            [&](uint16_t v) {},
+            [&](uint16_t v) { emit s_uint16SensorUpdate(qKey, v); },
             [&](uint32_t v) {},
             [&](double v) {});
 

@@ -68,7 +68,7 @@ namespace Kub3
 
         auto actReg = m_hwManager->getActuatorRegistry();
 
-        m_homingService    = std::make_shared<Services::HomingService>(actReg, m_repo, m_processConfig);
+        m_homingService    = std::make_shared<Services::HomingService>(actReg, m_repo, m_processConfig, m_hwConfig);
         m_drawerService    = std::make_shared<ConveyorDrawerService>(actReg, m_repo, m_processConfig);
         m_stowageService   = std::make_shared<Services::StowageService>(actReg, m_repo, m_processConfig);
         m_alignmentService = std::make_shared<Services::AlignmentService>(actReg, m_repo, m_processConfig);

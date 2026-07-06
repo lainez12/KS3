@@ -1,4 +1,4 @@
-#include <pages/ForceConfigPage.h>
+#include <pages/ForceThresholdsConfigPage.h>
 
 namespace Kub3::Components
 {
@@ -10,13 +10,13 @@ namespace Kub3::Components
         return sb;
     }
 
-    ForceConfigPage::ForceConfigPage(const Config::contact_process_config_t &conf, QWidget *parent) : QWidget(parent)
+    ForceThresholdsConfigPage::ForceThresholdsConfigPage(const Config::contact_process_config_t &conf, QWidget *parent) : QWidget(parent)
     {
         setupUI();
         loadInitialData(conf);
     }
 
-    void ForceConfigPage::setupUI()
+    void ForceThresholdsConfigPage::setupUI()
     {
         m_layout = new QVBoxLayout(this);
 
@@ -47,7 +47,7 @@ namespace Kub3::Components
         connect(m_maxProcessForce, &QDoubleSpinBox::valueChanged, m_contactThreshold, &QDoubleSpinBox::setMaximum);
     }
 
-    void ForceConfigPage::loadInitialData(const Config::contact_process_config_t &conf)
+    void ForceThresholdsConfigPage::loadInitialData(const Config::contact_process_config_t &conf)
     {
         // Load top-down to prevent premature clamping
         m_hwCrashForce->setValue(conf.hw_crash_force_limit_gf);
@@ -62,7 +62,7 @@ namespace Kub3::Components
         m_dsbAutolevelTolerance->setValue(conf.autolevel_force_tolerance_gf);
     }
 
-    void ForceConfigPage::pullDataToStruct(Config::contact_process_config_t &out) const
+    void ForceThresholdsConfigPage::pullDataToStruct(Config::contact_process_config_t &out) const
     {
         out.hw_crash_force_limit_gf      = m_hwCrashForce->value();
         out.max_process_force_gf         = m_maxProcessForce->value();

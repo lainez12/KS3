@@ -7,6 +7,7 @@
 #include <utility>
 
 #include <Common/Enums.h>
+#include <Config/hardware.h>
 #include <ViewModels/ProcedureTestViewModel.h>
 #include <Views/ViewBase.h>
 #include <utils.h>
@@ -35,8 +36,10 @@ namespace Kub3::Tools::Tester
          * @param viewModel Shared pointer to the backing view model.
          * @param parent The parent widget.
          */
-        explicit ProcedureTestView(Shared<ProcedureTestViewModel> viewModel, QWidget *parent = nullptr);
+        explicit ProcedureTestView(Shared<ProcedureTestViewModel> viewModel, const Config::hardware_config_t &hwConf, QWidget *parent = nullptr);
         ~ProcedureTestView() override;
+
+        void loadConfigValues(const Config::hardware_config_t &conf);
 
     protected:
         /**
@@ -47,6 +50,7 @@ namespace Kub3::Tools::Tester
     private slots:
         void booleanSensorUpdate(const QString &sensorId, bool value);
         void integerSensorUpdate(const QString &sensorId, int32_t value);
+        void uint16SensorUpdate(const QString &sensorId, uint16_t value);
 
         // Keyboard event handlers
         void handleKeyPressed(Qt::Key keyCode, Qt::KeyboardModifiers modifiers);
@@ -58,21 +62,34 @@ namespace Kub3::Tools::Tester
         void initializeSensorMaps();
         void setupButtonBindings();
         void setupViewModelBindings();
+        void setupRealtimeCurves();
 
         // Keyboard mapping and command helpers
-        Optional<std::pair<CameraId, CameraDirection>> mapKeyEvtToCameraCmd(Qt::Key keyCode) const;
-        void cameraMovement(CameraId camId, CameraMovementKind kind, CameraDirection dir);
+        Optional<Pair<CameraId, CameraDirection>> mapKeyEvtToCameraCmd(Qt::Key keyCode) const;
+        Optional<Pair<AlignmentStageId, AlignmentStageDirection>> mapKeyEvtToAlignmentStageCmd(Qt::Key keyCode) const;
+        void cameraMovement(CameraId camId, MovementKind kind, CameraDirection dir);
+        void alignmentStageMovement(AlignmentStageId, MovementKind kind, AlignmentStageDirection dir);
 
         // UI Updaters
         void updateBoolSensorsText(QLabel *label, const bool state);
-        void updateIntSensorsText(QLabel *label, const int32_t state);
+        void updateLabelText(QLabel *label, const QString &text);
 
     private:
+        typedef struct force_sensor_conf_s {
+            Optional<double> adcToGFRatio;
+            QString tareId;
+        } force_sensor_conf_t;
+
         Unique<Ui::ProcedureTestView> ui;
         Shared<ProcedureTestViewModel> m_procedureViewModel;
 
+        // Configuration values
+        std::unordered_map<QString, force_sensor_conf_t> m_forceSensorIdToConfMap = {};
+        std::unordered_map<QString, Config::motor_config_t> m_motorsHwConf        = {};
+
         std::unordered_map<QString, QLabel *> m_boolSensorsMap;
         std::unordered_map<QString, QLabel *> m_intSensorsMap;
+        std::unordered_map<QString, QLabel *> m_uint16SensorsMap;
     };
 
 } // namespace Kub3::Tools::Tester

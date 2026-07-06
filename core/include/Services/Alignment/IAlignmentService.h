@@ -21,8 +21,8 @@ namespace Kub3::Services
         RIGHT             = NEGATIVE,
         BACK              = POSITIVE,
         FRONT             = NEGATIVE,
-        CLOCKWISE         = POSITIVE,
-        COUNTER_CLOCKWISE = NEGATIVE,
+        COUNTER_CLOCKWISE = POSITIVE,
+        CLOCKWISE         = NEGATIVE,
     };
 
     struct AlignmentMoveStagePayload {

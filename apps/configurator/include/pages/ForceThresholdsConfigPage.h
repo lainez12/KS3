@@ -11,12 +11,12 @@
 namespace Kub3::Components
 {
 
-    class ForceConfigPage : public QWidget
+    class ForceThresholdsConfigPage : public QWidget
     {
         Q_OBJECT
 
     public:
-        explicit ForceConfigPage(const Config::contact_process_config_t &conf, QWidget *parent = nullptr);
+        explicit ForceThresholdsConfigPage(const Config::contact_process_config_t &conf, QWidget *parent = nullptr);
 
         void pullDataToStruct(Config::contact_process_config_t &outConf) const;
 

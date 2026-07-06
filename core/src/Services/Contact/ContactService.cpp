@@ -40,17 +40,17 @@ namespace Kub3::Services
         m_maxMotorsDeltaMm = processConf.elevator.max_z_relative_distance_mm;
 
         // Conversions factors
-        if (auto it = hwConfig.adc_to_gf_factors.find(FORCE_LEFT); it != hwConfig.adc_to_gf_factors.end())
+        if (auto it = hwConfig.adc_to_gf_factors.find(FORCE_LEFT_ADC); it != hwConfig.adc_to_gf_factors.end())
             m_adcToGFLeftFactor = it->second;
         else
             throw std::runtime_error("ContactService: Missing left sensor ADC to gram-force conversion factor in hardware configuration.");
 
-        if (auto it = hwConfig.adc_to_gf_factors.find(FORCE_RIGHT); it != hwConfig.adc_to_gf_factors.end())
+        if (auto it = hwConfig.adc_to_gf_factors.find(FORCE_RIGHT_ADC); it != hwConfig.adc_to_gf_factors.end())
             m_adcToGFRightFactor = it->second;
         else
             throw std::runtime_error("ContactService: Missing right sensor ADC to gram-force conversion factor in hardware configuration.");
 
-        if (auto it = hwConfig.adc_to_gf_factors.find(FORCE_BACK); it != hwConfig.adc_to_gf_factors.end())
+        if (auto it = hwConfig.adc_to_gf_factors.find(FORCE_BACK_ADC); it != hwConfig.adc_to_gf_factors.end())
             m_adcToGFBackFactor = it->second;
         else
             throw std::runtime_error("ContactService: Missing back sensor ADC to gram-force conversion factor in hardware configuration.");
@@ -215,15 +215,7 @@ namespace Kub3::Services
     {
         auto abortCb        = [this](std::string reason) { m_taskAbortReason = std::move(reason); };
         auto maxForceGetter = [this]() -> double { return this->getMaxCurrentForceGF(); };
-        auto forceGetter    = [this]() -> ForceReadings {
-            const double fL = static_cast<double>(HAL::MS::readUInt16(m_repo, FORCE_LEFT)) * m_adcToGFLeftFactor;
-            const double fR = static_cast<double>(HAL::MS::readUInt16(m_repo, FORCE_RIGHT)) * m_adcToGFRightFactor;
-            const double fB = static_cast<double>(HAL::MS::readUInt16(m_repo, FORCE_BACK)) * m_adcToGFBackFactor;
-            qDebug().nospace() << "(Current forces pre-conv) LEFT = " << static_cast<double>(HAL::MS::readUInt16(m_repo, FORCE_LEFT)) << "gF; RIGHT = " << static_cast<double>(HAL::MS::readUInt16(m_repo, FORCE_RIGHT)) << "gF; BACK = " << static_cast<double>(HAL::MS::readUInt16(m_repo, FORCE_BACK)) << "gF";
-            qDebug().nospace() << "(Current forces) LEFT = " << fL << "gF; RIGHT = " << fR << "gF; BACK = " << fB << "gF";
-
-            return {fL, fR, fB, std::max({fL, fR, fB})};
-        };
+        auto forceGetter    = [this]() -> force_readings_t { return this->getCurrentForces(); };
 
         // Approach until contact threshold is touched.
         this->enqueueTask<FastApproachTask>(m_zMotors, maxForceGetter, m_conf.contact_threshold_gf, m_freeProfile);
@@ -239,15 +231,8 @@ namespace Kub3::Services
     void ContactService::buildBasicContactLanes(double forceGF)
     {
         auto abortCb        = [this](std::string reason) { m_taskAbortReason = std::move(reason); };
-        auto maxForceGetter = [this]() -> double {
-            return this->getMaxCurrentForceGF();
-        };
-        auto forceGetter = [this]() -> ForceReadings {
-            const double fL = static_cast<double>(HAL::MS::readUInt16(m_repo, FORCE_LEFT)) * m_adcToGFLeftFactor;
-            const double fR = static_cast<double>(HAL::MS::readUInt16(m_repo, FORCE_RIGHT)) * m_adcToGFRightFactor;
-            const double fB = static_cast<double>(HAL::MS::readUInt16(m_repo, FORCE_BACK)) * m_adcToGFBackFactor;
-            return {fL, fR, fB, std::max({fL, fR, fB})};
-        };
+        auto maxForceGetter = [this]() -> double { return this->getMaxCurrentForceGF(); };
+        auto forceGetter    = [this]() -> force_readings_t { return this->getCurrentForces(); };
 
         // Approach until contact threshold is touched.
         this->enqueueTask<FastApproachTask>(m_zMotors, maxForceGetter, m_conf.contact_threshold_gf, m_freeProfile);
@@ -299,11 +284,45 @@ namespace Kub3::Services
     // Helper to get max current force in gram-force
     double ContactService::getMaxCurrentForceGF() const
     {
-        const double fL = static_cast<double>(HAL::MS::readUInt16(m_repo, FORCE_LEFT)) * m_adcToGFLeftFactor;
-        const double fR = static_cast<double>(HAL::MS::readUInt16(m_repo, FORCE_RIGHT)) * m_adcToGFRightFactor;
-        const double fB = static_cast<double>(HAL::MS::readUInt16(m_repo, FORCE_BACK)) * m_adcToGFBackFactor;
+        const uint16_t adcFL     = HAL::MS::readUInt16(m_repo, FORCE_LEFT_ADC);
+        const uint16_t adcFR     = HAL::MS::readUInt16(m_repo, FORCE_RIGHT_ADC);
+        const uint16_t adcFB     = HAL::MS::readUInt16(m_repo, FORCE_BACK_ADC);
+        const uint16_t adcFTareL = HAL::MS::readUInt16(m_repo, V_TARE_FORCE_LEFT_ADC);
+        const uint16_t adcFTareR = HAL::MS::readUInt16(m_repo, V_TARE_FORCE_RIGHT_ADC);
+        const uint16_t adcFTareB = HAL::MS::readUInt16(m_repo, V_TARE_FORCE_BACK_ADC);
+
+        const double fL = static_cast<double>(adcFL - adcFTareL) * m_adcToGFLeftFactor;
+        const double fR = static_cast<double>(adcFR - adcFTareR) * m_adcToGFRightFactor;
+        const double fB = static_cast<double>(adcFB - adcFTareB) * m_adcToGFBackFactor;
 
         return std::max({fL, fR, fB});
+    }
+
+    force_readings_t ContactService::getCurrentForces(void) const
+    {
+        const uint16_t adcFL     = HAL::MS::readUInt16(m_repo, FORCE_LEFT_ADC);
+        const uint16_t adcFR     = HAL::MS::readUInt16(m_repo, FORCE_RIGHT_ADC);
+        const uint16_t adcFB     = HAL::MS::readUInt16(m_repo, FORCE_BACK_ADC);
+        const uint16_t adcFTareL = HAL::MS::readUInt16(m_repo, V_TARE_FORCE_LEFT_ADC);
+        const uint16_t adcFTareR = HAL::MS::readUInt16(m_repo, V_TARE_FORCE_RIGHT_ADC);
+        const uint16_t adcFTareB = HAL::MS::readUInt16(m_repo, V_TARE_FORCE_BACK_ADC);
+
+        const double fL = static_cast<double>(adcFL - adcFTareL) * m_adcToGFLeftFactor;
+        const double fR = static_cast<double>(adcFR - adcFTareR) * m_adcToGFRightFactor;
+        const double fB = static_cast<double>(adcFB - adcFTareB) * m_adcToGFBackFactor;
+
+        qDebug() << QString("(Current forces) LEFT = %1 (%2 gF, tare: %3); RIGHT = %7 (%8 gF, tare: %9); BACK = %4 (%5 gF, tare: %6)")
+                        .arg(adcFL - adcFTareL)
+                        .arg(fL)
+                        .arg(adcFTareL)
+                        .arg(adcFR - adcFTareR)
+                        .arg(fR)
+                        .arg(adcFTareR)
+                        .arg(adcFB - adcFTareB)
+                        .arg(fB)
+                        .arg(adcFTareB);
+
+        return {fL, fR, fB, std::max({fL, fR, fB})};
     }
 
     bool ContactService::isInContact(void) const

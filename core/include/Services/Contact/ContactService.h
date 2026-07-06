@@ -6,6 +6,7 @@
 #include <HAL/Actuators/Motors/IPositionMotor.h>
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
 #include <Services/BaseTaskService.h>
+#include <Services/Contact/tasks/AdmittanceControlTask.h>
 #include <utils.h>
 
 #include "IContactService.h"
@@ -49,6 +50,7 @@ namespace Kub3::Services
 
         // Internal helpers for contact status
         [[nodiscard]] double getMaxCurrentForceGF(void) const;
+        [[nodiscard]] force_readings_t getCurrentForces(void) const;
         [[nodiscard]] bool isProcessForceExceeded(void) const;
         [[nodiscard]] bool isHardwareCrashLimitExceeded(void) const;
         [[nodiscard]] inline constexpr bool isMovingTowardsContact(ZDirection dir) const;

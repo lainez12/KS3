@@ -201,7 +201,7 @@ void MachineStatusView::populateIntegerSensorsMap(void)
 
 void MachineStatusView::populateUnsignedIntegerSensorsMap(void)
 {
-    m_uintSensorsMap.emplace(FORCE_LEFT, ui->forceLeftValue);
-    m_uintSensorsMap.emplace(FORCE_RIGHT, ui->forceRightValue);
-    m_uintSensorsMap.emplace(FORCE_BACK, ui->forceBackValue);
+    m_uintSensorsMap.emplace(FORCE_LEFT_ADC, ui->forceLeftValue);
+    m_uintSensorsMap.emplace(FORCE_RIGHT_ADC, ui->forceRightValue);
+    m_uintSensorsMap.emplace(FORCE_BACK_ADC, ui->forceBackValue);
 }

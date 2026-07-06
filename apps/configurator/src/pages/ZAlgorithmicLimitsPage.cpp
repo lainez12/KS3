@@ -34,7 +34,7 @@ namespace Kub3::Components
 
             m_maxZRelativeDistMm   = createDoubleSpinBox(0.0, 10.0, 4);
             m_maxMovementPerTickMm = createDoubleSpinBox(0.0, 10.0, 3);
-            m_deadbandVelocityMmS  = createDoubleSpinBox(0.001, 5.0, 3);
+            m_deadbandVelocityMmS  = createDoubleSpinBox(0.0001, 5.0, 5);
 
             formLayout->addRow("Maximum Z axes relative distance (mm):", m_maxZRelativeDistMm);
             formLayout->addRow("Maximum movement per loop cycle (mm):", m_maxMovementPerTickMm);
@@ -49,10 +49,10 @@ namespace Kub3::Components
         {
             auto *formLayout = new QFormLayout();
 
-            m_dsbKMeanLowForceMmSGF  = createDoubleSpinBox(0.0, 0.1, 5);
-            m_dsbKMeanHighForceMmSGF = createDoubleSpinBox(0.0, 0.1, 5);
-            m_dsbKTiltLowForceMmSGF  = createDoubleSpinBox(0.0, 0.1, 5);
-            m_dsbKTiltHighForceMmSGF = createDoubleSpinBox(0.0, 0.1, 5);
+            m_dsbKMeanLowForceMmSGF  = createDoubleSpinBox(0.0, 1.0, 5);
+            m_dsbKMeanHighForceMmSGF = createDoubleSpinBox(0.0, 1.0, 5);
+            m_dsbKTiltLowForceMmSGF  = createDoubleSpinBox(0.0, 1.0, 5);
+            m_dsbKTiltHighForceMmSGF = createDoubleSpinBox(0.0, 1.0, 5);
 
             formLayout->addRow("Translational Gain - Low Force (mm/s/gf)", m_dsbKMeanLowForceMmSGF);
             formLayout->addRow("Translational Gain - High Force (mm/s/gf)", m_dsbKMeanHighForceMmSGF);

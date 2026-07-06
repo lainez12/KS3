@@ -18,7 +18,8 @@ qt_add_executable(Kub3Configurator
     src/pages/MotorConfigPage.cpp
     src/pages/CameraConfigPage.cpp
     src/pages/CameraGeneralPage.cpp
-    src/pages/ForceConfigPage.cpp
+    src/pages/ForceConversionsConfigPage.cpp
+    src/pages/ForceThresholdsConfigPage.cpp
     src/pages/ZAlgorithmicLimitsPage.cpp
     src/pages/DrawersPositionsPage.cpp
     src/pages/AlignmentPositionsPage.cpp
@@ -32,7 +33,8 @@ qt_add_executable(Kub3Configurator
     include/pages/CameraConfigPage.h
     include/pages/CameraGeneralPage.h
     include/pages/DrawersPositionsPage.h
-    include/pages/ForceConfigPage.h
+    include/pages/ForceConversionsConfigPage.h
+    include/pages/ForceThresholdsConfigPage.h
     include/pages/ZAlgorithmicLimitsPage.h
     include/pages/AlignmentPositionsPage.h
     include/pages/MCUConfigPage.h

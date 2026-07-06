@@ -19,7 +19,8 @@ namespace Kub3::Services
         HomingService(
             Shared<HAL::Act::ActuatorRegistry> registry,
             Shared<HAL::MS::IMachineStatusRepo> repo,
-            const Config::process_config_t &processConfig);
+            const Config::process_config_t &processConfig,
+            const Config::hardware_config_t &hwConf);
 
         void initialize(void) override;
         void home(HomingTarget::Type target = HomingTarget::ALL) override;
@@ -68,6 +69,7 @@ namespace Kub3::Services
         Shared<HAL::Act::ActuatorRegistry> m_registry;
         Shared<HAL::MS::IMachineStatusRepo> m_repo;
         const Config::process_config_t &m_processConf;
+        const Config::hardware_config_t &m_hwConf;
 
         // Kinematic profiles
         // --- Z motors

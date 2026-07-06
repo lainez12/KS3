@@ -19,7 +19,7 @@ namespace Kub3::Services
         Shared<HAL::Act::IPositionMotor> motor;
         Config::kinematic_profile_t fastProfile;
         Config::kinematic_profile_t fineProfile;
-        bool fineMode         = false;
+        bool fineMode         = true;
         uint8_t watchdogTicks = 0;
     } motor_alignment_config_t;
 

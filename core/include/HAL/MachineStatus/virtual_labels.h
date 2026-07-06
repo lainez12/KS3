@@ -1,8 +1,8 @@
 #pragma once
 
-#define V_TARE_FORCE_LEFT  "virtualTareForceLeft"
-#define V_TARE_FORCE_RIGHT "virtualTareForceRight"
-#define V_TARE_FORCE_BACK  "virtualTareForceBack"
+#define V_TARE_FORCE_LEFT_ADC  "virtualTareForceLeftADC"
+#define V_TARE_FORCE_RIGHT_ADC "virtualTareForceRightADC"
+#define V_TARE_FORCE_BACK_ADC  "virtualTareForceBackADC"
 
 #define V_ARDKO_CONTACT_MASK_POSITION "virtualArdkoContactMaskPosition"
 

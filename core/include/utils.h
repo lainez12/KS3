@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <optional>
+#include <utility>
 
 namespace Kub3::Utils
 {
@@ -52,6 +53,65 @@ namespace Kub3::Utils
         };
         return Z{a, b};
     }
+
+    // --------------------------------
+    // --- Constexpr O(1) hash array
+    // --------------------------------
+
+    // A compile-time hash map for const char* / std::string_view
+    template <size_t N, size_t Capacity = N * 2> // 50% load factor to minimize collisions
+    struct ConstexprHashMap {
+        struct Entry {
+            std::string_view key{};
+            std::string_view value{};
+            bool is_valid = false;
+        };
+
+        std::array<Entry, Capacity> table{};
+
+        // Compile-time FNV-1a hash function
+        static constexpr uint32_t hash(std::string_view s)
+        {
+            uint32_t h = 2166136261u;
+            for (char c : s)
+            {
+                h = (h ^ static_cast<uint32_t>(c)) * 16777619u;
+            }
+            return h;
+        }
+
+        // Constructor builds the hash table at compile time
+        constexpr ConstexprHashMap(const std::pair<std::string_view, std::string_view> (&init)[N])
+        {
+            for (const auto &kv : init)
+            {
+                uint32_t h = hash(kv.first) % Capacity;
+
+                while (table[h].is_valid)
+                {
+                    h = (h + 1) % Capacity; // Linear probing
+                }
+                table[h] = {kv.first, kv.second, true};
+            }
+        }
+
+        // O(1) lookup
+        constexpr std::optional<std::string_view> get(std::string_view key) const
+        {
+            uint32_t h     = hash(key) % Capacity;
+            uint32_t start = h;
+
+            while (table[h].is_valid)
+            {
+                if (table[h].key == key)
+                    return table[h].value;
+                h = (h + 1) % Capacity;
+                if (h == start)
+                    break; // Table full, not found
+            }
+            return std::nullopt;
+        }
+    };
 }
 
 template <typename T>
@@ -65,6 +125,9 @@ using Weak = std::weak_ptr<T>;
 
 template <typename T>
 using Optional = std::optional<T>;
+
+template <typename K, typename V>
+using Pair = std::pair<K, V>;
 
 // ---------------------------------------
 // --- C++20 OVERLOADED VISITOR HELPER

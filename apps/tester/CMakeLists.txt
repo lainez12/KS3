@@ -12,6 +12,7 @@ qt_add_executable(Kub3Tester
 
     # Sources
     src/main.cpp
+    src/Logger.h
     src/Controllers/ProcedureTestController.cpp
     src/Controllers/MotorTestController.cpp
     src/Controllers/CameraTestController.cpp

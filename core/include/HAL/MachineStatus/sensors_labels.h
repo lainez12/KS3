@@ -81,12 +81,12 @@
 #define THETA_STAGE_ANTI_CLOCKWISE_LIMIT "thetaStageAntiClockwiseLimit"
 
 // Force sensors
-#define FORCE_LEFT     "leftForceSensor"
-#define FORCE_RIGHT    "rightForceSensor"
-#define FORCE_BACK     "backForceSensor"
-#define FORCE_LEFT_EN  "leftForceSensorEnabled"
-#define FORCE_RIGHT_EN "rightForceSensorEnabled"
-#define FORCE_BACK_EN  "backForceSensorEnabled"
+#define FORCE_LEFT_ADC  "leftForceSensorADC"
+#define FORCE_RIGHT_ADC "rightForceSensorADC"
+#define FORCE_BACK_ADC  "backForceSensorADC"
+#define FORCE_LEFT_EN   "leftForceSensorEnabled"
+#define FORCE_RIGHT_EN  "rightForceSensorEnabled"
+#define FORCE_BACK_EN   "backForceSensorEnabled"
 
 // Solenoid valves
 #define MASK_VACUUM_VALVE_STATUS          "maskVacuumValveStatus"

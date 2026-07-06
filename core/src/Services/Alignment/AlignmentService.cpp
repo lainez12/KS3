@@ -18,8 +18,8 @@ namespace
 
     static constexpr std::array<std::array<const char *, 2>, 3> stopIdMap{
         {/* --------- [0] = POSITIVE LIMIT, [1] = NEGATIVE LIMIT */
-         /* X --- */ {X_STAGE_RIGHT_LIMIT, X_STAGE_LEFT_LIMIT},
-         /* Y --- */ {Y_STAGE_FRONT_LIMIT, Y_STAGE_BACK_LIMIT},
+         /* X --- */ {X_STAGE_LEFT_LIMIT, X_STAGE_RIGHT_LIMIT},
+         /* Y --- */ {Y_STAGE_BACK_LIMIT, Y_STAGE_FRONT_LIMIT},
          /* THETA */ {THETA_STAGE_ANTI_CLOCKWISE_LIMIT, THETA_STAGE_CLOCKWISE_LIMIT}}};
 
     constexpr const char *stopId(AlignmentStage s, AlignmentDirection d) noexcept

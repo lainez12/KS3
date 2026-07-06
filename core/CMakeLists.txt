@@ -39,6 +39,7 @@ qt_add_library(Kub3Core STATIC
     src/Services/Homing/tasks/Initialization/MaskConveyorInitTask.cpp
     src/Services/Homing/tasks/Initialization/WaferConveyorInitTask.cpp
     src/Services/Homing/tasks/Initialization/ZMotorsInitTask.cpp
+    src/Services/Homing/tasks/Initialization/ForceSensorsTareTask.cpp
     src/Services/Drawers/DualConveyorDrawerService.cpp
     src/Services/Drawers/SingleConveyorDrawerService.cpp
     src/Services/Drawers/tasks/MaskEjectionTask.cpp
@@ -116,6 +117,7 @@ qt_add_library(Kub3Core STATIC
     include/Services/Homing/tasks/Initialization/MaskConveyorInitTask.h
     include/Services/Homing/tasks/Initialization/WaferConveyorInitTask.h
     include/Services/Homing/tasks/Initialization/ZMotorsInitTask.h
+    include/Services/Homing/tasks/Initialization/ForceSensorsTareTask.h
     include/Services/Drawers/IDrawerService.h
     include/Services/Drawers/DualConveyorDrawerService.h
     include/Services/Drawers/SingleConveyorDrawerService.h
