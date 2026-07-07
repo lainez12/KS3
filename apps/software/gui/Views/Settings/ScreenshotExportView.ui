@@ -13,13 +13,13 @@
   <property name="minimumSize">
    <size>
     <width>1920</width>
-    <height>818</height>
+    <height>820</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>1922</width>
-    <height>820</height>
+    <height>862</height>
    </size>
   </property>
   <property name="styleSheet">
@@ -51,17 +51,26 @@
      </property>
      <item row="0" column="0">
       <widget class="QScrollArea" name="scrollArea">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="minimumSize">
         <size>
          <width>1920</width>
-         <height>818</height>
+         <height>820</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
          <width>1920</width>
-         <height>16777215</height>
+         <height>860</height>
         </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: transparent;</string>
        </property>
        <property name="widgetResizable">
         <bool>true</bool>
@@ -72,7 +81,7 @@
           <x>0</x>
           <y>0</y>
           <width>1918</width>
-          <height>816</height>
+          <height>818</height>
          </rect>
         </property>
        </widget>
