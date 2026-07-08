@@ -101,6 +101,10 @@ namespace Kub3::Tools::Tester
         bool m_hasError  = false;
         QString m_currentProcedure;
         QString m_lastStatusMessage;
+
+        // Key press data
+        std::unordered_map<CameraId, bool> m_activeContinuousCameraMoves                 = {};
+        std::unordered_map<AlignmentStageId, bool> m_activeContinuousAlignmentStageMoves = {};
     };
 
 } // namespace Kub3::Tools::Tester

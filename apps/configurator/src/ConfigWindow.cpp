@@ -12,6 +12,7 @@
 #include <pages/ForceThresholdsConfigPage.h>
 #include <pages/MCUConfigPage.h>
 #include <pages/MotorConfigPage.h>
+#include <pages/PadMovementsPage.h>
 #include <pages/ZAlgorithmicLimitsPage.h>
 #include <utils.h>
 
@@ -29,6 +30,7 @@
 #define ALIGNMENT_CATEGORY     "X/Y/Theta (alignment)"
 #define CONVEYORS_CATEGORY     "Conveyors"
 #define CAMERAS_CATEGORY       "Cameras"
+#define PAD_CATEGORY           "Pad"
 #define MISCELLANEOUS_CATEGORY "Miscellaneous"
 
 ConfigWindow::ConfigWindow(QString hwConfigPath, QString processConfigPath, QString adminConfigPath, QWidget *parent) :
@@ -224,6 +226,11 @@ void ConfigWindow::populateUI()
         camGenPage->pullDataToStruct(m_processConfig.vision);
     });
 
+    auto *padMovementsPage = new Kub3::Components::PadMovementsPage(m_processConfig.pad);
+    int padMovementIndex   = addConfigPage(padMovementsPage, [this, padMovementsPage]() {
+        padMovementsPage->pullDataToStruct(m_processConfig.pad);
+    });
+
     m_categoryMap[SYSTEM_CATEGORY].push_back({"Administrator", adminIdx});
     m_categoryMap[SYSTEM_CATEGORY].push_back({"Micro-controllers", mcuIdx});
     m_categoryMap[FORCE_CATEGORY].push_back({"Limits & Thresholds", forceThresholdsIndex});
@@ -232,6 +239,7 @@ void ConfigWindow::populateUI()
     m_categoryMap[ALIGNMENT_CATEGORY].push_back({"Calibration Positions", alignIdx});
     m_categoryMap[CONVEYORS_CATEGORY].push_back({"Calibration Positions", drawersIdx});
     m_categoryMap[CAMERAS_CATEGORY].push_back({"General Settings", camGenIndex});
+    m_categoryMap[PAD_CATEGORY].push_back({"Movements", padMovementIndex});
 
     // -------------------------------------------------------------
     // DYNAMIC PAGES: CAMERAS SETTINGS
@@ -286,7 +294,9 @@ void ConfigWindow::populateUI()
         Z_CATEGORY,
         ALIGNMENT_CATEGORY,
         CAMERAS_CATEGORY,
-        MISCELLANEOUS_CATEGORY};
+        PAD_CATEGORY,
+        MISCELLANEOUS_CATEGORY,
+    };
 
     for (const QString &cat : categoryOrder)
     {

@@ -225,6 +225,18 @@ namespace Kub3::Config
             settings.setValue(CONF_PROCESS_ADMITTANCE_ROTATION_GAIN_HIGH_FORCE, config.contact.admittance.rotational_gain_high_force);
             settings.endGroup(); // CONF_PROCESS_ADMITTANCE_TUNING
 
+            // PAD MOVEMENTS VALUES
+            settings.beginGroup(CONF_PROCESS_PAD_MOVEMENTS);
+            settings.setValue(CONF_PROCESS_LEFT_CAM_X_DISTANCE_MM, config.pad.left_cam_x_distance_mm);
+            settings.setValue(CONF_PROCESS_RIGHT_CAM_X_DISTANCE_MM, config.pad.right_cam_x_distance_mm);
+            settings.setValue(CONF_PROCESS_LEFT_CAM_Y_DISTANCE_MM, config.pad.left_cam_y_distance_mm);
+            settings.setValue(CONF_PROCESS_RIGHT_CAM_Y_DISTANCE_MM, config.pad.right_cam_y_distance_mm);
+            settings.setValue(CONF_PROCESS_X_STAGE_DISTANCE_MM, config.pad.x_stage_distance_mm);
+            settings.setValue(CONF_PROCESS_Y_STAGE_DISTANCE_MM, config.pad.y_stage_distance_mm);
+            settings.setValue(CONF_PROCESS_THETA_STAGE_DISTANCE_MM, config.pad.theta_stage_distance_mm);
+            settings.setValue(CONF_PROCESS_Z_MOTORS_DISTANCE_MM, config.pad.z_motors_distance_mm);
+            settings.endGroup();
+
             // Flush and verify write
             settings.sync();
             if (settings.status() != QSettings::NoError)

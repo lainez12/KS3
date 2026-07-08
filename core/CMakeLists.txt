@@ -76,6 +76,7 @@ qt_add_library(Kub3Core STATIC
     # Headers
     include/utils.h
     include/Common/Enums.h
+    include/Config/utils.h
     include/Config/ConfigLoader.h
     include/Config/ConfigSaver.h
     include/Config/kinematics.h

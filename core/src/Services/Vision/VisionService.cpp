@@ -78,7 +78,23 @@ namespace Kub3::Services
 
     void VisionService::setupCameraMotor(VisionMotor motorId, const char *motorConfId, const Config::process_config_t &conf)
     {
-        auto motor = m_registry->get<HAL::Act::IPositionMotor>(motorConfId);
+        auto motor                     = m_registry->get<HAL::Act::IPositionMotor>(motorConfId);
+        auto extractGranularMovementMm = [&conf](VisionMotor id) -> double {
+            switch (id)
+            {
+            case VisionMotor::UpperLeftCameraX:
+                return conf.pad.left_cam_x_distance_mm;
+            case VisionMotor::UpperLeftCameraY:
+                return conf.pad.left_cam_y_distance_mm;
+            case VisionMotor::UpperRightCameraX:
+                return conf.pad.right_cam_x_distance_mm;
+            case VisionMotor::UpperRightCameraY:
+                return conf.pad.right_cam_y_distance_mm;
+            default:
+                break;
+            }
+            return 0.0;
+        };
 
         if (!motor)
         {
@@ -91,9 +107,10 @@ namespace Kub3::Services
         m_cameraMotors.emplace(
             motorId,
             vision_motor_config_t{
-                .motor       = motor.unwrap(),
-                .fastProfile = conf.getKinematicProfile(motorConfId, "normal"),
-                .fineProfile = conf.getKinematicProfile(motorConfId, "fine"),
+                .motor              = motor.unwrap(),
+                .fastProfile        = conf.getKinematicProfile(motorConfId, "normal"),
+                .fineProfile        = conf.getKinematicProfile(motorConfId, "fine"),
+                .granularMovementMm = extractGranularMovementMm(motorId),
             });
     }
 
@@ -185,7 +202,7 @@ namespace Kub3::Services
         m_deckMotor->moveDirection(static_cast<HAL::Act::MotorDirection>(VisionDirection::DeckFront), m_deckProfile);
     }
 
-    void VisionService::moveManual(VisionMotor motor, VisionDirection dir)
+    void VisionService::moveManual(VisionMotor motor, VisionDirection dir, bool granular)
     {
         auto it = m_cameraMotors.find(motor);
         if (it == m_cameraMotors.end() || !it->second.motor)
@@ -195,7 +212,7 @@ namespace Kub3::Services
         if (inCollisionZone(motor, dir))
         {
             if (m_pushingModeEnabled)
-                applyPush(motor, conf.fineMode); // Instantly apply push to the other motor to prevent stutter
+                applyPush(motor, conf.fineMode, granular); // Instantly apply push to the other motor to prevent stutter
             else
             {
                 qWarning() << "VisionService: Movement rejected. Cameras are too close.";
@@ -203,12 +220,22 @@ namespace Kub3::Services
             }
         }
 
-        conf.currentDir = dir;
-        if (conf.watchdogTicks == 0)
-            conf.motor->moveDirection(static_cast<HAL::Act::MotorDirection>(dir), conf.fineMode ? conf.fineProfile : conf.fastProfile);
+        const auto kinematics = conf.fineMode ? conf.fineProfile : conf.fastProfile;
 
-        // Reset watchdog
-        conf.watchdogTicks = VISION_WATCHDOG_TIMEOUT_TICKS;
+        if (granular)
+        {
+            const double relativeMovementMm = std::fabs(conf.granularMovementMm) * (dir == VisionDirection::Positive ? 1.0 : -1.0);
+
+            conf.motor->moveRelative(relativeMovementMm, kinematics);
+        }
+        else
+        {
+            conf.currentDir = dir;
+            if (conf.watchdogTicks == 0)
+                conf.motor->moveDirection(static_cast<HAL::Act::MotorDirection>(dir), kinematics);
+            // Reset watchdog
+            conf.watchdogTicks = VISION_WATCHDOG_TIMEOUT_TICKS;
+        }
     }
 
     void VisionService::stopManual(VisionMotor motor)
@@ -338,7 +365,7 @@ namespace Kub3::Services
         return false;
     }
 
-    void VisionService::applyPush(VisionMotor pushingMotor, bool fineMode)
+    void VisionService::applyPush(VisionMotor pushingMotor, bool fineMode, bool granular)
     {
         VisionMotor pushedMotor;
         VisionDirection pushedDir;
@@ -362,18 +389,28 @@ namespace Kub3::Services
             return;
 
         vision_motor_config_t &conf = it->second;
+        const auto kinematics       = conf.fineMode ? conf.fineProfile : conf.fastProfile;
 
-        conf.currentDir = pushedDir;
-        conf.fineMode   = fineMode; // Match the kinematic profile of the pushing motor
-
-        // Start motor if not already moving
-        if (conf.watchdogTicks == 0)
+        if (granular)
         {
-            conf.motor->moveDirection(static_cast<HAL::Act::MotorDirection>(pushedDir), conf.fineMode ? conf.fineProfile : conf.fastProfile);
-        }
+            const double relativeMovementMm = std::fabs(conf.granularMovementMm) * (pushedDir == VisionDirection::Positive ? 1.0 : -1.0);
 
-        // Feed the watchdog synchronously with the pushing motor
-        conf.watchdogTicks = VISION_WATCHDOG_TIMEOUT_TICKS;
+            conf.motor->moveRelative(relativeMovementMm, kinematics);
+        }
+        else
+        {
+            conf.currentDir = pushedDir;
+            conf.fineMode   = fineMode; // Match the kinematic profile of the pushing motor
+
+            // Start motor if not already moving
+            if (conf.watchdogTicks == 0)
+            {
+                conf.motor->moveDirection(static_cast<HAL::Act::MotorDirection>(pushedDir), kinematics);
+            }
+
+            // Feed the watchdog synchronously with the pushing motor
+            conf.watchdogTicks = VISION_WATCHDOG_TIMEOUT_TICKS;
+        }
     }
 
     bool VisionService::isMotorBeingPushed(VisionMotor motor, VisionDirection lastDir) const

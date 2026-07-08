@@ -8,6 +8,7 @@
 #define CONF_PROCESS_ALIGNMENT_POSITIONS "alignmentPositions"
 #define CONF_PROCESS_DRAWERS_POSITIONS   "drawersPositions"
 #define CONF_PROCESS_ELEVATOR_POSITIONS  "zElevator"
+#define CONF_PROCESS_PAD_MOVEMENTS       "padMovements"
 
 // CONF_PROCESS_KINEMATICS inner keys
 #define CONF_PROCESS_TARGET_VELOCITY_MM_S "target_velocity_mm_s"
@@ -60,3 +61,13 @@
 #define CONF_PROCESS_ADMITTANCE_TRANSLATION_GAIN_HIGH_FORCE "translation_gain_high_force"
 #define CONF_PROCESS_ADMITTANCE_ROTATION_GAIN_LOW_FORCE     "rotation_gain_low_force"
 #define CONF_PROCESS_ADMITTANCE_ROTATION_GAIN_HIGH_FORCE    "rotation_gain_high_force"
+
+// CONF_PROCESS_PAD_MOVEMENTS inner key
+#define CONF_PROCESS_LEFT_CAM_X_DISTANCE_MM  "left_cam_x_distance_mm"
+#define CONF_PROCESS_RIGHT_CAM_X_DISTANCE_MM "right_cam_x_distance_mm"
+#define CONF_PROCESS_LEFT_CAM_Y_DISTANCE_MM  "left_cam_y_distance_mm"
+#define CONF_PROCESS_RIGHT_CAM_Y_DISTANCE_MM "right_cam_y_distance_mm"
+#define CONF_PROCESS_X_STAGE_DISTANCE_MM     "x_stage_distance_mm"
+#define CONF_PROCESS_Y_STAGE_DISTANCE_MM     "y_stage_distance_mm"
+#define CONF_PROCESS_THETA_STAGE_DISTANCE_MM "theta_stage_distance_mm"
+#define CONF_PROCESS_Z_MOTORS_DISTANCE_MM    "z_motors_distance_mm"

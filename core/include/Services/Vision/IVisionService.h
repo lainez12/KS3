@@ -34,11 +34,11 @@ namespace Kub3::Services
         virtual ~IVisionService() = default;
 
         // Movement pure virtual methods
-        virtual void moveBlockToVisualisationPosition(void)             = 0;
-        virtual void moveManual(VisionMotor motor, VisionDirection dir) = 0;
-        virtual void stopManual(VisionMotor motor)                      = 0;
-        virtual void setKinematicMode(VisionMotor motor, bool fineMode) = 0;
-        virtual void setPushingMode(bool enabled)                       = 0;
+        virtual void moveBlockToVisualisationPosition(void)                                    = 0;
+        virtual void moveManual(VisionMotor motor, VisionDirection dir, bool granular = false) = 0;
+        virtual void stopManual(VisionMotor motor)                                             = 0;
+        virtual void setKinematicMode(VisionMotor motor, bool fineMode)                        = 0;
+        virtual void setPushingMode(bool enabled)                                              = 0;
 
         // Focals pure virtual methods
         virtual void setFocalEnabled(const std::string &focalId, bool enabled) = 0;

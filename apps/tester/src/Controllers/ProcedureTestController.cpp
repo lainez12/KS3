@@ -262,13 +262,6 @@ namespace Kub3::Tools::Tester
 
     void ProcedureTestController::ps_runCameraMovement(CameraId camId, MovementKind kind, CameraDirection dir)
     {
-        if (kind == MovementKind::GRANULAR)
-        {
-            // TODO: implement granular movement
-            qWarning().noquote() << "Granular movement not handled yet.";
-            return;
-        }
-
         // Translates UI enums to Logic enums
         auto resolveHardware = [](CameraId c, CameraDirection d) -> std::pair<Services::VisionMotor, Services::VisionDirection> {
             if (c == CameraId::LEFT)
@@ -305,31 +298,7 @@ namespace Kub3::Tools::Tester
 
         const auto [motor, direction] = resolveHardware(camId, dir);
 
-        if (kind == MovementKind::CONTINUOUS)
-        {
-            // Reject manual pad movement if a real automated procedure is running
-            if (m_activeService && m_activeService != m_visionService.get())
-            {
-                qWarning() << "Cannot move camera manually while an automated procedure is running.";
-                return;
-            }
-
-            auto it = std::find_if(
-                m_activeCameraMoves.begin(),
-                m_activeCameraMoves.end(),
-                [motor](const CameraMovement &m) { return m.motor == motor; });
-
-            // Insert the movement into our tracking list
-            if (it != m_activeCameraMoves.end())
-                it->dir = direction;
-            else
-                m_activeCameraMoves.push_back({motor, direction});
-
-            // Attach VisionService to the Tick engine if it's currently completely idle
-            startServiceRoutine(m_visionService.get(), "CameraPADMovement", true);
-            m_visionService->moveManual(motor, direction); // Initiate movement
-        }
-        else
+        if (kind == MovementKind::STOP)
         {
             // Erase the movement from the tracking list
             m_activeCameraMoves.erase(
@@ -349,18 +318,40 @@ namespace Kub3::Tools::Tester
                 m_tickTimer.stop();
             }
         }
+        else
+        {
+            // Reject manual pad movement if a real automated procedure is running
+            if (m_activeService && m_activeService != m_visionService.get())
+            {
+                qWarning() << "Cannot move camera manually while an automated procedure is running.";
+                return;
+            }
+
+            const bool isGranular = (kind == MovementKind::GRANULAR);
+
+            if (!isGranular)
+            {
+                auto it = std::find_if(
+                    m_activeCameraMoves.begin(),
+                    m_activeCameraMoves.end(),
+                    [motor](const CameraMovement &m) { return m.motor == motor; });
+
+                // Insert the movement into our tracking list
+                if (it != m_activeCameraMoves.end())
+                    it->dir = direction;
+                else
+                    m_activeCameraMoves.push_back({motor, direction});
+
+                // Attach VisionService to the Tick engine if it's currently completely idle
+                startServiceRoutine(m_visionService.get(), "CameraPADMovement", true);
+            }
+            m_visionService->moveManual(motor, direction, isGranular); // Initiate movement
+        }
     }
 
     void ProcedureTestController::ps_runAlignmentStageMovement(
         AlignmentStageId stageId, MovementKind kind, AlignmentStageDirection dir)
     {
-        if (kind == MovementKind::GRANULAR)
-        {
-            // TODO: implement granular movement
-            qWarning().noquote() << "Granular movement not handled yet.";
-            return;
-        }
-
         // Translates UI enums to Logic enums
         auto resolveHardware = [](AlignmentStageId c, AlignmentStageDirection d)
             -> std::pair<Services::AlignmentStage, Services::AlignmentDirection> {
@@ -384,31 +375,7 @@ namespace Kub3::Tools::Tester
 
         const auto [motor, direction] = resolveHardware(stageId, dir);
 
-        if (kind == MovementKind::CONTINUOUS)
-        {
-            // Reject manual pad movement if a real automated procedure is running
-            if (m_activeService && m_activeService != m_alignmentService.get())
-            {
-                qWarning() << "Cannot move alignment stages manually while an automated procedure is running.";
-                return;
-            }
-
-            auto it = std::find_if(
-                m_activeAlignmentStageMoves.begin(),
-                m_activeAlignmentStageMoves.end(),
-                [motor](const AlignmentStageMovement &m) { return m.motor == motor; });
-
-            // Insert the movement into our tracking list
-            if (it != m_activeAlignmentStageMoves.end())
-                it->dir = direction;
-            else
-                m_activeAlignmentStageMoves.push_back({motor, direction});
-
-            // Attach Alignment to the Tick engine if it's currently completely idle
-            startServiceRoutine(m_alignmentService.get(), "AlignmentStagePADMovement", true);
-            m_alignmentService->moveStage(motor, direction); // Initiate movement
-        }
-        else
+        if (kind == MovementKind::STOP)
         {
             // Erase the movement from the tracking list
             m_activeAlignmentStageMoves.erase(
@@ -427,6 +394,35 @@ namespace Kub3::Tools::Tester
                 m_activeService = nullptr;
                 m_tickTimer.stop();
             }
+        }
+        else
+        {
+            // Reject manual pad movement if a real automated procedure is running
+            if (m_activeService && m_activeService != m_alignmentService.get())
+            {
+                qWarning() << "Cannot move alignment stages manually while an automated procedure is running.";
+                return;
+            }
+
+            const bool isGranular = (kind == MovementKind::GRANULAR);
+
+            if (!isGranular)
+            {
+                auto it = std::find_if(
+                    m_activeAlignmentStageMoves.begin(),
+                    m_activeAlignmentStageMoves.end(),
+                    [motor](const AlignmentStageMovement &m) { return m.motor == motor; });
+
+                // Insert the movement into our tracking list
+                if (it != m_activeAlignmentStageMoves.end())
+                    it->dir = direction;
+                else
+                    m_activeAlignmentStageMoves.push_back({motor, direction});
+
+                // Attach Alignment to the Tick engine if it's currently completely idle
+                startServiceRoutine(m_alignmentService.get(), "AlignmentStagePADMovement", true);
+            }
+            m_alignmentService->moveStage(motor, direction, isGranular); // Initiate movement
         }
     }
 

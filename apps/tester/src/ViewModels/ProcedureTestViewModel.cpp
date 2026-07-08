@@ -109,8 +109,22 @@ namespace Kub3::Tools::Tester
 
     void ProcedureTestViewModel::uiRequestCameraMovement(CameraId camId, MovementKind kind, CameraDirection dir)
     {
-        if (!m_isRunning)
-            emit cmdRunCameraMovement(camId, kind, dir);
+        if (m_isRunning)
+            return;
+
+        if (kind == MovementKind::CONTINUOUS)
+            m_activeContinuousCameraMoves[camId] = true;
+        else if (kind == MovementKind::STOP)
+        {
+            auto it = m_activeContinuousCameraMoves.find(camId);
+
+            if (it == m_activeContinuousCameraMoves.end() || !m_activeContinuousCameraMoves.at(camId))
+                return; // Block stop signal here if movement was not continuous
+            m_activeContinuousCameraMoves[camId] = false;
+        }
+
+        // Send request for movement
+        emit cmdRunCameraMovement(camId, kind, dir);
     }
 
     void ProcedureTestViewModel::uiRequestAlignmentStageMovement(
@@ -118,8 +132,22 @@ namespace Kub3::Tools::Tester
         MovementKind kind,
         AlignmentStageDirection dir)
     {
-        if (!m_isRunning)
-            emit cmdRunAlignmentStageMovement(stageId, kind, dir);
+        if (m_isRunning)
+            return;
+
+        if (kind == MovementKind::CONTINUOUS)
+            m_activeContinuousAlignmentStageMoves[stageId] = true;
+        else if (kind == MovementKind::STOP)
+        {
+            auto it = m_activeContinuousAlignmentStageMoves.find(stageId);
+
+            if (it == m_activeContinuousAlignmentStageMoves.end() || !m_activeContinuousAlignmentStageMoves.at(stageId))
+                return; // Block stop signal here if movement was not continuous
+            m_activeContinuousAlignmentStageMoves[stageId] = false;
+        }
+
+        // Send request for movement
+        emit cmdRunAlignmentStageMovement(stageId, kind, dir);
     }
 
     // ==========================================

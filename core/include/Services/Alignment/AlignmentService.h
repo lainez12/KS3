@@ -19,6 +19,7 @@ namespace Kub3::Services
         Shared<HAL::Act::IPositionMotor> motor;
         Config::kinematic_profile_t fastProfile;
         Config::kinematic_profile_t fineProfile;
+        double granularMoveMm;
         bool fineMode         = true;
         uint8_t watchdogTicks = 0;
     } motor_alignment_config_t;
@@ -43,7 +44,7 @@ namespace Kub3::Services
             return "";
         };
 
-        void moveStage(AlignmentStage axis, AlignmentDirection dir) override;
+        void moveStage(AlignmentStage axis, AlignmentDirection dir, bool granular = false) override;
         void stopStage(AlignmentStage axis) override;
         void setKinematicProfile(AlignmentStage axis, bool fineMode) override;
         void setHardwareLock(bool locked) override;

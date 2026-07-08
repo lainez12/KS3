@@ -69,7 +69,7 @@ namespace Kub3::Services
         }
     }
 
-    void AlignmentService::moveStage(AlignmentStage axis, AlignmentDirection dir)
+    void AlignmentService::moveStage(AlignmentStage axis, AlignmentDirection dir, bool granular)
     {
         if (m_isLocked)
             return; // Prevent moving when in locked state
@@ -90,13 +90,23 @@ namespace Kub3::Services
             return;
         }
 
-        if (motorConfig.watchdogTicks == 0) // Motor is stopped
-        {
-            const auto &kinematics = motorConfig.fineMode ? motorConfig.fineProfile : motorConfig.fastProfile;
-            motorConfig.motor->moveDirection(static_cast<HAL::Act::MotorDirection>(dir), kinematics);
-        }
+        const auto &kinematics = motorConfig.fineMode ? motorConfig.fineProfile : motorConfig.fastProfile;
 
-        motorConfig.watchdogTicks = ALIGNMENT_WATCHDOG_TIMEOUT_TICKS; // Reset the watchdog
+        if (granular)
+        {
+            const double relativeMovementMm = std::fabs(motorConfig.granularMoveMm) * (dir == AlignmentDirection::POSITIVE ? 1.0 : -1.0);
+
+            motorConfig.motor->moveRelative(relativeMovementMm, kinematics);
+        }
+        else
+        {
+            if (motorConfig.watchdogTicks == 0) // Motor is stopped
+            {
+                motorConfig.motor->moveDirection(static_cast<HAL::Act::MotorDirection>(dir), kinematics);
+            }
+            // We only enable the watchdog when movement is not granular
+            motorConfig.watchdogTicks = ALIGNMENT_WATCHDOG_TIMEOUT_TICKS; // Reset the watchdog
+        }
     }
 
     void AlignmentService::stopStage(AlignmentStage axis)
@@ -135,19 +145,22 @@ namespace Kub3::Services
         UNWRAP_OR_THROW(thetaMotor, registry->get<HAL::Act::IPositionMotor>(THETA_STAGE_MOTOR), "[AlignmentService] Failed to load Theta Stage Motor: ");
 
         const motor_alignment_config_t xStageConfig{
-            .motor       = xMotor,
-            .fastProfile = processConfig.getKinematicProfile(X_STAGE_MOTOR, "normal"),
-            .fineProfile = processConfig.getKinematicProfile(X_STAGE_MOTOR, "fine"),
+            .motor          = xMotor,
+            .fastProfile    = processConfig.getKinematicProfile(X_STAGE_MOTOR, "normal"),
+            .fineProfile    = processConfig.getKinematicProfile(X_STAGE_MOTOR, "fine"),
+            .granularMoveMm = processConfig.pad.x_stage_distance_mm,
         };
         const motor_alignment_config_t yStageConfig{
-            .motor       = yMotor,
-            .fastProfile = processConfig.getKinematicProfile(Y_STAGE_MOTOR, "normal"),
-            .fineProfile = processConfig.getKinematicProfile(Y_STAGE_MOTOR, "fine"),
+            .motor          = yMotor,
+            .fastProfile    = processConfig.getKinematicProfile(Y_STAGE_MOTOR, "normal"),
+            .fineProfile    = processConfig.getKinematicProfile(Y_STAGE_MOTOR, "fine"),
+            .granularMoveMm = processConfig.pad.y_stage_distance_mm,
         };
         const motor_alignment_config_t thetaStageConfig{
-            .motor       = thetaMotor,
-            .fastProfile = processConfig.getKinematicProfile(THETA_STAGE_MOTOR, "normal"),
-            .fineProfile = processConfig.getKinematicProfile(THETA_STAGE_MOTOR, "fine"),
+            .motor          = thetaMotor,
+            .fastProfile    = processConfig.getKinematicProfile(THETA_STAGE_MOTOR, "normal"),
+            .fineProfile    = processConfig.getKinematicProfile(THETA_STAGE_MOTOR, "fine"),
+            .granularMoveMm = processConfig.pad.theta_stage_distance_mm,
         };
 
         m_motorsConfigurations.insert({AlignmentStage::X, std::move(xStageConfig)});

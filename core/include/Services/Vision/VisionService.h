@@ -40,7 +40,7 @@ namespace Kub3::Services
         Shared<HAL::Act::IPositionMotor> motor;
         Config::kinematic_profile_t fastProfile;
         Config::kinematic_profile_t fineProfile;
-
+        double granularMovementMm;
         bool fineMode              = false;
         uint32_t watchdogTicks     = 0;
         VisionDirection currentDir = VisionDirection::Positive;
@@ -68,7 +68,7 @@ namespace Kub3::Services
 
         // IVisionMotor overrides
         void moveBlockToVisualisationPosition(void) override;
-        void moveManual(VisionMotor motor, VisionDirection dir) override;
+        void moveManual(VisionMotor motor, VisionDirection dir, bool granular = false) override;
         void stopManual(VisionMotor motor) override;
         void setKinematicMode(VisionMotor motor, bool fineMode) override;
         void setPushingMode(bool enabled) override
@@ -81,7 +81,7 @@ namespace Kub3::Services
     private:
         // Collision and pushing logic
 
-        void applyPush(VisionMotor pushingMotor, bool fineMode);
+        void applyPush(VisionMotor pushingMotor, bool fineMode, bool granular = false);
         [[nodiscard]] bool inCollisionZone(VisionMotor motor, VisionDirection dir) const;
         [[nodiscard]] bool isMotorBeingPushed(VisionMotor motor, VisionDirection lastDir) const;
         [[nodiscard]] std::optional<std::pair<VisionMotor, VisionDirection>> getAssociatedPushedMotor(VisionMotor motor, VisionDirection lastDir) const;

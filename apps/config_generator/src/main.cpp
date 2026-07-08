@@ -9,9 +9,9 @@ int main(int argc, char *argv[])
     QCoreApplication app(argc, argv);
     app.setApplicationName("KUB3 Config Generator Tool");
 
-    QString hwPath    = KUB3_HARDWARE_CONFIG_PATH;
-    QString procPath  = KUB3_PROCESS_CONFIG_PATH;
-    QString adminPath = KUB3_ADMIN_CONFIG_PATH;
+    std::string hwPath    = KUB3_HARDWARE_CONFIG_PATH;
+    std::string procPath  = KUB3_PROCESS_CONFIG_PATH;
+    std::string adminPath = KUB3_ADMIN_CONFIG_PATH;
 
     // Support paths override via command line arguments
     if (argc >= 4)

@@ -45,10 +45,10 @@ namespace Kub3::Services
     public:
         virtual ~IAlignmentService() = default;
 
-        virtual void moveStage(AlignmentStage axis, AlignmentDirection dir)  = 0;
-        virtual void stopStage(AlignmentStage axis)                          = 0;
-        virtual void setKinematicProfile(AlignmentStage axis, bool fineMode) = 0;
-        virtual void setHardwareLock(bool locked)                            = 0;
+        virtual void moveStage(AlignmentStage axis, AlignmentDirection dir, bool granular = false) = 0;
+        virtual void stopStage(AlignmentStage axis)                                                = 0;
+        virtual void setKinematicProfile(AlignmentStage axis, bool fineMode)                       = 0;
+        virtual void setHardwareLock(bool locked)                                                  = 0;
     };
 
 }
