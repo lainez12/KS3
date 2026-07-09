@@ -29,20 +29,21 @@ NavButton::NavButton(QWidget *parent) :
 
     m_text = new QLabel(this);
     m_text->setAlignment(Qt::AlignCenter);
-    m_text->setStyleSheet("color: #0072ba; font-size: 12px;");
+    m_text->setStyleSheet("color: #0072ba;");
 
     layout->addWidget(m_circle, 0, Qt::AlignHCenter);
     layout->addWidget(m_text, 0, Qt::AlignHCenter);
 }
 
-void NavButton::setup(const QString &text, const QColor &colorEnabled, const QColor &colorDisabled, const QString &iconPath)
+void NavButton::setup(const QString &text, const QColor &colorEnabled, const QColor &colorDisabled, const QString &iconPath, const QFont &font)
 {
     m_text->setText(text);
+    m_text->setFont(font);
     m_circle->setColor(colorEnabled);
     this->colorEnabled  = colorEnabled;
     this->colorDisabled = colorDisabled;
 
-    m_text->setStyleSheet(QString("color: %1; font-size: 12px;").arg(colorEnabled.name()));
+    m_text->setStyleSheet(QString("color: %1;").arg(colorEnabled.name()));
     if (!iconPath.isEmpty())
         this->setIcon(iconPath);
 }
@@ -65,25 +66,25 @@ void NavButton::setEnabledNavButton(bool state)
     setEnabled(state);
     if (state)
     {
-        m_text->setStyleSheet(QString("color: %1; font-size: 12px;").arg(colorEnabled.name()));
+        m_text->setStyleSheet(QString("color: %1;").arg(colorEnabled.name()));
         m_circle->setColor(colorEnabled);
     }
     else
     {
-        m_text->setStyleSheet(QString("color: %1; font-size: 12px;").arg(colorDisabled.name()));
+        m_text->setStyleSheet(QString("color: %1;").arg(colorDisabled.name()));
         m_circle->setColor(colorDisabled);
     }
 }
 
 void NavButton::changeColorToDisabled()
 {
-    m_text->setStyleSheet(QString("color: %1; font-size: 12px;").arg(colorDisabled.name()));
+    m_text->setStyleSheet(QString("color: %1;").arg(colorDisabled.name()));
     m_circle->setColor(colorDisabled);
 }
 
 void NavButton::changeColorToEnabled()
 {
-    m_text->setStyleSheet(QString("color: %1; font-size: 12px;").arg(colorEnabled.name()));
+    m_text->setStyleSheet(QString("color: %1;").arg(colorEnabled.name()));
     m_circle->setColor(colorEnabled);
 }
 

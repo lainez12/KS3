@@ -32,7 +32,15 @@ void ExposureMenuView::createNavButtonsConfigs()
 
 void ExposureMenuView::configTitleBar()
 {
-    setTitleBar(TitleBarConfig{});
+    setTitleBar(TitleBarConfig{
+        .viewTitle      = "Exposure Menu",
+        .textColor      = QColor("#FFF"),
+        .bgColor        = QColor(BLUE_COLOR),
+        .iconPath       = ":/icons/redo.svg",
+        .sectionTitle   = "Load",
+        .showTitleBar   = true,
+        .m_showLeftLogo = true,
+    });
 }
 
 void ExposureMenuView::onBackButtonClicked(const QString &buttonId)

@@ -63,6 +63,7 @@ qt_add_executable(Kub3Software
     src/Views/Components/HardForceContactForm.cpp
     src/Views/Components/RealPositionCameras.cpp
     src/Views/Components/MessageOverlay.cpp
+    src/Views/Components/PopMessage.cpp
     src/Views/Components/NavButtonManager.cpp
     src/Views/Components/NavButton.cpp
     src/Views/Components/UpBar.cpp
@@ -128,6 +129,7 @@ qt_add_executable(Kub3Software
     include/Views/Components/HardForceContactForm.h
     include/Views/Components/RealPositionCameras.h
     include/Views/Components/MessageOverlay.h
+    include/Views/Components/PopMessage.h
     include/Views/Components/NavButton.h
     include/Views/Components/UpBar.h
     include/Views/Components/ActionBox.h

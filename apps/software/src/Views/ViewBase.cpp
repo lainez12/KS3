@@ -47,4 +47,17 @@ namespace Kub3::UI::Views
         m_messages->show();
     }
 
+    void ViewBase::showPopMessage(const QString &title, const QVector<PopMessage::ButtonConfig> &buttons)
+    {
+        showPopMessage(title, QString(), buttons);
+    }
+
+    void ViewBase::showPopMessage(const QString &title, const QString &message, const QVector<PopMessage::ButtonConfig> &buttons)
+    {
+        m_popMessage->setTitleText(title);
+        m_popMessage->setMessageText(message);
+        m_popMessage->setButtons(buttons);
+        m_popMessage->showMessage();
+    }
+
 } // namespace Kub3::UI::Views

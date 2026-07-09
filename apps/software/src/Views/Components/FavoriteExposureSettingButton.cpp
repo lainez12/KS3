@@ -25,28 +25,19 @@ void FavoriteExposureSettingButton::setupUi()
     titleLabel->setAttribute(Qt::WA_TransparentForMouseEvents);
     detailsLabel->setAttribute(Qt::WA_TransparentForMouseEvents);
 
-    titleLabel->setStyleSheet("color: #0078D7; font-size: 25px; font-weight: bold; text-decoration: underline; border: none;");
-    detailsLabel->setStyleSheet("color: #E25B22; font-size: 20px; font-weight: bold; border: none;");
+    titleLabel->setProperty("class", "color-blue text-medium title-favorite-exposure");
+    detailsLabel->setProperty("class", "color-orange text-small details-favorite-exposure");
 
     detailsLabel->setWordWrap(true);
-
+    detailsLabel->setAlignment(Qt::AlignJustify);
     layout->addWidget(titleLabel, 0, Qt::AlignLeft | Qt::AlignVCenter);
     layout->addStretch();
     layout->addWidget(detailsLabel, 0, Qt::AlignRight | Qt::AlignVCenter);
 
-    layout->setContentsMargins(8, 4, 8, 4);
+    layout->setContentsMargins(20, 6, 20, 6);
 
-    this->setStyleSheet(
-        "QPushButton {"
-        "   border: 1px solid #75B2E5;"
-        "   background-color: transparent;"
-        "}"
-        "QPushButton:hover {"
-        "   background-color: #E6F0FA;"
-        "}"
-        "QPushButton:pressed {"
-        "   background-color: #CCE4F7;"
-        "}");
+    this->setProperty("class", "favorite-exposure-button");
 
-    this->setMinimumHeight(70);
+    this->setMinimumHeight(90);
+    this->setMaximumHeight(130);
 }

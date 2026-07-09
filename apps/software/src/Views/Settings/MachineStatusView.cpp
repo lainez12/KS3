@@ -76,17 +76,17 @@ void MachineStatusView::updateBoolSensorsText(QLabel *label, const bool state)
 
 void MachineStatusView::createNavButtonsConfigs()
 {
-    NavButtonConfig homeBtn(
-        "Home",
+    NavButtonConfig bakcBtn(
+        "Back",
         QColor("#0072BA"),
         QColor("#B2D4F4"),
-        ":/icons/home.svg",
-        "home",
+        ":/icons/back.svg",
+        "Back",
         [this](const QString &) {
             // Retourner à HomeView
-            emit s_openView(Kub3::UI::ViewId::HOME_VIEW);
+            emit s_openView(Kub3::UI::ViewId::SETTINGS_VIEW);
         });
-    addNavButton("left", homeBtn);
+    addNavButton("left", bakcBtn);
 }
 
 void MachineStatusView::configTitleBar()

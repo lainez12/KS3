@@ -46,6 +46,12 @@
    </property>
    <item>
     <layout class="QGridLayout" name="gridLayout">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>10</number>
+     </property>
      <property name="spacing">
       <number>0</number>
      </property>
@@ -59,7 +65,7 @@
        </property>
        <property name="minimumSize">
         <size>
-         <width>1920</width>
+         <width>1900</width>
          <height>820</height>
         </size>
        </property>
@@ -80,7 +86,7 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>1918</width>
+          <width>1909</width>
           <height>818</height>
          </rect>
         </property>
