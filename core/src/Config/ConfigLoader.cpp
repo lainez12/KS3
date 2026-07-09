@@ -2,6 +2,7 @@
 #include <QStringList>
 #include <format>
 #include <stdexcept>
+#include <type_traits>
 
 #include <Config/ConfigLoader.h>
 #include <Config/keys/admin.h>
@@ -20,25 +21,77 @@
 namespace Kub3::Config
 {
 
-    // Helper to enforce required keys
-    static QVariant getRequiredValue(const QSettings &settings, const QString &key, bool strict)
+    // Type-safe helper to parse configuration fields
+    template <typename T, typename Func>
+    static void loadField(
+        const QSettings &settings,
+        const QString &key,
+        T &target,
+        bool strict,
+        std::vector<std::string> &logs,
+        Func converter)
     {
-        settings.group();
-        if (strict && !settings.contains(key))
+        if (settings.contains(key))
         {
-            throw std::runtime_error(std::format("CRITICAL: Missing config key '{}' in group '{}'", key.toStdString(), settings.group().toStdString()));
+            target = converter(settings.value(key));
         }
-        return settings.value(key);
+        else
+        {
+            if (strict)
+            {
+                throw std::runtime_error(std::format("CRITICAL: Missing config key '{}' in group '{}'", key.toStdString(), settings.group().toStdString()));
+            }
+
+            const auto keyedPath = (settings.group() + "/" + key).toStdString();
+
+            // Key is missing in lenient mode: Target retains its C++ struct default value.
+            // Log the default fallback so the generator knows it needs to be written to disk.
+            if constexpr (std::is_same_v<T, std::string>)
+            {
+                logs.push_back(std::format("{} = \"{}\"", keyedPath, target));
+            }
+            else if constexpr (std::is_same_v<T, QString>)
+            {
+                logs.push_back(std::format("{} = \"{}\"", keyedPath, target.toStdString()));
+            }
+            else if constexpr (std::is_same_v<T, bool>)
+            {
+                logs.push_back(std::format("{} = {}", keyedPath, target ? "true" : "false"));
+            }
+            else
+            {
+                logs.push_back(std::format("{} = {}", keyedPath, target));
+            }
+        }
     }
 
-    hardware_config_t ConfigLoader::loadHardwareConfig(const std::string &filePath, bool strict)
+    static double qToDouble(const QVariant &v)
     {
-        hardware_config_t config;
+        return v.toDouble();
+    }
+
+    static uint qToUint(const QVariant &v)
+    {
+        return v.toUInt();
+    }
+
+    static bool qToBool(const QVariant &v)
+    {
+        return v.toBool();
+    }
+
+    hardware_config_t ConfigLoader::loadHardwareConfig(const std::string &filePath, bool strict, std::vector<std::string> *logs)
+    {
+        std::vector<std::string> localLogs;
+        std::vector<std::string> &activeLogs = logs ? *logs : localLogs;
+
+        hardware_config_t config; // Default-constructed with compile-time defaults
         QSettings settings(QString::fromStdString(filePath), QSettings::IniFormat);
 
         if (settings.status() != QSettings::NoError)
         {
-            throw std::runtime_error("CRITICAL: Failed to open or parse hardware config file: " + filePath);
+            if (strict)
+                throw std::runtime_error("CRITICAL: Failed to open or parse hardware config file: " + filePath);
         }
 
         // =============================
@@ -47,25 +100,18 @@ namespace Kub3::Config
         settings.beginGroup(CONF_HW_MCUS);
         {
             static_assert(MCU_COUNT == 4, "MCU_COUNT does not match the model expected value (4)");
-            const std::string group(CONF_HW_MCUS);
 
-            // Ports
-            config.mcus[0] = mcu_hw_properties_s{
-                .port     = getRequiredValue(settings, CONF_HW_MCU1_PORT, strict).toString(),
-                .baudrate = getRequiredValue(settings, CONF_HW_MCU1_BAUDRATE, strict).toUInt(),
-            };
-            config.mcus[1] = mcu_hw_properties_s{
-                .port     = getRequiredValue(settings, CONF_HW_MCU2_PORT, strict).toString(),
-                .baudrate = getRequiredValue(settings, CONF_HW_MCU2_BAUDRATE, strict).toUInt(),
-            };
-            config.mcus[2] = mcu_hw_properties_s{
-                .port     = getRequiredValue(settings, CONF_HW_MCU3_PORT, strict).toString(),
-                .baudrate = getRequiredValue(settings, CONF_HW_MCU3_BAUDRATE, strict).toUInt(),
-            };
-            config.mcus[3] = mcu_hw_properties_s{
-                .port     = getRequiredValue(settings, CONF_HW_MCU4_PORT, strict).toString(),
-                .baudrate = getRequiredValue(settings, CONF_HW_MCU4_BAUDRATE, strict).toUInt(),
-            };
+            loadField(settings, CONF_HW_MCU1_PORT, config.mcus[0].port, strict, activeLogs, [](const QVariant &v) { return v.toString(); });
+            loadField(settings, CONF_HW_MCU1_BAUDRATE, config.mcus[0].baudrate, strict, activeLogs, &qToUint);
+
+            loadField(settings, CONF_HW_MCU2_PORT, config.mcus[1].port, strict, activeLogs, [](const QVariant &v) { return v.toString(); });
+            loadField(settings, CONF_HW_MCU2_BAUDRATE, config.mcus[1].baudrate, strict, activeLogs, &qToUint);
+
+            loadField(settings, CONF_HW_MCU3_PORT, config.mcus[2].port, strict, activeLogs, [](const QVariant &v) { return v.toString(); });
+            loadField(settings, CONF_HW_MCU3_BAUDRATE, config.mcus[2].baudrate, strict, activeLogs, &qToUint);
+
+            loadField(settings, CONF_HW_MCU4_PORT, config.mcus[3].port, strict, activeLogs, [](const QVariant &v) { return v.toString(); });
+            loadField(settings, CONF_HW_MCU4_BAUDRATE, config.mcus[3].baudrate, strict, activeLogs, &qToUint);
         }
         settings.endGroup();
 
@@ -80,38 +126,36 @@ namespace Kub3::Config
             motor_config_t motor;
             motor.id = group.toStdString();
 
-            QString type = getRequiredValue(settings, CONF_HW_MOTOR_TYPE, strict).toString();
+            QString type;
+            loadField(settings, CONF_HW_MOTOR_TYPE, type, strict, activeLogs, [](const QVariant &v) { return v.toString(); });
 
             if (type == CONF_HW_MOTOR_TYPE_STEPPER)
             {
                 stepper_hw_properties_t hw;
+                loadField(settings, CONF_HW_MOTOR_STEPS_PER_REV, hw.stepsPerRev, strict, activeLogs, &qToUint);
+                loadField(settings, CONF_HW_SCREW_PITCH_MM, hw.screwPitchMm, strict, activeLogs, &qToDouble);
+                loadField(settings, CONF_HW_MAX_VELOCITY_MM_S, hw.maxVelocityMmS, strict, activeLogs, &qToDouble);
+                loadField(settings, CONF_HW_MAX_ACCELERATION_MM_S2, hw.maxAccelerationMmS2, strict, activeLogs, &qToDouble);
+                loadField(settings, CONF_HW_ENCODER_TOPS_PER_REV, hw.encoderTopsPerRev, strict, activeLogs, &qToUint);
 
-                // Parse, Don't Validate: We immediately cast to correct type. If it's malformed, it throws.
-                hw.stepsPerRev         = getRequiredValue(settings, CONF_HW_MOTOR_STEPS_PER_REV, strict).toUInt();
-                hw.screwPitchMm        = getRequiredValue(settings, CONF_HW_SCREW_PITCH_MM, strict).toDouble();
-                hw.maxVelocityMmS      = getRequiredValue(settings, CONF_HW_MAX_VELOCITY_MM_S, strict).toDouble();
-                hw.maxAccelerationMmS2 = getRequiredValue(settings, CONF_HW_MAX_ACCELERATION_MM_S2, strict).toDouble();
-                hw.encoderTopsPerRev   = getRequiredValue(settings, CONF_HW_ENCODER_TOPS_PER_REV, strict).toUInt();
-
-                CHECK_CONFIG_VALUE(hw.stepsPerRev == 0.0, motor.id, hw.stepsPerRev, "steps per revolution", strict);
+                CHECK_CONFIG_VALUE(hw.stepsPerRev == 0, motor.id, hw.stepsPerRev, "steps per revolution", strict);
                 CHECK_CONFIG_VALUE(hw.screwPitchMm == 0.0, motor.id, hw.screwPitchMm, "screw pitch", strict);
-                CHECK_CONFIG_VALUE(hw.encoderTopsPerRev == 0.0, motor.id, hw.encoderTopsPerRev, "encoder tops per revolution", strict);
+                CHECK_CONFIG_VALUE(hw.encoderTopsPerRev == 0, motor.id, hw.encoderTopsPerRev, "encoder tops per revolution", strict);
 
                 motor.hwProperties = hw;
             }
             else if (type == CONF_HW_MOTOR_TYPE_DC)
             {
                 dc_motor_hw_properties_t hw;
-
-                hw.screwPitchMm        = getRequiredValue(settings, CONF_HW_SCREW_PITCH_MM, strict).toDouble();
-                hw.maxVelocityMmS      = getRequiredValue(settings, CONF_HW_MAX_VELOCITY_MM_S, strict).toDouble();
-                hw.maxAccelerationMmS2 = getRequiredValue(settings, CONF_HW_MAX_ACCELERATION_MM_S2, strict).toDouble();
+                loadField(settings, CONF_HW_SCREW_PITCH_MM, hw.screwPitchMm, strict, activeLogs, &qToDouble);
+                loadField(settings, CONF_HW_MAX_VELOCITY_MM_S, hw.maxVelocityMmS, strict, activeLogs, &qToDouble);
+                loadField(settings, CONF_HW_MAX_ACCELERATION_MM_S2, hw.maxAccelerationMmS2, strict, activeLogs, &qToDouble);
 
                 CHECK_CONFIG_VALUE(hw.screwPitchMm == 0.0, motor.id, hw.screwPitchMm, "screw pitch", strict);
 
                 motor.hwProperties = hw;
             }
-            else
+            else if (strict)
             {
                 throw std::runtime_error(std::format("CRITICAL: Unknown motor type '{}' for '{}'", type.toStdString(), motor.id));
             }
@@ -129,19 +173,16 @@ namespace Kub3::Config
         {
             settings.beginGroup(group);
 
-            camera_config_t camera = {
-                .id                = group.toStdString(),
-                .serialNumber      = getRequiredValue(settings, CONF_HW_SERIAL_NUMBER, strict).toString().toStdString(),
-                .maxExposureUs     = getRequiredValue(settings, CONF_HW_MAX_EXPOSURE_US, strict).toDouble(),
-                .defaultExposureUs = getRequiredValue(settings, CONF_HW_DEFAULT_EXPOSURE_US, strict).toDouble(),
-                .maxGainDb         = getRequiredValue(settings, CONF_HW_MAX_GAIN_DB, strict).toDouble(),
-                .defaultGainDb     = getRequiredValue(settings, CONF_HW_DEFAULT_GAIN_DB, strict).toDouble(),
-                .framerate         = getRequiredValue(settings, CONF_HW_FRAMERATE, strict).toDouble(),
-                .associatedFocalId = std::nullopt,
-                .associatedLightId = std::nullopt,
-            };
+            camera_config_t camera;
+            camera.id = group.toStdString();
 
-            // Optional bindings parsing (leaves as std::nullopt if missing/empty in INI)
+            loadField(settings, CONF_HW_SERIAL_NUMBER, camera.serialNumber, strict, activeLogs, [](const QVariant &v) { return v.toString().toStdString(); });
+            loadField(settings, CONF_HW_MAX_EXPOSURE_US, camera.maxExposureUs, strict, activeLogs, &qToDouble);
+            loadField(settings, CONF_HW_DEFAULT_EXPOSURE_US, camera.defaultExposureUs, strict, activeLogs, &qToDouble);
+            loadField(settings, CONF_HW_MAX_GAIN_DB, camera.maxGainDb, strict, activeLogs, &qToDouble);
+            loadField(settings, CONF_HW_DEFAULT_GAIN_DB, camera.defaultGainDb, strict, activeLogs, &qToDouble);
+            loadField(settings, CONF_HW_FRAMERATE, camera.framerate, strict, activeLogs, &qToDouble);
+
             if (settings.contains(CONF_HW_ASSOCIATED_FOCAL_ID))
             {
                 QString val = settings.value(CONF_HW_ASSOCIATED_FOCAL_ID).toString();
@@ -156,7 +197,7 @@ namespace Kub3::Config
             }
 
             config.cameras.emplace(group, camera);
-            settings.endGroup(); // group
+            settings.endGroup();
         }
         settings.endGroup(); // CONF_HW_CAMERAS
 
@@ -167,26 +208,32 @@ namespace Kub3::Config
         for (const QString &group : settings.childGroups())
         {
             settings.beginGroup(group);
-            config.adc_to_gf_factors.emplace(group, getRequiredValue(settings, CONF_HW_ADC_TO_GRAM_FORCE_FACTOR, strict).toDouble());
-            settings.endGroup(); // group
+            double val = 1.0;
+            loadField(settings, CONF_HW_ADC_TO_GRAM_FORCE_FACTOR, val, strict, activeLogs, &qToDouble);
+            config.adc_to_gf_factors.emplace(group, val);
+            settings.endGroup();
         }
-        settings.endGroup(); // CONF_HW_FORCE_SENSORS
+        settings.endGroup();
 
         return config;
     }
 
-    process_config_t ConfigLoader::loadProcessConfig(const std::string &filePath, bool strict)
+    process_config_t ConfigLoader::loadProcessConfig(const std::string &filePath, bool strict, std::vector<std::string> *logs)
     {
-        process_config_t config;
+        std::vector<std::string> localLogs;
+        std::vector<std::string> &activeLogs = logs ? *logs : localLogs;
+
+        process_config_t config; // Default constructed: Holds all structural C++ defaults
         QSettings settings(QString::fromStdString(filePath), QSettings::IniFormat);
 
         if (settings.status() != QSettings::NoError)
         {
-            throw std::runtime_error("CRITICAL: Failed to open or parse process config file: " + filePath);
+            if (strict)
+                throw std::runtime_error("CRITICAL: Failed to open or parse process config file: " + filePath);
         }
 
         // =============================
-        // LOAD KINEMATIC PROFILES
+        // LOAD KINEMATIC PROFILES (Handled recursively)
         // =============================
         settings.beginGroup(CONF_PROCESS_KINEMATICS);
         for (const QString &motorGroup : settings.childGroups())
@@ -198,146 +245,142 @@ namespace Kub3::Config
             {
                 settings.beginGroup(profileGroup);
                 kinematic_profile_t profile;
+                profile.id = profileGroup.toStdString();
 
-                profile.id                = profileGroup.toStdString();
-                profile.targetVelocityMmS = getRequiredValue(settings, CONF_PROCESS_TARGET_VELOCITY_MM_S, strict).toDouble();
-                profile.accelerationMmS2  = getRequiredValue(settings, CONF_PROCESS_ACCELERATION_MM_S, strict).toDouble();
+                loadField(settings, CONF_PROCESS_TARGET_VELOCITY_MM_S, profile.targetVelocityMmS, strict, activeLogs, &qToDouble);
+                loadField(settings, CONF_PROCESS_ACCELERATION_MM_S, profile.accelerationMmS2, strict, activeLogs, &qToDouble);
 
-                QString paramsType = getRequiredValue(settings, CONF_PROCESS_PARAMS_TYPE, strict).toString();
+                QString paramsType;
+                loadField(settings, CONF_PROCESS_PARAMS_TYPE, paramsType, strict, activeLogs, [](const QVariant &v) { return v.toString(); });
 
                 if (paramsType == CONF_PROCESS_PARAMS_TYPE_STEPPER)
                 {
-                    profile.params = stepper_kinematics_params_t{
-                        .stepFraction = (uint8_t)getRequiredValue(settings, CONF_PROCESS_STEP_FRACTION, strict).toUInt()};
+                    uint32_t stepFrac = 1;
+                    loadField(settings, CONF_PROCESS_STEP_FRACTION, stepFrac, strict, activeLogs, &qToUint);
+                    profile.params = stepper_kinematics_params_t{.stepFraction = (uint8_t)stepFrac};
                 }
-                else if (paramsType != CONF_PROCESS_PARAMS_TYPE_GENERIC)
+                else if (paramsType != CONF_PROCESS_PARAMS_TYPE_GENERIC && !paramsType.isEmpty())
                 {
-                    qWarning().nospace() << "WARNING: Parameters type '" << paramsType << "' (profile: " << motorId << "/" << profile.id << ") not handled";
+                    if (strict)
+                        qWarning().nospace() << "WARNING: Parameters type '" << paramsType << "' not handled";
                 }
 
                 config.kinematic_profiles[motorId][profile.id] = profile;
-                settings.endGroup(); // profileGroup
+                settings.endGroup();
             }
-            settings.endGroup(); // motorGroup
+            settings.endGroup();
         }
-        settings.endGroup(); // CONF_PROCESS_KINEMATICS
+        settings.endGroup();
 
         // =============================
         // LOAD CAMERAS DATA
         // =============================
         settings.beginGroup(CONF_PROCESS_CAMERAS);
-        if (settings.contains(CONF_PROCESS_MIN_CAMERA_DISTANCE_MM) || strict)
-        {
-            config.vision.min_camera_distance_mm = getRequiredValue(settings, CONF_PROCESS_MIN_CAMERA_DISTANCE_MM, strict).toDouble();
-        }
-        // --- Cameras' init
-        config.vision.left_cam_x_reset_pos_mm  = getRequiredValue(settings, CONF_PROCESS_LEFT_CAM_X_RESET_POS_MM, strict).toDouble();
-        config.vision.left_cam_y_reset_pos_mm  = getRequiredValue(settings, CONF_PROCESS_LEFT_CAM_Y_RESET_POS_MM, strict).toDouble();
-        config.vision.right_cam_x_reset_pos_mm = getRequiredValue(settings, CONF_PROCESS_RIGHT_CAM_X_RESET_POS_MM, strict).toDouble();
-        config.vision.right_cam_y_reset_pos_mm = getRequiredValue(settings, CONF_PROCESS_RIGHT_CAM_Y_RESET_POS_MM, strict).toDouble();
-        // --- Cameras' homing
-        config.vision.left_cam_x_home_pos_mm  = getRequiredValue(settings, CONF_PROCESS_LEFT_CAM_X_HOME_POS_MM, strict).toDouble();
-        config.vision.left_cam_y_home_pos_mm  = getRequiredValue(settings, CONF_PROCESS_LEFT_CAM_Y_HOME_POS_MM, strict).toDouble();
-        config.vision.right_cam_x_home_pos_mm = getRequiredValue(settings, CONF_PROCESS_RIGHT_CAM_X_HOME_POS_MM, strict).toDouble();
-        config.vision.right_cam_y_home_pos_mm = getRequiredValue(settings, CONF_PROCESS_RIGHT_CAM_Y_HOME_POS_MM, strict).toDouble();
-        // --- Focals
+        loadField(settings, CONF_PROCESS_MIN_CAMERA_DISTANCE_MM, config.vision.min_camera_distance_mm, strict, activeLogs, &qToDouble);
+        loadField(settings, CONF_PROCESS_LEFT_CAM_X_RESET_POS_MM, config.vision.left_cam_x_reset_pos_mm, strict, activeLogs, &qToDouble);
+        loadField(settings, CONF_PROCESS_LEFT_CAM_Y_RESET_POS_MM, config.vision.left_cam_y_reset_pos_mm, strict, activeLogs, &qToDouble);
+        loadField(settings, CONF_PROCESS_RIGHT_CAM_X_RESET_POS_MM, config.vision.right_cam_x_reset_pos_mm, strict, activeLogs, &qToDouble);
+        loadField(settings, CONF_PROCESS_RIGHT_CAM_Y_RESET_POS_MM, config.vision.right_cam_y_reset_pos_mm, strict, activeLogs, &qToDouble);
+        loadField(settings, CONF_PROCESS_LEFT_CAM_X_HOME_POS_MM, config.vision.left_cam_x_home_pos_mm, strict, activeLogs, &qToDouble);
+        loadField(settings, CONF_PROCESS_LEFT_CAM_Y_HOME_POS_MM, config.vision.left_cam_y_home_pos_mm, strict, activeLogs, &qToDouble);
+        loadField(settings, CONF_PROCESS_RIGHT_CAM_X_HOME_POS_MM, config.vision.right_cam_x_home_pos_mm, strict, activeLogs, &qToDouble);
+        loadField(settings, CONF_PROCESS_RIGHT_CAM_Y_HOME_POS_MM, config.vision.right_cam_y_home_pos_mm, strict, activeLogs, &qToDouble);
+
         {
             settings.beginGroup(CONF_PROCESS_LEFT_FOCAL);
-            config.vision.left_focal_conf = {
-                .default_value = getRequiredValue(settings, CONF_PROCESS_FOCAL_DEFAULT_VALUE, strict).toUInt(),
-                .min_value     = getRequiredValue(settings, CONF_PROCESS_FOCAL_MIN_VALUE, strict).toUInt(),
-                .max_value     = getRequiredValue(settings, CONF_PROCESS_FOCAL_MAX_VALUE, strict).toUInt(),
-            };
+            loadField(settings, CONF_PROCESS_FOCAL_DEFAULT_VALUE, config.vision.left_focal_conf.default_value, strict, activeLogs, &qToUint);
+            loadField(settings, CONF_PROCESS_FOCAL_MIN_VALUE, config.vision.left_focal_conf.min_value, strict, activeLogs, &qToUint);
+            loadField(settings, CONF_PROCESS_FOCAL_MAX_VALUE, config.vision.left_focal_conf.max_value, strict, activeLogs, &qToUint);
             settings.endGroup();
+
             settings.beginGroup(CONF_PROCESS_RIGHT_FOCAL);
-            config.vision.right_focal_conf = {
-                .default_value = getRequiredValue(settings, CONF_PROCESS_FOCAL_DEFAULT_VALUE, strict).toUInt(),
-                .min_value     = getRequiredValue(settings, CONF_PROCESS_FOCAL_MIN_VALUE, strict).toUInt(),
-                .max_value     = getRequiredValue(settings, CONF_PROCESS_FOCAL_MAX_VALUE, strict).toUInt(),
-            };
+            loadField(settings, CONF_PROCESS_FOCAL_DEFAULT_VALUE, config.vision.right_focal_conf.default_value, strict, activeLogs, &qToUint);
+            loadField(settings, CONF_PROCESS_FOCAL_MIN_VALUE, config.vision.right_focal_conf.min_value, strict, activeLogs, &qToUint);
+            loadField(settings, CONF_PROCESS_FOCAL_MAX_VALUE, config.vision.right_focal_conf.max_value, strict, activeLogs, &qToUint);
             settings.endGroup();
         }
-        settings.endGroup(); // CONF_PROCESS_CAMERAS
+        settings.endGroup();
 
         // =============================
         // SAVE ALIGNMENT POSITIONS
         // =============================
         settings.beginGroup(CONF_PROCESS_ALIGNMENT_POSITIONS);
-        config.alignment.x_stage_center_pos_mm     = getRequiredValue(settings, CONF_PROCESS_X_STAGE_CENTER_POS_MM, strict).toDouble();
-        config.alignment.y_stage_center_pos_mm     = getRequiredValue(settings, CONF_PROCESS_Y_STAGE_CENTER_POS_MM, strict).toDouble();
-        config.alignment.theta_stage_center_pos_mm = getRequiredValue(settings, CONF_PROCESS_THETA_STAGE_CENTER_POS_MM, strict).toDouble();
+        loadField(settings, CONF_PROCESS_X_STAGE_CENTER_POS_MM, config.alignment.x_stage_center_pos_mm, strict, activeLogs, &qToDouble);
+        loadField(settings, CONF_PROCESS_Y_STAGE_CENTER_POS_MM, config.alignment.y_stage_center_pos_mm, strict, activeLogs, &qToDouble);
+        loadField(settings, CONF_PROCESS_THETA_STAGE_CENTER_POS_MM, config.alignment.theta_stage_center_pos_mm, strict, activeLogs, &qToDouble);
         settings.endGroup();
 
         settings.beginGroup(CONF_PROCESS_ELEVATOR_POSITIONS);
-        config.elevator.max_z_relative_distance_mm = getRequiredValue(settings, CONF_PROCESS_MAX_Z_RELATIVE_DISTANCE_MM, strict).toDouble();
+        loadField(settings, CONF_PROCESS_MAX_Z_RELATIVE_DISTANCE_MM, config.elevator.max_z_relative_distance_mm, strict, activeLogs, &qToDouble);
         settings.endGroup();
 
         // =============================
         // SAVE DRAWERS POSITIONS
         // =============================
         settings.beginGroup(CONF_PROCESS_DRAWERS_POSITIONS);
-        config.drawers.cm3_reset_pos_mm = getRequiredValue(settings, CONF_PROCESS_CM3_RESET_POS_MM, strict).toDouble();
+        loadField(settings, CONF_PROCESS_CM3_RESET_POS_MM, config.drawers.cm3_reset_pos_mm, strict, activeLogs, &qToDouble);
         settings.endGroup();
 
         // =============================
         // FORCE LIMITS
         // =============================
         settings.beginGroup(CONF_PROCESS_FORCE_LIMITS);
-        config.contact.hw_crash_force_limit_gf      = getRequiredValue(settings, CONF_PROCESS_HW_CRASH_FORCE_LIMIT_GF, strict).toDouble();
-        config.contact.max_process_force_gf         = getRequiredValue(settings, CONF_PROCESS_MAX_FORCE_GF, strict).toDouble();
-        config.contact.contact_threshold_gf         = getRequiredValue(settings, CONF_PROCESS_CONTACT_THRESHOLD_GF, strict).toDouble();
-        config.contact.autolevel_force_gf           = getRequiredValue(settings, CONF_PROCESS_AUTOLEVEL_FORCE_GF, strict).toDouble();
-        config.contact.autolevel_force_tolerance_gf = getRequiredValue(settings, CONF_PROCESS_AUTOLEVEL_FORCE_TOLERANCE_GF, strict).toDouble();
-        settings.endGroup(); // forceLimitsGroup
+        loadField(settings, CONF_PROCESS_HW_CRASH_FORCE_LIMIT_GF, config.contact.hw_crash_force_limit_gf, strict, activeLogs, &qToDouble);
+        loadField(settings, CONF_PROCESS_MAX_FORCE_GF, config.contact.max_process_force_gf, strict, activeLogs, &qToDouble);
+        loadField(settings, CONF_PROCESS_CONTACT_THRESHOLD_GF, config.contact.contact_threshold_gf, strict, activeLogs, &qToDouble);
+        loadField(settings, CONF_PROCESS_AUTOLEVEL_FORCE_GF, config.contact.autolevel_force_gf, strict, activeLogs, &qToDouble);
+        loadField(settings, CONF_PROCESS_AUTOLEVEL_FORCE_TOLERANCE_GF, config.contact.autolevel_force_tolerance_gf, strict, activeLogs, &qToDouble);
+        settings.endGroup();
 
         // =============================
         // ADMITTANCE TUNING VALUES
         // =============================
         settings.beginGroup(CONF_PROCESS_ADMITTANCE_TUNING);
-        config.contact.admittance = {
-            .max_step_mm_per_tick          = getRequiredValue(settings, CONF_PROCESS_ADMITTANCE_MAX_STEP_MM_PER_TICK, strict).toDouble(),
-            .deadband_velocity_mm_s        = getRequiredValue(settings, CONF_PROCESS_ADMITTANCE_DEADBAND_VELOCITY_MM_S, strict).toDouble(),
-            .translational_gain_low_force  = getRequiredValue(settings, CONF_PROCESS_ADMITTANCE_TRANSLATION_GAIN_LOW_FORCE, strict).toDouble(),
-            .translational_gain_high_force = getRequiredValue(settings, CONF_PROCESS_ADMITTANCE_TRANSLATION_GAIN_HIGH_FORCE, strict).toDouble(),
-            .rotational_gain_low_force     = getRequiredValue(settings, CONF_PROCESS_ADMITTANCE_ROTATION_GAIN_LOW_FORCE, strict).toDouble(),
-            .rotational_gain_high_force    = getRequiredValue(settings, CONF_PROCESS_ADMITTANCE_ROTATION_GAIN_HIGH_FORCE, strict).toDouble(),
-        };
-        settings.endGroup(); // admittanceGroup
+        loadField(settings, CONF_PROCESS_ADMITTANCE_MAX_STEP_MM_PER_TICK, config.contact.admittance.max_step_mm_per_tick, strict, activeLogs, &qToDouble);
+        loadField(settings, CONF_PROCESS_ADMITTANCE_DEADBAND_VELOCITY_MM_S, config.contact.admittance.deadband_velocity_mm_s, strict, activeLogs, &qToDouble);
+        loadField(settings, CONF_PROCESS_ADMITTANCE_TRANSLATION_GAIN_LOW_FORCE, config.contact.admittance.translational_gain_low_force, strict, activeLogs, &qToDouble);
+        loadField(settings, CONF_PROCESS_ADMITTANCE_TRANSLATION_GAIN_HIGH_FORCE, config.contact.admittance.translational_gain_high_force, strict, activeLogs, &qToDouble);
+        loadField(settings, CONF_PROCESS_ADMITTANCE_ROTATION_GAIN_LOW_FORCE, config.contact.admittance.rotational_gain_low_force, strict, activeLogs, &qToDouble);
+        loadField(settings, CONF_PROCESS_ADMITTANCE_ROTATION_GAIN_HIGH_FORCE, config.contact.admittance.rotational_gain_high_force, strict, activeLogs, &qToDouble);
+        settings.endGroup();
 
         // =============================
         // PAD MOVEMENTS VALUES
         // =============================
         settings.beginGroup(CONF_PROCESS_PAD_MOVEMENTS);
-        config.pad = {
-            .left_cam_x_distance_mm  = getRequiredValue(settings, CONF_PROCESS_LEFT_CAM_X_DISTANCE_MM, strict).toDouble(),
-            .right_cam_x_distance_mm = getRequiredValue(settings, CONF_PROCESS_RIGHT_CAM_X_DISTANCE_MM, strict).toDouble(),
-            .left_cam_y_distance_mm  = getRequiredValue(settings, CONF_PROCESS_LEFT_CAM_Y_DISTANCE_MM, strict).toDouble(),
-            .right_cam_y_distance_mm = getRequiredValue(settings, CONF_PROCESS_RIGHT_CAM_Y_DISTANCE_MM, strict).toDouble(),
-            .x_stage_distance_mm     = getRequiredValue(settings, CONF_PROCESS_X_STAGE_DISTANCE_MM, strict).toDouble(),
-            .y_stage_distance_mm     = getRequiredValue(settings, CONF_PROCESS_Y_STAGE_DISTANCE_MM, strict).toDouble(),
-            .theta_stage_distance_mm = getRequiredValue(settings, CONF_PROCESS_THETA_STAGE_DISTANCE_MM, strict).toDouble(),
-            .z_motors_distance_mm    = getRequiredValue(settings, CONF_PROCESS_Z_MOTORS_DISTANCE_MM, strict).toDouble(),
-        };
+        settings.group();
+        loadField(settings, CONF_PROCESS_LEFT_CAM_X_DISTANCE_MM, config.pad.left_cam_x_distance_mm, strict, activeLogs, &qToDouble);
+        loadField(settings, CONF_PROCESS_RIGHT_CAM_X_DISTANCE_MM, config.pad.right_cam_x_distance_mm, strict, activeLogs, &qToDouble);
+        loadField(settings, CONF_PROCESS_LEFT_CAM_Y_DISTANCE_MM, config.pad.left_cam_y_distance_mm, strict, activeLogs, &qToDouble);
+        loadField(settings, CONF_PROCESS_RIGHT_CAM_Y_DISTANCE_MM, config.pad.right_cam_y_distance_mm, strict, activeLogs, &qToDouble);
+        loadField(settings, CONF_PROCESS_X_STAGE_DISTANCE_MM, config.pad.x_stage_distance_mm, strict, activeLogs, &qToDouble);
+        loadField(settings, CONF_PROCESS_Y_STAGE_DISTANCE_MM, config.pad.y_stage_distance_mm, strict, activeLogs, &qToDouble);
+        loadField(settings, CONF_PROCESS_THETA_STAGE_DISTANCE_MM, config.pad.theta_stage_distance_mm, strict, activeLogs, &qToDouble);
+        loadField(settings, CONF_PROCESS_Z_MOTORS_DISTANCE_MM, config.pad.z_motors_distance_mm, strict, activeLogs, &qToDouble);
+        loadField(settings, CONF_PROCESS_LEFT_CAM_LIGHTING_STEP_PC, config.pad.left_cam_light_step_pc, strict, activeLogs, &qToDouble);
+        loadField(settings, CONF_PROCESS_RIGHT_CAM_LIGHTING_STEP_PC, config.pad.right_cam_light_step_pc, strict, activeLogs, &qToDouble);
+        loadField(settings, CONF_PROCESS_LEFT_CAM_FOCAL_STEP_PC, config.pad.left_cam_focal_step_pc, strict, activeLogs, &qToDouble);
+        loadField(settings, CONF_PROCESS_RIGHT_CAM_FOCAL_STEP_PC, config.pad.right_cam_focal_step_pc, strict, activeLogs, &qToDouble);
         settings.endGroup();
 
         return config;
     }
 
-    admin_config_t ConfigLoader::loadAdminConfig(const std::string &filePath, bool strict)
+    admin_config_t ConfigLoader::loadAdminConfig(const std::string &filePath, bool strict, std::vector<std::string> *logs)
     {
+        std::vector<std::string> localLogs;
+        std::vector<std::string> &activeLogs = logs ? *logs : localLogs;
+
         admin_config_t config;
         QSettings settings(QString::fromStdString(filePath), QSettings::IniFormat);
 
         if (settings.status() != QSettings::NoError)
         {
-            throw std::runtime_error("CRITICAL: Failed to open or parse admin config file: " + filePath);
+            if (strict)
+                throw std::runtime_error("CRITICAL: Failed to open or parse admin config file: " + filePath);
         }
 
-        if (!settings.contains(CONF_ADMIN_KLOE_MODE))
-        {
-            throw std::runtime_error(std::format("CRITICAL: Missing admin config key '{}'", CONF_ADMIN_KLOE_MODE));
-        }
-        config.kloe_mode = settings.value(CONF_ADMIN_KLOE_MODE).toBool();
+        loadField(settings, CONF_ADMIN_KLOE_MODE, config.kloe_mode, strict, activeLogs, &qToBool);
 
         return config;
     }

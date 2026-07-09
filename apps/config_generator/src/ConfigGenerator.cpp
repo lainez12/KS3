@@ -56,13 +56,7 @@ namespace Kub3::Config
     void ConfigGenerator::generateModel8Admin(const std::string &path, uint32_t &filledCount)
     {
         std::vector<std::string> changes;
-        admin_config_t currentConfig = ConfigLoader::loadAdminConfig(path, false);
-
-        const admin_config_t defaultConfig = admin_config_t{
-            .kloe_mode = true,
-        };
-
-        currentConfig.mergeMissingFieldsFrom(defaultConfig, "admin", changes);
+        admin_config_t currentConfig = ConfigLoader::loadAdminConfig(path, false, &changes);
 
         for (const auto &change : changes)
         {
@@ -82,15 +76,8 @@ namespace Kub3::Config
     void ConfigGenerator::generateModel8Hardware(const std::string &path, uint32_t &filledCount)
     {
         std::vector<std::string> changes;
-        hardware_config_t currentConfig = ConfigLoader::loadHardwareConfig(path, false);
-
+        hardware_config_t currentConfig       = ConfigLoader::loadHardwareConfig(path, false, &changes);
         const hardware_config_t defaultConfig = hardware_config_t{
-            .mcus = {
-                {.port = "/dev/arduino1", .baudrate = 115200},
-                {.port = "/dev/arduino2", .baudrate = 115200},
-                {.port = "/dev/arduino3", .baudrate = 115200},
-                {.port = "/dev/arduino4", .baudrate = 115200},
-            },
             .motors = {
                 // Cameras' deck
                 {
@@ -322,8 +309,7 @@ namespace Kub3::Config
     void ConfigGenerator::generateModel8Process(const std::string &path, uint32_t &filledCount)
     {
         std::vector<std::string> changes;
-        process_config_t currentConfig = ConfigLoader::loadProcessConfig(path, false);
-
+        process_config_t currentConfig       = ConfigLoader::loadProcessConfig(path, false, &changes);
         const process_config_t defaultConfig = process_config_t{
             .kinematic_profiles = {
                 // Conveyors
@@ -430,59 +416,6 @@ namespace Kub3::Config
                         },
                     },
                 },
-            },
-            .drawers   = {.cm3_reset_pos_mm = 0.0},
-            .elevator  = {.max_z_relative_distance_mm = 10.0},
-            .alignment = {
-                .x_stage_center_pos_mm     = 5.0,
-                .y_stage_center_pos_mm     = 5.0,
-                .theta_stage_center_pos_mm = 3.0,
-            },
-            .contact = {
-                .contact_threshold_gf         = 50.0,
-                .autolevel_force_gf           = 500.0,
-                .autolevel_force_tolerance_gf = 50.0,
-                .max_process_force_gf         = 4000.0,
-                .hw_crash_force_limit_gf      = 8000.0,
-                .admittance                   = {
-                    .max_step_mm_per_tick          = 0.25,
-                    .deadband_velocity_mm_s        = 1e-03,
-                    .translational_gain_low_force  = 1.0,
-                    .translational_gain_high_force = 0.00015,
-                    .rotational_gain_low_force     = 0.8,
-                    .rotational_gain_high_force    = 0.00015,
-                },
-            },
-            .vision = {
-                .min_camera_distance_mm   = 50.0,
-                .left_cam_x_reset_pos_mm  = 30.0,
-                .left_cam_y_reset_pos_mm  = 30.0,
-                .right_cam_x_reset_pos_mm = 30.0,
-                .right_cam_y_reset_pos_mm = 30.0,
-                .left_cam_x_home_pos_mm   = 60.0,
-                .left_cam_y_home_pos_mm   = 60.0,
-                .right_cam_x_home_pos_mm  = 60.0,
-                .right_cam_y_home_pos_mm  = 60.0,
-                .left_focal_conf          = {
-                    .default_value = 0u,
-                    .min_value     = 0u,
-                    .max_value     = 4095u,
-                },
-                .right_focal_conf = {
-                    .default_value = 0u,
-                    .min_value     = 0u,
-                    .max_value     = 4095u,
-                },
-            },
-            .pad = {
-                .left_cam_x_distance_mm  = 0.1,
-                .right_cam_x_distance_mm = 0.1,
-                .left_cam_y_distance_mm  = 0.1,
-                .right_cam_y_distance_mm = 0.1,
-                .x_stage_distance_mm     = 0.1,
-                .y_stage_distance_mm     = 0.1,
-                .theta_stage_distance_mm = 0.1,
-                .z_motors_distance_mm    = 0.1,
             },
         };
 

@@ -1,12 +1,13 @@
 #pragma once
 
 #include <QString>
+#include <format>
 #include <string>
 #include <unordered_map>
 #include <variant>
 
 #include "../utils.h" // @note: keep relative path for compilation
-#include <Config/utils.h>
+#include <Config/default/hardware.h>
 
 #define MCU_COUNT            4
 #define DEFAULT_MCU_BAUDRATE 115200
@@ -21,45 +22,20 @@ namespace Kub3::Config
     typedef struct mcu_hw_properties_s {
         QString port;
         uint32_t baudrate = DEFAULT_MCU_BAUDRATE;
-
-        void mergeMissingFieldsFrom(const mcu_hw_properties_s &source, const std::string &path, std::vector<std::string> &logs)
-        {
-            MERGE_QSTRING_FIELD(*this, source, port, path, logs);
-            MERGE_FIELD(*this, source, 115200, baudrate, path, logs);
-        }
-
     } mcu_hw_properties_t;
 
     typedef struct stepper_hw_properties_s {
-        uint16_t stepsPerRev;
-        double screwPitchMm;
-        double maxVelocityMmS;
-        double maxAccelerationMmS2;
-        uint16_t encoderTopsPerRev;
-
-        void mergeMissingFieldsFrom(const stepper_hw_properties_s &source, const std::string &path, std::vector<std::string> &logs)
-        {
-            MERGE_FIELD(*this, source, 0, stepsPerRev, path, logs);
-            MERGE_FIELD(*this, source, 0.0, screwPitchMm, path, logs);
-            MERGE_FIELD(*this, source, 0.0, maxVelocityMmS, path, logs);
-            MERGE_FIELD(*this, source, 0.0, maxAccelerationMmS2, path, logs);
-            MERGE_FIELD(*this, source, 0, encoderTopsPerRev, path, logs);
-        }
-
+        uint16_t stepsPerRev       = CONF_HW_MOTOR_STEPS_PER_REV_DEFAULT;
+        double screwPitchMm        = CONF_HW_SCREW_PITCH_MM_DEFAULT;
+        double maxVelocityMmS      = CONF_HW_MAX_VELOCITY_MM_S_DEFAULT;
+        double maxAccelerationMmS2 = CONF_HW_MAX_ACCELERATION_MM_S2_DEFAULT;
+        uint16_t encoderTopsPerRev = CONF_HW_ENCODER_TOPS_PER_REV_DEFAULT;
     } stepper_hw_properties_t;
 
     typedef struct dc_motor_hw_properties_s {
-        double screwPitchMm;
-        double maxVelocityMmS;
-        double maxAccelerationMmS2;
-
-        void mergeMissingFieldsFrom(const dc_motor_hw_properties_s &source, const std::string &path, std::vector<std::string> &logs)
-        {
-            MERGE_FIELD(*this, source, 0.0, screwPitchMm, path, logs);
-            MERGE_FIELD(*this, source, 0.0, maxVelocityMmS, path, logs);
-            MERGE_FIELD(*this, source, 0.0, maxAccelerationMmS2, path, logs);
-        }
-
+        double screwPitchMm        = 0.0;
+        double maxVelocityMmS      = 0.0;
+        double maxAccelerationMmS2 = 0.0;
     } dc_motor_hw_properties_t;
 
     using motor_hw_properties_t = std::variant<
@@ -71,106 +47,60 @@ namespace Kub3::Config
         std::string id;
         motor_hw_properties_t hwProperties;
         // TODO: add optional encoder hw props instead of integrating it into the specific motor hw props
-
-        void mergeMissingFieldsFrom(const motor_config_s &source, const std::string &path, std::vector<std::string> &logs)
-        {
-            MERGE_STRING_FIELD(*this, source, id, path, logs);
-
-            if (std::holds_alternative<std::monostate>(hwProperties) && !std::holds_alternative<std::monostate>(source.hwProperties))
-            {
-                hwProperties = source.hwProperties;
-                logs.push_back(std::format("{}/hwProperties = <created from defaults>", path));
-            }
-            else if (std::holds_alternative<stepper_hw_properties_t>(hwProperties) && std::holds_alternative<stepper_hw_properties_t>(source.hwProperties))
-            {
-                std::get<stepper_hw_properties_t>(hwProperties).mergeMissingFieldsFrom(std::get<stepper_hw_properties_t>(source.hwProperties), std::format("{}/hwProperties", path), logs);
-            }
-            else if (std::holds_alternative<dc_motor_hw_properties_t>(hwProperties) && std::holds_alternative<dc_motor_hw_properties_t>(source.hwProperties))
-            {
-                std::get<dc_motor_hw_properties_t>(hwProperties).mergeMissingFieldsFrom(std::get<dc_motor_hw_properties_t>(source.hwProperties), std::format("{}/hwProperties", path), logs);
-            }
-        }
-
     } motor_config_t;
 
     typedef struct camera_config_s {
         std::string id;
         std::string serialNumber;
-        double maxExposureUs;
-        double defaultExposureUs;
-        double maxGainDb;
-        double defaultGainDb;
-        double framerate = 30.0;
+        double maxExposureUs     = CONF_HW_MAX_EXPOSURE_US_DEFAULT;
+        double defaultExposureUs = CONF_HW_DEFAULT_EXPOSURE_US_DEFAULT;
+        double maxGainDb         = CONF_HW_MAX_GAIN_DB_DEFAULT;
+        double defaultGainDb     = CONF_HW_DEFAULT_GAIN_DB_DEFAULT;
+        double framerate         = CONF_HW_FRAMERATE_DEFAULT;
 
         // Optional peripheral mappings
-        Optional<QString> associatedFocalId;
-        Optional<QString> associatedLightId;
-
-        void mergeMissingFieldsFrom(const camera_config_s &source, const std::string &path, std::vector<std::string> &logs)
-        {
-            MERGE_STRING_FIELD(*this, source, id, path, logs);
-            MERGE_STRING_FIELD(*this, source, serialNumber, path, logs);
-            MERGE_FIELD(*this, source, 0.0, maxExposureUs, path, logs);
-            MERGE_FIELD(*this, source, 0.0, defaultExposureUs, path, logs);
-            MERGE_FIELD(*this, source, 0.0, maxGainDb, path, logs);
-            MERGE_FIELD(*this, source, 0.0, defaultGainDb, path, logs);
-            MERGE_FIELD(*this, source, 30.0, framerate, path, logs);
-
-            MERGE_OPTIONAL_QSTRING_FIELD(*this, source, associatedFocalId, path, logs);
-            MERGE_OPTIONAL_QSTRING_FIELD(*this, source, associatedLightId, path, logs);
-        }
-
+        Optional<QString> associatedFocalId = std::nullopt;
+        Optional<QString> associatedLightId = std::nullopt;
     } camera_config_t;
 
     // Top level struct for hardware config
     typedef struct hardware_config_s {
-        mcu_hw_properties_t mcus[MCU_COUNT];
+        mcu_hw_properties_t mcus[MCU_COUNT] = {
+            {.port = "/dev/arduino1"},
+            {.port = "/dev/arduino2"},
+            {.port = "/dev/arduino3"},
+            {.port = "/dev/arduino4"},
+        };
         std::unordered_map<QString, motor_config_t> motors;
         std::unordered_map<QString, camera_config_t> cameras;
         std::unordered_map<QString, double> adc_to_gf_factors;
 
         void mergeMissingFieldsFrom(const hardware_config_s &source, const std::string &path, std::vector<std::string> &logs)
         {
-            for (size_t i = 0; i < MCU_COUNT; ++i)
-            {
-                mcus[i].mergeMissingFieldsFrom(source.mcus[i], std::format("{}/mcus[{}]", path, i), logs);
-            }
-
             for (const auto &[key, source_motor] : source.motors)
             {
-                std::string sub_path = std::format("{}/motors[{}]", path, key.toStdString());
                 if (motors.find(key) == motors.end())
                 {
                     motors[key] = source_motor;
-                    logs.push_back(std::format("{} = <created from defaults>", sub_path));
-                }
-                else
-                {
-                    motors[key].mergeMissingFieldsFrom(source_motor, sub_path, logs);
+                    logs.push_back(std::format("{}/motors[{}] = <created from defaults>", path, key.toStdString()));
                 }
             }
 
             for (const auto &[key, source_camera] : source.cameras)
             {
-                std::string sub_path = std::format("{}/cameras[{}]", path, key.toStdString());
                 if (cameras.find(key) == cameras.end())
                 {
                     cameras[key] = source_camera;
-                    logs.push_back(std::format("{} = <created from defaults>", sub_path));
-                }
-                else
-                {
-                    cameras[key].mergeMissingFieldsFrom(source_camera, sub_path, logs);
+                    logs.push_back(std::format("{}/cameras[{}] = <created from defaults>", path, key.toStdString()));
                 }
             }
 
             for (const auto &[key, source_val] : source.adc_to_gf_factors)
             {
-                std::string sub_path = std::format("{}/adc_to_gf_factors[{}]", path, key.toStdString());
                 if (adc_to_gf_factors.find(key) == adc_to_gf_factors.end())
                 {
                     adc_to_gf_factors[key] = source_val;
-                    logs.push_back(std::format("{} = {}", sub_path, source_val));
+                    logs.push_back(std::format("{}/adc_to_gf_factors[{}] = {}", path, key.toStdString(), source_val));
                 }
             }
         }

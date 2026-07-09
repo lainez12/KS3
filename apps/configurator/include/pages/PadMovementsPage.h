@@ -3,6 +3,7 @@
 #include <QDoubleSpinBox>
 #include <QFormLayout>
 #include <QLabel>
+#include <QTabWidget>
 #include <QVBoxLayout>
 #include <QWidget>
 
@@ -26,15 +27,23 @@ namespace Kub3::Components
 
     private:
         QVBoxLayout *m_layout = nullptr;
+        QTabWidget *m_tabs    = nullptr;
 
-        QDoubleSpinBox *m_leftCamXDistanceMm;   // Holds value in mm
-        QDoubleSpinBox *m_rightCamXDistanceMm;  // Holds value in mm
-        QDoubleSpinBox *m_leftCamYDistanceMm;   // Holds value in mm
-        QDoubleSpinBox *m_rightCamYDistanceMm;  // Holds value in mm
-        QDoubleSpinBox *m_xStageDistanceMm;     // Holds value in mm
-        QDoubleSpinBox *m_yStageDistanceMm;     // Holds value in mm
-        QDoubleSpinBox *m_thetaStageDistanceMm; // Holds value in mm
-        QDoubleSpinBox *m_zMotorsDistanceMm;    // Holds value in mm
+        // Cameras movements
+        QDoubleSpinBox *m_leftCamXDistanceMm  = nullptr; // Holds value in mm
+        QDoubleSpinBox *m_rightCamXDistanceMm = nullptr; // Holds value in mm
+        QDoubleSpinBox *m_leftCamYDistanceMm  = nullptr; // Holds value in mm
+        QDoubleSpinBox *m_rightCamYDistanceMm = nullptr; // Holds value in mm
+        // Cameras' Lights/Focals settings
+        QDoubleSpinBox *m_leftCamLight  = nullptr;
+        QDoubleSpinBox *m_rightCamLight = nullptr;
+        QDoubleSpinBox *m_leftCamFocal  = nullptr;
+        QDoubleSpinBox *m_rightCamFocal = nullptr;
+        // Alignment / Z-Elevator
+        QDoubleSpinBox *m_xStageDistanceMm     = nullptr; // Holds value in mm
+        QDoubleSpinBox *m_yStageDistanceMm     = nullptr; // Holds value in mm
+        QDoubleSpinBox *m_thetaStageDistanceMm = nullptr; // Holds value in mm
+        QDoubleSpinBox *m_zMotorsDistanceMm    = nullptr; // Holds value in mm
     };
 
 }

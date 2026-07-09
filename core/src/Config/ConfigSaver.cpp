@@ -227,14 +227,18 @@ namespace Kub3::Config
 
             // PAD MOVEMENTS VALUES
             settings.beginGroup(CONF_PROCESS_PAD_MOVEMENTS);
-            settings.setValue(CONF_PROCESS_LEFT_CAM_X_DISTANCE_MM, config.pad.left_cam_x_distance_mm);
-            settings.setValue(CONF_PROCESS_RIGHT_CAM_X_DISTANCE_MM, config.pad.right_cam_x_distance_mm);
-            settings.setValue(CONF_PROCESS_LEFT_CAM_Y_DISTANCE_MM, config.pad.left_cam_y_distance_mm);
-            settings.setValue(CONF_PROCESS_RIGHT_CAM_Y_DISTANCE_MM, config.pad.right_cam_y_distance_mm);
             settings.setValue(CONF_PROCESS_X_STAGE_DISTANCE_MM, config.pad.x_stage_distance_mm);
             settings.setValue(CONF_PROCESS_Y_STAGE_DISTANCE_MM, config.pad.y_stage_distance_mm);
             settings.setValue(CONF_PROCESS_THETA_STAGE_DISTANCE_MM, config.pad.theta_stage_distance_mm);
             settings.setValue(CONF_PROCESS_Z_MOTORS_DISTANCE_MM, config.pad.z_motors_distance_mm);
+            settings.setValue(CONF_PROCESS_LEFT_CAM_X_DISTANCE_MM, config.pad.left_cam_x_distance_mm);
+            settings.setValue(CONF_PROCESS_RIGHT_CAM_X_DISTANCE_MM, config.pad.right_cam_x_distance_mm);
+            settings.setValue(CONF_PROCESS_LEFT_CAM_Y_DISTANCE_MM, config.pad.left_cam_y_distance_mm);
+            settings.setValue(CONF_PROCESS_RIGHT_CAM_Y_DISTANCE_MM, config.pad.right_cam_y_distance_mm);
+            settings.setValue(CONF_PROCESS_LEFT_CAM_LIGHTING_STEP_PC, config.pad.left_cam_light_step_pc);
+            settings.setValue(CONF_PROCESS_RIGHT_CAM_LIGHTING_STEP_PC, config.pad.right_cam_light_step_pc);
+            settings.setValue(CONF_PROCESS_LEFT_CAM_FOCAL_STEP_PC, config.pad.left_cam_focal_step_pc);
+            settings.setValue(CONF_PROCESS_RIGHT_CAM_FOCAL_STEP_PC, config.pad.right_cam_focal_step_pc);
             settings.endGroup();
 
             // Flush and verify write

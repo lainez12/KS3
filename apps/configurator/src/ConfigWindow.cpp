@@ -239,7 +239,7 @@ void ConfigWindow::populateUI()
     m_categoryMap[ALIGNMENT_CATEGORY].push_back({"Calibration Positions", alignIdx});
     m_categoryMap[CONVEYORS_CATEGORY].push_back({"Calibration Positions", drawersIdx});
     m_categoryMap[CAMERAS_CATEGORY].push_back({"General Settings", camGenIndex});
-    m_categoryMap[PAD_CATEGORY].push_back({"Movements", padMovementIndex});
+    m_categoryMap[PAD_CATEGORY].push_back({"Short presses", padMovementIndex});
 
     // -------------------------------------------------------------
     // DYNAMIC PAGES: CAMERAS SETTINGS

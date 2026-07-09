@@ -76,7 +76,6 @@ qt_add_library(Kub3Core STATIC
     # Headers
     include/utils.h
     include/Common/Enums.h
-    include/Config/utils.h
     include/Config/ConfigLoader.h
     include/Config/ConfigSaver.h
     include/Config/kinematics.h
@@ -85,8 +84,12 @@ qt_add_library(Kub3Core STATIC
     include/Config/process.h
     include/Config/admin.h
     include/Config/helper.h
+    include/Config/keys/admin.h
     include/Config/keys/hardware.h
     include/Config/keys/process.h
+    include/Config/default/admin.h
+    include/Config/default/hardware.h
+    include/Config/default/process.h
     include/Views/Components/CameraStreamWidget.h
     include/Views/Components/DoubleRatioSlider.h
     include/Views/Components/KeyboardFilter.h
