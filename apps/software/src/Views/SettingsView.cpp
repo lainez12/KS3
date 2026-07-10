@@ -16,7 +16,7 @@ SettingsView::SettingsView(Unique<SettingsViewModel> viewModel, QWidget *parent)
     createNavButtonsConfigs();
     configTitleBar();
 
-    QFont font("Arial", 22, QFont::Bold);
+    QFont font("Arial", 22);
     ui->opeTimesBtn->setup("Operation Times", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/operating-times.svg", font);
     ui->opeTimesBtn->setSize(BUTTONS_SIZE);
     ui->aboutBtn->setup("About", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/about.svg", font);

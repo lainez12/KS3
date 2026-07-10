@@ -206,6 +206,7 @@ NavButton *MainWindow::createNavButton(const Kub3::UI::Views::NavButtonConfig &c
 {
     NavButton *btn = new NavButton();
     btn->setup(config.text, config.colorEnabled, config.colorDisabled, config.iconPath);
+    btn->setSize(77);
     btn->setEnabledNavButton(config.enabled);
 
     connect(btn, &NavButton::clicked,
@@ -276,7 +277,7 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     QMainWindow::resizeEvent(event); // Use QWidget::resizeEvent(event) if inheriting QWidget directly
 
     // 2. Perform geometry and layout calculations
-    int margin = this->width() * 0.05;                       // 5% margin on the left and right
+    int margin = this->width() * 0.05; // 5% margin on the left and right
     ui->bottomBar->setFixedHeight(121);
     ui->bottomBar->setContentsMargins(margin, 0, margin, 0); // Apply the margin to the bottom bar
 }

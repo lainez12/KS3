@@ -1,11 +1,15 @@
 /* 
 Definitions colors 
 @blue: #0072ba;
+@blue-kloe: #0070DB;
+@blue-dark: #0E00DB;
 @blue-light: #B2D4F4;
 @orange: #e85420;
 @lightGray: #f0f0f0;
+@violet: #7D20E8;
 @darkGray: #333333;
 @white: #ffffff;
+@turquoise: #00BCD1;
 @primary-color: #3498db;
 
 
@@ -87,7 +91,31 @@ QFrame#navBtnIconCircle {
     color: @orange;
 }
 
+.bg-violet {
+    background-color: @violet;
+}
 
+.bg-blue-dark {
+    background-color: @blue-dark;
+}
+
+.bg-turquoise {
+    background-color: @turquoise;
+}
+
+.color-white {
+    color: @white;
+}
+
+.bg-blue-kloe {
+    background-color: @blue-kloe;
+}
+
+.text-extra-large {
+    font-family: @artTtnorm;
+    font-size: 42px;
+    font-weight: 700;
+}
 
 .text-large {
     font-family: @artTtnorm;
@@ -129,6 +157,11 @@ QFrame#navBtnIconCircle {
     font: 20px;
     font-weight: 700;
     font-family: arial;
+}
+
+.button-fat 
+{
+    border: none;
 }
 
 .button-blue:checked
