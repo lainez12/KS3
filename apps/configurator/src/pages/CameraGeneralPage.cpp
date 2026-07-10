@@ -39,15 +39,17 @@ namespace Kub3::Components
         auto *positionsTab    = new QWidget();
         auto *positionsLayout = new QFormLayout(positionsTab);
 
-        m_minCamDist        = createDoubleSpinBox(0.0, 10000.0, 2);
-        m_leftCamXResetPos  = createDoubleSpinBox(-100000.0, 100000.0, 2);
-        m_leftCamYResetPos  = createDoubleSpinBox(-100000.0, 100000.0, 2);
-        m_rightCamXResetPos = createDoubleSpinBox(-100000.0, 100000.0, 2);
-        m_rightCamYResetPos = createDoubleSpinBox(-100000.0, 100000.0, 2);
-        m_leftCamXHomePos   = createDoubleSpinBox(-100000.0, 100000.0, 2);
-        m_leftCamYHomePos   = createDoubleSpinBox(-100000.0, 100000.0, 2);
-        m_rightCamXHomePos  = createDoubleSpinBox(-100000.0, 100000.0, 2);
-        m_rightCamYHomePos  = createDoubleSpinBox(-100000.0, 100000.0, 2);
+        m_minCamDist                 = createDoubleSpinBox(0.0, 10000.0, 2);
+        m_leftCamXResetPos           = createDoubleSpinBox(-100000.0, 100000.0, 2);
+        m_leftCamYResetPos           = createDoubleSpinBox(-100000.0, 100000.0, 2);
+        m_rightCamXResetPos          = createDoubleSpinBox(-100000.0, 100000.0, 2);
+        m_rightCamYResetPos          = createDoubleSpinBox(-100000.0, 100000.0, 2);
+        m_leftCamXHomePos            = createDoubleSpinBox(-100000.0, 100000.0, 2);
+        m_leftCamYHomePos            = createDoubleSpinBox(-100000.0, 100000.0, 2);
+        m_rightCamXHomePos           = createDoubleSpinBox(-100000.0, 100000.0, 2);
+        m_rightCamYHomePos           = createDoubleSpinBox(-100000.0, 100000.0, 2);
+        m_leftCamXVirtualLimitPosMm  = createDoubleSpinBox(-100000.0, 100000.0, 2);
+        m_rightCamXVirtualLimitPosMm = createDoubleSpinBox(-100000.0, 100000.0, 2);
 
         positionsLayout->addRow("Minimum Camera Distance (mm):", m_minCamDist);
         positionsLayout->addRow("Left Camera X Reset Position (mm):", m_leftCamXResetPos);
@@ -58,6 +60,8 @@ namespace Kub3::Components
         positionsLayout->addRow("Left Camera Y Home Position (mm):", m_leftCamYHomePos);
         positionsLayout->addRow("Right Camera X Home Position (mm):", m_rightCamXHomePos);
         positionsLayout->addRow("Right Camera Y Home Position (mm):", m_rightCamYHomePos);
+        positionsLayout->addRow("Left Camera X Virtual Limit (mm):", m_leftCamXVirtualLimitPosMm);
+        positionsLayout->addRow("Right Camera X Virtual Limit (mm):", m_rightCamXVirtualLimitPosMm);
 
         tabs->addTab(positionsTab, "Positions and Clearances");
 
@@ -113,6 +117,8 @@ namespace Kub3::Components
         m_leftCamYHomePos->setValue(conf.left_cam_y_home_pos_mm);
         m_rightCamXHomePos->setValue(conf.right_cam_x_home_pos_mm);
         m_rightCamYHomePos->setValue(conf.right_cam_y_home_pos_mm);
+        m_leftCamXVirtualLimitPosMm->setValue(conf.left_cam_x_virtual_limit_mm);
+        m_rightCamXVirtualLimitPosMm->setValue(conf.right_cam_x_virtual_limit_mm);
 
         // Block signals locally to safely push the initial structural values without
         // triggering intermediate auto-clamping limits.
@@ -149,6 +155,9 @@ namespace Kub3::Components
         out.left_cam_y_home_pos_mm  = m_leftCamYHomePos->value();
         out.right_cam_x_home_pos_mm = m_rightCamXHomePos->value();
         out.right_cam_y_home_pos_mm = m_rightCamYHomePos->value();
+        // Virtual limits
+        out.left_cam_x_virtual_limit_mm  = m_leftCamXVirtualLimitPosMm->value();
+        out.right_cam_x_virtual_limit_mm = m_rightCamXVirtualLimitPosMm->value();
         // Focals limits
         // --- Left
         out.left_focal_conf.min_value     = m_leftFocalMin->value();
