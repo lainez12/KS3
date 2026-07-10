@@ -47,17 +47,17 @@ namespace Kub3::UI::Views
         m_messages->show();
     }
 
-    void ViewBase::showPopMessage(const QString &title, const QVector<PopMessage::ButtonConfig> &buttons)
+    void ViewBase::showPopUpMessage(const QString &title, const QVector<PopUpMessage::ButtonConfig> &buttons)
     {
-        showPopMessage(title, QString(), buttons);
+        showPopUpMessage(title, QString(), buttons);
     }
 
-    void ViewBase::showPopMessage(const QString &title, const QString &message, const QVector<PopMessage::ButtonConfig> &buttons)
+    void ViewBase::showPopUpMessage(const QString &title, const QString &message, const QVector<PopUpMessage::ButtonConfig> &buttons)
     {
-        m_popMessage->setTitleText(title);
-        m_popMessage->setMessageText(message);
-        m_popMessage->setButtons(buttons);
-        m_popMessage->showMessage();
+        m_PopUpMessage->setTitleText(title);
+        m_PopUpMessage->setMessageText(message);
+        m_PopUpMessage->setButtons(buttons);
+        m_PopUpMessage->showMessage();
     }
 
 } // namespace Kub3::UI::Views

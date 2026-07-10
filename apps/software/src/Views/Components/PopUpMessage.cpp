@@ -1,4 +1,4 @@
-#include <Views/Components/PopMessage.h>
+#include <Views/Components/PopUpMessage.h>
 
 #include <QGraphicsDropShadowEffect>
 #include <QHBoxLayout>
@@ -32,7 +32,7 @@ namespace
     }
 }
 
-PopMessage::PopMessage(QWidget *parent) : QWidget(parent)
+PopUpMessage::PopUpMessage(QWidget *parent) : QWidget(parent)
 {
     setAttribute(Qt::WA_TransparentForMouseEvents, false);
     setAttribute(Qt::WA_StyledBackground, true);
@@ -50,19 +50,19 @@ PopMessage::PopMessage(QWidget *parent) : QWidget(parent)
     hide();
 }
 
-PopMessage::PopMessage(const QString &title, const QString &message, const QVector<ButtonConfig> &buttons, QWidget *parent) : PopMessage(parent)
+PopUpMessage::PopUpMessage(const QString &title, const QString &message, const QVector<ButtonConfig> &buttons, QWidget *parent) : PopUpMessage(parent)
 {
     setTitleText(title);
     setMessageText(message);
     setButtons(buttons);
 }
 
-void PopMessage::buildUi()
+void PopUpMessage::buildUi()
 {
-    setObjectName(QStringLiteral("PopMessageOverlay"));
+    setObjectName(QStringLiteral("PopUpMessageOverlay"));
 
     m_card = new QWidget(this);
-    m_card->setObjectName(QStringLiteral("PopMessageCard"));
+    m_card->setObjectName(QStringLiteral("PopUpMessageCard"));
     m_card->setMinimumWidth(kCardMinWidth);
     m_card->setMaximumWidth(kCardMaxWidth);
     m_card->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
@@ -78,7 +78,7 @@ void PopMessage::buildUi()
     m_cardLayout->setSpacing(0);
 
     m_header = new QWidget(m_card);
-    m_header->setObjectName(QStringLiteral("PopMessageHeader"));
+    m_header->setObjectName(QStringLiteral("PopUpMessageHeader"));
     m_header->setFixedHeight(78);
 
     m_headerLayout = new QHBoxLayout(m_header);
@@ -124,15 +124,15 @@ void PopMessage::buildUi()
     m_cardLayout->addWidget(m_body);
 
     m_card->setStyleSheet(
-        "#PopMessageCard { background: white; border-radius: 10px; }"
-        "#PopMessageHeader { background: #1976D2; border-top-left-radius: 10px; border-top-right-radius: 10px; }"
+        "#PopUpMessageCard { background: white; border-radius: 10px; }"
+        "#PopUpMessageHeader { background: #1976D2; border-top-left-radius: 10px; border-top-right-radius: 10px; }"
         "QLabel { color: #1976D2; }"
-        "QLabel#PopMessageTitle { color: white; }"
+        "QLabel#PopUpMessageTitle { color: white; }"
         "QPushButton { min-width: 160px; min-height: 68px; padding: 10px 22px; font-size: 22px; font-weight: 700; color: #1976D2; background: white; border: 2px solid #1976D2; border-radius: 4px; }"
         "QPushButton:hover { background: #E8F2FF; }"
         "QPushButton:pressed { background: #D7E9FF; }");
 
-    m_titleLabel->setObjectName(QStringLiteral("PopMessageTitle"));
+    m_titleLabel->setObjectName(QStringLiteral("PopUpMessageTitle"));
     m_titleLabel->setStyleSheet("color: white; font-size: 30px; font-weight: 700;");
     m_messageLabel->setStyleSheet("color: #1976D2; font-size: 28px; font-weight: 700;");
 
@@ -146,25 +146,25 @@ void PopMessage::buildUi()
     overlayLayout->addStretch(1);
 }
 
-void PopMessage::setTitleText(const QString &title)
+void PopUpMessage::setTitleText(const QString &title)
 {
     m_titleText = title;
     refreshContent();
 }
 
-void PopMessage::setMessageText(const QString &message)
+void PopUpMessage::setMessageText(const QString &message)
 {
     m_messageText = message;
     refreshContent();
 }
 
-void PopMessage::setButtons(const QVector<ButtonConfig> &buttons)
+void PopUpMessage::setButtons(const QVector<ButtonConfig> &buttons)
 {
     m_buttons = buttons;
     refreshButtons();
 }
 
-void PopMessage::showMessage()
+void PopUpMessage::showMessage()
 {
     if (parentWidget())
     {
@@ -175,7 +175,7 @@ void PopMessage::showMessage()
     show();
 }
 
-void PopMessage::refreshContent()
+void PopUpMessage::refreshContent()
 {
     if (m_titleLabel)
     {
@@ -188,7 +188,7 @@ void PopMessage::refreshContent()
     }
 }
 
-void PopMessage::refreshButtons()
+void PopUpMessage::refreshButtons()
 {
     if (!m_buttonsLayout)
     {
@@ -227,14 +227,14 @@ void PopMessage::refreshButtons()
     }
 }
 
-void PopMessage::paintEvent(QPaintEvent *)
+void PopUpMessage::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
     painter.fillRect(rect(), QColor(255, 255, 255, 220));
 }
 
-bool PopMessage::eventFilter(QObject *obj, QEvent *ev)
+bool PopUpMessage::eventFilter(QObject *obj, QEvent *ev)
 {
     if (obj == parent())
     {

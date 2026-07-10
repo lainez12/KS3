@@ -1,5 +1,5 @@
-#ifndef POPMESSAGE_H
-#define POPMESSAGE_H
+#ifndef PopUpMessage_H
+#define PopUpMessage_H
 
 #include <QEvent>
 #include <QWidget>
@@ -12,7 +12,7 @@ class QVBoxLayout;
 class QHBoxLayout;
 class QWidget;
 
-class PopMessage : public QWidget
+class PopUpMessage : public QWidget
 {
     Q_OBJECT
 
@@ -22,8 +22,8 @@ public:
         std::function<void()> callback;
     };
 
-    explicit PopMessage(QWidget *parent = nullptr);
-    PopMessage(const QString &title, const QString &message, const QVector<ButtonConfig> &buttons, QWidget *parent = nullptr);
+    explicit PopUpMessage(QWidget *parent = nullptr);
+    PopUpMessage(const QString &title, const QString &message, const QVector<ButtonConfig> &buttons, QWidget *parent = nullptr);
 
     void setTitleText(const QString &title);
     void setMessageText(const QString &message);
@@ -40,14 +40,14 @@ private:
     void refreshContent();
     void refreshButtons();
 
-    QWidget *m_card = nullptr;
-    QWidget *m_header = nullptr;
-    QWidget *m_body = nullptr;
-    QWidget *m_buttonsContainer = nullptr;
-    QLabel *m_titleLabel = nullptr;
-    QLabel *m_messageLabel = nullptr;
-    QVBoxLayout *m_cardLayout = nullptr;
-    QHBoxLayout *m_headerLayout = nullptr;
+    QWidget *m_card              = nullptr;
+    QWidget *m_header            = nullptr;
+    QWidget *m_body              = nullptr;
+    QWidget *m_buttonsContainer  = nullptr;
+    QLabel *m_titleLabel         = nullptr;
+    QLabel *m_messageLabel       = nullptr;
+    QVBoxLayout *m_cardLayout    = nullptr;
+    QHBoxLayout *m_headerLayout  = nullptr;
     QHBoxLayout *m_buttonsLayout = nullptr;
 
     QString m_titleText;
