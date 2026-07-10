@@ -20,15 +20,17 @@
 #define CONF_PROCESS_STEP_FRACTION "step_fraction"
 
 // CONF_PROCESS_CAMERAS inner keys
-#define CONF_PROCESS_MIN_CAMERA_DISTANCE_MM   "min_camera_distance_mm"
-#define CONF_PROCESS_LEFT_CAM_X_RESET_POS_MM  "left_cam_x_reset_pos_mm"
-#define CONF_PROCESS_LEFT_CAM_Y_RESET_POS_MM  "left_cam_y_reset_pos_mm"
-#define CONF_PROCESS_RIGHT_CAM_X_RESET_POS_MM "right_cam_x_reset_pos_mm"
-#define CONF_PROCESS_RIGHT_CAM_Y_RESET_POS_MM "right_cam_y_reset_pos_mm"
-#define CONF_PROCESS_LEFT_CAM_X_HOME_POS_MM   "left_cam_x_home_pos_mm"
-#define CONF_PROCESS_LEFT_CAM_Y_HOME_POS_MM   "left_cam_y_home_pos_mm"
-#define CONF_PROCESS_RIGHT_CAM_X_HOME_POS_MM  "right_cam_x_home_pos_mm"
-#define CONF_PROCESS_RIGHT_CAM_Y_HOME_POS_MM  "right_cam_y_home_pos_mm"
+#define CONF_PROCESS_MIN_CAMERA_DISTANCE_MM           "min_camera_distance_mm"
+#define CONF_PROCESS_LEFT_CAM_X_RESET_POS_MM          "left_cam_x_reset_pos_mm"
+#define CONF_PROCESS_LEFT_CAM_Y_RESET_POS_MM          "left_cam_y_reset_pos_mm"
+#define CONF_PROCESS_RIGHT_CAM_X_RESET_POS_MM         "right_cam_x_reset_pos_mm"
+#define CONF_PROCESS_RIGHT_CAM_Y_RESET_POS_MM         "right_cam_y_reset_pos_mm"
+#define CONF_PROCESS_LEFT_CAM_X_HOME_POS_MM           "left_cam_x_home_pos_mm"
+#define CONF_PROCESS_LEFT_CAM_Y_HOME_POS_MM           "left_cam_y_home_pos_mm"
+#define CONF_PROCESS_RIGHT_CAM_X_HOME_POS_MM          "right_cam_x_home_pos_mm"
+#define CONF_PROCESS_RIGHT_CAM_Y_HOME_POS_MM          "right_cam_y_home_pos_mm"
+#define CONF_PROCESS_LEFT_CAM_X_VIRTUAL_LIMIT_POS_MM  "left_cam_x_virtual_limit_pos_mm"
+#define CONF_PROCESS_RIGHT_CAM_X_VIRTUAL_LIMIT_POS_MM "right_cam_x_virtual_limit_pos_mm"
 // Focals
 #define CONF_PROCESS_LEFT_FOCAL          "leftFocal"  // --- Upper left camera focal
 #define CONF_PROCESS_RIGHT_FOCAL         "rightFocal" // --- Upper right camera focal
