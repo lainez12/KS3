@@ -1,11 +1,12 @@
 #ifndef MESSAGEOVERLAY_h
 #define MESSAGEOVERLAY_h
-#include <QWidget>
-#include <QPainter>
 #include <QEvent>
+#include <QPainter>
 #include <QResizeEvent>
+#include <QWidget>
 
-class MessageOverlay : public QWidget {
+class MessageOverlay : public QWidget
+{
     Q_OBJECT
 public:
     explicit MessageOverlay(QWidget *parent = nullptr);
@@ -17,6 +18,8 @@ protected:
 
 private:
     QString m_text;
+    bool warning = false;
+    QString warningText;
 };
 
 #endif

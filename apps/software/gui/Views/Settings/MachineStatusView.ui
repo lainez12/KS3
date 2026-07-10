@@ -16,8 +16,17 @@
   <layout class="QGridLayout" name="gridLayout">
    <item row="2" column="0" colspan="2">
     <widget class="QPushButton" name="goBackBtn">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>50</height>
+      </size>
+     </property>
      <property name="text">
       <string>Go back</string>
+     </property>
+     <property name="class" stdset="0">
+      <string>button-blue</string>
      </property>
     </widget>
    </item>
@@ -70,6 +79,9 @@
        <property name="styleClass" stdset="0">
         <string>clearradius</string>
        </property>
+       <property name="class" stdset="0">
+        <string>button-blue</string>
+       </property>
       </widget>
      </item>
      <item row="4" column="0" colspan="2">
@@ -98,6 +110,9 @@
        <property name="styleClass" stdset="0">
         <string>clearradius</string>
        </property>
+       <property name="class" stdset="0">
+        <string>button-blue</string>
+       </property>
       </widget>
      </item>
      <item row="15" column="1">
@@ -112,6 +127,9 @@
        </property>
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+       <property name="class" stdset="0">
+        <string>positions-machine-status-text</string>
        </property>
       </widget>
      </item>
@@ -141,6 +159,9 @@
        <property name="styleClass" stdset="0">
         <string>clearradius</string>
        </property>
+       <property name="class" stdset="0">
+        <string>button-blue</string>
+       </property>
       </widget>
      </item>
      <item row="14" column="1">
@@ -156,12 +177,18 @@
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
        </property>
+       <property name="class" stdset="0">
+        <string>positions-machine-status-text</string>
+       </property>
       </widget>
      </item>
      <item row="15" column="0">
       <widget class="QLabel" name="label_13">
        <property name="text">
         <string>Y</string>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
        </property>
       </widget>
      </item>
@@ -186,6 +213,9 @@
        <property name="text">
         <string>Y Back</string>
        </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
+       </property>
       </widget>
      </item>
      <item row="16" column="1">
@@ -201,12 +231,18 @@
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
        </property>
+       <property name="class" stdset="0">
+        <string>positions-machine-status-text</string>
+       </property>
       </widget>
      </item>
      <item row="9" column="0">
       <widget class="QLabel" name="waferThetaCWLabel">
        <property name="text">
         <string>Theta CW</string>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
        </property>
       </widget>
      </item>
@@ -219,6 +255,9 @@
        </property>
        <property name="text">
         <string>Positions</string>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-medium color-blue</string>
        </property>
       </widget>
      </item>
@@ -290,6 +329,9 @@
        <property name="styleClass" stdset="0">
         <string>clearradius</string>
        </property>
+       <property name="class" stdset="0">
+        <string>button-blue</string>
+       </property>
       </widget>
      </item>
      <item row="3" column="0">
@@ -297,12 +339,18 @@
        <property name="text">
         <string>X Right</string>
        </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
+       </property>
       </widget>
      </item>
      <item row="14" column="0">
       <widget class="QLabel" name="label_12">
        <property name="text">
         <string>X</string>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
        </property>
       </widget>
      </item>
@@ -353,6 +401,9 @@
        <property name="text">
         <string>Y Front</string>
        </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
+       </property>
       </widget>
      </item>
      <item row="0" column="0" colspan="2">
@@ -368,12 +419,18 @@
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
        </property>
+       <property name="class" stdset="0">
+        <string>text-medium color-blue</string>
+       </property>
       </widget>
      </item>
      <item row="16" column="0">
       <widget class="QLabel" name="label_14">
        <property name="text">
         <string>Theta</string>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
        </property>
       </widget>
      </item>
@@ -394,6 +451,9 @@
        </property>
        <property name="text">
         <string>X Left</string>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
        </property>
       </widget>
      </item>
@@ -422,6 +482,9 @@
        </property>
        <property name="text">
         <string>Theta CCW</string>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
        </property>
       </widget>
      </item>
@@ -474,8 +537,17 @@
    </item>
    <item row="2" column="3" colspan="2">
     <widget class="QPushButton" name="openCamerasBtn">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>50</height>
+      </size>
+     </property>
      <property name="text">
       <string>Open cameras</string>
+     </property>
+     <property name="class" stdset="0">
+      <string>button-blue</string>
      </property>
     </widget>
    </item>
@@ -531,6 +603,9 @@
        </property>
        <property name="styleClass" stdset="0">
         <string>clearradius</string>
+       </property>
+       <property name="class" stdset="0">
+        <string>button-blue</string>
        </property>
       </widget>
      </item>
@@ -591,6 +666,9 @@
        <property name="text">
         <string>CW0</string>
        </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
+       </property>
       </widget>
      </item>
      <item row="13" column="0">
@@ -603,6 +681,9 @@
        </property>
        <property name="text">
         <string>CM3</string>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
        </property>
       </widget>
      </item>
@@ -656,6 +737,9 @@
        <property name="styleClass" stdset="0">
         <string>clearradius</string>
        </property>
+       <property name="class" stdset="0">
+        <string>button-blue</string>
+       </property>
       </widget>
      </item>
      <item row="0" column="0" colspan="2">
@@ -666,14 +750,14 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
-       <property name="styleSheet">
-        <string notr="true">font: bold;</string>
-       </property>
        <property name="text">
         <string>WAFER drawer sensors</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-medium color-blue</string>
        </property>
       </widget>
      </item>
@@ -687,6 +771,9 @@
        </property>
        <property name="text">
         <string>CM0</string>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
        </property>
       </widget>
      </item>
@@ -754,6 +841,9 @@
        <property name="text">
         <string>CM1</string>
        </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
+       </property>
       </widget>
      </item>
      <item row="4" column="1">
@@ -784,6 +874,9 @@
       <widget class="QLabel" name="label_4">
        <property name="text">
         <string>Wafer</string>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
        </property>
       </widget>
      </item>
@@ -846,6 +939,9 @@
        <property name="text">
         <string>CM2</string>
        </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
+       </property>
       </widget>
      </item>
      <item row="2" column="1">
@@ -883,12 +979,18 @@
        <property name="text">
         <string>CW2</string>
        </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
+       </property>
       </widget>
      </item>
      <item row="18" column="0">
       <widget class="QLabel" name="label_5">
        <property name="text">
         <string>Mask</string>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
        </property>
       </widget>
      </item>
@@ -902,6 +1004,9 @@
        <property name="text">
         <string>Positions</string>
        </property>
+       <property name="class" stdset="0">
+        <string>text-medium color-blue</string>
+       </property>
       </widget>
      </item>
      <item row="8" column="0" colspan="2">
@@ -912,14 +1017,14 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
-       <property name="styleSheet">
-        <string notr="true">font: bold;</string>
-       </property>
        <property name="text">
         <string>MASK drawer sensors</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-medium color-blue</string>
        </property>
       </widget>
      </item>
@@ -933,6 +1038,9 @@
        </property>
        <property name="text">
         <string>CW1</string>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
        </property>
       </widget>
      </item>
@@ -1009,12 +1117,18 @@
        <property name="text">
         <string>Left camera X</string>
        </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
+       </property>
       </widget>
      </item>
      <item row="14" column="1">
       <widget class="QLabel" name="label_18">
        <property name="text">
         <string>Right camera X</string>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
        </property>
       </widget>
      </item>
@@ -1023,6 +1137,9 @@
        <property name="text">
         <string>Left camera Y</string>
        </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
+       </property>
       </widget>
      </item>
      <item row="6" column="1">
@@ -1030,12 +1147,18 @@
        <property name="text">
         <string>Right camera X Right limit</string>
        </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
+       </property>
       </widget>
      </item>
      <item row="4" column="1">
       <widget class="QLabel" name="leftCameraXLeftLimitLabel">
        <property name="text">
         <string>Left camera X Left limit</string>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
        </property>
       </widget>
      </item>
@@ -1088,6 +1211,9 @@
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
        </property>
+       <property name="class" stdset="0">
+        <string>text-medium color-blue</string>
+       </property>
       </widget>
      </item>
      <item row="8" column="1" colspan="2">
@@ -1109,6 +1235,9 @@
        </property>
        <property name="styleClass" stdset="0">
         <string>clearradius</string>
+       </property>
+       <property name="class" stdset="0">
+        <string>button-blue</string>
        </property>
       </widget>
      </item>
@@ -1150,6 +1279,9 @@
        <property name="text">
         <string>Left camera Y Front limit</string>
        </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
+       </property>
       </widget>
      </item>
      <item row="2" column="1">
@@ -1159,6 +1291,9 @@
        </property>
        <property name="text">
         <string>Tablier Negative</string>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
        </property>
       </widget>
      </item>
@@ -1182,6 +1317,9 @@
       <widget class="QLabel" name="rightCameraYFrontLimitLabel">
        <property name="text">
         <string>Right camera Y Front limit</string>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
        </property>
       </widget>
      </item>
@@ -1218,12 +1356,18 @@
        <property name="text">
         <string>Tablier Positive</string>
        </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
+       </property>
       </widget>
      </item>
      <item row="15" column="1">
       <widget class="QLabel" name="label_19">
        <property name="text">
         <string>Right camera Y</string>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
        </property>
       </widget>
      </item>
@@ -1236,6 +1380,9 @@
        </property>
        <property name="text">
         <string>Positions</string>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-medium color-blue</string>
        </property>
       </widget>
      </item>
@@ -1252,6 +1399,9 @@
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
        </property>
+       <property name="class" stdset="0">
+        <string>positions-machine-status-text</string>
+       </property>
       </widget>
      </item>
      <item row="13" column="2">
@@ -1266,6 +1416,9 @@
        </property>
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+       <property name="class" stdset="0">
+        <string>positions-machine-status-text</string>
        </property>
       </widget>
      </item>
@@ -1282,6 +1435,9 @@
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
        </property>
+       <property name="class" stdset="0">
+        <string>positions-machine-status-text</string>
+       </property>
       </widget>
      </item>
      <item row="14" column="2">
@@ -1296,6 +1452,9 @@
        </property>
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+       <property name="class" stdset="0">
+        <string>positions-machine-status-text</string>
        </property>
       </widget>
      </item>
@@ -1386,6 +1545,9 @@
        <property name="text">
         <string>Motor Right Low</string>
        </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
+       </property>
       </widget>
      </item>
      <item row="9" column="0" colspan="2">
@@ -1407,6 +1569,9 @@
        </property>
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+       <property name="class" stdset="0">
+        <string>positions-machine-status-text</string>
        </property>
       </widget>
      </item>
@@ -1430,6 +1595,9 @@
       <widget class="QLabel" name="label_8">
        <property name="text">
         <string>Motor Right</string>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
        </property>
       </widget>
      </item>
@@ -1492,6 +1660,9 @@
        <property name="text">
         <string>Motor Left Low</string>
        </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
+       </property>
       </widget>
      </item>
      <item row="6" column="1">
@@ -1553,6 +1724,9 @@
        <property name="text">
         <string>Motor Left High</string>
        </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
+       </property>
       </widget>
      </item>
      <item row="1" column="0" colspan="2">
@@ -1586,6 +1760,9 @@
        </property>
        <property name="text">
         <string>Temperature</string>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-medium color-blue</string>
        </property>
       </widget>
      </item>
@@ -1625,6 +1802,9 @@
        <property name="text">
         <string>Motor Right High</string>
        </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
+       </property>
       </widget>
      </item>
      <item row="20" column="0">
@@ -1642,14 +1822,14 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
-       <property name="styleSheet">
-        <string notr="true">font: bold;</string>
-       </property>
        <property name="text">
         <string>WAFER 3Z sensors</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-medium color-blue</string>
        </property>
       </widget>
      </item>
@@ -1712,6 +1892,9 @@
        <property name="text">
         <string>Motor Back High</string>
        </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
+       </property>
       </widget>
      </item>
      <item row="2" column="1">
@@ -1755,6 +1938,9 @@
        <property name="text">
         <string>Externe</string>
        </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
+       </property>
       </widget>
      </item>
      <item row="28" column="0" colspan="2">
@@ -1767,12 +1953,18 @@
        <property name="text">
         <string>Positions</string>
        </property>
+       <property name="class" stdset="0">
+        <string>text-medium color-blue</string>
+       </property>
       </widget>
      </item>
      <item row="31" column="0">
       <widget class="QLabel" name="label_10">
        <property name="text">
         <string>Motor Back</string>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
        </property>
       </widget>
      </item>
@@ -1871,6 +2063,9 @@
        <property name="text">
         <string>3Z-2</string>
        </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
+       </property>
       </widget>
      </item>
      <item row="25" column="1">
@@ -1885,6 +2080,9 @@
        </property>
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+       <property name="class" stdset="0">
+        <string>positions-machine-status-text</string>
        </property>
       </widget>
      </item>
@@ -1911,6 +2109,9 @@
        <property name="text">
         <string>Motor Back Low</string>
        </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
+       </property>
       </widget>
      </item>
      <item row="12" column="0">
@@ -1935,6 +2136,9 @@
        </property>
        <property name="text">
         <string>3Z-1</string>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
        </property>
       </widget>
      </item>
@@ -1961,6 +2165,9 @@
        <property name="text">
         <string>Wafer ON</string>
        </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
+       </property>
       </widget>
      </item>
      <item row="31" column="1">
@@ -1975,6 +2182,9 @@
        </property>
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+       <property name="class" stdset="0">
+        <string>positions-machine-status-text</string>
        </property>
       </widget>
      </item>
@@ -2055,6 +2265,9 @@
        <property name="text">
         <string>Motor Left</string>
        </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
+       </property>
       </widget>
      </item>
      <item row="21" column="0" colspan="2">
@@ -2086,6 +2299,9 @@
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
        </property>
+       <property name="class" stdset="0">
+        <string>positions-machine-status-text</string>
+       </property>
       </widget>
      </item>
      <item row="27" column="0" colspan="2">
@@ -2108,12 +2324,18 @@
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
        </property>
+       <property name="class" stdset="0">
+        <string>positions-machine-status-text</string>
+       </property>
       </widget>
      </item>
      <item row="24" column="0">
       <widget class="QLabel" name="label_temp_Interne">
        <property name="text">
         <string>Interne</string>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
        </property>
       </widget>
      </item>
@@ -2143,6 +2365,9 @@
        <property name="styleClass" stdset="0">
         <string>clearradius</string>
        </property>
+       <property name="class" stdset="0">
+        <string>button-blue</string>
+       </property>
       </widget>
      </item>
     </layout>
@@ -2164,6 +2389,9 @@
        </property>
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-medium color-blue</string>
        </property>
       </widget>
      </item>
@@ -2257,12 +2485,18 @@
        <property name="text">
         <string>ARDKO BR</string>
        </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
+       </property>
       </widget>
      </item>
      <item row="4" column="0">
       <widget class="QLabel" name="ardkoFrontLeftLabel">
        <property name="text">
         <string>ARDKO FL</string>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
        </property>
       </widget>
      </item>
@@ -2302,6 +2536,9 @@
        <property name="text">
         <string>Wafer vacuum</string>
        </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
+       </property>
       </widget>
      </item>
      <item row="10" column="1">
@@ -2327,18 +2564,21 @@
        <property name="text">
         <string>Force Back</string>
        </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
+       </property>
       </widget>
      </item>
      <item row="0" column="0" colspan="2">
       <widget class="QLabel" name="maskExposureTitle">
-       <property name="styleSheet">
-        <string notr="true">font: bold;</string>
-       </property>
        <property name="text">
         <string>MASK Exposure sensors</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-medium color-blue</string>
        </property>
       </widget>
      </item>
@@ -2347,12 +2587,18 @@
        <property name="text">
         <string>ARDKO FR</string>
        </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
+       </property>
       </widget>
      </item>
      <item row="10" column="0">
       <widget class="QLabel" name="forceRightLabel">
        <property name="text">
         <string>Force Right</string>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
        </property>
       </widget>
      </item>
@@ -2376,6 +2622,9 @@
       <widget class="QLabel" name="forceLeftLabel">
        <property name="text">
         <string>Force Left</string>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
        </property>
       </widget>
      </item>
@@ -2441,6 +2690,9 @@
        <property name="styleClass" stdset="0">
         <string>clearradius</string>
        </property>
+       <property name="class" stdset="0">
+        <string>button-blue</string>
+       </property>
       </widget>
      </item>
      <item row="2" column="0">
@@ -2448,12 +2700,18 @@
        <property name="text">
         <string>ARDKO BL</string>
        </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
+       </property>
       </widget>
      </item>
      <item row="18" column="0">
       <widget class="QLabel" name="waferCompressedAirLabel">
        <property name="text">
         <string>Compressed air</string>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
        </property>
       </widget>
      </item>
@@ -2500,6 +2758,9 @@
        </property>
        <property name="styleClass" stdset="0">
         <string>clearradius</string>
+       </property>
+       <property name="class" stdset="0">
+        <string>button-blue</string>
        </property>
       </widget>
      </item>
@@ -2580,12 +2841,18 @@
        <property name="styleClass" stdset="0">
         <string>clearradius</string>
        </property>
+       <property name="class" stdset="0">
+        <string>button-blue</string>
+       </property>
       </widget>
      </item>
      <item row="21" column="0">
       <widget class="QLabel" name="maskVacuumLabel">
        <property name="text">
         <string>Mask vacuum</string>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
        </property>
       </widget>
      </item>
@@ -2620,12 +2887,18 @@
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
        </property>
+       <property name="class" stdset="0">
+        <string>text-medium color-blue</string>
+       </property>
       </widget>
      </item>
      <item row="17" column="0">
       <widget class="QLabel" name="waferCompressedAirValveLabel">
        <property name="text">
         <string>Compressed air valve</string>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
        </property>
       </widget>
      </item>

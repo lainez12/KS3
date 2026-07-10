@@ -4,6 +4,7 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QPixmap>
+#include <QResizeEvent>
 #include <QWidget>
 
 #include <Views/ViewBase.h>
@@ -19,6 +20,7 @@ public:
     void setTitleBarConfig(Kub3::UI::Views::TitleBarConfig titleBar);
 
 protected:
+    void resizeEvent(QResizeEvent *event) override;
     void paintEvent(QPaintEvent *) override;
 
 private:

@@ -39,16 +39,14 @@
      </property>
      <item row="0" column="0" colspan="2">
       <widget class="QLabel" name="date">
-       <property name="styleSheet">
-        <string notr="true">font: normal normal bold 30px/30px Arial;
-letter-spacing: 0px;
-color: #0070DB;</string>
-       </property>
        <property name="text">
         <string>Continuous exposure</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignHCenter</set>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-large color-blue</string>
        </property>
       </widget>
      </item>
@@ -56,11 +54,6 @@ color: #0070DB;</string>
       <widget class="QLabel" name="label">
        <property name="layoutDirection">
         <enum>Qt::LayoutDirection::LeftToRight</enum>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">font: normal normal bold 30px/30px Arial;
-letter-spacing: 0px;
-color: #E85420;</string>
        </property>
        <property name="text">
         <string>Duration: 0min 10s
@@ -74,6 +67,9 @@ color: #E85420;</string>
        </property>
        <property name="indent">
         <number>25</number>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-large color-orange</string>
        </property>
       </widget>
      </item>
