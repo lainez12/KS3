@@ -1,6 +1,7 @@
 #include <QLabel>
 #include <QLayout>
 #include <QPainter>
+#include <QResizeEvent>
 
 #include <Views/Components/UpBar.h>
 
@@ -20,6 +21,7 @@ UpBar::UpBar(QWidget *parent) : QFrame(parent)
     leftLayout->addWidget(m_logoTopBar);
 
     m_topBarTitle = new QLabel(this);
+    m_topBarTitle->raise();
 
     QHBoxLayout *rightLayout = new QHBoxLayout();
     m_iconPath               = new QLabel(this);
@@ -27,18 +29,37 @@ UpBar::UpBar(QWidget *parent) : QFrame(parent)
     m_sectionTitle = new QLabel(this);
     rightLayout->addWidget(m_iconPath);
     rightLayout->addWidget(m_sectionTitle);
+    rightLayout->setSpacing(16);
 
+    layoutIntern->setContentsMargins(QMargins(40, 0, 40, 0));
     layoutIntern->addLayout(leftLayout);
     layoutIntern->addStretch(1);
-    layoutIntern->addWidget(m_topBarTitle);
-    layoutIntern->addStretch(1);
     layoutIntern->addLayout(rightLayout);
+}
+
+void UpBar::updateTitlePosition()
+{
+    if (m_topBarTitle)
+    {
+        m_topBarTitle->adjustSize();
+
+        int x = (this->width() - m_topBarTitle->width()) / 2;
+        int y = (this->height() - m_topBarTitle->height()) / 2;
+        m_topBarTitle->move(x, y);
+    }
+}
+
+void UpBar::resizeEvent(QResizeEvent *event)
+{
+    QFrame::resizeEvent(event);
+    updateTitlePosition(); // Recalculate center every time the UpBar resizes
 }
 
 void UpBar::setTextColor(const QColor &color)
 {
     m_topBarTitle->setStyleSheet(QString("%2 color: %1;").arg(color.name()).arg(TITLE_BAR));
-    m_sectionTitle->setStyleSheet(QString("%2 color: %1;").arg(color.name()).arg(TITLE_SECTION));
+    m_sectionTitle->setStyleSheet(QString("%2 color: %1; font-size: 24px;").arg(color.name()).arg(TITLE_SECTION));
+    updateTitlePosition();
 }
 
 void UpBar::setBackgroundColor(const QColor &color)
@@ -57,6 +78,7 @@ void UpBar::setTitleBarConfig(Kub3::UI::Views::TitleBarConfig titleBar)
     m_topBarTitle->setText(titleBar.viewTitle);
     m_sectionTitle->setText(titleBar.sectionTitle);
     m_iconPath->setPixmap(QPixmap(titleBar.iconPath));
+    updateTitlePosition();
 }
 
 void UpBar::paintEvent(QPaintEvent *)
