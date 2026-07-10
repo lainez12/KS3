@@ -93,7 +93,7 @@ namespace Kub3::Tools::Tester
         };
         std::vector<CameraMovement> m_activeCameraMoves;
         struct AlignmentStageMovement {
-            Services::AlignmentStage motor;
+            AlignmentStageId motor;
             Services::AlignmentDirection dir;
         };
         std::vector<AlignmentStageMovement> m_activeAlignmentStageMoves;

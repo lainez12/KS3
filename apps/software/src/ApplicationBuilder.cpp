@@ -200,6 +200,9 @@ namespace Kub3
         QObject::connect(m_logicThread, &QThread::finished, m_logicThread, &QObject::deleteLater);
 
         // 2. UI -> Logic Wiring (Queued Connections implicitly used across threads)
+        // --- VisualisationViewModel
+        // QObject::connect(m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::cmdRunCameraMovement, m_masterFSM, &MFSM::MasterFSM::ps_requestPADCameraMovement);
+        QObject::connect(m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::cmdRunAlignmentStageMovement, m_masterFSM, &MFSM::MasterFSM::ps_requestPADAlignmentStageMovement);
         // --- MachineStatusViewModel
         auto *msvm = m_machineStatusVM.get();
         QObject::connect(m_mainWindow.get(), &MainWindow::s_initializationRequest, m_masterFSM, &MFSM::MasterFSM::ps_requestInitialization);

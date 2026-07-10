@@ -1,17 +1,11 @@
 #pragma once
 
+#include <Common/Enums.h>
 #include <HAL/Actuators/Motors/IMotor.h>
 #include <Services/IService.h>
 
 namespace Kub3::Services
 {
-
-    enum class AlignmentStage
-    {
-        X     = 0x0,
-        Y     = 0x1,
-        THETA = 0x2
-    };
 
     enum class AlignmentDirection
     {
@@ -27,6 +21,7 @@ namespace Kub3::Services
 
     struct AlignmentMoveStagePayload {
         AlignmentDirection dir;
+        bool granular = true;
     };
 
     struct AlignmentStopStagePayload {};
@@ -45,10 +40,10 @@ namespace Kub3::Services
     public:
         virtual ~IAlignmentService() = default;
 
-        virtual void moveStage(AlignmentStage axis, AlignmentDirection dir, bool granular = false) = 0;
-        virtual void stopStage(AlignmentStage axis)                                                = 0;
-        virtual void setKinematicProfile(AlignmentStage axis, bool fineMode)                       = 0;
-        virtual void setHardwareLock(bool locked)                                                  = 0;
+        virtual void moveStage(AlignmentStageId axis, AlignmentDirection dir, bool granular = false) = 0;
+        virtual void stopStage(AlignmentStageId axis)                                                = 0;
+        virtual void setKinematicProfile(AlignmentStageId axis, bool fineMode)                       = 0;
+        virtual void setHardwareLock(bool locked)                                                    = 0;
     };
 
 }

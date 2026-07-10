@@ -6,9 +6,9 @@
 namespace
 {
 
+    using Kub3::AlignmentStageId;
     using Kub3::HAL::Act::MotorDirection;
     using Kub3::Services::AlignmentDirection;
-    using Kub3::Services::AlignmentStage;
 
     template <typename E>
     constexpr std::size_t to_index(E e) noexcept
@@ -16,13 +16,15 @@ namespace
         return static_cast<std::size_t>(std::underlying_type_t<E>(e));
     }
 
+    // TODO: change the mechanism to get the limit ID as this is extremely error prone is the used enums are update
+
     static constexpr std::array<std::array<const char *, 2>, 3> stopIdMap{
         {/* --------- [0] = POSITIVE LIMIT, [1] = NEGATIVE LIMIT */
          /* X --- */ {X_STAGE_LEFT_LIMIT, X_STAGE_RIGHT_LIMIT},
          /* Y --- */ {Y_STAGE_BACK_LIMIT, Y_STAGE_FRONT_LIMIT},
          /* THETA */ {THETA_STAGE_ANTI_CLOCKWISE_LIMIT, THETA_STAGE_CLOCKWISE_LIMIT}}};
 
-    constexpr const char *stopId(AlignmentStage s, AlignmentDirection d) noexcept
+    constexpr const char *stopId(AlignmentStageId s, AlignmentDirection d) noexcept
     {
         return stopIdMap[to_index(s)][to_index(d)];
     }
@@ -69,7 +71,7 @@ namespace Kub3::Services
         }
     }
 
-    void AlignmentService::moveStage(AlignmentStage axis, AlignmentDirection dir, bool granular)
+    void AlignmentService::moveStage(AlignmentStageId axis, AlignmentDirection dir, bool granular)
     {
         if (m_isLocked)
             return; // Prevent moving when in locked state
@@ -109,7 +111,7 @@ namespace Kub3::Services
         }
     }
 
-    void AlignmentService::stopStage(AlignmentStage axis)
+    void AlignmentService::stopStage(AlignmentStageId axis)
     {
         if (auto it = m_motorsConfigurations.find(axis); it != m_motorsConfigurations.end())
         {
@@ -118,7 +120,7 @@ namespace Kub3::Services
         }
     }
 
-    void AlignmentService::setKinematicProfile(AlignmentStage axis, bool fineMode)
+    void AlignmentService::setKinematicProfile(AlignmentStageId axis, bool fineMode)
     {
         if (auto it = m_motorsConfigurations.find(axis); it != m_motorsConfigurations.end())
         {
@@ -163,8 +165,8 @@ namespace Kub3::Services
             .granularMoveMm = processConfig.pad.theta_stage_distance_mm,
         };
 
-        m_motorsConfigurations.insert({AlignmentStage::X, std::move(xStageConfig)});
-        m_motorsConfigurations.insert({AlignmentStage::Y, std::move(yStageConfig)});
-        m_motorsConfigurations.insert({AlignmentStage::THETA, std::move(thetaStageConfig)});
+        m_motorsConfigurations.insert({AlignmentStageId::X, std::move(xStageConfig)});
+        m_motorsConfigurations.insert({AlignmentStageId::Y, std::move(yStageConfig)});
+        m_motorsConfigurations.insert({AlignmentStageId::THETA, std::move(thetaStageConfig)});
     }
 }

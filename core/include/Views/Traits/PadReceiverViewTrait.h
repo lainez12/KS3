@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QDebug>
 #include <QWidget>
 #include <functional>
 #include <map>
@@ -7,6 +8,30 @@
 
 namespace Kub3::UI::Views
 {
+
+    namespace
+    {
+        class ShowFocusFilter final : public QObject
+        {
+        public:
+            explicit ShowFocusFilter(QWidget *target) : QObject(target), m_target(target) {}
+
+        protected:
+            bool eventFilter(QObject *watched, QEvent *event) override
+            {
+                if (event->type() == QEvent::Show)
+                {
+                    qDebug() << "Show event detected for: " << m_target;
+                    m_target->setFocus(Qt::OtherFocusReason);
+                }
+                return QObject::eventFilter(watched, event);
+            }
+
+        private:
+            QWidget *m_target;
+        };
+    }
+
     // The physical subsystems the PAD can control
     enum class PadTarget
     {
@@ -47,7 +72,7 @@ namespace Kub3::UI::Views
     class PadReceiverViewTrait
     {
     public:
-        explicit PadReceiverViewTrait(QWidget *targetWidget);
+        explicit PadReceiverViewTrait(QWidget *targetWidget, QObject *parent = nullptr);
         virtual ~PadReceiverViewTrait() = default;
 
         /**
@@ -58,6 +83,8 @@ namespace Kub3::UI::Views
     private:
         void handleEvent(Qt::Key key, PadTrigger trigger);
 
+    private:
+        QWidget *m_target = nullptr;
         // Uses a std::map to map a Target/Action pair to the bound callback
         std::map<std::pair<PadTarget, PadAction>, PadCallback> m_callbacks;
     };

@@ -44,9 +44,9 @@ namespace Kub3::Services
             return "";
         };
 
-        void moveStage(AlignmentStage axis, AlignmentDirection dir, bool granular = false) override;
-        void stopStage(AlignmentStage axis) override;
-        void setKinematicProfile(AlignmentStage axis, bool fineMode) override;
+        void moveStage(AlignmentStageId axis, AlignmentDirection dir, bool granular = false) override;
+        void stopStage(AlignmentStageId axis) override;
+        void setKinematicProfile(AlignmentStageId axis, bool fineMode) override;
         void setHardwareLock(bool locked) override;
 
     private:
@@ -55,7 +55,7 @@ namespace Kub3::Services
     private:
         bool m_isLocked = false;
         Shared<HAL::MS::IMachineStatusRepo> m_repo;
-        std::unordered_map<AlignmentStage, motor_alignment_config_t> m_motorsConfigurations;
+        std::unordered_map<AlignmentStageId, motor_alignment_config_t> m_motorsConfigurations;
 
         // Fast kinematic profiles
         Config::kinematic_profile_t m_xStageFastProfile;

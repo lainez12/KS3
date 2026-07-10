@@ -1,5 +1,3 @@
-#include <QDebug>
-
 #include <MFSM/MasterFSM.h>
 #include <MFSM/interlocks.h>
 #if defined(KUB_MODEL_8)

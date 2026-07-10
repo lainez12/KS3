@@ -1,3 +1,4 @@
+#include <QEvent>
 #include <Views/Components/KeyboardFilter.h>
 #include <Views/Traits/PadReceiverViewTrait.h>
 #include <unordered_map>
@@ -30,20 +31,24 @@ namespace Kub3::UI::Views
         {Qt::Key_S, {PadTarget::ZElevator, PadAction::Down}},
     };
 
-    PadReceiverViewTrait::PadReceiverViewTrait(QWidget *targetWidget)
+    PadReceiverViewTrait::PadReceiverViewTrait(QWidget *targetWidget, QObject *parent) :
+        m_target(targetWidget)
     {
-        if (!targetWidget)
+        if (!m_target)
             return;
 
-        auto *keyboardFilter = new KeyboardFilter(targetWidget, targetWidget);
+        auto *showFilterObj = new ShowFocusFilter(targetWidget);
 
-        QObject::connect(keyboardFilter, &KeyboardFilter::keyPressed, targetWidget,
+        m_target->installEventFilter(showFilterObj);
+        m_target->setFocusPolicy(Qt::StrongFocus);
+
+        auto *keyboardFilter = new KeyboardFilter(m_target, m_target);
+
+        QObject::connect(keyboardFilter, &KeyboardFilter::keyPressed, m_target,
                          [this](Qt::Key key, Qt::KeyboardModifiers) { handleEvent(key, PadTrigger::Pressed); });
-
-        QObject::connect(keyboardFilter, &KeyboardFilter::keyHeld, targetWidget,
+        QObject::connect(keyboardFilter, &KeyboardFilter::keyHeld, m_target,
                          [this](Qt::Key key, Qt::KeyboardModifiers) { handleEvent(key, PadTrigger::Held); });
-
-        QObject::connect(keyboardFilter, &KeyboardFilter::keyReleased, targetWidget,
+        QObject::connect(keyboardFilter, &KeyboardFilter::keyReleased, m_target,
                          [this](Qt::Key key, Qt::KeyboardModifiers) { handleEvent(key, PadTrigger::Released); });
     }
 

@@ -76,6 +76,9 @@ namespace Kub3::MFSM
         void ps_requestFrameRateUpdate(const QString &camId, double val);
         void ps_requestCenteredZoomUpdate(const QString &camId, double val);
         void ps_requestROIUpdate(const QString &camId, const QRect &roi);
+        // Camera PAD movements
+        // void ps_requestPADCameraMovement(CameraId camId, MovementKind kind, CameraDirection dir);
+        void ps_requestPADAlignmentStageMovement(AlignmentStageId stageId, MovementKind kind, AlignmentStageDirection dir);
 
     private slots:
         // --- The Heartbeat (50Hz) ---

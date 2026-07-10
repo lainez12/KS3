@@ -1,6 +1,7 @@
 #ifndef VISUALISATIONVIEW_H
 #define VISUALISATIONVIEW_H
 
+#include <Common/Enums.h>
 #include <QLabel>
 #include <QWidget>
 #include <ViewModels/Alignment/VisualisationViewModel.h>
@@ -10,6 +11,7 @@
 #include <Views/Components/NavButton.h>
 #include <Views/Components/RealPositionCameras.h>
 #include <Views/KeyboardConnections.h>
+#include <Views/Traits/PadReceiverViewTrait.h>
 #include <Views/ViewBase.h>
 
 namespace Ui
@@ -20,9 +22,10 @@ namespace Ui
 namespace Kub3::UI::Views::ViewsAlignment
 {
 
-    class VisualisationView final : public AlignmentViewBase
+    class VisualisationView final : public AlignmentViewBase, public PadReceiverViewTrait
     {
         using VisualisationViewModel = Kub3::UI::ViewModels::Alignment::VisualisationViewModel;
+
         Q_OBJECT
 
     public:
@@ -42,6 +45,17 @@ namespace Kub3::UI::Views::ViewsAlignment
         void navButtonToggled(NavButton *button, QWidget *widget);
 
     private:
+        // Setup routines splitting up the constructor
+        void setupUI();
+        void setupConnections();
+        void setupBindings();
+        void setupNavButtons();
+
+        // Hardware movement dispatchers
+        void cameraMovement(CameraId camId, MovementKind kind, CameraDirection dir);
+        void alignmentStageMovement(AlignmentStageId stageId, MovementKind kind, AlignmentStageDirection dir);
+
+        // Nav configurations
         void setNewNavButtonsConfigs();
         void onValidateButtonClicked(const QString &buttonId) override;
         void onBackButtonClicked(const QString &buttonId) override;
@@ -63,7 +77,7 @@ namespace Kub3::UI::Views::ViewsAlignment
         Ui::VisualisationView *ui;
         KeyboardConnections m_keyboard;
 
-        // Custom widget artifacts kept
+        // Custom widget artifacts
         RealPositionCameras *m_mapPositionCameras;
         HardForceContactForm *m_hardForceContactForm;
     };

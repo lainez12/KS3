@@ -79,7 +79,7 @@ namespace Kub3::MFSM
     // --- MANUAL PAD MOVEMENTS (Interactive) ---
 
     struct CmdAlignmentPad {
-        Services::AlignmentStage targetStage;
+        AlignmentStageId stageId;
         Services::AlignmentPayload operation;
     };
     struct CmdZAxisPad {

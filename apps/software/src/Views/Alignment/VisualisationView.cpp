@@ -1,4 +1,3 @@
-#include <QDebug>
 #include <QString>
 
 #include <Views/Alignment/VisualisationView.h>
@@ -16,15 +15,25 @@
 
 VisualisationView::VisualisationView(Unique<VisualisationViewModel> viewModel, QWidget *parent) :
     AlignmentViewBase(std::move(viewModel), parent),
+    PadReceiverViewTrait(this),
     m_keyboard(this),
     ui(new Ui::VisualisationView)
 {
-    // ==========================================
-    // 1. CORE UI SETUP & Z-ORDER
-    // ==========================================
+    setupUI();
+    setupConnections();
+    setupBindings();
+    setupNavButtons();
+}
+
+VisualisationView::~VisualisationView()
+{
+}
+
+void VisualisationView::setupUI()
+{
     ui->setupUi(this);
 
-    // Reparent floating components (if not already done in UI) to ensure they overlap properly
+    // Reparent floating components to ensure they overlap properly
     ui->camAndMaskDistContainer->setParent(ui->content);
     ui->leftCamCtrlBtnsContainer->setParent(ui->content);
     ui->rightCamCtrlBtnsContainer->setParent(ui->content);
@@ -37,35 +46,10 @@ VisualisationView::VisualisationView(Unique<VisualisationViewModel> viewModel, Q
     ui->leftCamCtrlBtnsContainer->raise();  // Layer 4: Left orange buttons
     ui->rightCamCtrlBtnsContainer->raise(); // Layer 4: Right orange buttons
 
-    // ==========================================
-    // 2. WINDOW & GLOBAL CONFIGURATIONS
-    // ==========================================
     setDefaultTitleBar("Visualisation");
     m_shadowedBoxStyle = false;
 
-    m_keyboard.setupKeyboardConnections(this, "_d");
-    m_keyboard.setupKeyboardConnections(this, "_g");
-
-    // ==========================================
-    // 3. CAMERA / VISION CONNECTIONS
-    // ==========================================
-    if (auto *vm = dynamic_cast<VisualisationViewModel *>(m_viewModel.get()))
-    {
-        connect(
-            vm,
-            &Kub3::UI::ViewModels::BaseVisionViewModel::s_frameReady,
-            this,
-            [this](const QString &cameraId, const QImage &frame) {
-                if (cameraId == UPPER_LEFT_CAMERA)
-                    ui->visioLeft->ps_onFrameUpdated(frame);
-                else if (cameraId == UPPER_RIGHT_CAMERA)
-                    ui->visioRight->ps_onFrameUpdated(frame);
-            });
-    }
-
-    // ==========================================
-    // 4. SUB-WIDGET INITIALIZATIONS & VISIBILITY
-    // ==========================================
+    // Sub-widget sizing configurations
     QList<NavButton *> navBtns = {
         ui->moveCamLeft, ui->speedCamLeft, ui->gotoLeft, ui->pickUpLeft,
         ui->gotoRight, ui->speedCamRight, ui->moveCamRight, ui->pickUpRight};
@@ -94,62 +78,130 @@ VisualisationView::VisualisationView(Unique<VisualisationViewModel> viewModel, Q
     ui->visualMarkLeft->setVisible(false);
     ui->visualMarkRight->setVisible(false);
 
-    // ==========================================
-    // 5. EVENT CONNECTIONS
-    // ==========================================
+    // Dynamic overlay widgets creation
+    m_mapPositionCameras = new RealPositionCameras(this);
+    m_mapPositionCameras->setMinimumSize(0, 64);
+    m_mapPositionCameras->setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
+
+    // Inject position map at the TOP (index 0) of the container layout
+    ui->camAndMaskDistContainerLayout->insertWidget(0, m_mapPositionCameras);
+
+    // Hard Force Contact Form setup
+    m_hardForceContactForm = new HardForceContactForm(this);
+    m_hardForceContactForm->setVisible(false);
+}
+
+void VisualisationView::setupConnections()
+{
+    m_keyboard.setupKeyboardConnections(this, "_d");
+    m_keyboard.setupKeyboardConnections(this, "_g");
+
+    // Camera / Vision pipeline updates
+    if (auto *vm = dynamic_cast<VisualisationViewModel *>(m_viewModel.get()))
+    {
+        connect(
+            vm,
+            &Kub3::UI::ViewModels::BaseVisionViewModel::s_frameReady,
+            this,
+            [this](const QString &cameraId, const QImage &frame) {
+                if (cameraId == UPPER_LEFT_CAMERA)
+                    ui->visioLeft->ps_onFrameUpdated(frame);
+                else if (cameraId == UPPER_RIGHT_CAMERA)
+                    ui->visioRight->ps_onFrameUpdated(frame);
+            });
+    }
+
+    // Toggle event connections
     connect(ui->configCamLeftCheck, &QCheckBox::toggled, this, &VisualisationView::leftCamConfigToggled);
     connect(ui->configCamRightCheck, &QCheckBox::toggled, this, &VisualisationView::rightCamConfigToggled);
 
     connect(ui->moveCamLeft, &NavButton::clicked, [this]() { navButtonToggled(ui->moveCamLeft, ui->moveLeftCamWidget); });
     connect(ui->moveCamRight, &NavButton::clicked, [this]() { navButtonToggled(ui->moveCamRight, ui->moveRightCamWidget); });
 
-    // ==========================================
-    // 6. DYNAMIC OVERLAY WIDGETS CREATION
-    // ==========================================
-
-    // Instantiate RT Position Map
-    m_mapPositionCameras = new RealPositionCameras(this);
-
-    // IMPORTANT: Remove constraints so layout can expand/shrink it dynamically
-    m_mapPositionCameras->setMinimumSize(0, 64);
-    m_mapPositionCameras->setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
-
-    // Inject it at the TOP (index 0) of the camAndMaskDistContainerLayout
-    // so it sits exactly above the masking distance widget
-    ui->camAndMaskDistContainerLayout->insertWidget(0, m_mapPositionCameras);
-
+    // Real Position Map layout updates
     connect(m_mapPositionCameras, &RealPositionCameras::s_openMap, this, &VisualisationView::mapPositionCamerasOpenMap);
     connect(m_mapPositionCameras, &RealPositionCameras::s_closeMap, this, &VisualisationView::mapPositionCamerasCloseMap);
+}
 
-    // Hard Force Contact Form
-    m_hardForceContactForm = new HardForceContactForm(this);
-    m_hardForceContactForm->setVisible(false);
+void VisualisationView::setupBindings()
+{
+    // Local state translation helper
+    auto toMovementKind = [](UI::Views::PadTrigger trigger) -> MovementKind {
+        switch (trigger)
+        {
+        case UI::Views::PadTrigger::Pressed:
+            return MovementKind::GRANULAR;
+        case UI::Views::PadTrigger::Held:
+            return MovementKind::CONTINUOUS;
+        case UI::Views::PadTrigger::Released:
+            return MovementKind::STOP;
+        }
+        return MovementKind::STOP;
+    };
+    // Camera action-binding generator
+    auto bindCamera = [this, toMovementKind](CameraId camId, CameraDirection dir) {
+        return [this, toMovementKind, camId, dir](UI::Views::PadTrigger trigger) {
+            cameraMovement(camId, toMovementKind(trigger), dir);
+        };
+    };
+    // Stage action-binding generator
+    auto bindStage = [this, toMovementKind](AlignmentStageId stageId, AlignmentStageDirection dir) {
+        return [this, toMovementKind, stageId, dir](UI::Views::PadTrigger trigger) {
+            alignmentStageMovement(stageId, toMovementKind(trigger), dir);
+        };
+    };
 
-    // ==========================================
-    // 7. NAVIGATION BAR CONFIGURATION
-    // ==========================================
+    // Logical Pad Mapping to Cameras
+    // --- Left camera
+    link(UI::Views::PadTarget::LeftCamera, UI::Views::PadAction::Up, bindCamera(CameraId::LEFT, CameraDirection::UP));
+    link(UI::Views::PadTarget::LeftCamera, UI::Views::PadAction::Left, bindCamera(CameraId::LEFT, CameraDirection::LEFT));
+    link(UI::Views::PadTarget::LeftCamera, UI::Views::PadAction::Down, bindCamera(CameraId::LEFT, CameraDirection::DOWN));
+    link(UI::Views::PadTarget::LeftCamera, UI::Views::PadAction::Right, bindCamera(CameraId::LEFT, CameraDirection::RIGHT));
+    // --- Right camera
+    link(UI::Views::PadTarget::RightCamera, UI::Views::PadAction::Up, bindCamera(CameraId::RIGHT, CameraDirection::UP));
+    link(UI::Views::PadTarget::RightCamera, UI::Views::PadAction::Left, bindCamera(CameraId::RIGHT, CameraDirection::LEFT));
+    link(UI::Views::PadTarget::RightCamera, UI::Views::PadAction::Down, bindCamera(CameraId::RIGHT, CameraDirection::DOWN));
+    link(UI::Views::PadTarget::RightCamera, UI::Views::PadAction::Right, bindCamera(CameraId::RIGHT, CameraDirection::RIGHT));
+
+    // Logical Pad Mapping to Alignment Stages
+    // --- X stage
+    link(UI::Views::PadTarget::XStage, UI::Views::PadAction::Left, bindStage(AlignmentStageId::X, AlignmentStageDirection::X_LEFT));
+    link(UI::Views::PadTarget::XStage, UI::Views::PadAction::Right, bindStage(AlignmentStageId::X, AlignmentStageDirection::X_RIGHT));
+    // --- Y stage
+    link(UI::Views::PadTarget::YStage, UI::Views::PadAction::Front, bindStage(AlignmentStageId::Y, AlignmentStageDirection::Y_FRONT));
+    link(UI::Views::PadTarget::YStage, UI::Views::PadAction::Back, bindStage(AlignmentStageId::Y, AlignmentStageDirection::Y_BACK));
+    // --- Theta stage
+    link(UI::Views::PadTarget::ThetaStage, UI::Views::PadAction::CW, bindStage(AlignmentStageId::THETA, AlignmentStageDirection::THETA_CW));
+    link(UI::Views::PadTarget::ThetaStage, UI::Views::PadAction::CCW, bindStage(AlignmentStageId::THETA, AlignmentStageDirection::THETA_CCW));
+}
+
+void VisualisationView::setupNavButtons()
+{
     createNavButtonsConfigs();
     setNavButtonEnabled(ID_BTN_VALIDATE, true);
     setNewNavButtonsConfigs();
+}
 
+void VisualisationView::cameraMovement(CameraId camId, MovementKind kind, CameraDirection dir)
+{
+    if (auto *vm = dynamic_cast<VisualisationViewModel *>(m_viewModel.get()))
     {
-        qDebug().noquote() << "widths:\n\tcontainer=" << ui->camAndMaskDistContainer->width()
-                           << "\n\twidget_12=" << ui->widget_12->width()
-                           << "\n\tm_mapPositionCameras=" << m_mapPositionCameras->width();
+        vm->uiRequestCameraMovement(camId, kind, dir);
     }
 }
 
-VisualisationView::~VisualisationView()
+void VisualisationView::alignmentStageMovement(AlignmentStageId stageId, MovementKind kind, AlignmentStageDirection dir)
 {
+    if (auto *vm = dynamic_cast<VisualisationViewModel *>(m_viewModel.get()))
+    {
+        vm->uiRequestAlignmentStageMovement(stageId, kind, dir);
+    }
 }
 
 void VisualisationView::resizeEvent(QResizeEvent *ev)
 {
     QWidget::resizeEvent(ev);
     updateOverlayPositions();
-    qDebug().noquote() << "widths:\n\tcontainer=" << ui->camAndMaskDistContainer->width()
-                       << "\n\twidget_12=" << ui->widget_12->width()
-                       << "\n\tm_mapPositionCameras=" << m_mapPositionCameras->width();
 }
 
 void VisualisationView::updateOverlayPositions()

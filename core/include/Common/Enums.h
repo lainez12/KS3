@@ -28,9 +28,9 @@ namespace Kub3
 
     enum class AlignmentStageId : uint32_t
     {
-        X,
-        Y,
-        THETA
+        X     = 0x0,
+        Y     = 0x1,
+        THETA = 0x2
     };
 
     enum class AlignmentStageDirection : uint32_t

@@ -32,7 +32,6 @@ namespace Kub3::Tools::Tester
         m_procedureViewModel(std::move(viewModel))
     {
         ui->setupUi(this);
-        this->setFocusPolicy(Qt::StrongFocus);
 
         loadConfigValues(hwConf);
         initializeSensorMaps();
@@ -43,12 +42,6 @@ namespace Kub3::Tools::Tester
     }
 
     ProcedureTestView::~ProcedureTestView() = default;
-
-    void ProcedureTestView::showEvent(QShowEvent *event)
-    {
-        UI::Views::ViewBase::showEvent(event);
-        this->setFocus(Qt::OtherFocusReason);
-    }
 
     void ProcedureTestView::initializeSensorMaps()
     {
@@ -261,7 +254,6 @@ namespace Kub3::Tools::Tester
         {
             if (auto encoderId = MOTOR_TO_ENCODER_MAP.get(motorConf.first.toStdString()); encoderId)
             {
-                qDebug() << "[ProcedureTestView::loadConfigValues] Registering encoder:" << QString::fromStdString(std::string(encoderId.value()));
                 m_motorsHwConf.emplace(QString::fromStdString(std::string(encoderId.value())), motorConf.second);
             }
         }
@@ -291,7 +283,6 @@ namespace Kub3::Tools::Tester
 
     void ProcedureTestView::integerSensorUpdate(const QString &sensorId, int32_t value)
     {
-        qDebug() << "[ProcedureTestView::integerSensorUpdate] sensor id:" << sensorId;
         if (auto it = m_intSensorsMap.find(sensorId); it != m_intSensorsMap.end())
         {
             QString text;
@@ -299,7 +290,6 @@ namespace Kub3::Tools::Tester
 
             if (auto itMotorConf = m_motorsHwConf.find(sensorId); itMotorConf != m_motorsHwConf.end())
             {
-                qDebug() << "[ProcedureTestView] config found for motor encoder:" << sensorId;
                 motorConf = std::get_if<Config::stepper_hw_properties_t>(&itMotorConf->second.hwProperties);
             }
 

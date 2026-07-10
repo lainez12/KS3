@@ -42,12 +42,6 @@ namespace Kub3::Tools::Tester
 
         void loadConfigValues(const Config::hardware_config_t &conf);
 
-    protected:
-        /**
-         * @brief Ensures the view claims focus when displayed to capture keyboard events immediately.
-         */
-        void showEvent(QShowEvent *event) override;
-
     private slots:
         void booleanSensorUpdate(const QString &sensorId, bool value);
         void integerSensorUpdate(const QString &sensorId, int32_t value);

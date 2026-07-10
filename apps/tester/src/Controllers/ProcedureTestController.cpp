@@ -352,28 +352,7 @@ namespace Kub3::Tools::Tester
     void ProcedureTestController::ps_runAlignmentStageMovement(
         AlignmentStageId stageId, MovementKind kind, AlignmentStageDirection dir)
     {
-        // Translates UI enums to Logic enums
-        auto resolveHardware = [](AlignmentStageId c, AlignmentStageDirection d)
-            -> std::pair<Services::AlignmentStage, Services::AlignmentDirection> {
-            auto direction = convert(d);
-
-            if (c == AlignmentStageId::X)
-            {
-                return {Services::AlignmentStage::X, direction};
-            }
-            else if (c == AlignmentStageId::Y)
-            {
-                return {Services::AlignmentStage::Y, direction};
-            }
-            else if (c == AlignmentStageId::THETA)
-            {
-                return {Services::AlignmentStage::THETA, direction};
-            }
-
-            Q_UNREACHABLE();
-        };
-
-        const auto [motor, direction] = resolveHardware(stageId, dir);
+        const auto direction = convert(dir);
 
         if (kind == MovementKind::STOP)
         {
@@ -382,9 +361,9 @@ namespace Kub3::Tools::Tester
                 std::remove_if(
                     m_activeAlignmentStageMoves.begin(),
                     m_activeAlignmentStageMoves.end(),
-                    [motor](const AlignmentStageMovement &m) { return m.motor == motor; }),
+                    [stageId](const AlignmentStageMovement &m) { return m.motor == stageId; }),
                 m_activeAlignmentStageMoves.end());
-            m_alignmentService->stopStage(motor);
+            m_alignmentService->stopStage(stageId);
 
             // Detach AlignmentService from the Tick engine if it has nothing left to do
             if (m_activeAlignmentStageMoves.empty() &&
@@ -411,18 +390,18 @@ namespace Kub3::Tools::Tester
                 auto it = std::find_if(
                     m_activeAlignmentStageMoves.begin(),
                     m_activeAlignmentStageMoves.end(),
-                    [motor](const AlignmentStageMovement &m) { return m.motor == motor; });
+                    [stageId](const AlignmentStageMovement &m) { return m.motor == stageId; });
 
                 // Insert the movement into our tracking list
                 if (it != m_activeAlignmentStageMoves.end())
                     it->dir = direction;
                 else
-                    m_activeAlignmentStageMoves.push_back({motor, direction});
+                    m_activeAlignmentStageMoves.push_back({stageId, direction});
 
                 // Attach Alignment to the Tick engine if it's currently completely idle
                 startServiceRoutine(m_alignmentService.get(), "AlignmentStagePADMovement", true);
             }
-            m_alignmentService->moveStage(motor, direction, isGranular); // Initiate movement
+            m_alignmentService->moveStage(stageId, direction, isGranular); // Initiate movement
         }
     }
 

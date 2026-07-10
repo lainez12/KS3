@@ -189,6 +189,45 @@ namespace Kub3::MFSM
         });
     }
 
+    void MasterFSM::ps_requestPADAlignmentStageMovement(AlignmentStageId stageId, MovementKind kind, AlignmentStageDirection dir)
+    {
+        using namespace Services;
+
+        auto convert = [](AlignmentStageDirection d) -> AlignmentDirection {
+            switch (d)
+            {
+            case AlignmentStageDirection::X_LEFT:
+                return AlignmentDirection::LEFT;
+            case AlignmentStageDirection::X_RIGHT:
+                return AlignmentDirection::RIGHT;
+            case AlignmentStageDirection::Y_BACK:
+                return AlignmentDirection::BACK;
+            case AlignmentStageDirection::Y_FRONT:
+                return AlignmentDirection::FRONT;
+            case AlignmentStageDirection::THETA_CW:
+                return AlignmentDirection::CLOCKWISE;
+            case AlignmentStageDirection::THETA_CCW:
+                return AlignmentDirection::COUNTER_CLOCKWISE;
+            }
+            Q_UNREACHABLE();
+        };
+
+        AlignmentPayload op = AlignmentStopStagePayload{};
+
+        if (kind != MovementKind::STOP)
+        {
+            op = AlignmentMoveStagePayload{
+                .dir      = convert(dir),
+                .granular = (kind == MovementKind::GRANULAR),
+            };
+        }
+
+        dispatch(CmdAlignmentPad{
+            .stageId   = stageId,
+            .operation = op,
+        });
+    }
+
     // ==========================================================================
     // PAD & HARDWARE SERVICE ROUTING
     // ==========================================================================
@@ -196,11 +235,11 @@ namespace Kub3::MFSM
     void MasterFSM::processCmdAlignmentPad(const CmdAlignmentPad &cmd)
     {
         if (auto *op = std::get_if<Services::AlignmentMoveStagePayload>(&cmd.operation))
-            m_alignmentService->moveStage(cmd.targetStage, op->dir);
+            m_alignmentService->moveStage(cmd.stageId, op->dir, op->granular);
         else if (auto *op = std::get_if<Services::AlignmentStopStagePayload>(&cmd.operation))
-            m_alignmentService->stopStage(cmd.targetStage);
+            m_alignmentService->stopStage(cmd.stageId);
         else if (auto *op = std::get_if<Services::AlignmentSetKinematicModePayload>(&cmd.operation))
-            m_alignmentService->setKinematicProfile(cmd.targetStage, op->fineMode);
+            m_alignmentService->setKinematicProfile(cmd.stageId, op->fineMode);
     }
 
     void MasterFSM::processCmdZPad(const CmdZAxisPad &cmd)
