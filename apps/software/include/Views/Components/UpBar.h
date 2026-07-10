@@ -22,6 +22,10 @@ public:
 protected:
     void resizeEvent(QResizeEvent *event) override;
     void paintEvent(QPaintEvent *) override;
+    void resizeEvent(QResizeEvent *event) override;
+
+private:
+    void updateTitlePosition();
 
 private:
     QHBoxLayout *layoutIntern = nullptr;
