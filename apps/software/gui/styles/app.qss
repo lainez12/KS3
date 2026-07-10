@@ -171,7 +171,7 @@ QFrame#navBtnIconCircle {
     color: @white;
 }
 
-.button-blue-disabled
+.button-blue:disabled
 {
     border: 2px solid @blue-light;
     background-color: @white;

@@ -80,7 +80,7 @@
         <string>clearradius</string>
        </property>
        <property name="class" stdset="0">
-        <string>button-blue-disabled</string>
+        <string>button-blue</string>
        </property>
       </widget>
      </item>
@@ -111,7 +111,7 @@
         <string>clearradius</string>
        </property>
        <property name="class" stdset="0">
-        <string>button-blue-disabled</string>
+        <string>button-blue</string>
        </property>
       </widget>
      </item>
@@ -160,7 +160,7 @@
         <string>clearradius</string>
        </property>
        <property name="class" stdset="0">
-        <string>button-blue-disabled</string>
+        <string>button-blue</string>
        </property>
       </widget>
      </item>
@@ -330,7 +330,7 @@
         <string>clearradius</string>
        </property>
        <property name="class" stdset="0">
-        <string>button-blue-disabled</string>
+        <string>button-blue</string>
        </property>
       </widget>
      </item>
@@ -605,7 +605,7 @@
         <string>clearradius</string>
        </property>
        <property name="class" stdset="0">
-        <string>button-blue-disabled</string>
+        <string>button-blue</string>
        </property>
       </widget>
      </item>
@@ -738,7 +738,7 @@
         <string>clearradius</string>
        </property>
        <property name="class" stdset="0">
-        <string>button-blue-disabled</string>
+        <string>button-blue</string>
        </property>
       </widget>
      </item>
@@ -1237,7 +1237,7 @@
         <string>clearradius</string>
        </property>
        <property name="class" stdset="0">
-        <string>button-blue-disabled</string>
+        <string>button-blue</string>
        </property>
       </widget>
      </item>
@@ -2366,7 +2366,7 @@
         <string>clearradius</string>
        </property>
        <property name="class" stdset="0">
-        <string>button-blue-disabled</string>
+        <string>button-blue</string>
        </property>
       </widget>
      </item>
@@ -2691,7 +2691,7 @@
         <string>clearradius</string>
        </property>
        <property name="class" stdset="0">
-        <string>button-blue-disabled</string>
+        <string>button-blue</string>
        </property>
       </widget>
      </item>
@@ -2760,7 +2760,7 @@
         <string>clearradius</string>
        </property>
        <property name="class" stdset="0">
-        <string>button-blue-disabled</string>
+        <string>button-blue</string>
        </property>
       </widget>
      </item>
@@ -2842,7 +2842,7 @@
         <string>clearradius</string>
        </property>
        <property name="class" stdset="0">
-        <string>button-blue-disabled</string>
+        <string>button-blue</string>
        </property>
       </widget>
      </item>
