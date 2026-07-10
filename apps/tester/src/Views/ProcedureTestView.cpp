@@ -27,23 +27,19 @@ namespace Kub3::Tools::Tester
                                          const Config::hardware_config_t &hwConf,
                                          QWidget *parent) :
         UI::Views::ViewBase(viewModel, parent),
+        UI::Views::PadReceiverViewTrait(this),
         ui(std::make_unique<Ui::ProcedureTestView>()),
         m_procedureViewModel(std::move(viewModel))
     {
         ui->setupUi(this);
         this->setFocusPolicy(Qt::StrongFocus);
 
-        initializeSensorMaps();
         loadConfigValues(hwConf);
+        initializeSensorMaps();
         setupButtonBindings();
         setupViewModelBindings();
+        setupPadInputsCallbacks();
         setupRealtimeCurves();
-
-        // Setup Application-wide Keyboard Filter mapped to this view
-        auto *keyboardFilter = new UI::Views::KeyboardFilter(this, this);
-        connect(keyboardFilter, &UI::Views::KeyboardFilter::keyPressed, this, &ProcedureTestView::handleKeyPressed);
-        connect(keyboardFilter, &UI::Views::KeyboardFilter::keyHeld, this, &ProcedureTestView::handleKeyHeld);
-        connect(keyboardFilter, &UI::Views::KeyboardFilter::keyReleased, this, &ProcedureTestView::handleKeyReleased);
     }
 
     ProcedureTestView::~ProcedureTestView() = default;
@@ -208,6 +204,57 @@ namespace Kub3::Tools::Tester
         configureForcePlot(ui->pltRightForce, "measured", QColor("#CC79A7"));
     }
 
+    void ProcedureTestView::setupPadInputsCallbacks()
+    {
+        // Helper to map PadTrigger states directly to your MovementKind enum
+        auto toMovementKind = [](UI::Views::PadTrigger trigger) -> MovementKind {
+            switch (trigger)
+            {
+            case UI::Views::PadTrigger::Pressed:
+                return MovementKind::GRANULAR;
+            case UI::Views::PadTrigger::Held:
+                return MovementKind::CONTINUOUS;
+            case UI::Views::PadTrigger::Released:
+                return MovementKind::STOP;
+            }
+            return MovementKind::STOP;
+        };
+        // High-order helper to generate camera movement actions
+        auto bindCamera = [this, toMovementKind](CameraId camId, CameraDirection dir) {
+            return [this, toMovementKind, camId, dir](UI::Views::PadTrigger trigger) {
+                cameraMovement(camId, toMovementKind(trigger), dir);
+            };
+        };
+        // High-order helper to generate alignment stage actions
+        auto bindStage = [this, toMovementKind](AlignmentStageId stageId, AlignmentStageDirection dir) {
+            return [this, toMovementKind, stageId, dir](UI::Views::PadTrigger trigger) {
+                alignmentStageMovement(stageId, toMovementKind(trigger), dir);
+            };
+        };
+
+        // ==========================================
+        // LOGICAL PAD BINDINGS
+        // ==========================================
+
+        // Cameras (Left Camera)
+        link(UI::Views::PadTarget::LeftCamera, UI::Views::PadAction::Up, bindCamera(CameraId::LEFT, CameraDirection::UP));
+        link(UI::Views::PadTarget::LeftCamera, UI::Views::PadAction::Left, bindCamera(CameraId::LEFT, CameraDirection::LEFT));
+        link(UI::Views::PadTarget::LeftCamera, UI::Views::PadAction::Down, bindCamera(CameraId::LEFT, CameraDirection::DOWN));
+        link(UI::Views::PadTarget::LeftCamera, UI::Views::PadAction::Right, bindCamera(CameraId::LEFT, CameraDirection::RIGHT));
+
+        // X Alignment Stage
+        link(UI::Views::PadTarget::XStage, UI::Views::PadAction::Left, bindStage(AlignmentStageId::X, AlignmentStageDirection::X_LEFT));
+        link(UI::Views::PadTarget::XStage, UI::Views::PadAction::Right, bindStage(AlignmentStageId::X, AlignmentStageDirection::X_RIGHT));
+
+        // Y Alignment Stage
+        link(UI::Views::PadTarget::YStage, UI::Views::PadAction::Front, bindStage(AlignmentStageId::Y, AlignmentStageDirection::Y_FRONT));
+        link(UI::Views::PadTarget::YStage, UI::Views::PadAction::Back, bindStage(AlignmentStageId::Y, AlignmentStageDirection::Y_BACK));
+
+        // Theta Alignment Stage
+        link(UI::Views::PadTarget::ThetaStage, UI::Views::PadAction::CW, bindStage(AlignmentStageId::THETA, AlignmentStageDirection::THETA_CW));
+        link(UI::Views::PadTarget::ThetaStage, UI::Views::PadAction::CCW, bindStage(AlignmentStageId::THETA, AlignmentStageDirection::THETA_CCW));
+    }
+
     void ProcedureTestView::loadConfigValues(const Config::hardware_config_t &conf)
     {
         for (auto motorConf : conf.motors)
@@ -318,106 +365,6 @@ namespace Kub3::Tools::Tester
     void ProcedureTestView::alignmentStageMovement(AlignmentStageId stageId, MovementKind kind, AlignmentStageDirection dir)
     {
         m_procedureViewModel->uiRequestAlignmentStageMovement(stageId, kind, dir);
-    }
-
-    Optional<Pair<CameraId, CameraDirection>> ProcedureTestView::mapKeyEvtToCameraCmd(Qt::Key keyCode) const
-    {
-        switch (keyCode)
-        {
-        // Left Camera
-        case Qt::Key::Key_A:
-            return std::make_pair(CameraId::LEFT, CameraDirection::UP);
-        case Qt::Key::Key_K:
-            return std::make_pair(CameraId::LEFT, CameraDirection::LEFT);
-        case Qt::Key::Key_B:
-            return std::make_pair(CameraId::LEFT, CameraDirection::DOWN);
-        case Qt::Key::Key_J:
-            return std::make_pair(CameraId::LEFT, CameraDirection::RIGHT);
-
-        // Right Camera
-        case Qt::Key::Key_H:
-            return std::make_pair(CameraId::RIGHT, CameraDirection::UP);
-        case Qt::Key::Key_N:
-            return std::make_pair(CameraId::RIGHT, CameraDirection::LEFT);
-        case Qt::Key::Key_Z:
-            return std::make_pair(CameraId::RIGHT, CameraDirection::DOWN);
-        case Qt::Key::Key_O:
-            return std::make_pair(CameraId::RIGHT, CameraDirection::RIGHT);
-
-        default:
-            return std::nullopt;
-        }
-    }
-
-    Optional<Pair<AlignmentStageId, AlignmentStageDirection>>
-    ProcedureTestView::mapKeyEvtToAlignmentStageCmd(Qt::Key keyCode) const
-    {
-        switch (keyCode)
-        {
-        // X Stage
-        case Qt::Key::Key_L:
-            return std::make_pair(AlignmentStageId::X, AlignmentStageDirection::X_LEFT);
-        case Qt::Key::Key_Semicolon:
-            return std::make_pair(AlignmentStageId::X, AlignmentStageDirection::X_RIGHT);
-
-        // Y Stage
-        case Qt::Key::Key_T:
-            return std::make_pair(AlignmentStageId::Y, AlignmentStageDirection::Y_FRONT);
-        case Qt::Key::Key_E:
-            return std::make_pair(AlignmentStageId::Y, AlignmentStageDirection::Y_BACK);
-
-        // Theta Stage
-        case Qt::Key::Key_F:
-            return std::make_pair(AlignmentStageId::THETA, AlignmentStageDirection::THETA_CW);
-        case Qt::Key::Key_D:
-            return std::make_pair(AlignmentStageId::THETA, AlignmentStageDirection::THETA_CCW);
-
-            // TODO: implement Z elevators movement using PAD (the keys below are correct)
-            // // Z Elevators
-            // case Qt::Key::Key_U:
-            //     return std::make_pair(Z, UP);
-            // case Qt::Key::Key_S:
-            //     return std::make_pair(Z, DOWN);
-
-        default:
-            return std::nullopt;
-        }
-    }
-
-    void ProcedureTestView::handleKeyPressed(Qt::Key keyCode, Qt::KeyboardModifiers modifiers)
-    {
-        if (auto cmd = mapKeyEvtToCameraCmd(keyCode))
-        {
-            cameraMovement(cmd->first, MovementKind::GRANULAR, cmd->second);
-        }
-        else if (auto cmd = mapKeyEvtToAlignmentStageCmd(keyCode))
-        {
-            alignmentStageMovement(cmd->first, MovementKind::GRANULAR, cmd->second);
-        }
-    }
-
-    void ProcedureTestView::handleKeyHeld(Qt::Key keyCode, Qt::KeyboardModifiers modifiers)
-    {
-        if (auto cmd = mapKeyEvtToCameraCmd(keyCode))
-        {
-            cameraMovement(cmd->first, MovementKind::CONTINUOUS, cmd->second);
-        }
-        else if (auto cmd = mapKeyEvtToAlignmentStageCmd(keyCode))
-        {
-            alignmentStageMovement(cmd->first, MovementKind::CONTINUOUS, cmd->second);
-        }
-    }
-
-    void ProcedureTestView::handleKeyReleased(Qt::Key keyCode, Qt::KeyboardModifiers modifiers)
-    {
-        if (auto cmd = mapKeyEvtToCameraCmd(keyCode))
-        {
-            cameraMovement(cmd->first, MovementKind::STOP, cmd->second);
-        }
-        else if (auto cmd = mapKeyEvtToAlignmentStageCmd(keyCode))
-        {
-            alignmentStageMovement(cmd->first, MovementKind::STOP, cmd->second);
-        }
     }
 
 } // namespace Kub3::Tools::Tester

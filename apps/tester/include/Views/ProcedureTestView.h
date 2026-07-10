@@ -9,6 +9,7 @@
 #include <Common/Enums.h>
 #include <Config/hardware.h>
 #include <ViewModels/ProcedureTestViewModel.h>
+#include <Views/Traits/PadReceiverViewTrait.h>
 #include <Views/ViewBase.h>
 #include <utils.h>
 
@@ -26,7 +27,7 @@ namespace Kub3::Tools::Tester
      * Binds tightly to the `ProcedureTestViewModel` and captures keyboard events to
      * actuate hardware cameras manually.
      */
-    class ProcedureTestView final : public UI::Views::ViewBase
+    class ProcedureTestView final : public UI::Views::ViewBase, public UI::Views::PadReceiverViewTrait
     {
         Q_OBJECT
 
@@ -52,21 +53,15 @@ namespace Kub3::Tools::Tester
         void integerSensorUpdate(const QString &sensorId, int32_t value);
         void uint16SensorUpdate(const QString &sensorId, uint16_t value);
 
-        // Keyboard event handlers
-        void handleKeyPressed(Qt::Key keyCode, Qt::KeyboardModifiers modifiers);
-        void handleKeyHeld(Qt::Key keyCode, Qt::KeyboardModifiers modifiers);
-        void handleKeyReleased(Qt::Key keyCode, Qt::KeyboardModifiers modifiers);
-
     private:
         // Initialization helpers to keep the constructor clean
         void initializeSensorMaps();
         void setupButtonBindings();
         void setupViewModelBindings();
         void setupRealtimeCurves();
+        void setupPadInputsCallbacks();
 
-        // Keyboard mapping and command helpers
-        Optional<Pair<CameraId, CameraDirection>> mapKeyEvtToCameraCmd(Qt::Key keyCode) const;
-        Optional<Pair<AlignmentStageId, AlignmentStageDirection>> mapKeyEvtToAlignmentStageCmd(Qt::Key keyCode) const;
+        // Command helpers
         void cameraMovement(CameraId camId, MovementKind kind, CameraDirection dir);
         void alignmentStageMovement(AlignmentStageId, MovementKind kind, AlignmentStageDirection dir);
 

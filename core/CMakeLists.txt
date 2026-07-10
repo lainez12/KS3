@@ -16,6 +16,7 @@ qt_add_library(Kub3Core STATIC
     src/Views/Components/CameraStreamWidget.cpp
     src/Views/Components/DoubleRatioSlider.cpp
     src/Views/Components/KeyboardFilter.cpp
+    src/Views/Traits/PadReceiverViewTrait.cpp
     src/ViewModels/BaseViewModel.cpp
     src/ViewModels/BaseVisionViewModel.cpp
     src/MFSM/MasterFSM.actions.cpp
@@ -93,6 +94,7 @@ qt_add_library(Kub3Core STATIC
     include/Views/Components/CameraStreamWidget.h
     include/Views/Components/DoubleRatioSlider.h
     include/Views/Components/KeyboardFilter.h
+    include/Views/Traits/PadReceiverViewTrait.h
     include/ViewModels/BaseViewModel.h
     include/ViewModels/BaseVisionViewModel.h
     include/MFSM/events.h
