@@ -16,24 +16,6 @@ MainWindow::MainWindow(QWidget *parent) :
     m_topBar           = ui->upBar;
     m_topBar->hide();
 
-    // Ensure stackedWidget takes all available space and bottomBar stays at bottom
-    QWidget *centralWidget = this->centralWidget();
-    if (centralWidget)
-    {
-        QVBoxLayout *centralLayout = qobject_cast<QVBoxLayout *>(centralWidget->layout());
-        if (centralLayout)
-        {
-            // Find the index of the bottomBar in the layout
-            int bottomBarIndex = centralLayout->indexOf(ui->bottomBar);
-            if (bottomBarIndex > 0)
-            {
-                // Insert a vertical spacer before the bottomBar to push it to the bottom
-                centralLayout->insertStretch(bottomBarIndex, 1);
-                centralLayout->insertStretch(bottomBarIndex, 1);
-            }
-        }
-    }
-
     QHBoxLayout *mainLayout = qobject_cast<QHBoxLayout *>(ui->bottomBar->layout());
     if (mainLayout)
     {
@@ -295,5 +277,6 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 
     // 2. Perform geometry and layout calculations
     int margin = this->width() * 0.05;                       // 5% margin on the left and right
+    ui->bottomBar->setFixedHeight(121);
     ui->bottomBar->setContentsMargins(margin, 0, margin, 0); // Apply the margin to the bottom bar
 }
