@@ -40,6 +40,9 @@ namespace Kub3::Components
         QDoubleSpinBox *m_leftCamYHomePos  = nullptr;
         QDoubleSpinBox *m_rightCamXHomePos = nullptr;
         QDoubleSpinBox *m_rightCamYHomePos = nullptr;
+        // Virtual Limits
+        QDoubleSpinBox *m_leftCamXVirtualLimitPosMm  = nullptr;
+        QDoubleSpinBox *m_rightCamXVirtualLimitPosMm = nullptr;
 
         // Left Focal Configuration
         QSpinBox *m_leftFocalMin     = nullptr;

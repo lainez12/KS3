@@ -174,6 +174,9 @@ namespace Kub3::Config
             settings.setValue(CONF_PROCESS_LEFT_CAM_Y_HOME_POS_MM, config.vision.left_cam_y_home_pos_mm);
             settings.setValue(CONF_PROCESS_RIGHT_CAM_X_HOME_POS_MM, config.vision.right_cam_x_home_pos_mm);
             settings.setValue(CONF_PROCESS_RIGHT_CAM_Y_HOME_POS_MM, config.vision.right_cam_y_home_pos_mm);
+            // Cameras' virtual limits
+            settings.setValue(CONF_PROCESS_LEFT_CAM_X_VIRTUAL_LIMIT_POS_MM, config.vision.left_cam_x_virtual_limit_mm);
+            settings.setValue(CONF_PROCESS_RIGHT_CAM_X_VIRTUAL_LIMIT_POS_MM, config.vision.right_cam_x_virtual_limit_mm);
             // --- Focals
             {
                 settings.beginGroup(CONF_PROCESS_LEFT_FOCAL);
