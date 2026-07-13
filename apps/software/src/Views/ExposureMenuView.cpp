@@ -36,7 +36,7 @@ void ExposureMenuView::configTitleBar()
         .viewTitle      = "Exposure Menu",
         .textColor      = QColor("#FFF"),
         .bgColor        = QColor(BLUE_COLOR),
-        .iconPath       = ":/icons/redo.svg",
+        .iconPath       = "",
         .sectionTitle   = "Load",
         .showTitleBar   = true,
         .m_showLeftLogo = true,

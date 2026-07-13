@@ -31,6 +31,8 @@ SettingsView::SettingsView(Unique<SettingsViewModel> viewModel, QWidget *parent)
     ui->updateSoftBtn->setSize(BUTTONS_SIZE);
     ui->machineSettingsBtn->setup("Machine Status", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/select-all.svg", font);
     ui->machineSettingsBtn->setSize(BUTTONS_SIZE);
+    ui->adminBtn->setup("Admin", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/admin.svg", font);
+    ui->adminBtn->setSize(BUTTONS_SIZE);
 
     connect(ui->aboutBtn, &NavButton::clicked, this, [this]() { emit s_openView(Kub3::UI::ViewId::SETTINGS_ABOUT_VIEW); });
     connect(ui->temperatureBtn, &NavButton::clicked, this, [this]() { emit s_openView(Kub3::UI::ViewId::SETTINGS_TEMPERATURE_VIEW); });
@@ -47,7 +49,6 @@ SettingsView::~SettingsView()
 void SettingsView::resizeEvent(QResizeEvent *ev)
 {
     QWidget::resizeEvent(ev);
-    ui->buttonsLayout->setSpacing(this->width() * 0.03); // 7% of window width
 }
 
 void SettingsView::createNavButtonsConfigs()
@@ -62,7 +63,7 @@ void SettingsView::createNavButtonsConfigs()
 void SettingsView::configTitleBar()
 {
     setTitleBar(TitleBarConfig{
-        .viewTitle      = "Parameters",
+        .viewTitle      = "Settings",
         .textColor      = QColor("#FFF"),
         .bgColor        = QColor(BLUE_COLOR),
         .iconPath       = ":/icons/admin-circle.svg",
