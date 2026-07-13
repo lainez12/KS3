@@ -23,6 +23,10 @@ MainWindow::MainWindow(QWidget *parent) :
         m_bottomBarCenter = new QHBoxLayout();
         m_bottomBarRight  = new QHBoxLayout();
 
+        m_bottomBarLeft->setSpacing(25);
+        m_bottomBarCenter->setSpacing(30);
+        m_bottomBarRight->setSpacing(25);
+
         mainLayout->addLayout(m_bottomBarLeft);
         mainLayout->addStretch();
         mainLayout->addLayout(m_bottomBarCenter);

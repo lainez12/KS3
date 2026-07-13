@@ -278,7 +278,7 @@ void VisualisationView::setNewNavButtonsConfigs()
     NavButtonConfig speedMotorSubst("Subst. Speed", QColor(BLUE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/speed-motor-subst.svg", "U", std::bind(&VisualisationView::onSpeedMotorSubstButtonClicked, this, std::placeholders::_1));
     addNavButton("center", speedMotorSubst);
 
-    NavButtonConfig switchVacumAir("Switch Vacum - Air.", QColor(BLUE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/vac_air_switch.svg", "M", std::bind(&VisualisationView::onSwitchVacumAirButtonClicked, this, std::placeholders::_1));
+    NavButtonConfig switchVacumAir("Vacum - Air.", QColor(BLUE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/vac_air_switch.svg", "M", std::bind(&VisualisationView::onSwitchVacumAirButtonClicked, this, std::placeholders::_1));
     addNavButton("center", switchVacumAir);
 
     NavButtonConfig visualMark("Visual Mark", QColor(BLUE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/visual-mark.svg", "I", std::bind(&VisualisationView::onVisualMarkButtonClicked, this, std::placeholders::_1));
