@@ -5,12 +5,19 @@
 #define ID_BTN_SETTINGS "S"
 #define ID_BTN_OPEN     "O"
 #define ID_BTN_CLOSE    "C"
+#define BUTTONS_SIZE    300
 
 HomeEightView::HomeEightView(Unique<HomeViewModel> viewModel, QWidget *parent) :
     ViewBase(std::move(viewModel), parent),
     ui(new Ui::HomeEightView)
 {
     ui->setupUi(this);
+
+    QFont font("Arial", 22, QFont::Bold);
+    ui->maskBtn->setup("EJECT", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/insert.svg", font);
+    ui->maskBtn->setSize(BUTTONS_SIZE);
+    ui->waferBtn->setup("EJECT", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/insert.svg", font);
+    ui->waferBtn->setSize(BUTTONS_SIZE);
 
     createNavButtonsConfigs();
     m_showCentralLogo = true;

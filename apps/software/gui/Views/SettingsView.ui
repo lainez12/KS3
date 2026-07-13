@@ -25,34 +25,20 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <layout class="QGridLayout" name="gridLayout">
+     <property name="leftMargin">
+      <number>100</number>
+     </property>
      <property name="topMargin">
-      <number>20</number>
+      <number>40</number>
+     </property>
+     <property name="rightMargin">
+      <number>100</number>
      </property>
      <property name="bottomMargin">
-      <number>20</number>
+      <number>40</number>
      </property>
-     <item row="0" column="2">
-      <widget class="NavButton" name="opeTimesBtn" native="true">
-       <property name="minimumSize">
-        <size>
-         <width>20</width>
-         <height>20</height>
-        </size>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="0">
-      <widget class="NavButton" name="aboutBtn" native="true">
-       <property name="minimumSize">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="0">
-      <widget class="NavButton" name="machineSettingsBtn" native="true">
+     <item row="1" column="1">
+      <widget class="NavButton" name="ledTestBtn" native="true">
        <property name="minimumSize">
         <size>
          <width>20</width>
@@ -71,18 +57,8 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
-      <widget class="NavButton" name="screenshootBtn" native="true">
-       <property name="minimumSize">
-        <size>
-         <width>20</width>
-         <height>20</height>
-        </size>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="NavButton" name="ledTestBtn" native="true">
+     <item row="0" column="2">
+      <widget class="NavButton" name="opeTimesBtn" native="true">
        <property name="minimumSize">
         <size>
          <width>20</width>
@@ -101,8 +77,38 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="1">
+     <item row="0" column="0">
+      <widget class="NavButton" name="aboutBtn" native="true">
+       <property name="minimumSize">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="NavButton" name="screenshootBtn" native="true">
+       <property name="minimumSize">
+        <size>
+         <width>20</width>
+         <height>20</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="3">
       <widget class="NavButton" name="adminBtn" native="true"/>
+     </item>
+     <item row="0" column="3">
+      <widget class="NavButton" name="machineSettingsBtn" native="true">
+       <property name="minimumSize">
+        <size>
+         <width>20</width>
+         <height>20</height>
+        </size>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
