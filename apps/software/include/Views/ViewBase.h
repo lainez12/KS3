@@ -182,7 +182,7 @@ namespace Kub3::UI::Views
         bool m_shadowedBoxStyle = true;
         NavButtonManager m_buttonManager;
         Unique<MessageOverlay> m_messages   = std::make_unique<MessageOverlay>(this);
-        Unique<PopUpMessage> m_PopUpMessage = std::make_unique<PopUpMessage>(this);
+        Unique<PopUpMessage> m_popUpMessage = std::make_unique<PopUpMessage>(this);
 
     private:
         virtual void createNavButtonsConfigs() = 0;

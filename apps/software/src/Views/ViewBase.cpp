@@ -54,10 +54,10 @@ namespace Kub3::UI::Views
 
     void ViewBase::showPopUpMessage(const QString &title, const QString &message, const QVector<PopUpMessage::ButtonConfig> &buttons)
     {
-        m_PopUpMessage->setTitleText(title);
-        m_PopUpMessage->setMessageText(message);
-        m_PopUpMessage->setButtons(buttons);
-        m_PopUpMessage->showMessage();
+        m_popUpMessage->setTitleText(title);
+        m_popUpMessage->setMessageText(message);
+        m_popUpMessage->setButtons(buttons);
+        m_popUpMessage->showMessage();
     }
 
 } // namespace Kub3::UI::Views

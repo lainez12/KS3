@@ -237,7 +237,7 @@ void VisualisationView::updateOverlayPositions()
     // Absolute position the Hard Force Contact Form to bottom center as well
     m_hardForceContactForm->setGeometry(
         (w - m_hardForceContactForm->width()) / 2,
-        h - m_hardForceContactForm->height() + (ui->camAndMaskDistContainer->height() / 4), //
+        h - m_hardForceContactForm->height() + (ui->camAndMaskDistContainer->height() / 4),
         centralW,
         m_hardForceContactForm->height());
 }
