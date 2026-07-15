@@ -1,6 +1,9 @@
 // KeyboardConnections.cpp
 #include <QApplication>
+#include <QDebug>
+#include <QDoubleSpinBox>
 #include <QLineEdit>
+#include <QPushButton>
 #include <QSpinBox>
 
 #include <Views/KeyboardConnections.h>
@@ -16,13 +19,17 @@ namespace Kub3::UI::Views
     void KeyboardConnections::simulationKey(Qt::Key keyCode, const QString &text)
     {
         QWidget *focusedWidget = QApplication::focusWidget();
-        if (focusedWidget)
+        if (focusedWidget && (qobject_cast<QLineEdit *>(focusedWidget) || qobject_cast<QSpinBox *>(focusedWidget) || qobject_cast<QDoubleSpinBox *>(focusedWidget)))
         {
             QKeyEvent *keyPress = new QKeyEvent(QEvent::KeyPress, keyCode, Qt::NoModifier, text);
             QApplication::postEvent(focusedWidget, keyPress);
 
             QKeyEvent *keyRelease = new QKeyEvent(QEvent::KeyRelease, keyCode, Qt::NoModifier, text);
             QApplication::postEvent(focusedWidget, keyRelease);
+        }
+        else
+        {
+            qDebug() << "No focused widget or focused widget is not a QLineEdit, QSpinBox, or QDoubleSpinBox.";
         }
     }
 
