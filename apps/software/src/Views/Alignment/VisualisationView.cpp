@@ -237,8 +237,8 @@ void VisualisationView::updateOverlayPositions()
     // Absolute position the Hard Force Contact Form to bottom center as well
     m_hardForceContactForm->setGeometry(
         (w - m_hardForceContactForm->width()) / 2,
-        h - m_hardForceContactForm->height(),
-        m_hardForceContactForm->width(),
+        h - m_hardForceContactForm->height() + (ui->camAndMaskDistContainer->height() / 4),
+        centralW,
         m_hardForceContactForm->height());
 }
 
@@ -278,17 +278,11 @@ void VisualisationView::setNewNavButtonsConfigs()
     NavButtonConfig speedMotorSubst("Subst. Speed", QColor(BLUE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/speed-motor-subst.svg", "U", std::bind(&VisualisationView::onSpeedMotorSubstButtonClicked, this, std::placeholders::_1));
     addNavButton("center", speedMotorSubst);
 
-    NavButtonConfig maskingDistance("Masking dist.", QColor(BLUE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/masking-distance.svg", "M", std::bind(&VisualisationView::onMaskingDistanceButtonClicked, this, std::placeholders::_1));
-    addNavButton("center", maskingDistance);
-
-    NavButtonConfig antiCollision("Anti-Collision cam.", QColor(BLUE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/anti-collision.svg", "A", std::bind(&VisualisationView::onAntiCollisionButtonClicked, this, std::placeholders::_1));
-    addNavButton("center", antiCollision);
+    NavButtonConfig switchVacumAir("Vacum - Air.", QColor(BLUE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/vac_air_switch.svg", "M", std::bind(&VisualisationView::onSwitchVacumAirButtonClicked, this, std::placeholders::_1));
+    addNavButton("center", switchVacumAir);
 
     NavButtonConfig visualMark("Visual Mark", QColor(BLUE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/visual-mark.svg", "I", std::bind(&VisualisationView::onVisualMarkButtonClicked, this, std::placeholders::_1));
     addNavButton("center", visualMark);
-
-    NavButtonConfig measurement("Measurement", ":/icons/measurement.svg", "R", std::bind(&VisualisationView::onMeasurementButtonClicked, this, std::placeholders::_1));
-    addNavButton("center", measurement);
 }
 
 void VisualisationView::leftCamConfigToggled(bool checked)
@@ -356,14 +350,13 @@ void VisualisationView::onHardForceContButtonClicked(const QString &buttonId)
     }
 
     // Toggle between the map container and the hard force form
-    ui->camAndMaskDistContainer->setVisible(isHardForceContactFormVisible);
     m_hardForceContactForm->setVisible(!isHardForceContactFormVisible);
 
     switchColorNavButton(buttonId, isHardForceContactFormVisible);
 }
 
 void VisualisationView::onSpeedMotorSubstButtonClicked(const QString &buttonId) {}
-void VisualisationView::onMaskingDistanceButtonClicked(const QString &buttonId) {}
+void VisualisationView::onSwitchVacumAirButtonClicked(const QString &buttonId) {}
 void VisualisationView::onAntiCollisionButtonClicked(const QString &buttonId) {}
 
 void VisualisationView::onVisualMarkButtonClicked(const QString &buttonId)
@@ -383,7 +376,6 @@ void VisualisationView::closeHardForceContactFormIfNeeded(void)
 {
     if (m_hardForceContactForm->isVisible())
     {
-        ui->camAndMaskDistContainer->setVisible(true);
         m_hardForceContactForm->setVisible(false);
         switchColorNavButton("F", true);
     }

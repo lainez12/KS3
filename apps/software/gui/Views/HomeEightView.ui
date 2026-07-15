@@ -64,71 +64,146 @@ background-color: rgb(255, 255, 255);
    <property name="verticalSpacing">
     <number>10</number>
    </property>
-   <item row="3" column="3">
-    <widget class="QLabel" name="mainSubmenuTitle">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>60</height>
-      </size>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>16</pointsize>
-       <italic>false</italic>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">border-left: none; border-right: none;</string>
-     </property>
+   <item row="1" column="0" colspan="3">
+    <widget class="QLabel" name="mainTitle">
      <property name="text">
-      <string>MENU</string>
+      <string>UV-KUB 3  8&quot;</string>
      </property>
      <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignCenter</set>
+      <set>Qt::AlignmentFlag::AlignHCenter|Qt::AlignmentFlag::AlignTop</set>
      </property>
-     <property name="styleClass" stdset="0">
-      <string>band</string>
+     <property name="textClass" stdset="0">
+      <string>normtitle</string>
      </property>
     </widget>
    </item>
-   <item row="3" column="2">
-    <widget class="QLabel" name="waferLoaderSubmenuTitle">
-     <property name="minimumSize">
+   <item row="5" column="0" colspan="3">
+    <widget class="QWidget" name="widget" native="true">
+     <property name="maximumSize">
       <size>
-       <width>0</width>
-       <height>60</height>
+       <width>16777215</width>
+       <height>800</height>
       </size>
      </property>
-     <property name="font">
-      <font>
-       <pointsize>16</pointsize>
-       <italic>false</italic>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">border-left: none;</string>
-     </property>
-     <property name="text">
-      <string>WAFER LOADER</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignCenter</set>
-     </property>
-     <property name="styleClass" stdset="0">
-      <string>band</string>
-     </property>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <property name="leftMargin">
+       <number>48</number>
+      </property>
+      <property name="topMargin">
+       <number>24</number>
+      </property>
+      <property name="rightMargin">
+       <number>48</number>
+      </property>
+      <property name="horizontalSpacing">
+       <number>96</number>
+      </property>
+      <property name="verticalSpacing">
+       <number>48</number>
+      </property>
+      <item row="1" column="1">
+       <widget class="QPushButton" name="mainSubmenuStandByBtn">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>100</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>140</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string>STANDBY MODE</string>
+        </property>
+        <property name="styleClass" stdset="0">
+         <string>clearradius</string>
+        </property>
+        <property name="class" stdset="0">
+         <string>text-large color-white button-fat border-radius-25 bg-blue-kloe</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0" rowspan="3">
+       <widget class="NavButton" name="maskBtn" native="true"/>
+      </item>
+      <item row="2" column="1">
+       <widget class="QPushButton" name="pushButton_Initialisation">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>100</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>140</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>INITIALISATION</string>
+        </property>
+        <property name="styleClass" stdset="0">
+         <string>clearradius</string>
+        </property>
+        <property name="class" stdset="0">
+         <string>text-large color-white button-fat border-radius-25 bg-orange</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QPushButton" name="mainSubmenuExposureBtn">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>100</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>140</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string>EXPOSURE MENU</string>
+        </property>
+        <property name="styleClass" stdset="0">
+         <string>clearradius</string>
+        </property>
+        <property name="class" stdset="0">
+         <string>text-large color-white button-fat border-radius-25 bg-blue-kloe</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2" rowspan="3">
+       <widget class="NavButton" name="waferBtn" native="true"/>
+      </item>
+     </layout>
     </widget>
    </item>
-   <item row="3" column="1">
+   <item row="4" column="0">
     <widget class="QLabel" name="maskLoaderSubmenuTitle">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
@@ -161,66 +236,12 @@ background-color: rgb(255, 255, 255);
      <property name="styleClass" stdset="0">
       <string>band</string>
      </property>
-    </widget>
-   </item>
-   <item row="3" column="0">
-    <widget class="QWidget" name="widget_3" native="true">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>128</width>
-       <height>800</height>
-      </size>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">border-left: none; border-right: none;</string>
-     </property>
-     <property name="styleClass" stdset="0">
-      <string>band</string>
+     <property name="class" stdset="0">
+      <string>text-extra-large color-white bg-blue-kloe</string>
      </property>
     </widget>
    </item>
-   <item row="3" column="4">
-    <widget class="QWidget" name="widget_4" native="true">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>128</width>
-       <height>800</height>
-      </size>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">border-left: none; border-right: none;</string>
-     </property>
-     <property name="styleClass" stdset="0">
-      <string>band</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1" colspan="3">
-    <widget class="QLabel" name="mainTitle">
-     <property name="text">
-      <string>UV-KUB 3  8&quot;</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignHCenter|Qt::AlignmentFlag::AlignTop</set>
-     </property>
-     <property name="textClass" stdset="0">
-      <string>normtitle</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="2">
+   <item row="0" column="1">
     <spacer name="verticalSpacer_3">
      <property name="orientation">
       <enum>Qt::Orientation::Vertical</enum>
@@ -236,243 +257,86 @@ background-color: rgb(255, 255, 255);
      </property>
     </spacer>
    </item>
-   <item row="4" column="1" colspan="3">
-    <widget class="QWidget" name="widget" native="true">
-     <property name="maximumSize">
+   <item row="4" column="1">
+    <widget class="QLabel" name="mainSubmenuTitle">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
       <size>
-       <width>16777215</width>
-       <height>800</height>
+       <width>0</width>
+       <height>60</height>
       </size>
      </property>
-     <layout class="QGridLayout" name="gridLayout_2">
-      <property name="leftMargin">
-       <number>48</number>
-      </property>
-      <property name="topMargin">
-       <number>24</number>
-      </property>
-      <property name="rightMargin">
-       <number>48</number>
-      </property>
-      <property name="horizontalSpacing">
-       <number>96</number>
-      </property>
-      <property name="verticalSpacing">
-       <number>48</number>
-      </property>
-      <item row="0" column="2">
-       <widget class="QPushButton" name="mainSubmenuExposureBtn">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>120</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>800</height>
-         </size>
-        </property>
-        <property name="styleSheet">
-         <string notr="true"/>
-        </property>
-        <property name="text">
-         <string>EXPOSURE MENU</string>
-        </property>
-        <property name="styleClass" stdset="0">
-         <string>clearradius</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QPushButton" name="maskLoaderSubmenuCloseBtn">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>120</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>800</height>
-         </size>
-        </property>
-        <property name="styleSheet">
-         <string notr="true"/>
-        </property>
-        <property name="text">
-         <string>CLOSE</string>
-        </property>
-        <property name="styleClass" stdset="0">
-         <string>clearradius</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QPushButton" name="waferLoaderSubmenuOpenBtn">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>120</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>800</height>
-         </size>
-        </property>
-        <property name="styleSheet">
-         <string notr="true"/>
-        </property>
-        <property name="text">
-         <string>OPEN</string>
-        </property>
-        <property name="styleClass" stdset="0">
-         <string>clearradius</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <widget class="QPushButton" name="mainSubmenuStandByBtn">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>120</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>800</height>
-         </size>
-        </property>
-        <property name="styleSheet">
-         <string notr="true"/>
-        </property>
-        <property name="text">
-         <string>STANDBY MODE</string>
-        </property>
-        <property name="styleClass" stdset="0">
-         <string>clearradius</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QPushButton" name="waferLoaderSubmenuCloseBtn">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>120</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>800</height>
-         </size>
-        </property>
-        <property name="styleSheet">
-         <string notr="true"/>
-        </property>
-        <property name="text">
-         <string>CLOSE</string>
-        </property>
-        <property name="styleClass" stdset="0">
-         <string>clearradius</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QPushButton" name="maskLoaderSubmenuOpenBtn">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>120</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>800</height>
-         </size>
-        </property>
-        <property name="styleSheet">
-         <string notr="true"/>
-        </property>
-        <property name="text">
-         <string>OPEN</string>
-        </property>
-        <property name="styleClass" stdset="0">
-         <string>clearradius</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="2">
-       <widget class="QPushButton" name="pushButton_Initialisation">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>120</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>800</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>INITIALISATION</string>
-        </property>
-        <property name="styleClass" stdset="0">
-         <string>clearradius</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
+     <property name="font">
+      <font>
+       <pointsize>16</pointsize>
+       <italic>false</italic>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-left: none; border-right: none;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignCenter</set>
+     </property>
+     <property name="styleClass" stdset="0">
+      <string>band</string>
+     </property>
+     <property name="class" stdset="0">
+      <string>text-extra-large color-white bg-blue-kloe</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="2">
+    <widget class="QLabel" name="waferLoaderSubmenuTitle">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>60</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>16</pointsize>
+       <italic>false</italic>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-left: none;</string>
+     </property>
+     <property name="text">
+      <string>WAFER LOADER</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignCenter</set>
+     </property>
+     <property name="styleClass" stdset="0">
+      <string>band</string>
+     </property>
+     <property name="class" stdset="0">
+      <string>text-extra-large color-white bg-blue-kloe</string>
+     </property>
     </widget>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>NavButton</class>
+   <extends>QWidget</extends>
+   <header>Views/Components/NavButton.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="../resources.qrc"/>
  </resources>

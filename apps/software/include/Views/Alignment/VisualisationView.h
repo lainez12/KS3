@@ -64,7 +64,7 @@ namespace Kub3::UI::Views::ViewsAlignment
         void onScreenshotButtonClicked(const QString &buttonId);
         void onHardForceContButtonClicked(const QString &buttonId);
         void onSpeedMotorSubstButtonClicked(const QString &buttonId);
-        void onMaskingDistanceButtonClicked(const QString &buttonId);
+        void onSwitchVacumAirButtonClicked(const QString &buttonId);
         void onAntiCollisionButtonClicked(const QString &buttonId);
         void onVisualMarkButtonClicked(const QString &buttonId);
         void onMeasurementButtonClicked(const QString &buttonId);

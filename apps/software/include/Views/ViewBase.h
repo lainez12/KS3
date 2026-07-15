@@ -4,12 +4,14 @@
 #include <QHideEvent>
 #include <QShowEvent>
 #include <QString>
+#include <QVector>
 #include <QWidget>
 #include <memory>
 
 #include <ViewModels/BaseViewModel.h>
 #include <Views/Components/MessageOverlay.h>
 #include <Views/Components/NavButtonManager.h>
+#include <Views/Components/PopUpMessage.h>
 #include <utils.h>
 
 namespace Kub3::UI
@@ -64,6 +66,8 @@ namespace Kub3::UI::Views
 
     public:
         void showAnOverlayMessage(QString text);
+        void showPopUpMessage(const QString &title, const QVector<PopUpMessage::ButtonConfig> &buttons);
+        void showPopUpMessage(const QString &title, const QString &message, const QVector<PopUpMessage::ButtonConfig> &buttons);
 
         void resizeEventOverride(QResizeEvent *event)
         {
@@ -177,7 +181,8 @@ namespace Kub3::UI::Views
         bool m_showCentralLogo  = false;
         bool m_shadowedBoxStyle = true;
         NavButtonManager m_buttonManager;
-        Unique<MessageOverlay> m_messages = std::make_unique<MessageOverlay>(this);
+        Unique<MessageOverlay> m_messages   = std::make_unique<MessageOverlay>(this);
+        Unique<PopUpMessage> m_popUpMessage = std::make_unique<PopUpMessage>(this);
 
     private:
         virtual void createNavButtonsConfigs() = 0;

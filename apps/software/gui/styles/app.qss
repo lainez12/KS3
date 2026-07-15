@@ -1,10 +1,15 @@
 /* 
 Definitions colors 
-@blue: #0072ba; 
+@blue: #0072ba;
+@blue-kloe: #0070DB;
+@blue-dark: #0E00DB;
+@blue-light: #B2D4F4;
 @orange: #e85420;
 @lightGray: #f0f0f0;
+@violet: #7D20E8;
 @darkGray: #333333;
 @white: #ffffff;
+@turquoise: #00BCD1;
 @primary-color: #3498db;
 
 
@@ -25,6 +30,12 @@ QMainWindow {
 
 QWidget#HomeView, QWidget#MachineStatusView {
     background: transparent;
+}
+
+.positions-machine-status-text {
+    font-family: @artTtnorm;
+    font-size: 20px;
+    font-weight: 700;
 }
 
 QMainWindow QWidget#kloeLogo QLabel {
@@ -71,50 +82,303 @@ QLabel {
 QFrame#navBtnIconCircle {
     background-color: rgb(0, 114, 186);
 }
-/* 
-#upBar
-{
-    background-color: @blue;
-    border: none;
-    min-height: 96px;
-    max-height: 96px;
+
+.color-blue {
+    color: @blue;
 }
 
-QLabel#viewTitle
-{
+.color-orange {
+    color: @orange;
+}
+
+.bg-orange {
+    background-color: @orange;
+}
+
+.bg-violet {
+    background-color: @violet;
+}
+
+.bg-blue-dark {
+    background-color: @blue-dark;
+}
+
+.bg-turquoise {
+    background-color: @turquoise;
+}
+
+.color-white {
+    color: @white;
+}
+
+.bg-blue-kloe {
+    background-color: @blue-kloe;
+}
+
+.text-extra-large {
+    font-family: @artTtnorm;
+    font-size: 42px;
+    font-weight: 700;
+}
+
+.text-large {
     font-family: @artTtnorm;
     font-size: 32px;
     font-weight: 700;
-    font-style: italic;
-    color: @blue; 
 }
 
-QLabel#sectionTitle
-{
+.text-medium {
     font-family: @artTtnorm;
-    font-size: 24px;
+    font-size: 25px;
+    font-weight: 300;
+}
+
+.text-small {
+    font-family: @artTtnorm;
+    font-size: 20px;
+}
+
+.title-favorite-exposure
+{
+    font-weight: bold; 
+    text-decoration: underline; 
+    border: none;
+}
+
+.details-favorite-exposure
+{
+    font-weight: bold; 
+    border: none;
+    qproperty-alignment: 'AlignJustify';
+    qproperty-wordWrap: true;
+}
+
+.button-blue, .button-numpad
+{
+    border: 2px solid @blue;
+    background-color: @white;
+    color: @blue;
+    font: 20px;
     font-weight: 700;
-    font-style: italic;
-    color: @blue; 
+    font-family: arial;
+}
+
+.button-fat 
+{
+    border: none;
+}
+
+.button-blue:checked
+{
+    border: 2px solid @blue;
+    background-color: @blue;
+    color: @white;
+}
+
+.button-blue:disabled
+{
+    border: 2px solid @blue-light;
+    background-color: @white;
+    color: @blue-light;
+    font: 20px;
+    font-weight: 700;
+    font-family: arial;
+}
+
+.favorite-exposure-button
+{
+    border: 1px solid #75B2E5;
+    background-color: transparent;
+}
+
+.favorite-exposure-button:hover {
+    background-color: #E6F0FA;
+}
+
+.favorite-exposure-button:pressed {
+    background-color: #CCE4F7;
 }
 
 
-QCheckBox#configCamLeftCheck::indicator:unchecked {
-    image: url(:/icons/cam-settings-left.svg);
-    width: 200px;
-    height: 70px;
+.border-radius-25 {
+    border-radius: 25px;
 }
 
-QCheckBox#configCamLeftCheck::indicator:checked {
-    image: url(:/icons/cam-settings-right-checked.svg);
-    width: 30px;
-    height: 70px;
+.border-solid-2 {
+    border: 2px solid #000;
 }
 
-QCheckBox {
-    width: 30px;
-    height: 50px;
-    background-color: #e85420;
+QScrollBar::handle:vertical {
+    background-color: @blue;
+    min-height: 40px;
 }
 
-*/
+QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
+    background-color: @white;;
+}
+
+/* ===== Extracted from apps/software/gui/Views/*.ui ===== */
+
+
+/* VersionView */
+#VersionView QLabel#contactUs {
+    font: normal normal bold 25px/25px Arial;
+    letter-spacing: 0px;
+    color: #E85420;
+}
+#VersionView QLabel#software,
+#VersionView QLabel#version,
+#VersionView QLabel#date {
+    font: normal normal bold 40px/45px Arial;
+    letter-spacing: 0px;
+    color: #E85420;
+}
+#VersionView QLabel#siteWeb,
+#VersionView QLabel#infos {
+    font: normal normal bold 25px/25px Arial;
+    letter-spacing: 0px;
+    color: #0070DB;
+}
+
+/* UpdateSoftwareView */
+#UpdateSoftwareView QLabel#date {
+    font: normal normal bold 40px/45px Arial;
+    letter-spacing: 0px;
+    color: #E85420;
+}
+
+/* TemperatureView */
+#TemperatureView QLabel#date {
+    font: normal normal bold 40px/45px Arial;
+    letter-spacing: 0px;
+    color: #E85420;
+}
+
+/* ScreenshotExportView */
+#ScreenshotExportView QScrollArea#scrollArea {
+    background-color: transparent;
+}
+
+/* OperatingTimesView */
+#OperatingTimesView QLabel#label_2,
+#OperatingTimesView QLabel#date,
+#OperatingTimesView QLabel#label_3 {
+    font: normal normal bold 40px/45px Arial;
+    letter-spacing: 0px;
+    color: #E85420;
+}
+#OperatingTimesView QLabel#label,
+#OperatingTimesView QLabel#label_3 {
+    font: normal normal bold 40px/45px Arial;
+    letter-spacing: 0px;
+    color: #0070DB;
+}
+
+/* LedTestView */
+#LedTestView QLabel#date {
+    font: normal normal bold 40px/45px Arial;
+    letter-spacing: 0px;
+    color: #E85420;
+}
+
+/* HomeEightView (FormSplashScreen) */
+#HomeEightView #FormSplashScreen {
+    background-color: rgb(255, 255, 255);
+}
+#HomeEightView QLabel#mainSubmenuTitle,
+#HomeEightView QLabel#waferLoaderSubmenuTitle,
+#HomeEightView QLabel#maskLoaderSubmenuTitle,
+#HomeEightView QWidget#widget_3,
+#HomeEightView QWidget#widget_4 {
+    border-left: none;
+    border-right: none;
+}
+
+/* ExposureMenuView */
+#ExposureMenuView QTextBrowser {
+    border: 1px solid black;
+}
+#ExposureMenuView QScrollBar {
+    width: 48px;
+}
+#ExposureMenuView QPushButton {
+    padding: 0 20px;
+}
+
+/* ExposureSettingsView - numeric pad & common controls */
+#ExposureSettingsView QPushButton.numpad,
+#ExposureSettingsView QPushButton[name^="btn"] {
+    border: 2px solid #0070DB;
+    background-color: #ffffff;
+    color: #0070DB;
+    font: 20px;
+    font-weight: 700;
+    font-family: arial;
+}
+
+#ExposureSettingsView QLabel,
+#ExposureSettingsView QSpinBox {
+    font: normal normal bold 25px/29px Arial;
+    letter-spacing: 0px;
+    color: #0070DB;
+}
+#ExposureSettingsView QLabel.orange,
+#ExposureSettingsView QLabel[style*="#E85420"],
+#ExposureSettingsView QSpinBox.orange {
+    color: #E85420;
+}
+
+/* Save/Load dialogs - common button and lineedit */
+#SaveExposureSettingsView QPushButton,
+#SaveParametersView QPushButton,
+#LoadParametersView QPushButton {
+    border: 2px solid #0070DB;
+    background-color: #ffffff;
+    color: #0070DB;
+    font: 20px;
+    font-weight: 700;
+    font-family: arial;
+}
+#SaveExposureSettingsView QLineEdit,
+#SaveParametersView QLineEdit {
+    border: 1px solid #0070DB;
+}
+#SaveExposureSettingsView QScrollArea,
+#SaveParametersView QScrollArea,
+#LoadParametersView QScrollArea {
+    background-color: #fff;
+    border: 1px solid #0070DB;
+}
+
+/* ProgressExposureView */
+#ProgressExposureView QLabel.orange {
+    color: #E85420;
+}
+#ProgressExposureView QProgressBar {
+    border: 1px solid #7D20E8;
+    background-color: transparent;
+}
+#ProgressExposureView QProgressBar::chunk {
+    background-color: #7D20E8;
+}
+
+/* VisualisationView */
+#VisualisationView QCheckBox::indicator {
+    width: 0px;
+    height: 0px;
+    border: none;
+    background: none;
+}
+#VisualisationView QWidget#widget_8 {
+    background-color: #0070DB;
+    color: #fff;
+    font-size: 20px;
+}
+
+/* ContactSelectionView placeholders (class-based in UI) */
+#ContactSelectionView QPushButton[styleClass="clearradius"] {
+    /* preserved as placeholder for clearradius buttons */
+}
+
+/* End of extracted rules */
+

@@ -81,7 +81,7 @@ FavoriteExposureSettingsView::FavoriteExposureSettingsView(Unique<FavoriteExposu
 
     createNavButtonsConfigs();
     setNewNavButtonsConfigs();
-    setDefaultTitleBar("Exposure Settings");
+    setDefaultTitleBar("Exposure settings");
 
     connect(ui->newSettingsLabel, &QPushButton::clicked, this, [this]() { emit s_openView(Kub3::UI::ViewId::EXPOSURE_SETTINGS_VIEW); });
 

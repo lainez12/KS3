@@ -104,15 +104,13 @@
             <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="styleSheet">
-            <string notr="true">border: 2px solid #0070DB;
-background-color: #ffffff;
-color: #0070DB;
-font: 20px;
-font-weight: 700;
-font-family: arial;</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string>x</string>
+           </property>
+           <property name="class" stdset="0">
+            <string>button-numpad</string>
            </property>
           </widget>
          </item>
@@ -133,16 +131,11 @@ font-family: arial;</string>
            <property name="focusPolicy">
             <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
-           <property name="styleSheet">
-            <string notr="true">border: 2px solid #0070DB;
-background-color: #ffffff;
-color: #0070DB;
-font: 20px;
-font-weight: 700;
-font-family: arial;</string>
-           </property>
            <property name="text">
             <string>.</string>
+           </property>
+           <property name="class" stdset="0">
+            <string>button-numpad</string>
            </property>
           </widget>
          </item>
@@ -163,16 +156,11 @@ font-family: arial;</string>
            <property name="focusPolicy">
             <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
-           <property name="styleSheet">
-            <string notr="true">border: 2px solid #0070DB;
-background-color: #ffffff;
-color: #0070DB;
-font: 20px;
-font-weight: 700;
-font-family: arial;</string>
-           </property>
            <property name="text">
             <string>6</string>
+           </property>
+           <property name="class" stdset="0">
+            <string>button-numpad</string>
            </property>
           </widget>
          </item>
@@ -193,22 +181,12 @@ font-family: arial;</string>
            <property name="font">
             <font>
              <family>arial</family>
-             <pointsize>-1</pointsize>
              <italic>false</italic>
-             <bold>true</bold>
+             <bold>false</bold>
             </font>
            </property>
            <property name="focusPolicy">
             <enum>Qt::FocusPolicy::NoFocus</enum>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">border: 2px solid #0070DB;
-background-color: #ffffff;
-color: #0070DB;
-font: 20px;
-font-weight: 700;
-font-family: arial;
-</string>
            </property>
            <property name="text">
             <string>7</string>
@@ -235,7 +213,10 @@ font-family: arial;
             <bool>false</bool>
            </property>
            <property name="flat">
-            <bool>true</bool>
+            <bool>false</bool>
+           </property>
+           <property name="class" stdset="0">
+            <string>button-numpad</string>
            </property>
           </widget>
          </item>
@@ -256,16 +237,11 @@ font-family: arial;
            <property name="focusPolicy">
             <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
-           <property name="styleSheet">
-            <string notr="true">border: 2px solid #0070DB;
-background-color: #ffffff;
-color: #0070DB;
-font: 20px;
-font-weight: 700;
-font-family: arial;</string>
-           </property>
            <property name="text">
             <string>8</string>
+           </property>
+           <property name="class" stdset="0">
+            <string>button-numpad</string>
            </property>
           </widget>
          </item>
@@ -287,15 +263,13 @@ font-family: arial;</string>
             <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="styleSheet">
-            <string notr="true">border: 2px solid #0070DB;
-background-color: #ffffff;
-color: #0070DB;
-font: 20px;
-font-weight: 700;
-font-family: arial;</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string>1</string>
+           </property>
+           <property name="class" stdset="0">
+            <string>button-numpad</string>
            </property>
           </widget>
          </item>
@@ -316,16 +290,11 @@ font-family: arial;</string>
            <property name="focusPolicy">
             <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
-           <property name="styleSheet">
-            <string notr="true">border: 2px solid #0070DB;
-background-color: #ffffff;
-color: #0070DB;
-font: 20px;
-font-weight: 700;
-font-family: arial;</string>
-           </property>
            <property name="text">
             <string>4</string>
+           </property>
+           <property name="class" stdset="0">
+            <string>button-numpad</string>
            </property>
           </widget>
          </item>
@@ -346,16 +315,11 @@ font-family: arial;</string>
            <property name="focusPolicy">
             <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
-           <property name="styleSheet">
-            <string notr="true">border: 2px solid #0070DB;
-background-color: #ffffff;
-color: #0070DB;
-font: 20px;
-font-weight: 700;
-font-family: arial;</string>
-           </property>
            <property name="text">
             <string>5</string>
+           </property>
+           <property name="class" stdset="0">
+            <string>button-numpad</string>
            </property>
           </widget>
          </item>
@@ -379,19 +343,14 @@ font-family: arial;</string>
            <property name="focusPolicy">
             <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
-           <property name="styleSheet">
-            <string notr="true">border: 2px solid #0070DB;
-background-color: #ffffff;
-color: #0070DB;
-font: 20px;
-font-weight: 700;
-font-family: arial;</string>
-           </property>
            <property name="text">
             <string>9</string>
            </property>
            <property name="flat">
             <bool>false</bool>
+           </property>
+           <property name="class" stdset="0">
+            <string>button-numpad</string>
            </property>
           </widget>
          </item>
@@ -412,16 +371,11 @@ font-family: arial;</string>
            <property name="focusPolicy">
             <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
-           <property name="styleSheet">
-            <string notr="true">border: 2px solid #0070DB;
-background-color: #ffffff;
-color: #0070DB;
-font: 20px;
-font-weight: 700;
-font-family: arial;</string>
-           </property>
            <property name="text">
             <string>2</string>
+           </property>
+           <property name="class" stdset="0">
+            <string>button-numpad</string>
            </property>
           </widget>
          </item>
@@ -445,46 +399,42 @@ font-family: arial;</string>
            <property name="focusPolicy">
             <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
-           <property name="styleSheet">
-            <string notr="true">border: 2px solid #0070DB;
-background-color: #ffffff;
-color: #0070DB;
-font: 20px;
-font-weight: 700;
-font-family: arial;</string>
-           </property>
            <property name="text">
             <string>0</string>
+           </property>
+           <property name="class" stdset="0">
+            <string>button-numpad</string>
            </property>
           </widget>
          </item>
          <item row="2" column="3" rowspan="2">
           <widget class="QPushButton" name="btnEnter">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="minimumSize">
             <size>
              <width>70</width>
-             <height>155</height>
+             <height>255</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
              <width>120</width>
-             <height>225</height>
+             <height>255</height>
             </size>
            </property>
            <property name="focusPolicy">
             <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
-           <property name="styleSheet">
-            <string notr="true">border: 2px solid #0070DB;
-background-color: #ffffff;
-color: #0070DB;
-font: 20px;
-font-weight: 700;
-font-family: arial;</string>
-           </property>
            <property name="text">
             <string>Enter</string>
+           </property>
+           <property name="class" stdset="0">
+            <string>button-numpad</string>
            </property>
           </widget>
          </item>
@@ -505,16 +455,11 @@ font-family: arial;</string>
            <property name="focusPolicy">
             <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
-           <property name="styleSheet">
-            <string notr="true">border: 2px solid #0070DB;
-background-color: #ffffff;
-color: #0070DB;
-font: 20px;
-font-weight: 700;
-font-family: arial;</string>
-           </property>
            <property name="text">
             <string>Clear</string>
+           </property>
+           <property name="class" stdset="0">
+            <string>button-numpad</string>
            </property>
           </widget>
          </item>
@@ -535,16 +480,11 @@ font-family: arial;</string>
            <property name="focusPolicy">
             <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
-           <property name="styleSheet">
-            <string notr="true">border: 2px solid #0070DB;
-background-color: #ffffff;
-color: #0070DB;
-font: 20px;
-font-weight: 700;
-font-family: arial;</string>
-           </property>
            <property name="text">
             <string>3</string>
+           </property>
+           <property name="class" stdset="0">
+            <string>button-numpad</string>
            </property>
           </widget>
          </item>
@@ -580,6 +520,7 @@ font-family: arial;</string>
             </property>
             <property name="font">
              <font>
+              <family>Arial</family>
               <pointsize>-1</pointsize>
               <italic>false</italic>
               <bold>true</bold>
@@ -588,7 +529,7 @@ font-family: arial;</string>
             <property name="styleSheet">
              <string notr="true">background-image: &quot;&quot;;
 text-align: left;
-font: normal normal bold 19px/19px Arial;
+font: normal normal bold 20px Arial;
 letter-spacing: 0px;
 color: #E85420;
 opacity: 1;</string>
@@ -791,7 +732,7 @@ font-size: 40px;</string>
             <widget class="QLabel" name="imageFlashingMode">
              <property name="maximumSize">
               <size>
-               <width>305</width>
+               <width>380</width>
                <height>180</height>
               </size>
              </property>

@@ -16,30 +16,16 @@ MainWindow::MainWindow(QWidget *parent) :
     m_topBar           = ui->upBar;
     m_topBar->hide();
 
-    // Ensure stackedWidget takes all available space and bottomBar stays at bottom
-    QWidget *centralWidget = this->centralWidget();
-    if (centralWidget)
-    {
-        QVBoxLayout *centralLayout = qobject_cast<QVBoxLayout *>(centralWidget->layout());
-        if (centralLayout)
-        {
-            // Find the index of the bottomBar in the layout
-            int bottomBarIndex = centralLayout->indexOf(ui->bottomBar);
-            if (bottomBarIndex > 0)
-            {
-                // Insert a vertical spacer before the bottomBar to push it to the bottom
-                centralLayout->insertStretch(bottomBarIndex, 1);
-                centralLayout->insertStretch(bottomBarIndex, 1);
-            }
-        }
-    }
-
     QHBoxLayout *mainLayout = qobject_cast<QHBoxLayout *>(ui->bottomBar->layout());
     if (mainLayout)
     {
         m_bottomBarLeft   = new QHBoxLayout();
         m_bottomBarCenter = new QHBoxLayout();
         m_bottomBarRight  = new QHBoxLayout();
+
+        m_bottomBarLeft->setSpacing(25);
+        m_bottomBarCenter->setSpacing(30);
+        m_bottomBarRight->setSpacing(25);
 
         mainLayout->addLayout(m_bottomBarLeft);
         mainLayout->addStretch();
@@ -224,6 +210,7 @@ NavButton *MainWindow::createNavButton(const Kub3::UI::Views::NavButtonConfig &c
 {
     NavButton *btn = new NavButton();
     btn->setup(config.text, config.colorEnabled, config.colorDisabled, config.iconPath);
+    btn->setSize(77);
     btn->setEnabledNavButton(config.enabled);
 
     connect(btn, &NavButton::clicked,
@@ -294,6 +281,7 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     QMainWindow::resizeEvent(event); // Use QWidget::resizeEvent(event) if inheriting QWidget directly
 
     // 2. Perform geometry and layout calculations
-    int margin = this->width() * 0.05;                       // 5% margin on the left and right
+    int margin = this->width() * 0.05; // 5% margin on the left and right
+    ui->bottomBar->setFixedHeight(121);
     ui->bottomBar->setContentsMargins(margin, 0, margin, 0); // Apply the margin to the bottom bar
 }

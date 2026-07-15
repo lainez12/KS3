@@ -10,6 +10,7 @@
         <file>icons/insert.svg</file>
         <file>icons/flood_icon.svg</file>
         <file>icons/abandon.svg</file>
+        <file>icons/abandon-red.svg</file>
         <file>icons/about.svg</file>
         <file>icons/admin.svg</file>
         <file>icons/admin-circle.svg</file>
@@ -22,6 +23,7 @@
         <file>icons/cam-settings-right-checked.svg</file>
         <file>icons/cam-settings-right.svg</file>
         <file>icons/check.svg</file>
+        <file>icons/check-green.svg</file>
         <file>icons/continue.svg</file>
         <file>icons/croix.svg</file>
         <file>icons/delete.svg</file>
@@ -78,6 +80,7 @@
         <file>icons/stop.svg</file>
         <file>icons/temperature.svg</file>
         <file>icons/usb-software.svg</file>
+        <file>icons/vac_air_switch.svg</file>
         <file>icons/visual-mark.svg</file>
         <file>icons/wafer4pouce.png</file>
         <file>icons/wafer4pouces.png</file>

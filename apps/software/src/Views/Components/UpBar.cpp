@@ -5,13 +5,14 @@
 
 #include <Views/Components/UpBar.h>
 
-#define TITLE_BAR     "font-size: 50px; font-weight: bold;"
-#define TITLE_SECTION "font-size: 17px; font-weight: bold;"
+#define TITLE_BAR     "font-size: 60px; font-weight: 700; font-family: arial; letter-spacing: 2px;"
+#define TITLE_SECTION "font-size: 24px; font-weight: bold; font-family: arial;"
 #define PATH_LOGO     ":/icons/logoKloeBlanc.svg"
 
 UpBar::UpBar(QWidget *parent) : QFrame(parent)
 {
     layoutIntern = new QHBoxLayout(this);
+    layoutIntern->setContentsMargins(50, 0, 45, 0);
 
     QHBoxLayout *leftLayout = new QHBoxLayout();
     m_logoTopBar            = new QLabel(this);
@@ -21,6 +22,8 @@ UpBar::UpBar(QWidget *parent) : QFrame(parent)
     leftLayout->addWidget(m_logoTopBar);
 
     m_topBarTitle = new QLabel(this);
+    m_topBarTitle->setAlignment(Qt::AlignCenter);
+    m_topBarTitle->setAttribute(Qt::WA_TransparentForMouseEvents);
     m_topBarTitle->raise();
 
     QHBoxLayout *rightLayout = new QHBoxLayout();
@@ -79,6 +82,16 @@ void UpBar::setTitleBarConfig(Kub3::UI::Views::TitleBarConfig titleBar)
     m_sectionTitle->setText(titleBar.sectionTitle);
     m_iconPath->setPixmap(QPixmap(titleBar.iconPath));
     updateTitlePosition();
+}
+
+void UpBar::resizeEvent(QResizeEvent *event)
+{
+    QFrame::resizeEvent(event);
+
+    if (m_topBarTitle != nullptr)
+    {
+        m_topBarTitle->setGeometry(0, 0, width(), height());
+    }
 }
 
 void UpBar::paintEvent(QPaintEvent *)

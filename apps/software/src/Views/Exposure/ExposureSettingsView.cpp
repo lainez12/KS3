@@ -35,7 +35,7 @@ ExposureSettingsView::ExposureSettingsView(Unique<ExposureSettingsViewModel> vie
         ID_BTN_BACK,
         std::bind(&ExposureSettingsView::onBackButtonClicked, this, std::placeholders::_1));
     addNavButton("left", backBtn);
-    setDefaultTitleBar("Exposure Settings");
+    setDefaultTitleBar("Exposure settings");
 
     setUpShawedBoxStyle(ui->minContinuouspinBox);
     setUpShawedBoxStyle(ui->segContinuouspinBox);

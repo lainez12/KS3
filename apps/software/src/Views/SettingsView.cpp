@@ -16,20 +16,23 @@ SettingsView::SettingsView(Unique<SettingsViewModel> viewModel, QWidget *parent)
     createNavButtonsConfigs();
     configTitleBar();
 
-    ui->opeTimesBtn->setup("Operation Times", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/operating-times.svg");
+    QFont font("Arial", 22);
+    ui->opeTimesBtn->setup("Operation Times", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/operating-times.svg", font);
     ui->opeTimesBtn->setSize(BUTTONS_SIZE);
-    ui->aboutBtn->setup("About", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/about.svg");
+    ui->aboutBtn->setup("About", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/about.svg", font);
     ui->aboutBtn->setSize(BUTTONS_SIZE);
-    ui->temperatureBtn->setup("Temperature", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/temperature.svg");
+    ui->temperatureBtn->setup("Temperature", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/temperature.svg", font);
     ui->temperatureBtn->setSize(BUTTONS_SIZE);
-    ui->screenshootBtn->setup("Screenshot export", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/screenshots-export.svg");
+    ui->screenshootBtn->setup("Screenshot export", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/screenshots-export.svg", font);
     ui->screenshootBtn->setSize(BUTTONS_SIZE);
-    ui->ledTestBtn->setup("Led test", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/led-test.svg");
+    ui->ledTestBtn->setup("Led test", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/led-test.svg", font);
     ui->ledTestBtn->setSize(BUTTONS_SIZE);
-    ui->updateSoftBtn->setup("Update software", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/usb-software.svg");
+    ui->updateSoftBtn->setup("Update software", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/usb-software.svg", font);
     ui->updateSoftBtn->setSize(BUTTONS_SIZE);
-    ui->machineSettingsBtn->setup("Machine settings", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/select-all.svg");
+    ui->machineSettingsBtn->setup("Machine Status", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/select-all.svg", font);
     ui->machineSettingsBtn->setSize(BUTTONS_SIZE);
+    ui->adminBtn->setup("Admin", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/admin.svg", font);
+    ui->adminBtn->setSize(BUTTONS_SIZE);
 
     connect(ui->aboutBtn, &NavButton::clicked, this, [this]() { emit s_openView(Kub3::UI::ViewId::SETTINGS_ABOUT_VIEW); });
     connect(ui->temperatureBtn, &NavButton::clicked, this, [this]() { emit s_openView(Kub3::UI::ViewId::SETTINGS_TEMPERATURE_VIEW); });
@@ -46,7 +49,6 @@ SettingsView::~SettingsView()
 void SettingsView::resizeEvent(QResizeEvent *ev)
 {
     QWidget::resizeEvent(ev);
-    ui->buttonsLayout->setSpacing(this->width() * 0.03); // 7% of window width
 }
 
 void SettingsView::createNavButtonsConfigs()
@@ -61,7 +63,7 @@ void SettingsView::createNavButtonsConfigs()
 void SettingsView::configTitleBar()
 {
     setTitleBar(TitleBarConfig{
-        .viewTitle      = "Parameters",
+        .viewTitle      = "Settings",
         .textColor      = QColor("#FFF"),
         .bgColor        = QColor(BLUE_COLOR),
         .iconPath       = ":/icons/admin-circle.svg",

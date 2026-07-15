@@ -6,20 +6,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>381</width>
+    <width>434</width>
     <height>364</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>381</width>
+    <width>434</width>
     <height>364</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>381</width>
-    <height>364</height>
+    <width>434</width>
+    <height>445</height>
    </size>
   </property>
   <property name="styleSheet">
@@ -144,7 +144,7 @@ cameras positions</string>
     <widget class="QWidget" name="backgroundWafer" native="true">
      <property name="minimumSize">
       <size>
-       <width>381</width>
+       <width>434</width>
        <height>381</height>
       </size>
      </property>
@@ -153,9 +153,12 @@ cameras positions</string>
        <rect>
         <x>120</x>
         <y>110</y>
-        <width>25</width>
-        <height>25</height>
+        <width>41</width>
+        <height>41</height>
        </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background: none;</string>
       </property>
       <property name="text">
        <string/>
@@ -171,10 +174,13 @@ cameras positions</string>
       <property name="geometry">
        <rect>
         <x>220</x>
-        <y>100</y>
-        <width>25</width>
-        <height>25</height>
+        <y>84</y>
+        <width>41</width>
+        <height>41</height>
        </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background: none;</string>
       </property>
       <property name="text">
        <string/>
