@@ -25,6 +25,7 @@ qt_add_executable(Kub3Configurator
     src/pages/DrawersPositionsPage.cpp
     src/pages/AlignmentPositionsPage.cpp
     src/pages/MCUConfigPage.cpp
+    src/pages/LanguageConfigPage.cpp
     # Headers
     include/utils.h
     include/ConfigWindow.h
@@ -40,6 +41,7 @@ qt_add_executable(Kub3Configurator
     include/pages/ZAlgorithmicLimitsPage.h
     include/pages/AlignmentPositionsPage.h
     include/pages/MCUConfigPage.h
+    include/pages/LanguageConfigPage.h
     # UI
     gui/resources.qrc
     gui/ConfigWindow.ui

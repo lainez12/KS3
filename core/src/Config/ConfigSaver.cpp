@@ -24,6 +24,11 @@ namespace Kub3::Config
             QSettings settings(QString::fromStdString(tempPath), QSettings::IniFormat);
 
             // =============================
+            // LOCALE SETTINGS
+            // =============================
+            settings.setValue(CONF_HW_KEYBOARD_LAYOUT, config.keyboardLayout);
+
+            // =============================
             // LOAD MCUs SETTINGS
             // =============================
             settings.beginGroup(CONF_HW_MCUS);

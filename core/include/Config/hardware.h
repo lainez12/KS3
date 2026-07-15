@@ -65,6 +65,7 @@ namespace Kub3::Config
 
     // Top level struct for hardware config
     typedef struct hardware_config_s {
+        QString keyboardLayout              = CONF_HW_LOCALE_DEFAULT;
         mcu_hw_properties_t mcus[MCU_COUNT] = {
             {.port = "/dev/arduino1"},
             {.port = "/dev/arduino2"},
