@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Config/keys/hardware.h>
+
 #define CONF_HW_MOTORS_DEFAULT        "motors"
 #define CONF_HW_CAMERAS_DEFAULT       "cameras"
 #define CONF_HW_FORCE_SENSORS_DEFAULT "forceSensors"
@@ -19,3 +21,6 @@
 #define CONF_HW_MAX_GAIN_DB_DEFAULT         24.0
 #define CONF_HW_DEFAULT_GAIN_DB_DEFAULT     2.0
 #define CONF_HW_FRAMERATE_DEFAULT           30.0
+
+// LOCALE
+#define CONF_HW_LOCALE_DEFAULT LOCALE_EN_US

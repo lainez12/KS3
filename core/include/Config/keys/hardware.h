@@ -40,3 +40,11 @@
 
 // CONF_HW_FORCE_SENSORS inner keys
 #define CONF_HW_ADC_TO_GRAM_FORCE_FACTOR "adc_to_gram_force_factor"
+
+// KEYBOARD LAYOUTS (IETF language tag)
+#define CONF_HW_KEYBOARD_LAYOUT "keyboard_layout"
+#define LOCALE_EN_US            "en_US"
+#define LOCALE_FR_FR            "fr_FR"
+#define LOCALE_EN_GB            "en_GB"
+#define LOCALE_ES_ES            "es_ES"
+#define LOCALE_DE_DE            "de_DE"

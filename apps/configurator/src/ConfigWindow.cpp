@@ -10,6 +10,7 @@
 #include <pages/DrawersPositionsPage.h>
 #include <pages/ForceConversionsConfigPage.h>
 #include <pages/ForceThresholdsConfigPage.h>
+#include <pages/LanguageConfigPage.h>
 #include <pages/MCUConfigPage.h>
 #include <pages/MotorConfigPage.h>
 #include <pages/PadMovementsPage.h>
@@ -174,7 +175,14 @@ void ConfigWindow::populateUI()
         m_adminPage->pullDataToStruct(m_adminConfig);
     });
     // -------------------------------------------------------------
-    // STATIC PAGE: SYSTEM SETTINGS
+    // STATIC PAGE: KEYBOARD & LANGUAGE SETTINGS
+    // -------------------------------------------------------------
+    auto *languagePage = new Kub3::Components::LanguageConfigPage(m_hwConfig);
+    int languageIdx    = addConfigPage(languagePage, [this, languagePage]() {
+        languagePage->pullDataToStruct(m_hwConfig);
+    });
+    // -------------------------------------------------------------
+    // STATIC PAGE: MCU SETTINGS
     // -------------------------------------------------------------
     auto *mcuPage = new Kub3::Components::MCUConfigPage(m_hwConfig);
     int mcuIdx    = addConfigPage(mcuPage, [this, mcuPage]() {
@@ -232,6 +240,7 @@ void ConfigWindow::populateUI()
     });
 
     m_categoryMap[SYSTEM_CATEGORY].push_back({"Administrator", adminIdx});
+    m_categoryMap[SYSTEM_CATEGORY].push_back({"Locale (Keyboard & Language)", languageIdx});
     m_categoryMap[SYSTEM_CATEGORY].push_back({"Micro-controllers", mcuIdx});
     m_categoryMap[FORCE_CATEGORY].push_back({"Limits & Thresholds", forceThresholdsIndex});
     m_categoryMap[FORCE_CATEGORY].push_back({"Conversions", forceConvIndex});

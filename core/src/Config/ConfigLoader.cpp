@@ -95,6 +95,11 @@ namespace Kub3::Config
         }
 
         // =============================
+        // LOAD LOCALE SETTINGS
+        // =============================
+        loadField(settings, CONF_HW_KEYBOARD_LAYOUT, config.keyboardLayout, strict, activeLogs, [](const QVariant &v) { return v.toString(); });
+
+        // =============================
         // LOAD MCUs SETTINGS
         // =============================
         settings.beginGroup(CONF_HW_MCUS);
