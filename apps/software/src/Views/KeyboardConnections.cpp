@@ -11,14 +11,44 @@
 namespace Kub3::UI::Views
 {
 
+    namespace
+    {
+        static bool isEditableWidget(QWidget *widget)
+        {
+            return widget && (qobject_cast<QLineEdit *>(widget) || qobject_cast<QSpinBox *>(widget) || qobject_cast<QDoubleSpinBox *>(widget));
+        }
+
+        static QString widgetDescription(QWidget *widget)
+        {
+            if (!widget)
+                return QStringLiteral("<null>");
+
+            return QStringLiteral("%1 %2").arg(widget->metaObject()->className(), widget->objectName());
+        }
+    }
+
     KeyboardConnections::KeyboardConnections(QWidget *parent) :
         QWidget(parent)
     {
+        if (qApp)
+        {
+            connect(qApp, &QApplication::focusChanged, this, [this](QWidget *, QWidget *newWidget) {
+                updateLastEditableFocus(newWidget);
+            });
+        }
+    }
+
+    void KeyboardConnections::updateLastEditableFocus(QWidget *newWidget)
+    {
+        if (isEditableWidget(newWidget))
+        {
+            m_lastEditableFocus = newWidget;
+        }
     }
 
     void KeyboardConnections::simulationKey(Qt::Key keyCode, const QString &text)
     {
-        QWidget *focusedWidget = QApplication::focusWidget();
+        QWidget *focusedWidget = m_lastEditableFocus.data();
         if (focusedWidget && (qobject_cast<QLineEdit *>(focusedWidget) || qobject_cast<QSpinBox *>(focusedWidget) || qobject_cast<QDoubleSpinBox *>(focusedWidget)))
         {
             QKeyEvent *keyPress = new QKeyEvent(QEvent::KeyPress, keyCode, Qt::NoModifier, text);
@@ -35,7 +65,7 @@ namespace Kub3::UI::Views
 
     void KeyboardConnections::clearInputSelected()
     {
-        QWidget *focusedWidget = QApplication::focusWidget();
+        QWidget *focusedWidget = m_lastEditableFocus.data();
         if (!focusedWidget)
         {
             return;
