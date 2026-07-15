@@ -1,12 +1,7 @@
 #include <QLabel>
 #include <QLayout>
 #include <QPainter>
-<<<<<<< HEAD
-#include <Qt>
-    == == ==
-    =
 #include <QResizeEvent>
-        >>>>>>> 0f0ab6f(UpBar title centering and horizontal margins)
 
 #include <Views/Components/UpBar.h>
 
@@ -14,7 +9,7 @@
 #define TITLE_SECTION "font-size: 24px; font-weight: bold; font-family: arial;"
 #define PATH_LOGO     ":/icons/logoKloeBlanc.svg"
 
-                    UpBar::UpBar(QWidget *parent) : QFrame(parent)
+UpBar::UpBar(QWidget *parent) : QFrame(parent)
 {
     layoutIntern = new QHBoxLayout(this);
     layoutIntern->setContentsMargins(50, 0, 45, 0);
