@@ -84,16 +84,6 @@ void UpBar::setTitleBarConfig(Kub3::UI::Views::TitleBarConfig titleBar)
     updateTitlePosition();
 }
 
-void UpBar::resizeEvent(QResizeEvent *event)
-{
-    QFrame::resizeEvent(event);
-
-    if (m_topBarTitle != nullptr)
-    {
-        m_topBarTitle->setGeometry(0, 0, width(), height());
-    }
-}
-
 void UpBar::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
