@@ -42,6 +42,7 @@ namespace Kub3::UI::Views
         void configTitleBar();
 
         void onBackButtonClicked(const QString &buttonId);
+        void onBackToMainButtonClicked(const QString &buttonId);
 
     private:
         Ui::ExposureModeView *ui;

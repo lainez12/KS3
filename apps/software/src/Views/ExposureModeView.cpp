@@ -54,7 +54,7 @@ void ExposureModeView::createNavButtonsConfigs()
         QColor("#B2D4F4"),
         ":/icons/picto.png",
         ID_BTN_BACKMAIN,
-        std::bind(&ExposureModeView::onBackButtonClicked, this, std::placeholders::_1));
+        std::bind(&ExposureModeView::onBackToMainButtonClicked, this, std::placeholders::_1));
     backMainBtn.isTextColorDifferent = true;
     backMainBtn.textColor            = QColor("#000");
     addNavButton("left", backMainBtn);
@@ -83,6 +83,11 @@ void ExposureModeView::configTitleBar()
 void ExposureModeView::onBackButtonClicked(const QString &buttonId)
 {
     emit s_openView(Kub3::UI::ViewId::EXPOSURE_MENU_VIEW);
+}
+
+void ExposureModeView::onBackToMainButtonClicked(const QString &buttonId)
+{
+    emit s_openView(Kub3::UI::ViewId::HOME_EIGHT_VIEW);
 }
 
 void ExposureModeView::onFloodExposureClicked()
