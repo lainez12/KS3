@@ -60,7 +60,7 @@ namespace Kub3::Services
             if (cw1)
             {
                 m_step = Step::SlowApproach;
-                m_motor->moveDirection(HAL::Act::MotorDirection::Positive, m_fineProfile);
+                m_motor->moveDirection(HAL::Act::MotorDirection::Negative, m_fineProfile);
             }
         }
 
