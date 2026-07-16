@@ -56,7 +56,7 @@ namespace Kub3::Components
 
         for (uint idx = 0; idx < sizeof(locales); ++idx)
         {
-            if (conf.keyboardLayout == locales[idx])
+            if (conf.keyboardLayout == QString(locales[idx]))
             {
                 m_kbSelector->setCurrentIndex(idx);
                 valid = 1;
