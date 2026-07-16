@@ -179,6 +179,7 @@ void MainWindow::showLogoIfNeeded(Kub3::UI::Views::ViewBase *view)
         QLabel *logo = new QLabel();
         logo->setPixmap(QPixmap(":/icons/logoKloe.svg").scaledToHeight(48));
         logo->setAlignment(Qt::AlignCenter);
+        logo->setContentsMargins(0, 0, 100, 0);
         m_bottomBarCenter->addWidget(logo);
     }
 }
@@ -212,6 +213,9 @@ NavButton *MainWindow::createNavButton(const Kub3::UI::Views::NavButtonConfig &c
     btn->setup(config.text, config.colorEnabled, config.colorDisabled, config.iconPath);
     btn->setSize(77);
     btn->setEnabledNavButton(config.enabled);
+    if(config.isTextColorDifferent) {
+        btn->setTextColor(config.textColor);
+    }
 
     connect(btn, &NavButton::clicked,
             this, [this, config]() {

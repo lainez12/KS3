@@ -52,7 +52,7 @@ namespace Kub3::UI::Views
             .viewTitle      = viewTitle,
             .textColor      = QColor("#FFF"),
             .bgColor        = QColor(TURQUOISE_COLOR),
-            .iconPath       = ":/icons/flood_icon.svg",
+            .iconPath       = ":/icons/mask-alignment_icon.svg",
             .sectionTitle   = "Mask Alignment",
             .showTitleBar   = true,
             .m_showLeftLogo = true,

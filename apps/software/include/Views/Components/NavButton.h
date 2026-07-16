@@ -17,6 +17,7 @@ public:
     void setText(const QString &newText);
     void setEnabledNavButton(bool state);
     void setSize(const uint sizePx);
+    void setTextColor(const QColor &color);
     void changeColorToDisabled();
     void changeColorToEnabled();
     void switchColor(bool enabled);
@@ -31,6 +32,7 @@ private:
     BottomCroppedCircle *m_circle;
     QColor colorEnabled;
     QColor colorDisabled;
+    QColor textColor;
     QLabel *m_iconLabel;
     QLabel *m_text;
 };

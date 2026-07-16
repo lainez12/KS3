@@ -7,10 +7,12 @@
 #include <Views/Components/Colors.h>
 #include <functional>
 
-namespace Kub3::UI::Views {
+namespace Kub3::UI::Views
+{
 
     struct NavButtonConfig {
         QString text;
+        QColor textColor     = QColor(BLUE_COLOR);
         QColor colorEnabled  = QColor(BLUE_COLOR);
         QColor colorDisabled = QColor(BLUE_COLOR_SHADOW);
         QString iconPath;
@@ -18,17 +20,21 @@ namespace Kub3::UI::Views {
         std::function<void(const QString &)> callback;
         bool enabled = true;
         bool visible = true;
+        bool isTextColorDifferent = false;
 
         NavButtonConfig() = default;
 
-        NavButtonConfig(const QString &t, const QColor &cE, const QColor &cD, const QString &i, const QString &id, std::function<void(const QString &)> cb) : text(t), colorEnabled(cE), colorDisabled(cD), iconPath(i), buttonId(id), callback(cb) {
+        NavButtonConfig(const QString &t, const QColor &cE, const QColor &cD, const QString &i, const QString &id, std::function<void(const QString &)> cb) : text(t), colorEnabled(cE), colorDisabled(cD), iconPath(i), buttonId(id), callback(cb)
+        {
         }
 
-        NavButtonConfig(const QString &t, const QString &i, const QString &id, std::function<void(const QString &)> cb) : text(t), iconPath(i), buttonId(id), callback(cb) {
+        NavButtonConfig(const QString &t, const QString &i, const QString &id, std::function<void(const QString &)> cb) : text(t), iconPath(i), buttonId(id), callback(cb)
+        {
         }
     };
 
-    class NavButtonManager {
+    class NavButtonManager
+    {
     public:
         NavButtonManager()          = default;
         virtual ~NavButtonManager() = default;
@@ -50,13 +56,15 @@ namespace Kub3::UI::Views {
 
         bool setButtonText(const QString &buttonId, const QString &text);
 
-        int buttonCount() const {
+        int buttonCount() const
+        {
             return m_buttons.size();
         }
 
         int buttonCountByPosition(const QString &position) const;
 
-        bool isEmpty() const {
+        bool isEmpty() const
+        {
             return m_buttons.isEmpty();
         }
 

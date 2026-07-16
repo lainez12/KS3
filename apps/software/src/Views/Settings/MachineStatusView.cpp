@@ -83,7 +83,7 @@ void MachineStatusView::createNavButtonsConfigs()
         ":/icons/back.svg",
         "Back",
         [this](const QString &) {
-            // Retourner à HomeView
+            // Retourner à ExposureModeView
             emit s_openView(Kub3::UI::ViewId::SETTINGS_VIEW);
         });
     addNavButton("left", backBtn);

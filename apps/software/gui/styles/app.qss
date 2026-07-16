@@ -28,7 +28,7 @@ QMainWindow {
     background-color: @white;
 }
 
-QWidget#HomeView, QWidget#MachineStatusView {
+QWidget#ExposureModeView, QWidget#MachineStatusView {
     background: transparent;
 }
 

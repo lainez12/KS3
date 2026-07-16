@@ -10,6 +10,7 @@
 #include <Services/Homing/HomingService.h>
 #include <Services/Stowage/StowageService.h>
 #include <Services/Vision/VisionService.h>
+
 #if defined(KUB_MODEL_4) || defined(KUB_MODEL_6)
 #include <Services/Drawers/SingleConveyorDrawerService.h>
 #elif defined(KUB_MODEL_8)
@@ -128,7 +129,6 @@ namespace Kub3
             ASSIGN_VIEW_MODEL(UI::ViewModels::Alignment::SaveParametersViewModel, saveParametersVM, m_saveParametersVM, m_repo);
 
             // Views creation
-            auto *homeView                     = new HomeView(std::move(homeVM), m_mainWindow.get());
             auto *homeEightView                = new HomeEightView(std::move(homeEightVM), m_mainWindow.get());
             auto *machineStatusView            = new MachineStatusView(std::move(machineStatusVM), m_mainWindow.get());
             auto *exposureMenuView             = new ExposureMenuView(std::move(exposureMenuVM), m_mainWindow.get());
@@ -150,8 +150,9 @@ namespace Kub3
             auto *visualisationView            = new VisualisationView(std::move(visualisationVM), m_mainWindow.get());
             auto *loadParametersView           = new LoadParametersView(std::move(loadParametersVM), m_mainWindow.get());
             auto *saveParametersView           = new SaveParametersView(std::move(saveParametersVM), m_mainWindow.get());
+            auto *exposureModeView             = new ExposureModeView(std::move(homeVM), m_mainWindow.get());
 
-            m_mainWindow->addView(Kub3::UI::ViewId::HOME_VIEW, homeView);
+            m_mainWindow->addView(Kub3::UI::ViewId::HOME_VIEW, exposureModeView);
             m_mainWindow->addView(Kub3::UI::ViewId::HOME_EIGHT_VIEW, homeEightView);
             m_mainWindow->addView(Kub3::UI::ViewId::EXPOSURE_MENU_VIEW, exposureMenuView);
             m_mainWindow->addView(Kub3::UI::ViewId::MACHINE_STATUS_VIEW, machineStatusView);

@@ -37,7 +37,7 @@ void ExposureMenuView::configTitleBar()
         .textColor      = QColor("#FFF"),
         .bgColor        = QColor(BLUE_COLOR),
         .iconPath       = "",
-        .sectionTitle   = "Load",
+        .sectionTitle   = "",
         .showTitleBar   = true,
         .m_showLeftLogo = true,
     });

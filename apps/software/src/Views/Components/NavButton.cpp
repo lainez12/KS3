@@ -42,8 +42,8 @@ void NavButton::setup(const QString &text, const QColor &colorEnabled, const QCo
     m_circle->setColor(colorEnabled);
     this->colorEnabled  = colorEnabled;
     this->colorDisabled = colorDisabled;
-
-    m_text->setStyleSheet(QString("color: %1;").arg(colorEnabled.name()));
+    this->textColor = colorEnabled;
+    m_text->setStyleSheet(QString("color: %1;").arg(textColor.name()));
     if (!iconPath.isEmpty())
         this->setIcon(iconPath);
 }
@@ -66,7 +66,7 @@ void NavButton::setEnabledNavButton(bool state)
     setEnabled(state);
     if (state)
     {
-        m_text->setStyleSheet(QString("color: %1;").arg(colorEnabled.name()));
+        m_text->setStyleSheet(QString("color: %1;").arg(textColor.name()));
         m_circle->setColor(colorEnabled);
     }
     else
@@ -78,13 +78,13 @@ void NavButton::setEnabledNavButton(bool state)
 
 void NavButton::changeColorToDisabled()
 {
-    m_text->setStyleSheet(QString("color: %1;").arg(colorDisabled.name()));
+    m_text->setStyleSheet(QString("color: %1;").arg(textColor.name()));
     m_circle->setColor(colorDisabled);
 }
 
 void NavButton::changeColorToEnabled()
 {
-    m_text->setStyleSheet(QString("color: %1;").arg(colorEnabled.name()));
+    m_text->setStyleSheet(QString("color: %1;").arg(textColor.name()));
     m_circle->setColor(colorEnabled);
 }
 
@@ -111,4 +111,10 @@ void NavButton::setSize(const uint sizePx)
 
     m_circle->setFixedSize(QSize(sizePx, sizePx));
     m_iconLabel->setFixedSize(QSize(iconSizePx, iconSizePx));
+}
+
+void NavButton::setTextColor(const QColor &color)
+{
+    textColor = color;
+    m_text->setStyleSheet(QString("color: %1;").arg(textColor.name()));
 }

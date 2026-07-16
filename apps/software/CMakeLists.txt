@@ -43,7 +43,7 @@ qt_add_executable(Kub3Software
     src/Views/AlignmentViewBase.cpp
     src/Views/SettingsViewBase.cpp
     src/Views/ExposureViewBase.cpp
-    src/Views/HomeView.cpp
+    src/Views/ExposureModeView.cpp
     src/Views/HomeEightView.cpp
     src/Views/ExposureMenuView.cpp
     src/Views/SettingsView.cpp
@@ -108,7 +108,7 @@ qt_add_executable(Kub3Software
     include/Views/AlignmentViewBase.h
     include/Views/SettingsViewBase.h
     include/Views/ExposureViewBase.h
-    include/Views/HomeView.h
+    include/Views/ExposureModeView.h
     include/Views/HomeEightView.h
     include/Views/ExposureMenuView.h
     include/Views/SettingsView.h
@@ -144,7 +144,7 @@ qt_add_executable(Kub3Software
     gui/Views/Exposure/RecapExposureSettingsView.ui
     gui/Views/Exposure/CompleteExposureView.ui
     gui/Views/Exposure/ProgressExposureView.ui
-    gui/Views/HomeView.ui
+    gui/Views/ExposureModeView.ui
     gui/Views/HomeEightView.ui
     gui/Views/ExposureMenuView.ui
     gui/Views/SettingsView.ui

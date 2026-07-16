@@ -10,9 +10,10 @@ ActionBox::ActionBox(QWidget *parent) : BottomCroppedCircle(parent)
     m_layout = new QVBoxLayout(this);
 
     m_layout->setAlignment(Qt::AlignCenter);
-    m_layout->setSpacing(8);
+    m_layout->setSpacing(30);
     m_layout->setContentsMargins(20, 40, 20, 50);
 
+    this->setFixedSize(320, 320); // Default size, can be adjusted as needed
     // Icon Placeholder
     m_icon = new QLabel(this);
     m_icon->setAlignment(Qt::AlignCenter);
@@ -63,8 +64,8 @@ void ActionBox::resizeEvent(QResizeEvent *event)
         return;
 
     const int spacing        = m_layout->spacing();
-    const int fontSize       = qMax(int(side * 0.1), 18); // 10% of width (min. font size = 18px)
-    const int iconSize       = side * 0.36;               // 36% of width
+    const int fontSize       = qMax(int(side * 0.08), 18); // 10% of width (min. font size = 18px)
+    const int iconSize       = side * 0.36;                // 36% of width
     const int remainingSpace = side - (fontSize + iconSize + spacing);
     const int topMargin      = remainingSpace * 0.40;
     const int bottomMargin   = remainingSpace * 0.60;

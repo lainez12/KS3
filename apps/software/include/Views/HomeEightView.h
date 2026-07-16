@@ -50,4 +50,4 @@ namespace Kub3::UI::Views
 
 using HomeEightView = Kub3::UI::Views::HomeEightView;
 
-#endif // HOMEVIEW_H
+#endif
