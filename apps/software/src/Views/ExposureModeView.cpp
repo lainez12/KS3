@@ -1,3 +1,4 @@
+#include <Views/Components/Colors.h>
 #include <Views/ExposureModeView.h>
 
 #include "ui_ExposureModeView.h"
@@ -6,6 +7,7 @@
 #define ID_BTN_OPEN     "O"
 #define ID_BTN_CLOSE    "C"
 #define ID_BTN_BACK     "B"
+#define ID_BTN_BACKMAIN "BM"
 
 ExposureModeView::ExposureModeView(Unique<HomeViewModel> viewModel, QWidget *parent) :
     ViewBase(std::move(viewModel), parent),
@@ -51,9 +53,19 @@ void ExposureModeView::createNavButtonsConfigs()
         QColor("#FFF"),
         QColor("#B2D4F4"),
         ":/icons/picto.png",
+        ID_BTN_BACKMAIN,
+        std::bind(&ExposureModeView::onBackButtonClicked, this, std::placeholders::_1));
+    backMainBtn.isTextColorDifferent = true;
+    backMainBtn.textColor            = QColor("#000");
+    addNavButton("left", backMainBtn);
+    NavButtonConfig backBtn(
+        "Back",
+        QColor(BLUE_COLOR),
+        QColor("#B2D4F4"),
+        ":/icons/back.svg",
         ID_BTN_BACK,
         std::bind(&ExposureModeView::onBackButtonClicked, this, std::placeholders::_1));
-    addNavButton("left", backMainBtn);
+    addNavButton("left", backBtn);
 }
 void ExposureModeView::configTitleBar()
 {

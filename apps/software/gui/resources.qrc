@@ -16,8 +16,10 @@
         <file>icons/admin-circle.svg</file>
         <file>icons/anti-collision.svg</file>
         <file>icons/back.svg</file>
+        <file>icons/btnShift.svg</file>
         <file>icons/bg-move-camera-droite.svg</file>
         <file>icons/bg-move-camera-gauche.svg</file>
+        <file>icons/btnBackspace.svg</file>
         <file>icons/cam-settings-left-checked.svg</file>
         <file>icons/cam-settings-left.svg</file>
         <file>icons/cam-settings-right-checked.svg</file>
