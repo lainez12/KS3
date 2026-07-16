@@ -45,8 +45,11 @@
      </property>
      <item row="0" column="0">
       <layout class="QVBoxLayout" name="newSettingsQVB">
+       <property name="spacing">
+        <number>0</number>
+       </property>
        <property name="sizeConstraint">
-        <enum>QLayout::SizeConstraint::SetMinimumSize</enum>
+        <enum>QLayout::SizeConstraint::SetMaximumSize</enum>
        </property>
        <item>
         <widget class="QPushButton" name="newSettingsLabel">
@@ -59,19 +62,19 @@
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>56</height>
+           <height>79</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
            <width>16777215</width>
-           <height>56</height>
+           <height>16777215</height>
           </size>
          </property>
          <property name="styleSheet">
           <string notr="true">color: #ffffff;
 background-color: #B2D4F4;
-font-size: 35px;
+font-size: 40px;
 font-weight: 700;
 font-family: arial;
 border: 0px solid;</string>
@@ -191,7 +194,7 @@ border: 0px solid;</string>
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>54</height>
+           <height>79</height>
           </size>
          </property>
          <property name="maximumSize">
@@ -203,7 +206,7 @@ border: 0px solid;</string>
          <property name="styleSheet">
           <string notr="true">color: #ffffff;
 background-color: #0070DB;
-font-size: 35px;
+font-size: 40px;
 font-weight: 700;
 font-family: arial;</string>
          </property>

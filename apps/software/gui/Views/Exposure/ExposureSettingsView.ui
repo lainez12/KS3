@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1945</width>
-    <height>911</height>
+    <height>923</height>
    </rect>
   </property>
   <property name="styleSheet">
@@ -40,64 +40,298 @@
       <number>0</number>
      </property>
      <item row="1" column="1">
-      <layout class="QVBoxLayout" name="padEtLastCycleQVB" stretch="0,300,150,15">
+      <layout class="QVBoxLayout" name="padEtLastCycleQVB" stretch="0,0,0,0">
        <property name="spacing">
-        <number>29</number>
+        <number>0</number>
        </property>
        <property name="sizeConstraint">
         <enum>QLayout::SizeConstraint::SetFixedSize</enum>
        </property>
        <property name="topMargin">
-        <number>45</number>
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>230</number>
        </property>
        <item>
         <spacer name="verticalSpacer">
          <property name="orientation">
           <enum>Qt::Orientation::Vertical</enum>
          </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Policy::Fixed</enum>
+         </property>
          <property name="sizeHint" stdset="0">
           <size>
            <width>20</width>
-           <height>40</height>
+           <height>80</height>
           </size>
          </property>
         </spacer>
        </item>
        <item>
-        <layout class="QGridLayout" name="numPadContainer" columnstretch="0,0,0,0">
+        <layout class="QGridLayout" name="numPadContainer" columnstretch="0,0,0,0,0,0">
          <property name="sizeConstraint">
           <enum>QLayout::SizeConstraint::SetFixedSize</enum>
          </property>
          <property name="leftMargin">
-          <number>150</number>
+          <number>0</number>
          </property>
          <property name="topMargin">
           <number>0</number>
          </property>
          <property name="rightMargin">
-          <number>150</number>
+          <number>0</number>
          </property>
          <property name="bottomMargin">
           <number>0</number>
          </property>
-         <property name="horizontalSpacing">
-          <number>0</number>
-         </property>
-         <property name="verticalSpacing">
-          <number>15</number>
+         <property name="spacing">
+          <number>25</number>
          </property>
          <item row="0" column="3">
-          <widget class="QPushButton" name="btnBackspace">
+          <widget class="QPushButton" name="btn9">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
            <property name="minimumSize">
             <size>
-             <width>60</width>
-             <height>60</height>
+             <width>100</width>
+             <height>100</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>120</width>
-             <height>120</height>
+             <width>100</width>
+             <height>100</height>
+            </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
+           </property>
+           <property name="text">
+            <string>9</string>
+           </property>
+           <property name="flat">
+            <bool>false</bool>
+           </property>
+           <property name="class" stdset="0">
+            <string>button-numpad</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="3">
+          <widget class="QPushButton" name="btnPoint">
+           <property name="minimumSize">
+            <size>
+             <width>100</width>
+             <height>100</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>100</width>
+             <height>100</height>
+            </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
+           </property>
+           <property name="text">
+            <string>.</string>
+           </property>
+           <property name="class" stdset="0">
+            <string>button-numpad</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="2">
+          <widget class="QPushButton" name="btn2">
+           <property name="minimumSize">
+            <size>
+             <width>100</width>
+             <height>100</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>100</width>
+             <height>100</height>
+            </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
+           </property>
+           <property name="text">
+            <string>2</string>
+           </property>
+           <property name="class" stdset="0">
+            <string>button-numpad</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="3">
+          <widget class="QPushButton" name="btn3">
+           <property name="minimumSize">
+            <size>
+             <width>100</width>
+             <height>100</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>100</width>
+             <height>100</height>
+            </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
+           </property>
+           <property name="text">
+            <string>3</string>
+           </property>
+           <property name="class" stdset="0">
+            <string>button-numpad</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Policy::Expanding</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="1" column="4">
+          <widget class="QPushButton" name="btnClear">
+           <property name="minimumSize">
+            <size>
+             <width>100</width>
+             <height>100</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>100</width>
+             <height>100</height>
+            </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
+           </property>
+           <property name="text">
+            <string>Clear</string>
+           </property>
+           <property name="class" stdset="0">
+            <string>button-numpad</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="2">
+          <widget class="QPushButton" name="btn5">
+           <property name="minimumSize">
+            <size>
+             <width>100</width>
+             <height>100</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>100</width>
+             <height>100</height>
+            </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
+           </property>
+           <property name="text">
+            <string>5</string>
+           </property>
+           <property name="class" stdset="0">
+            <string>button-numpad</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="4" rowspan="2">
+          <widget class="QPushButton" name="btnEnter">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>100</width>
+             <height>215</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>100</width>
+             <height>255</height>
+            </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
+           </property>
+           <property name="text">
+            <string>Enter</string>
+           </property>
+           <property name="class" stdset="0">
+            <string>button-numpad</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QPushButton" name="btn1">
+           <property name="minimumSize">
+            <size>
+             <width>100</width>
+             <height>100</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>100</width>
+             <height>100</height>
+            </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::NoFocus</enum>
+           </property>
+           <property name="styleSheet">
+            <string notr="true"/>
+           </property>
+           <property name="text">
+            <string>1</string>
+           </property>
+           <property name="class" stdset="0">
+            <string>button-numpad</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="4">
+          <widget class="QPushButton" name="btnBackspace">
+           <property name="minimumSize">
+            <size>
+             <width>100</width>
+             <height>100</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>100</width>
+             <height>100</height>
             </size>
            </property>
            <property name="focusPolicy">
@@ -124,68 +358,71 @@
            </property>
           </widget>
          </item>
-         <item row="3" column="2">
-          <widget class="QPushButton" name="btnPoint">
+         <item row="3" column="1" colspan="2">
+          <widget class="QPushButton" name="btn0">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
            <property name="minimumSize">
             <size>
-             <width>60</width>
-             <height>60</height>
+             <width>0</width>
+             <height>100</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>120</width>
-             <height>120</height>
+             <width>400</width>
+             <height>100</height>
             </size>
            </property>
            <property name="focusPolicy">
             <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="text">
-            <string>.</string>
+            <string>0</string>
            </property>
            <property name="class" stdset="0">
             <string>button-numpad</string>
            </property>
           </widget>
          </item>
-         <item row="1" column="2">
-          <widget class="QPushButton" name="btn6">
+         <item row="0" column="2">
+          <widget class="QPushButton" name="btn8">
            <property name="minimumSize">
             <size>
-             <width>60</width>
-             <height>60</height>
+             <width>100</width>
+             <height>100</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>120</width>
-             <height>120</height>
+             <width>100</width>
+             <height>100</height>
             </size>
            </property>
            <property name="focusPolicy">
             <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="text">
-            <string>6</string>
+            <string>8</string>
            </property>
            <property name="class" stdset="0">
             <string>button-numpad</string>
            </property>
           </widget>
          </item>
-         <item row="0" column="0">
+         <item row="0" column="1">
           <widget class="QPushButton" name="btn7">
            <property name="minimumSize">
             <size>
-             <width>60</width>
-             <height>60</height>
+             <width>100</width>
+             <height>100</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>120</width>
-             <height>120</height>
+             <width>100</width>
+             <height>100</height>
             </size>
            </property>
            <property name="font">
@@ -230,71 +467,43 @@
            </property>
           </widget>
          </item>
-         <item row="0" column="1">
-          <widget class="QPushButton" name="btn8">
+         <item row="1" column="3">
+          <widget class="QPushButton" name="btn6">
            <property name="minimumSize">
             <size>
-             <width>60</width>
-             <height>60</height>
+             <width>100</width>
+             <height>100</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>120</width>
-             <height>120</height>
+             <width>100</width>
+             <height>100</height>
             </size>
            </property>
            <property name="focusPolicy">
             <enum>Qt::FocusPolicy::NoFocus</enum>
            </property>
            <property name="text">
-            <string>8</string>
+            <string>6</string>
            </property>
            <property name="class" stdset="0">
             <string>button-numpad</string>
            </property>
           </widget>
          </item>
-         <item row="2" column="0">
-          <widget class="QPushButton" name="btn1">
-           <property name="minimumSize">
-            <size>
-             <width>60</width>
-             <height>60</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>120</width>
-             <height>120</height>
-            </size>
-           </property>
-           <property name="focusPolicy">
-            <enum>Qt::FocusPolicy::NoFocus</enum>
-           </property>
-           <property name="styleSheet">
-            <string notr="true"/>
-           </property>
-           <property name="text">
-            <string>1</string>
-           </property>
-           <property name="class" stdset="0">
-            <string>button-numpad</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
+         <item row="1" column="1">
           <widget class="QPushButton" name="btn4">
            <property name="minimumSize">
             <size>
-             <width>60</width>
-             <height>60</height>
+             <width>100</width>
+             <height>100</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>120</width>
-             <height>120</height>
+             <width>100</width>
+             <height>100</height>
             </size>
            </property>
            <property name="focusPolicy">
@@ -308,195 +517,21 @@
            </property>
           </widget>
          </item>
-         <item row="1" column="1">
-          <widget class="QPushButton" name="btn5">
-           <property name="minimumSize">
-            <size>
-             <width>60</width>
-             <height>60</height>
-            </size>
+         <item row="0" column="5">
+          <spacer name="horizontalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
            </property>
-           <property name="maximumSize">
-            <size>
-             <width>120</width>
-             <height>120</height>
-            </size>
+           <property name="sizeType">
+            <enum>QSizePolicy::Policy::Expanding</enum>
            </property>
-           <property name="focusPolicy">
-            <enum>Qt::FocusPolicy::NoFocus</enum>
-           </property>
-           <property name="text">
-            <string>5</string>
-           </property>
-           <property name="class" stdset="0">
-            <string>button-numpad</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="2">
-          <widget class="QPushButton" name="btn9">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>60</width>
-             <height>60</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>120</width>
-             <height>120</height>
-            </size>
-           </property>
-           <property name="focusPolicy">
-            <enum>Qt::FocusPolicy::NoFocus</enum>
-           </property>
-           <property name="text">
-            <string>9</string>
-           </property>
-           <property name="flat">
-            <bool>false</bool>
-           </property>
-           <property name="class" stdset="0">
-            <string>button-numpad</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="QPushButton" name="btn2">
-           <property name="minimumSize">
-            <size>
-             <width>60</width>
-             <height>60</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>120</width>
-             <height>120</height>
-            </size>
-           </property>
-           <property name="focusPolicy">
-            <enum>Qt::FocusPolicy::NoFocus</enum>
-           </property>
-           <property name="text">
-            <string>2</string>
-           </property>
-           <property name="class" stdset="0">
-            <string>button-numpad</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="0" colspan="2">
-          <widget class="QPushButton" name="btn0">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="minimumSize">
+           <property name="sizeHint" stdset="0">
             <size>
              <width>0</width>
-             <height>70</height>
+             <height>0</height>
             </size>
            </property>
-           <property name="maximumSize">
-            <size>
-             <width>400</width>
-             <height>120</height>
-            </size>
-           </property>
-           <property name="focusPolicy">
-            <enum>Qt::FocusPolicy::NoFocus</enum>
-           </property>
-           <property name="text">
-            <string>0</string>
-           </property>
-           <property name="class" stdset="0">
-            <string>button-numpad</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="3" rowspan="2">
-          <widget class="QPushButton" name="btnEnter">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>70</width>
-             <height>255</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>120</width>
-             <height>255</height>
-            </size>
-           </property>
-           <property name="focusPolicy">
-            <enum>Qt::FocusPolicy::NoFocus</enum>
-           </property>
-           <property name="text">
-            <string>Enter</string>
-           </property>
-           <property name="class" stdset="0">
-            <string>button-numpad</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="3">
-          <widget class="QPushButton" name="btnClear">
-           <property name="minimumSize">
-            <size>
-             <width>60</width>
-             <height>60</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>120</width>
-             <height>120</height>
-            </size>
-           </property>
-           <property name="focusPolicy">
-            <enum>Qt::FocusPolicy::NoFocus</enum>
-           </property>
-           <property name="text">
-            <string>Clear</string>
-           </property>
-           <property name="class" stdset="0">
-            <string>button-numpad</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="2">
-          <widget class="QPushButton" name="btn3">
-           <property name="minimumSize">
-            <size>
-             <width>60</width>
-             <height>60</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>120</width>
-             <height>120</height>
-            </size>
-           </property>
-           <property name="focusPolicy">
-            <enum>Qt::FocusPolicy::NoFocus</enum>
-           </property>
-           <property name="text">
-            <string>3</string>
-           </property>
-           <property name="class" stdset="0">
-            <string>button-numpad</string>
-           </property>
-          </widget>
+          </spacer>
          </item>
         </layout>
        </item>
@@ -506,8 +541,8 @@
           <widget class="QWidget" name="containerLastCycle" native="true">
            <property name="minimumSize">
             <size>
-             <width>450</width>
-             <height>120</height>
+             <width>500</width>
+             <height>135</height>
             </size>
            </property>
            <property name="maximumSize">
@@ -522,10 +557,10 @@
            <widget class="QLabel" name="lastCycleTextLabel">
             <property name="geometry">
              <rect>
-              <x>140</x>
-              <y>10</y>
+              <x>200</x>
+              <y>0</y>
               <width>321</width>
-              <height>101</height>
+              <height>111</height>
              </rect>
             </property>
             <property name="font">
@@ -605,7 +640,7 @@ Exposure power: 20%</string>
            <property name="sizeHint" stdset="0">
             <size>
              <width>20</width>
-             <height>40</height>
+             <height>80</height>
             </size>
            </property>
           </spacer>
@@ -672,8 +707,8 @@ font-size: 40px;</string>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
-             <width>20</width>
-             <height>40</height>
+             <width>0</width>
+             <height>255</height>
             </size>
            </property>
           </spacer>
@@ -799,7 +834,7 @@ font-size: 40px;</string>
        <item>
         <widget class="QStackedWidget" name="inputsStack">
          <property name="currentIndex">
-          <number>1</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="pageFlashing">
           <layout class="QGridLayout" name="gridLayout_4">
@@ -814,6 +849,9 @@ font-size: 40px;</string>
            </property>
            <property name="bottomMargin">
             <number>0</number>
+           </property>
+           <property name="horizontalSpacing">
+            <number>10</number>
            </property>
            <item row="7" column="0" colspan="6">
             <widget class="QLabel" name="label">
@@ -833,7 +871,7 @@ font-size: 40px;</string>
               <string notr="true">
 /* UI Properties */
 text-align: left;
-font: normal normal bold 25px/29px Arial;
+font: normal normal bold 30px Arial;
 letter-spacing: 0px;
 color: #0070DB;
 opacity: 1;</string>
@@ -853,13 +891,13 @@ opacity: 1;</string>
              </property>
              <property name="minimumSize">
               <size>
-               <width>70</width>
-               <height>0</height>
+               <width>120</width>
+               <height>77</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
-               <width>70</width>
+               <width>0</width>
                <height>50</height>
               </size>
              </property>
@@ -910,7 +948,7 @@ color: #E85420;</string>
               <string notr="true">
 /* UI Properties */
 text-align: left;
-font: normal normal bold 25px/29px Arial;
+font: normal normal bold 30px Arial;
 letter-spacing: 0px;
 color: #0070DB;
 opacity: 1;</string>
@@ -919,22 +957,6 @@ opacity: 1;</string>
               <string>Duration T off</string>
              </property>
             </widget>
-           </item>
-           <item row="4" column="0">
-            <spacer name="horizontalSpacer_3">
-             <property name="orientation">
-              <enum>Qt::Orientation::Horizontal</enum>
-             </property>
-             <property name="sizeType">
-              <enum>QSizePolicy::Policy::Fixed</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
            </item>
            <item row="4" column="1">
             <widget class="QSpinBox" name="minOnFlashingspinBox">
@@ -946,13 +968,13 @@ opacity: 1;</string>
              </property>
              <property name="minimumSize">
               <size>
-               <width>70</width>
-               <height>0</height>
+               <width>120</width>
+               <height>77</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
-               <width>70</width>
+               <width>0</width>
                <height>50</height>
               </size>
              </property>
@@ -1004,10 +1026,11 @@ opacity: 1;</string>
               </size>
              </property>
              <property name="styleSheet">
-              <string notr="true">
+              <string notr="true">width: 40px;
+height: 28px;
 /* UI Properties */
 text-align: left;
-font: normal normal bold 25px/29px Arial;
+font: normal normal bold 30px Arial;
 letter-spacing: 0px;
 color: #E85420;
 opacity: 1;</string>
@@ -1036,7 +1059,7 @@ opacity: 1;</string>
 height: 28px;
 /* UI Properties */
 text-align: left;
-font: normal normal bold 25px/29px Arial;
+font: normal normal bold 30px Arial;
 letter-spacing: 0px;
 color: #E85420;
 opacity: 1;</string>
@@ -1056,13 +1079,13 @@ opacity: 1;</string>
              </property>
              <property name="minimumSize">
               <size>
-               <width>70</width>
-               <height>0</height>
+               <width>120</width>
+               <height>77</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
-               <width>70</width>
+               <width>0</width>
                <height>50</height>
               </size>
              </property>
@@ -1097,7 +1120,7 @@ opacity: 1;</string>
              <property name="sizeHint" stdset="0">
               <size>
                <width>20</width>
-               <height>140</height>
+               <height>85</height>
               </size>
              </property>
             </spacer>
@@ -1112,13 +1135,13 @@ opacity: 1;</string>
              </property>
              <property name="minimumSize">
               <size>
-               <width>70</width>
-               <height>0</height>
+               <width>120</width>
+               <height>77</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
-               <width>70</width>
+               <width>0</width>
                <height>50</height>
               </size>
              </property>
@@ -1157,10 +1180,11 @@ color: #E85420;</string>
               </size>
              </property>
              <property name="styleSheet">
-              <string notr="true">
+              <string notr="true">width: 40px;
+height: 28px;
 /* UI Properties */
 text-align: left;
-font: normal normal bold 25px/29px Arial;
+font: normal normal bold 30px Arial;
 letter-spacing: 0px;
 color: #E85420;
 opacity: 1;</string>
@@ -1185,9 +1209,10 @@ opacity: 1;</string>
               </size>
              </property>
              <property name="styleSheet">
-              <string notr="true">/* UI Properties */
+              <string notr="true">
+/* UI Properties */
 text-align: left;
-font: normal normal bold 25px/29px Arial;
+font: normal normal bold 30px Arial;
 letter-spacing: 0px;
 color: #0070DB;
 opacity: 1;</string>
@@ -1202,7 +1227,7 @@ opacity: 1;</string>
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                <horstretch>0</horstretch>
-               <verstretch>80</verstretch>
+               <verstretch>0</verstretch>
               </sizepolicy>
              </property>
              <property name="maximumSize">
@@ -1215,7 +1240,7 @@ opacity: 1;</string>
               <string notr="true">
 /* UI Properties */
 text-align: left;
-font: normal normal bold 25px/29px Arial;
+font: normal normal bold 30px Arial;
 letter-spacing: 0px;
 color: #0070DB;
 opacity: 1;</string>
@@ -1244,7 +1269,7 @@ opacity: 1;</string>
 height: 28px;
 /* UI Properties */
 text-align: left;
-font: normal normal bold 25px/29px Arial;
+font: normal normal bold 30px Arial;
 letter-spacing: 0px;
 color: #E85420;
 opacity: 1;</string>
@@ -1280,13 +1305,13 @@ opacity: 1;</string>
              </property>
              <property name="minimumSize">
               <size>
-               <width>70</width>
-               <height>0</height>
+               <width>120</width>
+               <height>77</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
-               <width>70</width>
+               <width>0</width>
                <height>50</height>
               </size>
              </property>
@@ -1329,7 +1354,7 @@ color: #E85420;</string>
 height: 28px;
 /* UI Properties */
 text-align: left;
-font: normal normal bold 25px/29px Arial;
+font: normal normal bold 30px Arial;
 letter-spacing: 0px;
 color: #E85420;
 opacity: 1;</string>
@@ -1349,13 +1374,13 @@ opacity: 1;</string>
              </property>
              <property name="minimumSize">
               <size>
-               <width>70</width>
-               <height>0</height>
+               <width>120</width>
+               <height>77</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
-               <width>70</width>
+               <width>0</width>
                <height>50</height>
               </size>
              </property>
@@ -1398,6 +1423,12 @@ color: #E85420;</string>
            <property name="bottomMargin">
             <number>0</number>
            </property>
+           <property name="horizontalSpacing">
+            <number>10</number>
+           </property>
+           <property name="verticalSpacing">
+            <number>15</number>
+           </property>
            <item row="4" column="2">
             <widget class="QLabel" name="label_9">
              <property name="sizePolicy">
@@ -1416,7 +1447,7 @@ color: #E85420;</string>
               <string notr="true">
 /* UI Properties */
 text-align: left;
-font: normal normal bold 25px/29px Arial;
+font: normal normal bold 30px Arial;
 letter-spacing: 0px;
 color: #E85420;
 opacity: 1;</string>
@@ -1436,8 +1467,8 @@ opacity: 1;</string>
              </property>
              <property name="minimumSize">
               <size>
-               <width>70</width>
-               <height>0</height>
+               <width>120</width>
+               <height>77</height>
               </size>
              </property>
              <property name="maximumSize">
@@ -1522,7 +1553,7 @@ color: #E85420;</string>
               <string notr="true">
 /* UI Properties */
 text-align: left;
-font: normal normal bold 25px/29px Arial;
+font: normal normal bold 30px Arial;
 letter-spacing: 0px;
 color: #E85420;
 opacity: 1;</string>
@@ -1542,8 +1573,8 @@ opacity: 1;</string>
              </property>
              <property name="minimumSize">
               <size>
-               <width>70</width>
-               <height>0</height>
+               <width>120</width>
+               <height>77</height>
               </size>
              </property>
              <property name="maximumSize">
@@ -1591,48 +1622,17 @@ color: #E85420;</string>
              <property name="sizeHint" stdset="0">
               <size>
                <width>20</width>
-               <height>140</height>
+               <height>110</height>
               </size>
              </property>
             </spacer>
-           </item>
-           <item row="1" column="0" colspan="5">
-            <widget class="QLabel" name="label_5">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>80</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>9999999</width>
-               <height>80</height>
-              </size>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">
-/* UI Properties */
-text-align: left;
-font: normal normal bold 25px/29px Arial;
-letter-spacing: 0px;
-color: #0070DB;
-opacity: 1;</string>
-             </property>
-             <property name="text">
-              <string>Duration</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
-             </property>
-            </widget>
            </item>
            <item row="3" column="0" colspan="5">
             <widget class="QLabel" name="label_8">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                <horstretch>0</horstretch>
-               <verstretch>80</verstretch>
+               <verstretch>0</verstretch>
               </sizepolicy>
              </property>
              <property name="maximumSize">
@@ -1645,7 +1645,7 @@ opacity: 1;</string>
               <string notr="true">
 /* UI Properties */
 text-align: left;
-font: normal normal bold 25px/29px Arial;
+font: normal normal bold 30px Arial;
 letter-spacing: 0px;
 color: #0070DB;
 opacity: 1;</string>
@@ -1672,9 +1672,8 @@ opacity: 1;</string>
              <property name="styleSheet">
               <string notr="true">
 /* UI Properties */
-
 text-align: left;
-font: normal normal bold 25px/29px Arial;
+font: normal normal bold 30px Arial;
 letter-spacing: 0px;
 color: #E85420;
 opacity: 1;</string>
@@ -1688,14 +1687,14 @@ opacity: 1;</string>
             <widget class="QSpinBox" name="minContinuouspinBox">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>100</horstretch>
-               <verstretch>50</verstretch>
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
               </sizepolicy>
              </property>
              <property name="minimumSize">
               <size>
-               <width>70</width>
-               <height>0</height>
+               <width>120</width>
+               <height>77</height>
               </size>
              </property>
              <property name="maximumSize">
@@ -1745,6 +1744,37 @@ color: #E85420;</string>
              </property>
             </widget>
            </item>
+           <item row="1" column="0" colspan="5">
+            <widget class="QLabel" name="label_5">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>9999999</width>
+               <height>80</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">
+/* UI Properties */
+text-align: left;
+font: normal normal bold 30px Arial;
+letter-spacing: 0px;
+color: #0070DB;
+opacity: 1;</string>
+             </property>
+             <property name="text">
+              <string>Duration</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
           </layout>
          </widget>
         </widget>
@@ -1761,16 +1791,22 @@ color: #E85420;</string>
        </property>
        <item>
         <widget class="QLabel" name="newSettingsLabel">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>79</height>
+          </size>
+         </property>
          <property name="maximumSize">
           <size>
            <width>16777215</width>
-           <height>56</height>
+           <height>16777215</height>
           </size>
          </property>
          <property name="styleSheet">
           <string notr="true">color: #ffffff;
 background-color: #0070DB;
-font-size: 35px;
+font-size: 40px;
 font-weight: 700;
 font-family: arial;</string>
          </property>
@@ -1812,7 +1848,7 @@ font-family: arial;</string>
          <property name="styleSheet">
           <string notr="true">color: #ffffff;
 background-color: #B2D4F4;
-font-size: 35px;
+font-size: 40px;
 font-weight: 700;
 font-family: arial;
 border: 0px solid;</string>
