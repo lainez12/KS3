@@ -6,7 +6,7 @@
 RealPositionCameras::RealPositionCameras(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::RealPositionCameras),
-    m_icon(QPixmap(":/icons/fleche-bas.svg"))
+    m_icon(QPixmap(":/icons/fleche-haut.svg"))
 {
     ui->setupUi(this);
     ui->backgroundWafer->setVisible(false);
