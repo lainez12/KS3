@@ -133,6 +133,10 @@ namespace Kub3::Services
         {
             if (config.watchdogTicks > 0)
             {
+                // SAFETY: Virtual limit switch
+                if (this->checkVirtualLimits(motorId, config))
+                    continue;
+
                 // SAFETY: Continuous anti-collision check while moving
                 if (inCollisionZone(motorId, config.currentDir))
                 {
@@ -209,6 +213,11 @@ namespace Kub3::Services
             return;
         vision_motor_config_t &conf = it->second;
 
+        // Check for virtual limits before ordering movement
+        if (this->checkVirtualLimits(motor, conf))
+            return;
+
+        // Check for collisions
         if (inCollisionZone(motor, dir))
         {
             if (m_pushingModeEnabled)
@@ -327,6 +336,37 @@ namespace Kub3::Services
         {
             qCritical().noquote() << ERR_PREFIX << focal.unwrap_err();
         }
+    }
+
+    // ==========================================
+    // CAMERA VIRTUAL LIMITS HELPERS
+    // ==========================================
+
+    bool VisionService::checkVirtualLimits(VisionMotor motorId, const vision_motor_config_t &config)
+    {
+        // Upper left camera X
+        if (motorId == VisionMotor::UpperLeftCameraX &&
+            config.currentDir == VisionDirection::UpperLeftCamXRight &&
+            config.motor->getEncoderPositionMm() < m_conf.left_cam_x_virtual_limit_mm)
+        {
+            qDebug() << "VisionService: Virtual limit reached for left camera X motor.";
+            if (config.motor)
+                config.motor->emergencyStop();
+            return true;
+        }
+
+        // Upper right camera X
+        if (motorId == VisionMotor::UpperRightCameraX &&
+            config.currentDir == VisionDirection::UpperRightCamXLeft &&
+            config.motor->getEncoderPositionMm() > m_conf.right_cam_x_virtual_limit_mm)
+        {
+            qDebug() << "VisionService: Virtual limit reached for left camera X motor.";
+            if (config.motor)
+                config.motor->emergencyStop();
+            return true;
+        }
+
+        return false;
     }
 
     // ==========================================
