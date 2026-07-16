@@ -454,6 +454,9 @@ font-size: 20px;</string>
    </item>
    <item>
     <widget class="QWidget" name="content" native="true">
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
      <widget class="QWidget" name="moveLeftCamWidget" native="true">
       <property name="geometry">
        <rect>
@@ -2588,13 +2591,42 @@ font-size: 20px;</string>
        <rect>
         <x>480</x>
         <y>680</y>
-        <width>231</width>
-        <height>61</height>
+        <width>311</width>
+        <height>200</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_14">
        <item>
-        <widget class="NavButton" name="moveCamLeft" native="true"/>
+        <spacer name="horizontalSpacer_9">
+         <property name="orientation">
+          <enum>Qt::Orientation::Horizontal</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Policy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="NavButton" name="moveCamLeft" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>50</width>
+           <height>50</height>
+          </size>
+         </property>
+        </widget>
        </item>
        <item>
         <spacer name="horizontalSpacer_7">
@@ -2610,13 +2642,50 @@ font-size: 20px;</string>
         </spacer>
        </item>
        <item>
-        <widget class="NavButton" name="speedCamLeft" native="true"/>
+        <widget class="NavButton" name="speedCamLeft" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
        </item>
        <item>
-        <widget class="NavButton" name="pickUpLeft" native="true"/>
+        <widget class="NavButton" name="pickUpLeft" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
        </item>
        <item>
-        <widget class="NavButton" name="gotoLeft" native="true"/>
+        <widget class="NavButton" name="gotoLeft" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_11">
+         <property name="orientation">
+          <enum>Qt::Orientation::Horizontal</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Policy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>
@@ -2626,22 +2695,58 @@ font-size: 20px;</string>
         <x>1180</x>
         <y>680</y>
         <width>221</width>
-        <height>61</height>
+        <height>200</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_15">
        <item>
-        <widget class="NavButton" name="gotoRight" native="true">
+        <spacer name="horizontalSpacer_12">
+         <property name="orientation">
+          <enum>Qt::Orientation::Horizontal</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Policy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="NavButton" name="speedCamRight" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="styleSheet">
           <string notr="true"/>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="NavButton" name="pickUpRight" native="true"/>
+        <widget class="NavButton" name="pickUpRight" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
        </item>
        <item>
-        <widget class="NavButton" name="speedCamRight" native="true"/>
+        <widget class="NavButton" name="gotoRight" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
        </item>
        <item>
         <spacer name="horizontalSpacer_8">
@@ -2657,7 +2762,30 @@ font-size: 20px;</string>
         </spacer>
        </item>
        <item>
-        <widget class="NavButton" name="moveCamRight" native="true"/>
+        <widget class="NavButton" name="moveCamRight" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_10">
+         <property name="orientation">
+          <enum>Qt::Orientation::Horizontal</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Policy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>

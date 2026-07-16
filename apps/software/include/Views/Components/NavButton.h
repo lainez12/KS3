@@ -12,11 +12,12 @@ class NavButton : public QWidget
 public:
     explicit NavButton(QWidget *parent = nullptr);
 
-    void setup(const QString &text, const QColor &colorEnabled, const QColor &colorDisabled, const QString &iconPath = "", const QFont &font = QFont("Arial", 12));
+    void setup(const QString &text, const QColor &colorEnabled, const QColor &colorDisabled, const QString &iconPath = "", const QFont &font = QFont("Arial", 12), const uint gapPx = 0, const QString &textBgColor = "");
     void setIcon(const QString &iconPath);
     void setText(const QString &newText);
     void setEnabledNavButton(bool state);
     void setSize(const uint sizePx);
+    void setGap(const uint gapPx);
     void setTextColor(const QColor &color);
     void changeColorToDisabled();
     void changeColorToEnabled();
@@ -32,6 +33,7 @@ private:
     BottomCroppedCircle *m_circle;
     QColor colorEnabled;
     QColor colorDisabled;
+    QString textBgColor;
     QColor textColor;
     QLabel *m_iconLabel;
     QLabel *m_text;
