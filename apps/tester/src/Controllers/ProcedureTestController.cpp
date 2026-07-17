@@ -260,6 +260,11 @@ namespace Kub3::Tools::Tester
         startServiceRoutine(m_contactService.get(), "Autoleveling");
     }
 
+    void ProcedureTestController::ps_toggleForceSensors(bool en)
+    {
+        m_contactService->toggleForceSensors(en);
+    }
+
     void ProcedureTestController::ps_runCameraMovement(CameraId camId, MovementKind kind, CameraDirection dir)
     {
         // Translates UI enums to Logic enums

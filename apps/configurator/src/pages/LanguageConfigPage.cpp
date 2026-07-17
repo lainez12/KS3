@@ -52,9 +52,10 @@ namespace Kub3::Components
 
     void LanguageConfigPage::loadInitialData(const Kub3::Config::hardware_config_t &conf)
     {
-        bool valid = 0;
+        bool valid              = 0;
+        const uint localArrSize = sizeof(locales) / sizeof(locales[0]);
 
-        for (uint idx = 0; idx < sizeof(locales); ++idx)
+        for (uint idx = 0; idx < localArrSize; ++idx)
         {
             if (conf.keyboardLayout == QString(locales[idx]))
             {

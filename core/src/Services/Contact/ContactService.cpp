@@ -30,6 +30,12 @@ namespace Kub3::Services
     {
         this->initializeMachineValues();
 
+        // Force sensors switches
+        UNWRAP_OR_THROW(leftForceSw, m_registry->get<HAL::Act::ISwitch>(FORCE_LEFT_SWITCH), "[ContactService] Failed to load Left Force Sensor Switch: ");
+        UNWRAP_OR_THROW(rightForceSw, m_registry->get<HAL::Act::ISwitch>(FORCE_RIGHT_SWITCH), "[ContactService] Failed to load Right Force Sensor Switch: ");
+        UNWRAP_OR_THROW(backForceSw, m_registry->get<HAL::Act::ISwitch>(FORCE_BACK_SWITCH), "[ContactService] Failed to load Back Force Sensor Switch: ");
+        m_forceSensorsSw = {leftForceSw, rightForceSw, backForceSw};
+
         // Motors & kinematics
         UNWRAP_OR_THROW(leftMotor, m_registry->get<HAL::Act::IPositionMotor>(Z_LEFT_MOTOR), "[ContactService] Failed to load Z Left Motor: ");
         UNWRAP_OR_THROW(rightMotor, m_registry->get<HAL::Act::IPositionMotor>(Z_RIGHT_MOTOR), "[ContactService] Failed to load Z Right Motor: ");
@@ -179,6 +185,20 @@ namespace Kub3::Services
         }
     }
 
+    void ContactService::toggleForceSensors(bool en)
+    {
+        for (auto sw : m_forceSensorsSw)
+        {
+            if (!sw)
+                continue;
+
+            if (en)
+                sw->turnOn();
+            else
+                sw->turnOff();
+        }
+    }
+
     // ==========================================
     // BASE TASK SERVICE IMPLEMENTATIONS
     // ==========================================
@@ -208,7 +228,10 @@ namespace Kub3::Services
 
         std::visit(museum, kind);
         if (setupSuccess)
+        {
+            this->toggleForceSensors(true);
             this->startSequence();
+        }
     }
 
     void ContactService::buildAutolevelingLanes(void)

@@ -38,6 +38,7 @@ namespace Kub3::Services
     public:
         virtual ~IContactService() = default;
 
+        virtual void toggleForceSensors(bool en)              = 0;
         virtual void startContactRoutine(ContactPayload kind) = 0;
         virtual void moveZManual(ZDirection dir)              = 0;
         virtual void stopZManual(void)                        = 0;

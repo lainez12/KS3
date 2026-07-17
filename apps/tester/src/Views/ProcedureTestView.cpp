@@ -1,5 +1,7 @@
 #include "ui_ProcedureTestView.h"
 
+#include <QCheckBox>
+
 #include <HAL/MachineStatus/actuators_labels.h>
 #include <HAL/MachineStatus/sensors_labels.h>
 #include <HAL/MachineStatus/virtual_labels.h>
@@ -138,6 +140,7 @@ namespace Kub3::Tools::Tester
         connect(ui->btnInitAllZAxes, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestInitZAxes(); });
         connect(ui->btnHomeAllZAxes, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestHomeZAxes(); });
         connect(ui->btnStartAutolevel, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestAutolevel(); });
+        connect(ui->cbEnableForceSensors, &QCheckBox::toggled, this, [this](bool c) { m_procedureViewModel->uiRequestForceSensorsToggle(c); });
 
         // --- Vision (Cameras + Deck) ---
         connect(ui->btnInitCameras, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestInitCameras(); });
@@ -189,7 +192,7 @@ namespace Kub3::Tools::Tester
         auto configureForcePlot = [&](RealTimeCurveWidget *plt, const QString &id, QColor clr) {
             plt->setUnit("gF");
             plt->configureCurve(id, "Force", clr);
-            plt->setHistory(60000); // 60 seconds window
+            plt->setHistory(20000); // 20 seconds window
         };
 
         configureForcePlot(ui->pltLeftForce, "measured", QColor("#0072B2"));
@@ -325,7 +328,7 @@ namespace Kub3::Tools::Tester
                     ui->pltBackForce->addDataPoint("measured", forceGF);
                 else if (sensorId == FORCE_RIGHT_ADC)
                     ui->pltRightForce->addDataPoint("measured", forceGF);
-                text = QString::number(forceGF) + " gF";
+                text = QString::number(forceGF) + " gF (bin.: " + QString::number(value) + ", tare bin.: " + QString::number(forceTareADC) + ")";
             }
             else
                 text = QString::number(value);

@@ -5,6 +5,7 @@
 #include <HAL/Actuators/Focal/Focal.h>
 #include <HAL/Actuators/Lights/CameraLightingLed.h>
 #include <HAL/Actuators/Lights/UVExposureHead.h>
+#include <HAL/Actuators/Switches/LogicSwitch.h>
 #include <HAL/Actuators/Valves/SolenoidValve.h>
 #include <HAL/Com/LengthBasedParser.h>
 #include <HAL/Com/SerialCommunicator.h>
@@ -569,12 +570,9 @@ namespace Kub3::HAL
         auto zWaferOnLimit   = std::make_shared<Sensor<bool>>(m_repo, WAFER_ON, false, &limitSwitchParser);
         auto z2Limit         = std::make_shared<Sensor<bool>>(m_repo, Z2, false, &limitSwitchParser);
         // --- Force sensors
-        auto leftForceEn  = std::make_shared<Sensor<bool>>(m_repo, FORCE_LEFT_EN, false, &forceSensorEnabledParser);
-        auto rightForceEn = std::make_shared<Sensor<bool>>(m_repo, FORCE_RIGHT_EN, false, &forceSensorEnabledParser);
-        auto backForceEn  = std::make_shared<Sensor<bool>>(m_repo, FORCE_BACK_EN, false, &forceSensorEnabledParser);
-        auto leftForce    = std::make_shared<Sensor<uint16_t>>(m_repo, FORCE_LEFT_ADC, static_cast<uint16_t>(0), &forceSensorParser);
-        auto rightForce   = std::make_shared<Sensor<uint16_t>>(m_repo, FORCE_RIGHT_ADC, static_cast<uint16_t>(0), &forceSensorParser);
-        auto backForce    = std::make_shared<Sensor<uint16_t>>(m_repo, FORCE_BACK_ADC, static_cast<uint16_t>(0), &forceSensorParser);
+        auto leftForce  = std::make_shared<Sensor<uint16_t>>(m_repo, FORCE_LEFT_ADC, static_cast<uint16_t>(0), &forceSensorParser);
+        auto rightForce = std::make_shared<Sensor<uint16_t>>(m_repo, FORCE_RIGHT_ADC, static_cast<uint16_t>(0), &forceSensorParser);
+        auto backForce  = std::make_shared<Sensor<uint16_t>>(m_repo, FORCE_BACK_ADC, static_cast<uint16_t>(0), &forceSensorParser);
 
         // Register sensors
         // --- Encoders
@@ -601,9 +599,6 @@ namespace Kub3::HAL
         this->registerSensor(router, "Z2"s, std::move(z2Limit));
         this->registerSensor(router, "Z3"s, std::move(zWaferOnLimit));
         // --- Force sensors
-        this->registerSensor(router, "F?1"s, std::move(leftForceEn));
-        this->registerSensor(router, "F?2"s, std::move(rightForceEn));
-        this->registerSensor(router, "F?3"s, std::move(backForceEn));
         this->registerSensor(router, "F1"s, std::move(leftForce));
         this->registerSensor(router, "F2"s, std::move(rightForce));
         this->registerSensor(router, "F3"s, std::move(backForce));
@@ -623,18 +618,28 @@ namespace Kub3::HAL
         auto zBackMotor  = createStepperMotor(config, Z_BACK_MOTOR, '3', Kinematics::TRAPEZOIDAL, driver, Z_BACK_ENCODER);
         auto maskMotor   = createStepperMotor(config, MASK_DRAWER_MOTOR, '4', Kinematics::TRAPEZOIDAL, driver, MASK_ENCODER);
         auto waferMotor  = createStepperMotor(config, WAFER_DRAWER_MOTOR, '5', Kinematics::TRAPEZOIDAL, driver, WAFER_ENCODER);
+        // --- Force sensors switches
+        auto leftForceSwitch  = std::make_shared<Act::LogicSwitch>(FORCE_LEFT_SWITCH, "F11", "F10", driver);
+        auto rightForceSwitch = std::make_shared<Act::LogicSwitch>(FORCE_RIGHT_SWITCH, "F21", "F20", driver);
+        auto backForceSwitch  = std::make_shared<Act::LogicSwitch>(FORCE_BACK_SWITCH, "F31", "F30", driver);
 
         router->registerRoute("SS\x00"s, Act::StepperMotor::createFeedbackHandler(zLeftMotor));
         router->registerRoute("SS\x01"s, Act::StepperMotor::createFeedbackHandler(zRightMotor));
         router->registerRoute("SS\x02"s, Act::StepperMotor::createFeedbackHandler(zBackMotor));
         router->registerRoute("SS\x03"s, Act::StepperMotor::createFeedbackHandler(maskMotor));
         router->registerRoute("SS\x04"s, Act::StepperMotor::createFeedbackHandler(waferMotor));
+        router->registerRoute("F?1", Act::LogicSwitch::createFeedbackHandler(leftForceSwitch));
+        router->registerRoute("F?2", Act::LogicSwitch::createFeedbackHandler(rightForceSwitch));
+        router->registerRoute("F?3", Act::LogicSwitch::createFeedbackHandler(backForceSwitch));
 
         m_actuatorRegistry->registerActuator(std::move(zLeftMotor));
         m_actuatorRegistry->registerActuator(std::move(zRightMotor));
         m_actuatorRegistry->registerActuator(std::move(zBackMotor));
         m_actuatorRegistry->registerActuator(std::move(maskMotor));
         m_actuatorRegistry->registerActuator(std::move(waferMotor));
+        m_actuatorRegistry->registerActuator(std::move(leftForceSwitch));
+        m_actuatorRegistry->registerActuator(std::move(rightForceSwitch));
+        m_actuatorRegistry->registerActuator(std::move(backForceSwitch));
     }
 
     // --- Cameras HAL instanciation helpers
