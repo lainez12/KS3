@@ -56,6 +56,7 @@ namespace Kub3::Tools::Tester
         void ps_runInitZAxes(void);
         void ps_runHomeZAxes(void);
         void ps_runAutolevel(void);
+        void ps_forceSensorTare(ForceSensor fs);
         void ps_toggleForceSensors(bool);
         void ps_runCameraMovement(CameraId camId, MovementKind kind, CameraDirection dir);
         void ps_runAlignmentStageMovement(AlignmentStageId stageId, MovementKind kind, AlignmentStageDirection dir);

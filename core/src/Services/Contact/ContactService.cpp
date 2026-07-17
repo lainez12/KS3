@@ -185,18 +185,19 @@ namespace Kub3::Services
         }
     }
 
-    void ContactService::toggleForceSensors(bool en)
+    void ContactService::tareForceSensor(TestToken, ForceSensor fs)
     {
-        for (auto sw : m_forceSensorsSw)
-        {
-            if (!sw)
-                continue;
+        if ((fs & ForceSensor::Left) != ForceSensor::None)
+            m_repo->setValueRaw(V_TARE_FORCE_LEFT_ADC, HAL::MS::readUInt16(m_repo, FORCE_LEFT_ADC));
+        if ((fs & ForceSensor::Right) != ForceSensor::None)
+            m_repo->setValueRaw(V_TARE_FORCE_RIGHT_ADC, HAL::MS::readUInt16(m_repo, FORCE_RIGHT_ADC));
+        if ((fs & ForceSensor::Back) != ForceSensor::None)
+            m_repo->setValueRaw(V_TARE_FORCE_BACK_ADC, HAL::MS::readUInt16(m_repo, FORCE_BACK_ADC));
+    }
 
-            if (en)
-                sw->turnOn();
-            else
-                sw->turnOff();
-        }
+    void ContactService::toggleForceSensors(TestToken, bool en)
+    {
+        this->_toggleForceSensors(en);
     }
 
     // ==========================================
@@ -229,7 +230,7 @@ namespace Kub3::Services
         std::visit(museum, kind);
         if (setupSuccess)
         {
-            this->toggleForceSensors(true);
+            this->_toggleForceSensors(true);
             this->startSequence();
         }
     }
@@ -298,6 +299,20 @@ namespace Kub3::Services
         m_repo->setValueRaw(V_LEFT_Z_HORIZONTALITY_DELTA, 0);
         m_repo->setValueRaw(V_RIGHT_Z_HORIZONTALITY_DELTA, 0);
         m_repo->setValueRaw(V_BACK_Z_HORIZONTALITY_DELTA, 0);
+    }
+
+    void ContactService::_toggleForceSensors(bool en)
+    {
+        for (auto sw : m_forceSensorsSw)
+        {
+            if (!sw)
+                continue;
+
+            if (en)
+                sw->turnOn();
+            else
+                sw->turnOff();
+        }
     }
 
     // ==========================================

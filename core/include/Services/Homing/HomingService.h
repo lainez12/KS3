@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Common/TestToken.h>
 #include <Config/conf.h>
 #include <HAL/Actuators/ActuatorRegistry.h>
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
@@ -24,7 +25,8 @@ namespace Kub3::Services
 
         void initialize(void) override;
         void home(HomingTarget::Type target = HomingTarget::ALL) override;
-        void runGranularAction(HomingTarget::Type target, bool initialization = true) override;
+        // Test methods
+        void runGranularAction(TestToken, HomingTarget::Type target, bool initialization = true) override;
 
     protected:
         void onStop(void) override;

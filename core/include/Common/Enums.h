@@ -2,6 +2,16 @@
 
 #include <stdint.h>
 
+#define impl_bin_operators_for_enum(EnumClass)                                                  \
+    inline EnumClass operator&(EnumClass lhs, EnumClass rhs)                                    \
+    {                                                                                           \
+        return static_cast<EnumClass>(static_cast<uint32_t>(lhs) & static_cast<uint32_t>(rhs)); \
+    }                                                                                           \
+    inline EnumClass operator|(EnumClass lhs, EnumClass rhs)                                    \
+    {                                                                                           \
+        return static_cast<EnumClass>(static_cast<uint32_t>(lhs) | static_cast<uint32_t>(rhs)); \
+    }
+
 namespace Kub3
 {
 
@@ -12,15 +22,17 @@ namespace Kub3
         Mask  = 1u << 1,
         Both  = Wafer | Mask
     };
+    impl_bin_operators_for_enum(DrawerTarget);
 
-    inline DrawerTarget operator&(DrawerTarget lhs, DrawerTarget rhs)
+    enum class ForceSensor : uint32_t
     {
-        return static_cast<DrawerTarget>(static_cast<uint32_t>(lhs) & static_cast<uint32_t>(rhs));
-    }
-    inline DrawerTarget operator|(DrawerTarget lhs, DrawerTarget rhs)
-    {
-        return static_cast<DrawerTarget>(static_cast<uint32_t>(lhs) | static_cast<uint32_t>(rhs));
-    }
+        None  = 0,
+        Left  = 1u << 0,
+        Right = 1u << 1,
+        Back  = 1u << 2,
+        All   = Left | Right | Back,
+    };
+    impl_bin_operators_for_enum(ForceSensor);
 
     enum class CameraId : uint32_t
     {

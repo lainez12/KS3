@@ -136,10 +136,14 @@ namespace Kub3::Tools::Tester
         connect(ui->btnInitAllStages, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestInitStages(); });
         connect(ui->btnCenterAllStages, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestCenterStages(); });
 
-        // --- Z Elevator ---
+        // --- Z Elevator & Contact ---
         connect(ui->btnInitAllZAxes, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestInitZAxes(); });
         connect(ui->btnHomeAllZAxes, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestHomeZAxes(); });
         connect(ui->btnStartAutolevel, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestAutolevel(); });
+        connect(ui->btnTareAll, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestForceSensorTare(ForceSensor::All); });
+        connect(ui->btnTareLeft, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestForceSensorTare(ForceSensor::Left); });
+        connect(ui->btnTareRight, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestForceSensorTare(ForceSensor::Right); });
+        connect(ui->btnTareBack, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestForceSensorTare(ForceSensor::Back); });
         connect(ui->cbEnableForceSensors, &QCheckBox::toggled, this, [this](bool c) { m_procedureViewModel->uiRequestForceSensorsToggle(c); });
 
         // --- Vision (Cameras + Deck) ---
@@ -175,6 +179,11 @@ namespace Kub3::Tools::Tester
             ui->btnInsertWafer->setEnabled(idle);
             ui->btnHomeWafer->setEnabled(idle);
             ui->btnInitializeWafer->setEnabled(idle);
+
+            ui->btnTareAll->setEnabled(idle);
+            ui->btnTareLeft->setEnabled(idle);
+            ui->btnTareRight->setEnabled(idle);
+            ui->btnTareBack->setEnabled(idle);
 
             // ui->btnCenterXStage->setEnabled(idle);
             // ui->btnCenterYStage->setEnabled(idle);

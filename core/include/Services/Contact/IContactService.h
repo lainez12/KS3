@@ -4,6 +4,12 @@
 
 #include <Services/IService.h>
 
+namespace Kub3
+{
+    enum class ForceSensor : uint32_t;
+    class TestToken;
+}
+
 namespace Kub3::Services
 {
 
@@ -38,11 +44,14 @@ namespace Kub3::Services
     public:
         virtual ~IContactService() = default;
 
-        virtual void toggleForceSensors(bool en)              = 0;
         virtual void startContactRoutine(ContactPayload kind) = 0;
         virtual void moveZManual(ZDirection dir)              = 0;
         virtual void stopZManual(void)                        = 0;
         [[nodiscard]] virtual bool isInContact(void) const    = 0;
+
+        // Test methods
+        virtual void toggleForceSensors(TestToken, bool en)     = 0;
+        virtual void tareForceSensor(TestToken, ForceSensor fs) = 0;
     };
 
 }
