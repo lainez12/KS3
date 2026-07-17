@@ -1,5 +1,7 @@
 #include "ui_ProcedureTestView.h"
 
+#include <QCheckBox>
+
 #include <HAL/MachineStatus/actuators_labels.h>
 #include <HAL/MachineStatus/sensors_labels.h>
 #include <HAL/MachineStatus/virtual_labels.h>
@@ -115,14 +117,14 @@ namespace Kub3::Tools::Tester
         connect(ui->btnEjectMask, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestDrawerOperation(DrawerTarget::Mask, true); });
         connect(ui->btnInsertMask, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestDrawerOperation(DrawerTarget::Mask, false); });
         connect(ui->btnExposureMask, &QPushButton::clicked, this, [this]() { /* TODO */ });
-        connect(ui->btnInitializeMask, &QPushButton::clicked, this, [this]() { /* TODO */ });
-        connect(ui->btnHomeMask, &QPushButton::clicked, this, [this]() { /* TODO */ });
+        connect(ui->btnInitializeMask, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestInitDrawer(DrawerTarget::Mask); });
+        connect(ui->btnHomeMask, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestHomeDrawer(DrawerTarget::Mask); });
 
         // --- Wafer Operations ---
         connect(ui->btnEjectWafer, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestDrawerOperation(DrawerTarget::Wafer, true); });
         connect(ui->btnInsertWafer, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestDrawerOperation(DrawerTarget::Wafer, false); });
-        connect(ui->btnInitializeWafer, &QPushButton::clicked, this, [this]() { /* TODO */ });
-        connect(ui->btnHomeWafer, &QPushButton::clicked, this, [this]() { /* TODO */ });
+        connect(ui->btnInitializeWafer, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestInitDrawer(DrawerTarget::Wafer); });
+        connect(ui->btnHomeWafer, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestHomeDrawer(DrawerTarget::Wafer); });
 
         // --- Alignment Stages Operations ---
         connect(ui->btnInitXStage, &QPushButton::clicked, this, []() {});
@@ -134,10 +136,15 @@ namespace Kub3::Tools::Tester
         connect(ui->btnInitAllStages, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestInitStages(); });
         connect(ui->btnCenterAllStages, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestCenterStages(); });
 
-        // --- Z Elevator ---
+        // --- Z Elevator & Contact ---
         connect(ui->btnInitAllZAxes, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestInitZAxes(); });
         connect(ui->btnHomeAllZAxes, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestHomeZAxes(); });
         connect(ui->btnStartAutolevel, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestAutolevel(); });
+        connect(ui->btnTareAll, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestForceSensorTare(ForceSensor::All); });
+        connect(ui->btnTareLeft, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestForceSensorTare(ForceSensor::Left); });
+        connect(ui->btnTareRight, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestForceSensorTare(ForceSensor::Right); });
+        connect(ui->btnTareBack, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestForceSensorTare(ForceSensor::Back); });
+        connect(ui->cbEnableForceSensors, &QCheckBox::toggled, this, [this](bool c) { m_procedureViewModel->uiRequestForceSensorsToggle(c); });
 
         // --- Vision (Cameras + Deck) ---
         connect(ui->btnInitCameras, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestInitCameras(); });
@@ -164,7 +171,7 @@ namespace Kub3::Tools::Tester
 
             ui->btnEjectMask->setEnabled(idle);
             ui->btnInsertMask->setEnabled(idle);
-            ui->btnExposureMask->setEnabled(idle);
+            // ui->btnExposureMask->setEnabled(idle);
             ui->btnHomeMask->setEnabled(idle);
             ui->btnInitializeMask->setEnabled(idle);
 
@@ -172,6 +179,11 @@ namespace Kub3::Tools::Tester
             ui->btnInsertWafer->setEnabled(idle);
             ui->btnHomeWafer->setEnabled(idle);
             ui->btnInitializeWafer->setEnabled(idle);
+
+            ui->btnTareAll->setEnabled(idle);
+            ui->btnTareLeft->setEnabled(idle);
+            ui->btnTareRight->setEnabled(idle);
+            ui->btnTareBack->setEnabled(idle);
 
             // ui->btnCenterXStage->setEnabled(idle);
             // ui->btnCenterYStage->setEnabled(idle);
@@ -189,7 +201,7 @@ namespace Kub3::Tools::Tester
         auto configureForcePlot = [&](RealTimeCurveWidget *plt, const QString &id, QColor clr) {
             plt->setUnit("gF");
             plt->configureCurve(id, "Force", clr);
-            plt->setHistory(60000); // 60 seconds window
+            plt->setHistory(20000); // 20 seconds window
         };
 
         configureForcePlot(ui->pltLeftForce, "measured", QColor("#0072B2"));
@@ -325,7 +337,7 @@ namespace Kub3::Tools::Tester
                     ui->pltBackForce->addDataPoint("measured", forceGF);
                 else if (sensorId == FORCE_RIGHT_ADC)
                     ui->pltRightForce->addDataPoint("measured", forceGF);
-                text = QString::number(forceGF) + " gF";
+                text = QString::number(forceGF) + " gF (bin.: " + QString::number(value) + ", tare bin.: " + QString::number(forceTareADC) + ")";
             }
             else
                 text = QString::number(value);

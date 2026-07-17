@@ -89,6 +89,7 @@ namespace Kub3::Services
 
         // Misc.
 
+        bool checkVirtualLimits(VisionMotor motorId, const vision_motor_config_t &config);
         void setupCameraMotor(VisionMotor motorId, const char *motorConfId, const Config::process_config_t &conf);
         bool deckVisualisationLimitReached(void) const;
 

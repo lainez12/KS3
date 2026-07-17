@@ -72,7 +72,6 @@ namespace Kub3::Services
             UNWRAP_OR_ABORT(xStageBundle, buildStageMotorBundle(StageMotorIdArg::XStage));
             UNWRAP_OR_ABORT(yStageBundle, buildStageMotorBundle(StageMotorIdArg::YStage));
             UNWRAP_OR_ABORT(thetaStageBundle, buildStageMotorBundle(StageMotorIdArg::ThetaStage));
-            UNWRAP_OR_ABORT(maskConvMotor, m_registry->get<HAL::Act::IPositionMotor>(MASK_DRAWER_MOTOR));
             UNWRAP_OR_ABORT(waferConvMotor, m_registry->get<HAL::Act::IPositionMotor>(WAFER_DRAWER_MOTOR));
 
             if (waferOn)
@@ -93,15 +92,9 @@ namespace Kub3::Services
 
             buildStagesSequence(true);
             // Init 3Z (lower to T2MK low limits)
-            enqueueTask<ZMotorsInitTask>(m_repo, leftZMotorBundle, rightZMotorBundle, backZMotorBundle);
-            // TODO: Add task to tare force sensors here
-            // Init mask conveyor
-            enqueueTask<MaskConveyorInitTask>(
-                m_repo, maskConvMotor,
-                m_maskConveyorFastProfile, m_maskConveyorFineProfile, m_maskConveyorContactProfile,
-                m_processConf.drawers.cm3_reset_pos_mm);
-            // Init wafer conveyor
-            enqueueTask<WaferConveyorInitTask>(m_repo, waferConvMotor, m_waferConveyorFastProfile, m_waferConveyorFineProfile);
+            buildZMotorsSequence(true);
+            // Init conveyors
+            buildConveyorsSequence(true);
         }
         // CAMERAS TASKS LANE BUILD
         buildCamerasSequence(true, CAMERAS_TASKS_QUEUE_LANE);
@@ -265,12 +258,27 @@ namespace Kub3::Services
         this->startSequence();
     }
 
-    void HomingService::runGranularAction(HomingTarget::Type target, bool initialization)
+    void HomingService::runGranularAction(TestToken, HomingTarget::Type target, bool initialization)
     {
         this->clearTasks();
 
         switch (target)
         {
+        case HomingTarget::MASK_CONVEYOR:
+        {
+            buildMaskSequence(initialization);
+            break;
+        }
+        case HomingTarget::WAFER_CONVEYOR:
+        {
+            buildWaferSequence(initialization);
+            break;
+        }
+        case HomingTarget::MASK_CONVEYOR | HomingTarget::WAFER_CONVEYOR:
+        {
+            buildConveyorsSequence(initialization);
+            break;
+        }
         case HomingTarget::ALIGNMENT_STAGES:
         {
             buildStagesSequence(initialization);
@@ -352,6 +360,51 @@ namespace Kub3::Services
         m_leftCameraYKineProfile  = m_processConf.getKinematicProfile(LEFT_CAMERA_Y_MOTOR, "normal");
         m_rightCameraXKineProfile = m_processConf.getKinematicProfile(RIGHT_CAMERA_X_MOTOR, "normal");
         m_rightCameraYKineProfile = m_processConf.getKinematicProfile(RIGHT_CAMERA_Y_MOTOR, "normal");
+    }
+
+    // ==============================
+    // Sequence building helpers
+    // ==============================
+
+    void HomingService::buildMaskSequence(bool init, uint8_t lane)
+    {
+        UNWRAP_OR_ABORT(maskConvMotor, m_registry->get<HAL::Act::IPositionMotor>(MASK_DRAWER_MOTOR));
+
+        if (init)
+        {
+            enqueueTaskOnLane<MaskConveyorInitTask>(
+                lane, m_repo, maskConvMotor,
+                m_maskConveyorFastProfile, m_maskConveyorFineProfile, m_maskConveyorContactProfile,
+                m_processConf.drawers.cm3_reset_pos_mm);
+        }
+        else
+        {
+            enqueueTaskOnLane<MaskHomingTask>(
+                lane, m_repo, maskConvMotor,
+                m_maskConveyorFastProfile, m_maskConveyorFineProfile, m_maskConveyorContactProfile);
+        }
+    }
+
+    void HomingService::buildWaferSequence(bool init, uint8_t lane)
+    {
+        UNWRAP_OR_ABORT(waferConvMotor, m_registry->get<HAL::Act::IPositionMotor>(WAFER_DRAWER_MOTOR));
+
+        if (init)
+        {
+            enqueueTaskOnLane<WaferConveyorInitTask>(
+                lane, m_repo, waferConvMotor, m_waferConveyorFastProfile, m_waferConveyorFineProfile);
+        }
+        else
+        {
+            enqueueTaskOnLane<WaferHomingTask>(
+                lane, m_repo, waferConvMotor, m_waferConveyorFastProfile, m_waferConveyorFineProfile);
+        }
+    }
+
+    void HomingService::buildConveyorsSequence(bool init, uint8_t lane)
+    {
+        buildMaskSequence(init, lane);
+        buildWaferSequence(init, lane);
     }
 
     void HomingService::buildStagesSequence(bool init, uint8_t lane)

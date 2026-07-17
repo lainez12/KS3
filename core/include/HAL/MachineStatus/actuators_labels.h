@@ -30,3 +30,8 @@
 // Lighting leds
 #define LEFT_CAMERA_LIGHT  "leftCameraLightingLed"
 #define RIGHT_CAMERA_LIGHT "rightCameraLightingLed"
+
+// Force sensors switches
+#define FORCE_LEFT_SWITCH  "forceLeftSwitch"
+#define FORCE_RIGHT_SWITCH "forceRightSwitch"
+#define FORCE_BACK_SWITCH  "forceBackSwitch"

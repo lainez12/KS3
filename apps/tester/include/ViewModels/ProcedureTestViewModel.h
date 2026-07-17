@@ -54,9 +54,13 @@ namespace Kub3::Tools::Tester
         void uiRequestInitCameras(void);
         void uiRequestInitDeck(void);
         void uiRequestInitVision(void);
+        void uiRequestInitDrawer(DrawerTarget tgt);
+        void uiRequestHomeDrawer(DrawerTarget tgt);
         void uiRequestInitZAxes(void);
         void uiRequestHomeZAxes(void);
         void uiRequestAutolevel(void);
+        void uiRequestForceSensorTare(ForceSensor fs);
+        void uiRequestForceSensorsToggle(bool);
         void uiRequestCameraMovement(CameraId camId, MovementKind kind, CameraDirection dir);
         void uiRequestAlignmentStageMovement(AlignmentStageId stageId, MovementKind kind, AlignmentStageDirection dir);
 
@@ -86,9 +90,13 @@ namespace Kub3::Tools::Tester
         void cmdRunInitCameras(void);
         void cmdRunInitDeck(void);
         void cmdRunInitVision(void);
+        void cmdRunHomeDrawer(DrawerTarget tgt);
+        void cmdRunInitDrawer(DrawerTarget tgt);
         void cmdRunInitZAxes(void);
         void cmdRunHomeZAxes(void);
         void cmdRunAutolevel(void);
+        void cmdForceSensorTare(ForceSensor fs);
+        void cmdForceSensorsToggle(bool);
         void cmdRunCameraMovement(CameraId camId, MovementKind kind, CameraDirection dir);
         void cmdRunAlignmentStageMovement(AlignmentStageId stageId, MovementKind kind, AlignmentStageDirection dir);
 

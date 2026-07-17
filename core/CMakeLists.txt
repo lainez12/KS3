@@ -69,6 +69,7 @@ qt_add_library(Kub3Core STATIC
     src/HAL/Actuators/Motors/DirectCurrentMotor.cpp
     src/HAL/Actuators/Valves/SolenoidValve.cpp
     src/HAL/Actuators/Focal/Focal.cpp
+    src/HAL/Actuators/Switches/LogicSwitch.cpp
     src/Algorithms/Kinematic/utils.cpp
     src/Algorithms/Kinematic/TrapezoidalGenerator.cpp
     src/Algorithms/Admittance/AdmittanceController.cpp
@@ -77,6 +78,7 @@ qt_add_library(Kub3Core STATIC
     # Headers
     include/utils.h
     include/Common/Enums.h
+    include/Common/TestToken.h
     include/Config/ConfigLoader.h
     include/Config/ConfigSaver.h
     include/Config/kinematics.h
@@ -178,6 +180,8 @@ qt_add_library(Kub3Core STATIC
     include/HAL/Actuators/Valves/SolenoidValve.h
     include/HAL/Actuators/Focal/IFocal.h
     include/HAL/Actuators/Focal/Focal.h
+    include/HAL/Actuators/Switches/ISwitch.h
+    include/HAL/Actuators/Switches/LogicSwitch.h
     include/Algorithms/Kinematic/utils.h
     include/Algorithms/Kinematic/IKinematicGenerator.h
     include/Algorithms/Kinematic/TrapezoidalGenerator.h

@@ -147,6 +147,8 @@ namespace Kub3::Tools::Tester
         QObject::connect(procVM, &ProcedureTestViewModel::cmdRunInitCameras, m_procedureTestController, &ProcedureTestController::ps_runInitCameras, Qt::QueuedConnection);
         QObject::connect(procVM, &ProcedureTestViewModel::cmdRunInitDeck, m_procedureTestController, &ProcedureTestController::ps_runInitDeck, Qt::QueuedConnection);
         QObject::connect(procVM, &ProcedureTestViewModel::cmdRunInitVision, m_procedureTestController, &ProcedureTestController::ps_runInitVision, Qt::QueuedConnection);
+        QObject::connect(procVM, &ProcedureTestViewModel::cmdRunInitDrawer, m_procedureTestController, &ProcedureTestController::ps_runInitDrawer, Qt::QueuedConnection);
+        QObject::connect(procVM, &ProcedureTestViewModel::cmdRunHomeDrawer, m_procedureTestController, &ProcedureTestController::ps_runHomeDrawer, Qt::QueuedConnection);
         QObject::connect(procVM, &ProcedureTestViewModel::cmdRunHoming, m_procedureTestController, &ProcedureTestController::ps_runHoming, Qt::QueuedConnection);
         QObject::connect(procVM, &ProcedureTestViewModel::cmdRunDrawerOperation, m_procedureTestController, &ProcedureTestController::ps_runDrawerOperation, Qt::QueuedConnection);
         QObject::connect(procVM, &ProcedureTestViewModel::cmdRunStowage, m_procedureTestController, &ProcedureTestController::ps_runStowage, Qt::QueuedConnection);
@@ -154,6 +156,8 @@ namespace Kub3::Tools::Tester
         QObject::connect(procVM, &ProcedureTestViewModel::cmdRunInitZAxes, m_procedureTestController, &ProcedureTestController::ps_runInitZAxes, Qt::QueuedConnection);
         QObject::connect(procVM, &ProcedureTestViewModel::cmdRunHomeZAxes, m_procedureTestController, &ProcedureTestController::ps_runHomeZAxes, Qt::QueuedConnection);
         QObject::connect(procVM, &ProcedureTestViewModel::cmdRunAutolevel, m_procedureTestController, &ProcedureTestController::ps_runAutolevel, Qt::QueuedConnection);
+        QObject::connect(procVM, &ProcedureTestViewModel::cmdForceSensorTare, m_procedureTestController, &ProcedureTestController::ps_forceSensorTare, Qt::QueuedConnection);
+        QObject::connect(procVM, &ProcedureTestViewModel::cmdForceSensorsToggle, m_procedureTestController, &ProcedureTestController::ps_toggleForceSensors, Qt::QueuedConnection);
         QObject::connect(procVM, &ProcedureTestViewModel::cmdRunCameraMovement, m_procedureTestController, &ProcedureTestController::ps_runCameraMovement, Qt::QueuedConnection);
         QObject::connect(procVM, &ProcedureTestViewModel::cmdRunAlignmentStageMovement, m_procedureTestController, &ProcedureTestController::ps_runAlignmentStageMovement, Qt::QueuedConnection);
 

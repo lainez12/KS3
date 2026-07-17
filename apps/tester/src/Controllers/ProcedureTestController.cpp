@@ -1,5 +1,6 @@
 #include <QThread>
 
+#include <Common/TestToken.h>
 #include <Controllers/ProcedureTestController.h>
 #include <Services/Alignment/AlignmentService.h>
 #include <Services/Contact/ContactService.h>
@@ -17,6 +18,18 @@
 constexpr uint64_t pack(uint32_t c, uint32_t s)
 {
     return (static_cast<uint64_t>(c) << 32) | static_cast<uint64_t>(s);
+}
+
+namespace
+{
+    constexpr const char *str(Kub3::DrawerTarget tgt)
+    {
+        if (tgt == Kub3::DrawerTarget::Wafer)
+            return "Wafer";
+        if (tgt == Kub3::DrawerTarget::Mask)
+            return "Mask";
+        return "Both";
+    }
 }
 
 namespace Kub3::Tools::Tester
@@ -180,33 +193,54 @@ namespace Kub3::Tools::Tester
 
     void ProcedureTestController::ps_runInitStages(void)
     {
-        m_homingService->runGranularAction(Services::HomingTarget::ALIGNMENT_STAGES);
+        m_homingService->runGranularAction(TestToken{}, Services::HomingTarget::ALIGNMENT_STAGES);
         startServiceRoutine(m_homingService.get(), "Stages Initialization Sequence");
     }
 
     void ProcedureTestController::ps_runCenterStages(void)
     {
-        m_homingService->runGranularAction(Services::HomingTarget::ALIGNMENT_STAGES, false);
+        m_homingService->runGranularAction(TestToken{}, Services::HomingTarget::ALIGNMENT_STAGES, false);
         startServiceRoutine(m_homingService.get(), "Stages Homing Sequence");
     }
 
     void ProcedureTestController::ps_runInitCameras(void)
     {
-        m_homingService->runGranularAction(Services::HomingTarget::CAMERAS);
+        m_homingService->runGranularAction(TestToken{}, Services::HomingTarget::CAMERAS);
         startServiceRoutine(m_homingService.get(), "Cameras Initialization Sequence");
     }
 
     void ProcedureTestController::ps_runInitDeck(void)
     {
-        m_homingService->runGranularAction(Services::HomingTarget::DECK);
+        m_homingService->runGranularAction(TestToken{}, Services::HomingTarget::DECK);
         startServiceRoutine(m_homingService.get(), "Deck Initialization Sequence");
     }
 
     void ProcedureTestController::ps_runInitVision(void)
     {
-        m_homingService->runGranularAction(
-            static_cast<Services::HomingTarget::Type>(Services::HomingTarget::CAMERAS | Services::HomingTarget::DECK));
+        auto homingTarget = static_cast<Services::HomingTarget::Type>(Services::HomingTarget::CAMERAS | Services::HomingTarget::DECK);
+
+        m_homingService->runGranularAction(TestToken{}, homingTarget);
         startServiceRoutine(m_homingService.get(), "Vision Initialization Sequence");
+    }
+
+    void ProcedureTestController::ps_runInitDrawer(DrawerTarget target)
+    {
+        auto maskTarget   = static_cast<bool>(target & DrawerTarget::Mask) ? Services::HomingTarget::MASK_CONVEYOR : Services::HomingTarget::NONE;
+        auto waferTarget  = static_cast<bool>(target & DrawerTarget::Wafer) ? Services::HomingTarget::WAFER_CONVEYOR : Services::HomingTarget::NONE;
+        auto homingTarget = static_cast<Services::HomingTarget::Type>(maskTarget | waferTarget);
+
+        m_homingService->runGranularAction(TestToken{}, homingTarget);
+        startServiceRoutine(m_homingService.get(), QString("%1 Drawer Initialization Sequence").arg(str(target)));
+    }
+
+    void ProcedureTestController::ps_runHomeDrawer(DrawerTarget target)
+    {
+        auto maskTarget   = static_cast<bool>(target & DrawerTarget::Mask) ? Services::HomingTarget::MASK_CONVEYOR : Services::HomingTarget::NONE;
+        auto waferTarget  = static_cast<bool>(target & DrawerTarget::Wafer) ? Services::HomingTarget::WAFER_CONVEYOR : Services::HomingTarget::NONE;
+        auto homingTarget = static_cast<Services::HomingTarget::Type>(maskTarget | waferTarget);
+
+        m_homingService->runGranularAction(TestToken{}, homingTarget, false);
+        startServiceRoutine(m_homingService.get(), QString("%1 Drawer Homing Sequence").arg(str(target)));
     }
 
     void ProcedureTestController::ps_runHoming(int targetBits)
@@ -244,13 +278,13 @@ namespace Kub3::Tools::Tester
 
     void ProcedureTestController::ps_runInitZAxes(void)
     {
-        m_homingService->runGranularAction(Services::HomingTarget::Z_MOTORS);
+        m_homingService->runGranularAction(TestToken{}, Services::HomingTarget::Z_MOTORS);
         startServiceRoutine(m_homingService.get(), "Z Axes Initialization Sequence");
     }
 
     void ProcedureTestController::ps_runHomeZAxes(void)
     {
-        m_homingService->runGranularAction(Services::HomingTarget::Z_MOTORS, false);
+        m_homingService->runGranularAction(TestToken{}, Services::HomingTarget::Z_MOTORS, false);
         startServiceRoutine(m_homingService.get(), "Z Axes Homing Sequence");
     }
 
@@ -258,6 +292,16 @@ namespace Kub3::Tools::Tester
     {
         m_contactService->startContactRoutine(Services::AutolevelingPayload{});
         startServiceRoutine(m_contactService.get(), "Autoleveling");
+    }
+
+    void ProcedureTestController::ps_forceSensorTare(ForceSensor fs)
+    {
+        m_contactService->tareForceSensor(TestToken(), fs);
+    }
+
+    void ProcedureTestController::ps_toggleForceSensors(bool en)
+    {
+        m_contactService->toggleForceSensors(TestToken(), en);
     }
 
     void ProcedureTestController::ps_runCameraMovement(CameraId camId, MovementKind kind, CameraDirection dir)

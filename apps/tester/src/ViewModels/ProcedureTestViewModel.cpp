@@ -89,6 +89,18 @@ namespace Kub3::Tools::Tester
             emit cmdRunInitVision();
     }
 
+    void ProcedureTestViewModel::uiRequestInitDrawer(DrawerTarget tgt)
+    {
+        if (!m_isRunning)
+            emit cmdRunInitDrawer(tgt);
+    }
+
+    void ProcedureTestViewModel::uiRequestHomeDrawer(DrawerTarget tgt)
+    {
+        if (!m_isRunning)
+            emit cmdRunHomeDrawer(tgt);
+    }
+
     void ProcedureTestViewModel::uiRequestInitZAxes(void)
     {
         if (!m_isRunning)
@@ -105,6 +117,17 @@ namespace Kub3::Tools::Tester
     {
         if (!m_isRunning)
             emit cmdRunAutolevel();
+    }
+
+    void ProcedureTestViewModel::uiRequestForceSensorTare(ForceSensor fs)
+    {
+        if (!m_isRunning)
+            emit cmdForceSensorTare(fs);
+    }
+
+    void ProcedureTestViewModel::uiRequestForceSensorsToggle(bool en)
+    {
+        emit cmdForceSensorsToggle(en);
     }
 
     void ProcedureTestViewModel::uiRequestCameraMovement(CameraId camId, MovementKind kind, CameraDirection dir)

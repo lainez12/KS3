@@ -2,6 +2,11 @@
 
 #include <Services/IService.h>
 
+namespace Kub3
+{
+    class TestToken;
+}
+
 namespace Kub3::Services
 {
 
@@ -9,6 +14,7 @@ namespace Kub3::Services
     {
         enum Type : uint32_t
         {
+            NONE             = 0x0,
             MASK_CONVEYOR    = 1u << 0,
             WAFER_CONVEYOR   = 1u << 1,
             Z_MOTORS         = 1u << 2,
@@ -46,9 +52,11 @@ namespace Kub3::Services
     public:
         ~IHomingService() = default;
 
-        virtual void initialize()                                                             = 0;
-        virtual void home(HomingTarget::Type target = HomingTarget::ALL)                      = 0;
-        virtual void runGranularAction(HomingTarget::Type target, bool initialization = true) = 0;
+        virtual void initialize()                                        = 0;
+        virtual void home(HomingTarget::Type target = HomingTarget::ALL) = 0;
+
+        // Test methods
+        virtual void runGranularAction(TestToken, HomingTarget::Type target, bool initialization = true) = 0;
     };
 
 }

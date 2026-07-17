@@ -1,9 +1,12 @@
 #pragma once
 
 #include <Algorithms/Admittance/AdmittanceController.h>
+#include <Common/Enums.h>
+#include <Common/TestToken.h>
 #include <Config/conf.h>
 #include <HAL/Actuators/ActuatorRegistry.h>
 #include <HAL/Actuators/Motors/IPositionMotor.h>
+#include <HAL/Actuators/Switches/ISwitch.h>
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
 #include <Services/BaseTaskService.h>
 #include <Services/Contact/tasks/AdmittanceControlTask.h>
@@ -35,12 +38,15 @@ namespace Kub3::Services
         void moveZManual(ZDirection dir) override;
         void stopZManual(void) override;
         [[nodiscard]] bool isInContact(void) const override;
+        void tareForceSensor(TestToken, ForceSensor fs) override;
+        void toggleForceSensors(TestToken, bool en) override;
 
         // BaseTaskService overrides
         void tick(void) override;
         void onStop(void) override;
 
     private:
+        void _toggleForceSensors(bool en);
         void buildAutolevelingLanes(void);
         void buildBasicContactLanes(double forceGF);
         void buildHorizontalityLanes(void);
@@ -60,6 +66,7 @@ namespace Kub3::Services
         Shared<HAL::MS::IMachineStatusRepo> m_repo;
         Config::contact_process_config_t m_conf;
 
+        std::array<Shared<HAL::Act::ISwitch>, 3> m_forceSensorsSw;
         std::array<Shared<HAL::Act::IPositionMotor>, 3> m_zMotors;
         uint32_t m_manualWatchdogTicks = 0;
         ZDirection m_currentManualDir  = ZDirection::Down; // Tracking active manual direction

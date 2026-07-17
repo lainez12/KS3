@@ -30,6 +30,12 @@ namespace Kub3::Services
     {
         this->initializeMachineValues();
 
+        // Force sensors switches
+        UNWRAP_OR_THROW(leftForceSw, m_registry->get<HAL::Act::ISwitch>(FORCE_LEFT_SWITCH), "[ContactService] Failed to load Left Force Sensor Switch: ");
+        UNWRAP_OR_THROW(rightForceSw, m_registry->get<HAL::Act::ISwitch>(FORCE_RIGHT_SWITCH), "[ContactService] Failed to load Right Force Sensor Switch: ");
+        UNWRAP_OR_THROW(backForceSw, m_registry->get<HAL::Act::ISwitch>(FORCE_BACK_SWITCH), "[ContactService] Failed to load Back Force Sensor Switch: ");
+        m_forceSensorsSw = {leftForceSw, rightForceSw, backForceSw};
+
         // Motors & kinematics
         UNWRAP_OR_THROW(leftMotor, m_registry->get<HAL::Act::IPositionMotor>(Z_LEFT_MOTOR), "[ContactService] Failed to load Z Left Motor: ");
         UNWRAP_OR_THROW(rightMotor, m_registry->get<HAL::Act::IPositionMotor>(Z_RIGHT_MOTOR), "[ContactService] Failed to load Z Right Motor: ");
@@ -179,6 +185,21 @@ namespace Kub3::Services
         }
     }
 
+    void ContactService::tareForceSensor(TestToken, ForceSensor fs)
+    {
+        if ((fs & ForceSensor::Left) != ForceSensor::None)
+            m_repo->setValueRaw(V_TARE_FORCE_LEFT_ADC, HAL::MS::readUInt16(m_repo, FORCE_LEFT_ADC));
+        if ((fs & ForceSensor::Right) != ForceSensor::None)
+            m_repo->setValueRaw(V_TARE_FORCE_RIGHT_ADC, HAL::MS::readUInt16(m_repo, FORCE_RIGHT_ADC));
+        if ((fs & ForceSensor::Back) != ForceSensor::None)
+            m_repo->setValueRaw(V_TARE_FORCE_BACK_ADC, HAL::MS::readUInt16(m_repo, FORCE_BACK_ADC));
+    }
+
+    void ContactService::toggleForceSensors(TestToken, bool en)
+    {
+        this->_toggleForceSensors(en);
+    }
+
     // ==========================================
     // BASE TASK SERVICE IMPLEMENTATIONS
     // ==========================================
@@ -208,7 +229,10 @@ namespace Kub3::Services
 
         std::visit(museum, kind);
         if (setupSuccess)
+        {
+            this->_toggleForceSensors(true);
             this->startSequence();
+        }
     }
 
     void ContactService::buildAutolevelingLanes(void)
@@ -275,6 +299,20 @@ namespace Kub3::Services
         m_repo->setValueRaw(V_LEFT_Z_HORIZONTALITY_DELTA, 0);
         m_repo->setValueRaw(V_RIGHT_Z_HORIZONTALITY_DELTA, 0);
         m_repo->setValueRaw(V_BACK_Z_HORIZONTALITY_DELTA, 0);
+    }
+
+    void ContactService::_toggleForceSensors(bool en)
+    {
+        for (auto sw : m_forceSensorsSw)
+        {
+            if (!sw)
+                continue;
+
+            if (en)
+                sw->turnOn();
+            else
+                sw->turnOff();
+        }
     }
 
     // ==========================================
