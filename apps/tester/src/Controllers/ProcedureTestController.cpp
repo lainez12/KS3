@@ -224,8 +224,8 @@ namespace Kub3::Tools::Tester
 
     void ProcedureTestController::ps_runInitDrawer(DrawerTarget target)
     {
-        auto maskTarget   = (target & DrawerTarget::Mask) ? Services::HomingTarget::MASK_CONVEYOR : Services::HomingTarget::NONE;
-        auto waferTarget  = (target & DrawerTarget::Wafer) ? Services::HomingTarget::WAFER_CONVEYOR : Services::HomingTarget::NONE;
+        auto maskTarget   = static_cast<bool>(target & DrawerTarget::Mask) ? Services::HomingTarget::MASK_CONVEYOR : Services::HomingTarget::NONE;
+        auto waferTarget  = static_cast<bool>(target & DrawerTarget::Wafer) ? Services::HomingTarget::WAFER_CONVEYOR : Services::HomingTarget::NONE;
         auto homingTarget = static_cast<Services::HomingTarget::Type>(maskTarget | waferTarget);
 
         m_homingService->runGranularAction(homingTarget);
@@ -234,8 +234,8 @@ namespace Kub3::Tools::Tester
 
     void ProcedureTestController::ps_runHomeDrawer(DrawerTarget target)
     {
-        auto maskTarget   = (target & DrawerTarget::Mask) ? Services::HomingTarget::MASK_CONVEYOR : Services::HomingTarget::NONE;
-        auto waferTarget  = (target & DrawerTarget::Wafer) ? Services::HomingTarget::WAFER_CONVEYOR : Services::HomingTarget::NONE;
+        auto maskTarget   = static_cast<bool>(target & DrawerTarget::Mask) ? Services::HomingTarget::MASK_CONVEYOR : Services::HomingTarget::NONE;
+        auto waferTarget  = static_cast<bool>(target & DrawerTarget::Wafer) ? Services::HomingTarget::WAFER_CONVEYOR : Services::HomingTarget::NONE;
         auto homingTarget = static_cast<Services::HomingTarget::Type>(maskTarget | waferTarget);
 
         m_homingService->runGranularAction(homingTarget, false);
