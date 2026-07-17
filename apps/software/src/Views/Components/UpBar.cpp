@@ -81,7 +81,7 @@ void UpBar::setTitleBarConfig(Kub3::UI::Views::TitleBarConfig titleBar)
 void UpBar::resizeEvent(QResizeEvent *event)
 {
     QFrame::resizeEvent(event);
-    updateTitlgePosition(); // Recalculate center every time the UpBar resizes
+    updateTitlePosition(); // Recalculate center every time the UpBar resizes
 }
 
 void UpBar::paintEvent(QPaintEvent *)
