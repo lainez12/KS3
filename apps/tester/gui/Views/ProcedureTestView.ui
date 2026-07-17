@@ -58,7 +58,7 @@
        <item>
         <widget class="QTabWidget" name="tabWidget">
          <property name="currentIndex">
-          <number>2</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="conveyorsTab">
           <attribute name="title">
@@ -145,6 +145,9 @@
            </item>
            <item row="4" column="2">
             <widget class="QPushButton" name="btnExposureMask">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="text">
               <string>EXPOSURE</string>
              </property>
@@ -999,18 +1002,15 @@
              <property name="title">
               <string>Autoleveling / Horizontality</string>
              </property>
-             <layout class="QGridLayout" name="gridLayout_12" rowstretch="1,0,0,0,0">
-              <item row="0" column="2">
-               <widget class="Kub3::Tools::Tester::RealTimeCurveWidget" name="pltRightForce" native="true">
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>184</height>
-                 </size>
+             <layout class="QGridLayout" name="gridLayout_12" rowstretch="0,1,0,0,0,0">
+              <item row="5" column="0" colspan="3">
+               <widget class="QPushButton" name="btnStartAutolevel">
+                <property name="text">
+                 <string>Autolevel</string>
                 </property>
                </widget>
               </item>
-              <item row="0" column="1">
+              <item row="1" column="1">
                <widget class="Kub3::Tools::Tester::RealTimeCurveWidget" name="pltBackForce" native="true">
                 <property name="minimumSize">
                  <size>
@@ -1020,59 +1020,7 @@
                 </property>
                </widget>
               </item>
-              <item row="4" column="0" colspan="3">
-               <widget class="QPushButton" name="btnStartAutolevel">
-                <property name="text">
-                 <string>Autolevel</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0">
-               <widget class="QLabel" name="label_5">
-                <property name="font">
-                 <font>
-                  <pointsize>14</pointsize>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="layoutDirection">
-                 <enum>Qt::LayoutDirection::LeftToRight</enum>
-                </property>
-                <property name="text">
-                 <string>Left Force</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignmentFlag::AlignCenter</set>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="0" colspan="3">
-               <widget class="QCheckBox" name="cbEnableForceSensors">
-                <property name="text">
-                 <string>Enable force sensors</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="2">
-               <widget class="QLabel" name="label_21">
-                <property name="font">
-                 <font>
-                  <pointsize>14</pointsize>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="layoutDirection">
-                 <enum>Qt::LayoutDirection::LeftToRight</enum>
-                </property>
-                <property name="text">
-                 <string>Right Force</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignmentFlag::AlignCenter</set>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="2">
+              <item row="3" column="2">
                <widget class="QLabel" name="lblRightForce">
                 <property name="font">
                  <font>
@@ -1091,18 +1039,8 @@
                 </property>
                </widget>
               </item>
-              <item row="0" column="0">
-               <widget class="Kub3::Tools::Tester::RealTimeCurveWidget" name="pltLeftForce" native="true">
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>184</height>
-                 </size>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="1">
-               <widget class="QLabel" name="lblBackForce">
+              <item row="2" column="0">
+               <widget class="QLabel" name="label_5">
                 <property name="font">
                  <font>
                   <pointsize>14</pointsize>
@@ -1113,14 +1051,43 @@
                  <enum>Qt::LayoutDirection::LeftToRight</enum>
                 </property>
                 <property name="text">
-                 <string>N.D.</string>
+                 <string>Left Force</string>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignmentFlag::AlignCenter</set>
                 </property>
                </widget>
               </item>
-              <item row="2" column="0">
+              <item row="1" column="0">
+               <widget class="Kub3::Tools::Tester::RealTimeCurveWidget" name="pltLeftForce" native="true">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>184</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="2">
+               <widget class="QLabel" name="label_21">
+                <property name="font">
+                 <font>
+                  <pointsize>14</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="layoutDirection">
+                 <enum>Qt::LayoutDirection::LeftToRight</enum>
+                </property>
+                <property name="text">
+                 <string>Right Force</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignmentFlag::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="0">
                <widget class="QLabel" name="lblLeftForce">
                 <property name="font">
                  <font>
@@ -1139,7 +1106,7 @@
                 </property>
                </widget>
               </item>
-              <item row="1" column="1">
+              <item row="2" column="1">
                <widget class="QLabel" name="label_18">
                 <property name="font">
                  <font>
@@ -1155,6 +1122,42 @@
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignmentFlag::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="QLabel" name="lblBackForce">
+                <property name="font">
+                 <font>
+                  <pointsize>14</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="layoutDirection">
+                 <enum>Qt::LayoutDirection::LeftToRight</enum>
+                </property>
+                <property name="text">
+                 <string>N.D.</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignmentFlag::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="2">
+               <widget class="Kub3::Tools::Tester::RealTimeCurveWidget" name="pltRightForce" native="true">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>184</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0" colspan="3">
+               <widget class="QCheckBox" name="cbEnableForceSensors">
+                <property name="text">
+                 <string>Enable force sensors</string>
                 </property>
                </widget>
               </item>

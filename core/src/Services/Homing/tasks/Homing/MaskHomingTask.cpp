@@ -135,8 +135,9 @@ namespace Kub3::Services
     void MaskHomingTask::contactModeLogic(void)
     {
         const bool cm2 = HAL::MS::readBool(m_repo, CM2);
+        const bool cm3 = HAL::MS::readBool(m_repo, CM3);
 
-        if (cm2)
+        if (cm2 || cm3)
         {
             m_motor->emergencyStop();
             m_step = Step::Finished;

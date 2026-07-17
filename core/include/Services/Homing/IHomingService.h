@@ -9,6 +9,7 @@ namespace Kub3::Services
     {
         enum Type : uint32_t
         {
+            NONE             = 0x0,
             MASK_CONVEYOR    = 1u << 0,
             WAFER_CONVEYOR   = 1u << 1,
             Z_MOTORS         = 1u << 2,

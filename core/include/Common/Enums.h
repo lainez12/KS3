@@ -5,12 +5,22 @@
 namespace Kub3
 {
 
-    enum class DrawerTarget
+    enum class DrawerTarget : uint32_t
     {
-        Wafer,
-        Mask,
-        Both
+        None  = 0,
+        Wafer = 1u << 0,
+        Mask  = 1u << 1,
+        Both  = Wafer | Mask
     };
+
+    inline DrawerTarget operator&(DrawerTarget lhs, DrawerTarget rhs)
+    {
+        return static_cast<DrawerTarget>(static_cast<uint32_t>(lhs) & static_cast<uint32_t>(rhs));
+    }
+    inline DrawerTarget operator|(DrawerTarget lhs, DrawerTarget rhs)
+    {
+        return static_cast<DrawerTarget>(static_cast<uint32_t>(lhs) | static_cast<uint32_t>(rhs));
+    }
 
     enum class CameraId : uint32_t
     {

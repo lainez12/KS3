@@ -19,6 +19,18 @@ constexpr uint64_t pack(uint32_t c, uint32_t s)
     return (static_cast<uint64_t>(c) << 32) | static_cast<uint64_t>(s);
 }
 
+namespace
+{
+    constexpr const char *str(Kub3::DrawerTarget tgt)
+    {
+        if (tgt == Kub3::DrawerTarget::Wafer)
+            return "Wafer";
+        if (tgt == Kub3::DrawerTarget::Mask)
+            return "Mask";
+        return "Both";
+    }
+}
+
 namespace Kub3::Tools::Tester
 {
 #if defined(KUB_MODEL_4) || defined(KUB_MODEL_6)
@@ -204,9 +216,30 @@ namespace Kub3::Tools::Tester
 
     void ProcedureTestController::ps_runInitVision(void)
     {
-        m_homingService->runGranularAction(
-            static_cast<Services::HomingTarget::Type>(Services::HomingTarget::CAMERAS | Services::HomingTarget::DECK));
+        auto homingTarget = static_cast<Services::HomingTarget::Type>(Services::HomingTarget::CAMERAS | Services::HomingTarget::DECK);
+
+        m_homingService->runGranularAction(homingTarget);
         startServiceRoutine(m_homingService.get(), "Vision Initialization Sequence");
+    }
+
+    void ProcedureTestController::ps_runInitDrawer(DrawerTarget target)
+    {
+        auto maskTarget   = (target & DrawerTarget::Mask) ? Services::HomingTarget::MASK_CONVEYOR : Services::HomingTarget::NONE;
+        auto waferTarget  = (target & DrawerTarget::Wafer) ? Services::HomingTarget::WAFER_CONVEYOR : Services::HomingTarget::NONE;
+        auto homingTarget = static_cast<Services::HomingTarget::Type>(maskTarget | waferTarget);
+
+        m_homingService->runGranularAction(homingTarget);
+        startServiceRoutine(m_homingService.get(), QString("%1 Drawer Initialization Sequence").arg(str(target)));
+    }
+
+    void ProcedureTestController::ps_runHomeDrawer(DrawerTarget target)
+    {
+        auto maskTarget   = (target & DrawerTarget::Mask) ? Services::HomingTarget::MASK_CONVEYOR : Services::HomingTarget::NONE;
+        auto waferTarget  = (target & DrawerTarget::Wafer) ? Services::HomingTarget::WAFER_CONVEYOR : Services::HomingTarget::NONE;
+        auto homingTarget = static_cast<Services::HomingTarget::Type>(maskTarget | waferTarget);
+
+        m_homingService->runGranularAction(homingTarget, false);
+        startServiceRoutine(m_homingService.get(), QString("%1 Drawer Homing Sequence").arg(str(target)));
     }
 
     void ProcedureTestController::ps_runHoming(int targetBits)

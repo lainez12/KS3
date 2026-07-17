@@ -89,6 +89,18 @@ namespace Kub3::Tools::Tester
             emit cmdRunInitVision();
     }
 
+    void ProcedureTestViewModel::uiRequestInitDrawer(DrawerTarget tgt)
+    {
+        if (!m_isRunning)
+            emit cmdRunInitDrawer(tgt);
+    }
+
+    void ProcedureTestViewModel::uiRequestHomeDrawer(DrawerTarget tgt)
+    {
+        if (!m_isRunning)
+            emit cmdRunHomeDrawer(tgt);
+    }
+
     void ProcedureTestViewModel::uiRequestInitZAxes(void)
     {
         if (!m_isRunning)
