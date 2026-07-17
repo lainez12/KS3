@@ -4,6 +4,7 @@
 #include <Config/conf.h>
 #include <HAL/Actuators/ActuatorRegistry.h>
 #include <HAL/Actuators/Motors/IPositionMotor.h>
+#include <HAL/Actuators/Switches/ISwitch.h>
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
 #include <Services/BaseTaskService.h>
 #include <Services/Contact/tasks/AdmittanceControlTask.h>
@@ -31,6 +32,7 @@ namespace Kub3::Services
                        const Config::hardware_config_t &hwConfig);
 
         // IContactService overrides
+        void toggleForceSensors(bool en) override;
         void startContactRoutine(ContactPayload kind) override;
         void moveZManual(ZDirection dir) override;
         void stopZManual(void) override;
@@ -60,6 +62,7 @@ namespace Kub3::Services
         Shared<HAL::MS::IMachineStatusRepo> m_repo;
         Config::contact_process_config_t m_conf;
 
+        std::array<Shared<HAL::Act::ISwitch>, 3> m_forceSensorsSw;
         std::array<Shared<HAL::Act::IPositionMotor>, 3> m_zMotors;
         uint32_t m_manualWatchdogTicks = 0;
         ZDirection m_currentManualDir  = ZDirection::Down; // Tracking active manual direction

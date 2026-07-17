@@ -9,6 +9,7 @@ qt_add_executable(Kub3Software
     # Sources
     src/main.cpp
     src/Logger.h
+    src/system.cpp
     src/ApplicationBuilder.cpp
     src/ViewModels/HomeViewModel.cpp
     src/ViewModels/SettingsViewModel.cpp
@@ -73,6 +74,7 @@ qt_add_executable(Kub3Software
     src/Views/Modules/CamerasTestView.cpp
 
     # Headers
+    include/system.h
     include/ApplicationBuilder.h
     include/ViewModels/HomeViewModel.h
     include/ViewModels/SettingsViewModel.h
