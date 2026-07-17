@@ -117,14 +117,14 @@ namespace Kub3::Tools::Tester
         connect(ui->btnEjectMask, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestDrawerOperation(DrawerTarget::Mask, true); });
         connect(ui->btnInsertMask, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestDrawerOperation(DrawerTarget::Mask, false); });
         connect(ui->btnExposureMask, &QPushButton::clicked, this, [this]() { /* TODO */ });
-        connect(ui->btnInitializeMask, &QPushButton::clicked, this, [this]() { /* TODO */ });
-        connect(ui->btnHomeMask, &QPushButton::clicked, this, [this]() { /* TODO */ });
+        connect(ui->btnInitializeMask, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestInitDrawer(DrawerTarget::Mask); });
+        connect(ui->btnHomeMask, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestHomeDrawer(DrawerTarget::Mask); });
 
         // --- Wafer Operations ---
         connect(ui->btnEjectWafer, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestDrawerOperation(DrawerTarget::Wafer, true); });
         connect(ui->btnInsertWafer, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestDrawerOperation(DrawerTarget::Wafer, false); });
-        connect(ui->btnInitializeWafer, &QPushButton::clicked, this, [this]() { /* TODO */ });
-        connect(ui->btnHomeWafer, &QPushButton::clicked, this, [this]() { /* TODO */ });
+        connect(ui->btnInitializeWafer, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestInitDrawer(DrawerTarget::Wafer); });
+        connect(ui->btnHomeWafer, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestHomeDrawer(DrawerTarget::Wafer); });
 
         // --- Alignment Stages Operations ---
         connect(ui->btnInitXStage, &QPushButton::clicked, this, []() {});
@@ -167,7 +167,7 @@ namespace Kub3::Tools::Tester
 
             ui->btnEjectMask->setEnabled(idle);
             ui->btnInsertMask->setEnabled(idle);
-            ui->btnExposureMask->setEnabled(idle);
+            // ui->btnExposureMask->setEnabled(idle);
             ui->btnHomeMask->setEnabled(idle);
             ui->btnInitializeMask->setEnabled(idle);
 

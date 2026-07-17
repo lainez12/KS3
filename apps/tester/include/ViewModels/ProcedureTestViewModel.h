@@ -54,6 +54,8 @@ namespace Kub3::Tools::Tester
         void uiRequestInitCameras(void);
         void uiRequestInitDeck(void);
         void uiRequestInitVision(void);
+        void uiRequestInitDrawer(DrawerTarget tgt);
+        void uiRequestHomeDrawer(DrawerTarget tgt);
         void uiRequestInitZAxes(void);
         void uiRequestHomeZAxes(void);
         void uiRequestAutolevel(void);
@@ -87,6 +89,8 @@ namespace Kub3::Tools::Tester
         void cmdRunInitCameras(void);
         void cmdRunInitDeck(void);
         void cmdRunInitVision(void);
+        void cmdRunHomeDrawer(DrawerTarget tgt);
+        void cmdRunInitDrawer(DrawerTarget tgt);
         void cmdRunInitZAxes(void);
         void cmdRunHomeZAxes(void);
         void cmdRunAutolevel(void);

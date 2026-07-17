@@ -34,6 +34,9 @@ namespace Kub3::Services
         void loadMotorsKinematicProfiles(void);
 
         // Lanes build helpers
+        void buildMaskSequence(bool init, uint8_t lane = 0);
+        void buildWaferSequence(bool init, uint8_t lane = 0);
+        void buildConveyorsSequence(bool init, uint8_t lane = 0);
         void buildStagesSequence(bool init, uint8_t lane = 0);
         void buildZMotorsSequence(bool init, uint8_t lane = 0);
         void buildCamerasSequence(bool init, uint8_t lane = 0);

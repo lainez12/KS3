@@ -47,6 +47,8 @@ namespace Kub3::Tools::Tester
         void ps_runInitCameras(void);
         void ps_runInitDeck(void);
         void ps_runInitVision(void);
+        void ps_runInitDrawer(DrawerTarget target);
+        void ps_runHomeDrawer(DrawerTarget target);
         void ps_runHoming(int targetBits);
         void ps_runDrawerOperation(DrawerTarget target, bool eject);
         void ps_runStowage(int targetInt);
