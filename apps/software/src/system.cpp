@@ -1,62 +1,98 @@
 #include <system.h>
 
-std::string translateLocaleToXkb(const std::string &locale)
+namespace Kub3
 {
-    if (locale.empty())
-    {
-        return "us"; // Fallback safe default
-    }
 
-    std::string layout;
-    size_t underscorePos = locale.find('_');
+    std::string translateLocaleToXkb(const std::string &locale)
+    {
+        if (locale.empty())
+        {
+            return "us"; // Fallback safe default
+        }
 
-    if (underscorePos != std::string::npos && underscorePos + 1 < locale.length())
-    {
-        // Extract the 2-letter country code (e.g., "FR" from "fr_FR.UTF-8")
-        layout = locale.substr(underscorePos + 1, 2);
-    }
-    else
-    {
-        // Fallback: use the first 2 letters of the language code (e.g., "fr" from "fr")
-        layout = locale.substr(0, 2);
-    }
+        std::string layout;
+        size_t underscorePos = locale.find('_');
 
-    // Convert to lowercase (XKB layout codes are strictly lowercase)
-    std::transform(layout.begin(), layout.end(), layout.begin(),
-                   [](unsigned char c) { return std::tolower(c); });
+        if (underscorePos != std::string::npos && underscorePos + 1 < locale.length())
+        {
+            // Extract the 2-letter country code (e.g., "FR" from "fr_FR.UTF-8")
+            layout = locale.substr(underscorePos + 1, 2);
+        }
+        else
+        {
+            // Fallback: use the first 2 letters of the language code (e.g., "fr" from "fr")
+            layout = locale.substr(0, 2);
+        }
 
-    // Strict Sanitization: Ensure the layout consists ONLY of 2 to 3 alphanumeric characters.
-    // This absolutely eliminates any risk of command injection when executed via std::system.
-    if (layout.length() < 2 || layout.length() > 3)
-    {
-        return "us";
-    }
-    for (char c : layout)
-    {
-        if (!std::isalnum(static_cast<unsigned char>(c)))
+        // Convert to lowercase (XKB layout codes are strictly lowercase)
+        std::transform(layout.begin(), layout.end(), layout.begin(),
+                       [](unsigned char c) { return std::tolower(c); });
+
+        // Strict Sanitization: Ensure the layout consists ONLY of 2 to 3 alphanumeric characters.
+        // This absolutely eliminates any risk of command injection when executed via std::system.
+        if (layout.length() < 2 || layout.length() > 3)
         {
             return "us";
         }
+        for (char c : layout)
+        {
+            if (!std::isalnum(static_cast<unsigned char>(c)))
+            {
+                return "us";
+            }
+        }
+
+        return layout;
     }
 
-    return layout;
-}
-
-bool applyKeyboardLayout(const std::string &layout)
-{
-    // Double-check sanitization to prevent shell injections
-    for (char c : layout)
+    bool applyKeyboardLayout(const std::string &layout)
     {
-        if (!std::isalnum(static_cast<unsigned char>(c)))
+        // Double-check sanitization to prevent shell injections
+        for (char c : layout)
+        {
+            if (!std::isalnum(static_cast<unsigned char>(c)))
+            {
+                return false;
+            }
+        }
+
+        // Construct standard command: "setxkbmap <layout>"
+        std::string command = "setxkbmap " + layout;
+
+        // std::system is clean and safe here due to the strict alphanumeric validation above
+        int result = std::system(command.c_str());
+        return (result == 0);
+    }
+
+    bool verifyRootPassword(const std::string &inputPassword)
+    {
+        // Retrieve the shadow entry for the "root" user
+        // Note: This only works if the app is running as root (UID 0)
+        struct spwd *shadowEntry = getspnam("root");
+        if (!shadowEntry)
+        {
+            return false; // Root user not found or permission denied
+        }
+
+        // Extract the stored hash (Format: $id$salt$hashed)
+        const char *correctHash = shadowEntry->sp_pwdp;
+
+        // Check if the account is locked ('!') or disabled/no password ('*')
+        if (correctHash[0] == '!' || correctHash[0] == '*')
         {
             return false;
         }
+
+        // Hash the user's input using the stored hash as the salt
+        // crypt() automatically extracts the algorithm and salt from 'correctHash'
+        char *inputHash = crypt(inputPassword.c_str(), correctHash);
+        if (!inputHash)
+        {
+            return false; // Hashing algorithm failed (unsupported format)
+        }
+
+        // Compare the hashes safely
+        return (std::strcmp(correctHash, inputHash) == 0);
     }
 
-    // Construct standard command: "setxkbmap <layout>"
-    std::string command = "setxkbmap " + layout;
-
-    // std::system is clean and safe here due to the strict alphanumeric validation above
-    int result = std::system(command.c_str());
-    return (result == 0);
 }

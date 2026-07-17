@@ -170,7 +170,7 @@ qt_add_executable(Kub3Software
 qt_finalize_target(Kub3Software)
 
 target_include_directories(Kub3Software PRIVATE include)
-target_link_libraries(Kub3Software PRIVATE Kub3Core Qt6::Gui Qt6::Widgets Qt6::Svg)
+target_link_libraries(Kub3Software PRIVATE Kub3Core Qt6::Gui Qt6::Widgets Qt6::Svg crypt)
 
 set_target_properties(Kub3Software PROPERTIES
     INSTALL_RPATH "$ORIGIN;$ORIGIN/../lib;$ORIGIN/lib"
