@@ -23,7 +23,7 @@ static void qtLogsHandler(QtMsgType type, const QMessageLogContext &context, con
         originalHandler(type, context, msg);
 }
 
-static QString preprocesVariablesStyles(QString styles)
+static QString preprocessStyleVariables(QString styles)
 {
     QRegularExpression varRegex("(@[\\w-]+):\\s*(.*?);");
     QRegularExpressionMatchIterator i = varRegex.globalMatch(styles);
@@ -52,7 +52,7 @@ static void loadStyles(QApplication *app)
     {
         QTextStream ts(&f);
         QString content    = ts.readAll();
-        QString stylesheet = preprocesVariablesStyles(content);
+        QString stylesheet = preprocessStyleVariables(content);
         app->setStyleSheet(stylesheet);
         f.close();
     }
