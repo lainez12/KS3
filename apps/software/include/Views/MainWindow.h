@@ -24,6 +24,7 @@
 #include <Views/Exposure/SaveExposureSettingsView.h>
 #include <Views/ExposureMenuView.h>
 #include <Views/HomeEightView.h>
+#include <Views/Settings/AdminPasswordView.h>
 #include <Views/Settings/LedTestView.h>
 #include <Views/Settings/MachineStatusView.h>
 #include <Views/Settings/OperatingTimesView.h>

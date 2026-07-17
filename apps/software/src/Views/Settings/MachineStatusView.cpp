@@ -95,7 +95,7 @@ void MachineStatusView::configTitleBar()
         .viewTitle      = "Machine Status",
         .textColor      = QColor("#FFF"),
         .bgColor        = QColor("#0072BA"),
-        .iconPath       = ":/icons/admin.svg",
+        .iconPath       = ":/icons/settings.svg",
         .sectionTitle   = "Settings",
         .showTitleBar   = true,
         .m_showLeftLogo = true,

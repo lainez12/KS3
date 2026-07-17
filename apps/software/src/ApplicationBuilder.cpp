@@ -116,6 +116,7 @@ namespace Kub3
             ASSIGN_VIEW_MODEL(UI::ViewModels::Exposure::ProgressExposureViewModel, progressExposureVM, m_progressExposureVM, m_repo);
             ASSIGN_VIEW_MODEL(UI::ViewModels::Exposure::CompleteExposureViewModel, completeExposureVM, m_completeExposureVM, m_repo);
             ASSIGN_VIEW_MODEL(UI::ViewModels::Exposure::SaveExposureSettingsViewModel, saveExposureSettingsVM, m_saveExposureSettingsVM, m_repo);
+            ASSIGN_VIEW_MODEL(UI::ViewModels::Settings::AdminPasswordViewModel, adminPasswordVM, m_adminPasswordVM, m_repo);
             ASSIGN_VIEW_MODEL(UI::ViewModels::Settings::VersionViewModel, versionVM, m_versionVM, m_repo);
             ASSIGN_VIEW_MODEL(UI::ViewModels::Settings::TemperatureViewModel, temperatureVM, m_temperatureVM, m_repo);
             ASSIGN_VIEW_MODEL(UI::ViewModels::Settings::OperatingTimesViewModel, operatingTimeVM, m_operatingTimeVM, m_repo);
@@ -139,6 +140,7 @@ namespace Kub3
             auto *progressExposureView         = new ProgressExposureView(std::move(progressExposureVM), m_mainWindow.get());
             auto *completeExposureView         = new CompleteExposureView(std::move(completeExposureVM), m_mainWindow.get());
             auto *saveExposureSettingsView     = new SaveExposureSettingsView(std::move(saveExposureSettingsVM), m_mainWindow.get());
+            auto *adminPasswordView            = new AdminPasswordView(std::move(adminPasswordVM), m_mainWindow.get());
             auto *versionView                  = new VersionView(std::move(versionVM), m_mainWindow.get());
             auto *temperatureView              = new TemperatureView(std::move(temperatureVM), m_mainWindow.get());
             auto *operatingTimeView            = new OperatingTimesView(std::move(operatingTimeVM), m_mainWindow.get());
@@ -157,6 +159,7 @@ namespace Kub3
             m_mainWindow->addView(Kub3::UI::ViewId::EXPOSURE_MENU_VIEW, exposureMenuView);
             m_mainWindow->addView(Kub3::UI::ViewId::MACHINE_STATUS_VIEW, machineStatusView);
             m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_VIEW, settingsView);
+            m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_ADMIN_PASSWORD_VIEW, adminPasswordView);
             m_mainWindow->addView(Kub3::UI::ViewId::EXPOSURE_SETTINGS_VIEW, exposureSettingsView);
             m_mainWindow->addView(Kub3::UI::ViewId::FAVORITE_EXPOSURE_SETTINGS_VIEW, favoriteExposureSettingsView);
             m_mainWindow->addView(Kub3::UI::ViewId::RECAP_EXPOSURE_SETTINGS_VIEW, recapExposureSettingsView);

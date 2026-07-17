@@ -35,8 +35,9 @@ NavButton::NavButton(QWidget *parent) :
     layout->addWidget(m_text, 0, Qt::AlignHCenter);
 }
 
-void NavButton::setup(const QString &text, const QColor &colorEnabled, const QColor &colorDisabled, const QString &iconPath, const QFont &font, const uint gapPx, const QString &textBgColor)
+void NavButton::setup(QString text, const QColor &colorEnabled, const QColor &colorDisabled, const QString &iconPath, const QFont &font, const uint gapPx, const QString &textBgColor)
 {
+    text[0] = text[0].toUpper();
     m_text->setText(text);
     m_text->setFont(font);
     m_circle->setColor(colorEnabled);

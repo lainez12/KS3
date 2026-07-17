@@ -12,7 +12,7 @@ class NavButton : public QWidget
 public:
     explicit NavButton(QWidget *parent = nullptr);
 
-    void setup(const QString &text, const QColor &colorEnabled, const QColor &colorDisabled, const QString &iconPath = "", const QFont &font = QFont("Arial", 12), const uint gapPx = 0, const QString &textBgColor = "");
+    void setup(QString text, const QColor &colorEnabled, const QColor &colorDisabled, const QString &iconPath = "", const QFont &font = QFont("Arial", 12), const uint gapPx = 0, const QString &textBgColor = "");
     void setIcon(const QString &iconPath);
     void setText(const QString &newText);
     void setEnabledNavButton(bool state);

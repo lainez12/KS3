@@ -40,7 +40,7 @@ void SaveExposureSettingsView::setNewNavButtonsConfigs()
         ":/icons/back.svg",
         ID_BTN_BACK,
         std::bind(&SaveExposureSettingsView::onBackButtonClicked, this, std::placeholders::_1));
-    addNavButton("left", backBtn);
+    addNavButton("left", backBtn, 1);
 
     NavButtonConfig saveBtn(
         "Save",

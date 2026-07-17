@@ -5,7 +5,7 @@
 #define ID_BTN_SETTINGS "S"
 #define ID_BTN_OPEN     "O"
 #define ID_BTN_CLOSE    "C"
-#define BUTTONS_SIZE    300
+#define BUTTONS_SIZE    280
 
 HomeEightView::HomeEightView(Unique<HomeViewModel> viewModel, QWidget *parent) :
     ViewBase(std::move(viewModel), parent),
@@ -45,7 +45,7 @@ void HomeEightView::updateMachineLogo(int h)
     if (h <= 0)
         return;
 
-    const int baseFontSize          = h * 0.1;             // 6% of window height
+    const int baseFontSize          = h * 0.11;            // 6% of window height
     const int substrateSizeFontSize = baseFontSize * 0.45; // 64% of base
     // We use arg %1 for the logo size, arg %2 for the substrate size, arg %3 for the text
     const QString templateStr =
@@ -64,7 +64,7 @@ void HomeEightView::updateMachineLogo(int h)
 void HomeEightView::createNavButtonsConfigs()
 {
     NavButtonConfig settingsBtn(
-        "settings",
+        "Settings",
         QColor("#0072BA"),
         QColor("#B2D4F4"),
         ":/icons/settings.svg",

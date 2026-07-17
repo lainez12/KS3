@@ -19,7 +19,7 @@ namespace Kub3::UI::Views
             ":/icons/home.svg",
             "H",
             std::bind(&ExposureViewBase::onHomeButtonClicked, this, std::placeholders::_1));
-        addNavButton("left", homeBtn);
+        addNavButton("left", homeBtn, 0);
 
         NavButtonConfig validateBtn(
             "Validate",

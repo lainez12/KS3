@@ -130,12 +130,20 @@ QFrame#navBtnIconCircle {
 .text-medium {
     font-family: @artTtnorm;
     font-size: 25px;
-    font-weight: 300;
 }
 
 .text-small {
     font-family: @artTtnorm;
     font-size: 20px;
+}
+
+.text-extra-small {
+    font-family: @artTtnorm;
+    font-size: 16px;
+}
+
+.text-bold {
+    font-weight: 700;
 }
 
 .title-favorite-exposure

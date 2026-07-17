@@ -26,9 +26,15 @@ namespace Kub3::UI::Views
         void updateLastEditableFocus(QWidget *newWidget);
         void connectButton(QWidget *parent, const QString &buttonName, Qt::Key keyCode, const QString &text);
         void connectClearButton(QWidget *parent, const QString &buttonName);
+        void connectCapitalButton(QWidget *parent, const QString &buttonName);
+        void toggleCapitalState();
+        void switchToUpperCase();
+        void switchToLowerCase();
+        //void switchLetterCase(const QString &buttonName,  const QString &newText, Qt::Key newKeyCode);
 
     private:
         QPointer<QWidget> m_lastEditableFocus;
+        bool isCapitalActive = true;
     };
 
 }

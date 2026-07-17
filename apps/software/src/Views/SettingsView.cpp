@@ -41,6 +41,7 @@ SettingsView::SettingsView(Unique<SettingsViewModel> viewModel, QWidget *parent)
     connect(ui->ledTestBtn, &NavButton::clicked, this, [this]() { emit s_openView(Kub3::UI::ViewId::SETTINGS_LED_TEST_VIEW); });
     connect(ui->updateSoftBtn, &NavButton::clicked, this, [this]() { emit s_openView(Kub3::UI::ViewId::SETTINGS_UPDATE_SOFTWARE_VIEW); });
     connect(ui->machineSettingsBtn, &NavButton::clicked, this, [this]() { emit s_openView(Kub3::UI::ViewId::MACHINE_STATUS_VIEW); });
+    connect(ui->adminBtn, &NavButton::clicked, this, [this]() { emit s_openView(Kub3::UI::ViewId::SETTINGS_ADMIN_PASSWORD_VIEW); });
 }
 SettingsView::~SettingsView()
 {
@@ -54,20 +55,24 @@ void SettingsView::resizeEvent(QResizeEvent *ev)
 void SettingsView::createNavButtonsConfigs()
 {
     NavButtonConfig homeBtn(
-        "Home",
-        ":/icons/home.svg",
+        "Back to Main",
+        QColor("#FFF"),
+        QColor("#B2D4F4"),
+        ":/icons/picto.png",
         ID_BTN_HOME,
         std::bind(&SettingsView::onHomeButtonClicked, this, std::placeholders::_1));
+    homeBtn.isTextColorDifferent = true;
+    homeBtn.textColor            = QColor("#000");
     addNavButton("left", homeBtn);
 }
 void SettingsView::configTitleBar()
 {
     setTitleBar(TitleBarConfig{
-        .viewTitle      = "Settings",
+        .viewTitle      = "Menu",
         .textColor      = QColor("#FFF"),
         .bgColor        = QColor(BLUE_COLOR),
-        .iconPath       = ":/icons/admin-circle.svg",
-        .sectionTitle   = "Parameters",
+        .iconPath       = ":/icons/settings.svg",
+        .sectionTitle   = "Settings",
         .showTitleBar   = true,
         .m_showLeftLogo = true,
     });

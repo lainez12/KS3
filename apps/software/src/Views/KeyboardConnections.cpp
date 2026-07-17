@@ -133,6 +133,11 @@ namespace Kub3::UI::Views
         connectButton(parent, "btnB" + suffix, Qt::Key_B, "B");
         connectButton(parent, "btnN" + suffix, Qt::Key_N, "N");
         connectButton(parent, "btnM" + suffix, Qt::Key_M, "M");
+
+        connectButton(parent, "btnEspace" + suffix, Qt::Key_Space, " ");
+
+        connectCapitalButton(parent, "btnShift" + suffix);
+        // connectButton(parent, "btnShift" + suffix, Qt::Key_CapsLock, "");
     }
 
     void KeyboardConnections::connectButton(QWidget *parent, const QString &buttonName, Qt::Key keyCode, const QString &text)
@@ -155,6 +160,41 @@ namespace Kub3::UI::Views
                 clearInputSelected();
             });
         }
+    }
+
+    void KeyboardConnections::connectCapitalButton(QWidget *parent, const QString &buttonName)
+    {
+        QPushButton *btn = parent->findChild<QPushButton *>(buttonName);
+        if (btn)
+        {
+            connect(btn, &QPushButton::clicked, this, [this]() {
+                toggleCapitalState();
+                qDebug() << "Capital state toggled. New state: " << (isCapitalActive ? "Active" : "Inactive");
+            });
+        }
+    }
+
+    void KeyboardConnections::toggleCapitalState()
+    {
+        isCapitalActive = !isCapitalActive;
+        if (isCapitalActive)
+        {
+            // siwtchToUpperCase();
+        }
+        else
+        {
+            switchToLowerCase();
+        }
+    }
+
+    void KeyboardConnections::switchToUpperCase()
+    {
+        // switchLetterCase("btnQ", "Q", Qt::Key_Q);
+    }
+
+    void KeyboardConnections::switchToLowerCase()
+    {
+        // switchLetterCase("btnQ", "q", Qt::Key_Q);
     }
 
 }
