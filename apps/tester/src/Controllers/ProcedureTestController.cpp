@@ -1,5 +1,6 @@
 #include <QThread>
 
+#include <Common/TestToken.h>
 #include <Controllers/ProcedureTestController.h>
 #include <Services/Alignment/AlignmentService.h>
 #include <Services/Contact/ContactService.h>
@@ -192,25 +193,25 @@ namespace Kub3::Tools::Tester
 
     void ProcedureTestController::ps_runInitStages(void)
     {
-        m_homingService->runGranularAction(Services::HomingTarget::ALIGNMENT_STAGES);
+        m_homingService->runGranularAction(TestToken{}, Services::HomingTarget::ALIGNMENT_STAGES);
         startServiceRoutine(m_homingService.get(), "Stages Initialization Sequence");
     }
 
     void ProcedureTestController::ps_runCenterStages(void)
     {
-        m_homingService->runGranularAction(Services::HomingTarget::ALIGNMENT_STAGES, false);
+        m_homingService->runGranularAction(TestToken{}, Services::HomingTarget::ALIGNMENT_STAGES, false);
         startServiceRoutine(m_homingService.get(), "Stages Homing Sequence");
     }
 
     void ProcedureTestController::ps_runInitCameras(void)
     {
-        m_homingService->runGranularAction(Services::HomingTarget::CAMERAS);
+        m_homingService->runGranularAction(TestToken{}, Services::HomingTarget::CAMERAS);
         startServiceRoutine(m_homingService.get(), "Cameras Initialization Sequence");
     }
 
     void ProcedureTestController::ps_runInitDeck(void)
     {
-        m_homingService->runGranularAction(Services::HomingTarget::DECK);
+        m_homingService->runGranularAction(TestToken{}, Services::HomingTarget::DECK);
         startServiceRoutine(m_homingService.get(), "Deck Initialization Sequence");
     }
 
@@ -218,7 +219,7 @@ namespace Kub3::Tools::Tester
     {
         auto homingTarget = static_cast<Services::HomingTarget::Type>(Services::HomingTarget::CAMERAS | Services::HomingTarget::DECK);
 
-        m_homingService->runGranularAction(homingTarget);
+        m_homingService->runGranularAction(TestToken{}, homingTarget);
         startServiceRoutine(m_homingService.get(), "Vision Initialization Sequence");
     }
 
@@ -228,7 +229,7 @@ namespace Kub3::Tools::Tester
         auto waferTarget  = static_cast<bool>(target & DrawerTarget::Wafer) ? Services::HomingTarget::WAFER_CONVEYOR : Services::HomingTarget::NONE;
         auto homingTarget = static_cast<Services::HomingTarget::Type>(maskTarget | waferTarget);
 
-        m_homingService->runGranularAction(homingTarget);
+        m_homingService->runGranularAction(TestToken{}, homingTarget);
         startServiceRoutine(m_homingService.get(), QString("%1 Drawer Initialization Sequence").arg(str(target)));
     }
 
@@ -238,7 +239,7 @@ namespace Kub3::Tools::Tester
         auto waferTarget  = static_cast<bool>(target & DrawerTarget::Wafer) ? Services::HomingTarget::WAFER_CONVEYOR : Services::HomingTarget::NONE;
         auto homingTarget = static_cast<Services::HomingTarget::Type>(maskTarget | waferTarget);
 
-        m_homingService->runGranularAction(homingTarget, false);
+        m_homingService->runGranularAction(TestToken{}, homingTarget, false);
         startServiceRoutine(m_homingService.get(), QString("%1 Drawer Homing Sequence").arg(str(target)));
     }
 
@@ -277,13 +278,13 @@ namespace Kub3::Tools::Tester
 
     void ProcedureTestController::ps_runInitZAxes(void)
     {
-        m_homingService->runGranularAction(Services::HomingTarget::Z_MOTORS);
+        m_homingService->runGranularAction(TestToken{}, Services::HomingTarget::Z_MOTORS);
         startServiceRoutine(m_homingService.get(), "Z Axes Initialization Sequence");
     }
 
     void ProcedureTestController::ps_runHomeZAxes(void)
     {
-        m_homingService->runGranularAction(Services::HomingTarget::Z_MOTORS, false);
+        m_homingService->runGranularAction(TestToken{}, Services::HomingTarget::Z_MOTORS, false);
         startServiceRoutine(m_homingService.get(), "Z Axes Homing Sequence");
     }
 
@@ -293,9 +294,14 @@ namespace Kub3::Tools::Tester
         startServiceRoutine(m_contactService.get(), "Autoleveling");
     }
 
+    void ProcedureTestController::ps_forceSensorTare(ForceSensor fs)
+    {
+        m_contactService->tareForceSensor(TestToken(), fs);
+    }
+
     void ProcedureTestController::ps_toggleForceSensors(bool en)
     {
-        m_contactService->toggleForceSensors(en);
+        m_contactService->toggleForceSensors(TestToken(), en);
     }
 
     void ProcedureTestController::ps_runCameraMovement(CameraId camId, MovementKind kind, CameraDirection dir)

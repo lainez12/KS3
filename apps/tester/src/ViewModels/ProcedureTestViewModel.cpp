@@ -119,6 +119,12 @@ namespace Kub3::Tools::Tester
             emit cmdRunAutolevel();
     }
 
+    void ProcedureTestViewModel::uiRequestForceSensorTare(ForceSensor fs)
+    {
+        if (!m_isRunning)
+            emit cmdForceSensorTare(fs);
+    }
+
     void ProcedureTestViewModel::uiRequestForceSensorsToggle(bool en)
     {
         emit cmdForceSensorsToggle(en);

@@ -1,6 +1,8 @@
 #pragma once
 
 #include <Algorithms/Admittance/AdmittanceController.h>
+#include <Common/Enums.h>
+#include <Common/TestToken.h>
 #include <Config/conf.h>
 #include <HAL/Actuators/ActuatorRegistry.h>
 #include <HAL/Actuators/Motors/IPositionMotor.h>
@@ -32,17 +34,19 @@ namespace Kub3::Services
                        const Config::hardware_config_t &hwConfig);
 
         // IContactService overrides
-        void toggleForceSensors(bool en) override;
         void startContactRoutine(ContactPayload kind) override;
         void moveZManual(ZDirection dir) override;
         void stopZManual(void) override;
         [[nodiscard]] bool isInContact(void) const override;
+        void tareForceSensor(TestToken, ForceSensor fs) override;
+        void toggleForceSensors(TestToken, bool en) override;
 
         // BaseTaskService overrides
         void tick(void) override;
         void onStop(void) override;
 
     private:
+        void _toggleForceSensors(bool en);
         void buildAutolevelingLanes(void);
         void buildBasicContactLanes(double forceGF);
         void buildHorizontalityLanes(void);

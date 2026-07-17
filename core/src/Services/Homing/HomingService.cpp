@@ -258,7 +258,7 @@ namespace Kub3::Services
         this->startSequence();
     }
 
-    void HomingService::runGranularAction(HomingTarget::Type target, bool initialization)
+    void HomingService::runGranularAction(TestToken, HomingTarget::Type target, bool initialization)
     {
         this->clearTasks();
 
