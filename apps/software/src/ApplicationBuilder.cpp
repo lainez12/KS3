@@ -3,6 +3,7 @@
 #include <ApplicationBuilder.h>
 
 #include <Config/helper.h>
+#include <system.h>
 // Services
 #include <Services/Alignment/AlignmentService.h>
 #include <Services/Contact/ContactService.h>
@@ -55,6 +56,17 @@ namespace Kub3
     {
         qInfo() << "Building Tier 3 (Hardware)...";
         m_repo = std::make_shared<HAL::MS::MachineStatusRepo>();
+
+        // Apply keyboard layout
+        {
+            std::string xkbLayout = translateLocaleToXkb(m_hwConfig.keyboardLayout.toStdString());
+
+            qInfo() << "Translated \"" << m_hwConfig.keyboardLayout << "\" to XKB layout: \"" << xkbLayout << "\"\n";
+            if (applyKeyboardLayout(xkbLayout))
+                qInfo() << "Successfully changed layout to: " << xkbLayout << "\n";
+            else
+                qWarning() << "Failed to apply keyboard layout.\n";
+        }
 
         // Strict Dependency Injection
         m_hwManager = std::make_unique<HAL::HardwareManager>(m_repo, m_hwConfig);
