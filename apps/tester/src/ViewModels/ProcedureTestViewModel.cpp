@@ -107,6 +107,11 @@ namespace Kub3::Tools::Tester
             emit cmdRunAutolevel();
     }
 
+    void ProcedureTestViewModel::uiRequestForceSensorsToggle(bool en)
+    {
+        emit cmdForceSensorsToggle(en);
+    }
+
     void ProcedureTestViewModel::uiRequestCameraMovement(CameraId camId, MovementKind kind, CameraDirection dir)
     {
         if (m_isRunning)
