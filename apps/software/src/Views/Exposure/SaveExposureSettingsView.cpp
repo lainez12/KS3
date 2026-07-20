@@ -22,6 +22,7 @@ SaveExposureSettingsView::SaveExposureSettingsView(Unique<SaveExposureSettingsVi
     setNewNavButtonsConfigs();
     createNavButtonsConfigs();
     setDefaultTitleBar("Save parameters");
+    connect(ui->btnConfirm, &QPushButton::clicked, this, &SaveExposureSettingsView::onConfirmButtonClicked);
 }
 SaveExposureSettingsView::~SaveExposureSettingsView()
 {
@@ -49,5 +50,9 @@ void SaveExposureSettingsView::onBackButtonClicked()
 }
 
 void SaveExposureSettingsView::onValidateButtonClicked()
+{
+}
+
+void SaveExposureSettingsView::onConfirmButtonClicked()
 {
 }

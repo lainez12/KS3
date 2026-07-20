@@ -32,6 +32,9 @@ namespace Kub3::UI::Views::ViewsExposure
         void onBackButtonClicked();
         void onValidateButtonClicked() override;
 
+    public slots:
+        void onConfirmButtonClicked();
+
     private:
         Ui::SaveExposureSettingsView *ui;
         KeyboardConnections m_keyboard;
