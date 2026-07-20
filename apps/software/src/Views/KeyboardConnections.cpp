@@ -166,7 +166,6 @@ namespace Kub3::UI::Views
             QPushButton *btn   = this->parent()->findChild<QPushButton *>(buttonName);
             if (btn)
             {
-
                 btn->setText(QString(letter).toUpper());
                 disconnect(btn, &QPushButton::clicked, this, nullptr);
                 QWidget *parent = this->parentWidget();
