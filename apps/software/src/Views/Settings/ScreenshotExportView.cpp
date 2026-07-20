@@ -46,28 +46,28 @@ void ScreenshotExportView::createNewNavButtonConfigs()
         "Select all",
         ":/icons/select-all.svg",
         "R",
-        std::bind(&ScreenshotExportView::onSelectAllButtonClicked, this, std::placeholders::_1));
+        std::bind(&ScreenshotExportView::onSelectAllButtonClicked, this));
     addNavButton("right", selectAll);
 
     NavButtonConfig deleteButton(
         "Delete",
         ":/icons/delete.svg",
         "D",
-        std::bind(&ScreenshotExportView::onDeleteButtonClicked, this, std::placeholders::_1));
+        std::bind(&ScreenshotExportView::onDeleteButtonClicked, this));
     addNavButton("right", deleteButton);
 
     NavButtonConfig deselectAll(
         "Deselect all",
         ":/icons/deselect-all.svg",
         "E",
-        std::bind(&ScreenshotExportView::onDeselectAllButtonClicked, this, std::placeholders::_1));
+        std::bind(&ScreenshotExportView::onDeselectAllButtonClicked, this));
     addNavButton("right", deselectAll);
 
     NavButtonConfig loadOnUsb(
         "Load on USB",
         ":/icons/load-on-usb.svg",
         "L",
-        std::bind(&ScreenshotExportView::onLoadOnUsbButtonClicked, this, std::placeholders::_1));
+        std::bind(&ScreenshotExportView::onLoadOnUsbButtonClicked, this));
     addNavButton("right", loadOnUsb);
 }
 
@@ -156,16 +156,13 @@ void ScreenshotExportView::resizeEvent(QResizeEvent *event)
     }
 }
 
-void ScreenshotExportView::onSelectAllButtonClicked(const QString &buttonId)
+void ScreenshotExportView::onSelectAllButtonClicked()
 {
-    Q_UNUSED(buttonId);
     setAllThumbnailsSelected(true);
 }
 
-void ScreenshotExportView::onDeleteButtonClicked(const QString &buttonId)
+void ScreenshotExportView::onDeleteButtonClicked()
 {
-    Q_UNUSED(buttonId);
-
     bool removedAny = false;
     for (ScreenshotThumbnailWidget *card : m_thumbnailCards)
     {
@@ -183,13 +180,11 @@ void ScreenshotExportView::onDeleteButtonClicked(const QString &buttonId)
     }
 }
 
-void ScreenshotExportView::onDeselectAllButtonClicked(const QString &buttonId)
+void ScreenshotExportView::onDeselectAllButtonClicked()
 {
-    Q_UNUSED(buttonId);
     setAllThumbnailsSelected(false);
 }
 
-void ScreenshotExportView::onLoadOnUsbButtonClicked(const QString &buttonId)
+void ScreenshotExportView::onLoadOnUsbButtonClicked()
 {
-    Q_UNUSED(buttonId);
 }

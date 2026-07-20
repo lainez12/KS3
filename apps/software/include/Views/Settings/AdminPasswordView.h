@@ -28,7 +28,7 @@ namespace Kub3::UI::Views::ViewsSettings
 
     private:
         void setNewNavButtonsConfigs();
-        void onValidateButtonClicked(const QString &buttonId);
+        void onValidateButtonClicked(void);
 
     private:
         Ui::AdminPasswordView *ui;

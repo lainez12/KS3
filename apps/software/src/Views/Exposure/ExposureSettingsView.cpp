@@ -24,7 +24,7 @@ ExposureSettingsView::ExposureSettingsView(Unique<ExposureSettingsViewModel> vie
         "Save",
         ":/icons/save.svg",
         ID_BTN_SAVE,
-        std::bind(&ExposureSettingsView::onSaveButtonClicked, this, std::placeholders::_1));
+        std::bind(&ExposureSettingsView::onSaveButtonClicked, this));
     addNavButton("right", saveBtn);
 
     createNavButtonsConfigs();
@@ -33,7 +33,7 @@ ExposureSettingsView::ExposureSettingsView(Unique<ExposureSettingsViewModel> vie
         "Back",
         ":/icons/back.svg",
         ID_BTN_BACK,
-        std::bind(&ExposureSettingsView::onBackButtonClicked, this, std::placeholders::_1));
+        std::bind(&ExposureSettingsView::onBackButtonClicked, this));
     addNavButton("left", backBtn);
     setDefaultTitleBar("Exposure settings");
 
@@ -72,17 +72,17 @@ void ExposureSettingsView::resizeEvent(QResizeEvent *ev)
     QWidget::resizeEvent(ev);
 }
 
-void ExposureSettingsView::onBackButtonClicked(const QString &buttonId)
+void ExposureSettingsView::onBackButtonClicked()
 {
     // emit s_openView(Kub3::UI::ViewId::BACK_VIEW);
 }
 
-void ExposureSettingsView::onSaveButtonClicked(const QString &buttonId)
+void ExposureSettingsView::onSaveButtonClicked()
 {
     emit s_openView(Kub3::UI::ViewId::SAVE_EXPOSURE_SETTINGS_VIEW);
 }
 
-void ExposureSettingsView::onValidateButtonClicked(const QString &buttonId)
+void ExposureSettingsView::onValidateButtonClicked()
 {
     emit s_openView(Kub3::UI::ViewId::RECAP_EXPOSURE_SETTINGS_VIEW);
 }

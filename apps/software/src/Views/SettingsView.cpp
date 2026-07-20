@@ -41,7 +41,7 @@ SettingsView::SettingsView(Unique<SettingsViewModel> viewModel, QWidget *parent)
     connect(ui->ledTestBtn, &NavButton::clicked, this, [this]() { emit s_openView(Kub3::UI::ViewId::SETTINGS_LED_TEST_VIEW); });
     connect(ui->updateSoftBtn, &NavButton::clicked, this, [this]() { emit s_openView(Kub3::UI::ViewId::SETTINGS_UPDATE_SOFTWARE_VIEW); });
     connect(ui->machineSettingsBtn, &NavButton::clicked, this, [this]() { emit s_openView(Kub3::UI::ViewId::MACHINE_STATUS_VIEW); });
-    connect(ui->adminBtn, &NavButton::clicked, this, [this]() { emit s_openView(Kub3::UI::ViewId::SETTINGS_ADMIN_PASSWORD_VIEW); });
+    connect(ui->adminBtn, &NavButton::clicked, this, [this]() { emit s_openView(Kub3::UI::ViewId::SETTINGS_ADMIN_CONFIGURATOR_PASSWD_VIEW); });
 }
 SettingsView::~SettingsView()
 {
@@ -60,7 +60,7 @@ void SettingsView::createNavButtonsConfigs()
         QColor("#B2D4F4"),
         ":/icons/picto.png",
         ID_BTN_HOME,
-        std::bind(&SettingsView::onHomeButtonClicked, this, std::placeholders::_1));
+        std::bind(&SettingsView::onHomeButtonClicked, this));
     homeBtn.isTextColorDifferent = true;
     homeBtn.textColor            = QColor("#000");
     addNavButton("left", homeBtn);
@@ -78,7 +78,7 @@ void SettingsView::configTitleBar()
     });
 }
 
-void SettingsView::onHomeButtonClicked(const QString &buttonId)
+void SettingsView::onHomeButtonClicked()
 {
     emit s_openView(Kub3::UI::ViewId::HOME_EIGHT_VIEW);
 }

@@ -1,4 +1,8 @@
+#include <QCoreApplication>
 #include <QDebug>
+#include <QDir>
+#include <QFileInfo>
+#include <QProcess>
 
 #include <ApplicationBuilder.h>
 
@@ -22,18 +26,41 @@
     auto local_var   = std::make_unique<Type>(__VA_ARGS__); \
     this->member_var = local_var.get()
 
-namespace Kub3
+namespace
 {
 
+    void launchConfigurator(void)
+    {
+        QString programPath = KUB3_CONFIGURATOR_BIN_PATH;
+        QFileInfo fileInfo(programPath);
+
+        if (fileInfo.isRelative())
+        {
+            QDir appDir(QCoreApplication::applicationDirPath());
+            programPath = appDir.absoluteFilePath(programPath);
+        }
+
+        if (!QProcess::startDetached(programPath))
+        {
+            qCritical() << "Failed to launch the configurator program at:" << programPath;
+        }
+        else
+        {
+            qInfo() << "Successfully launched configurator at:" << programPath;
+        }
+    }
+
+}
+
+namespace Kub3
+{
 #if defined(KUB_MODEL_4) || defined(KUB_MODEL_6)
     using ConveyorDrawerService = Services::SingleConveyorDrawerService;
 #elif defined(KUB_MODEL_8)
     using ConveyorDrawerService = Services::DualConveyorDrawerService;
 #endif
 
-    ApplicationBuilder &ApplicationBuilder::loadConfigurations(const std::string &hwPath,
-                                                               const std::string &processPath,
-                                                               const std::string &adminPath)
+    ApplicationBuilder &ApplicationBuilder::loadConfigurations(const std::string &hwPath, const std::string &processPath, const std::string &adminPath)
     {
         qInfo() << "Loading Configurations...";
         m_hwConfig      = Config::ConfigLoader::loadHardwareConfig(hwPath);
@@ -128,7 +155,7 @@ namespace Kub3
             ASSIGN_VIEW_MODEL(UI::ViewModels::Exposure::ProgressExposureViewModel, progressExposureVM, m_progressExposureVM, m_repo);
             ASSIGN_VIEW_MODEL(UI::ViewModels::Exposure::CompleteExposureViewModel, completeExposureVM, m_completeExposureVM, m_repo);
             ASSIGN_VIEW_MODEL(UI::ViewModels::Exposure::SaveExposureSettingsViewModel, saveExposureSettingsVM, m_saveExposureSettingsVM, m_repo);
-            ASSIGN_VIEW_MODEL(UI::ViewModels::Settings::AdminPasswordViewModel, adminPasswordVM, m_adminPasswordVM, m_repo);
+            ASSIGN_VIEW_MODEL(UI::ViewModels::Settings::AdminPasswordViewModel, configuratorPasswdVM, m_configuratorPasswdVM, m_repo);
             ASSIGN_VIEW_MODEL(UI::ViewModels::Settings::VersionViewModel, versionVM, m_versionVM, m_repo);
             ASSIGN_VIEW_MODEL(UI::ViewModels::Settings::TemperatureViewModel, temperatureVM, m_temperatureVM, m_repo);
             ASSIGN_VIEW_MODEL(UI::ViewModels::Settings::OperatingTimesViewModel, operatingTimeVM, m_operatingTimeVM, m_repo);
@@ -152,7 +179,7 @@ namespace Kub3
             auto *progressExposureView         = new ProgressExposureView(std::move(progressExposureVM), m_mainWindow.get());
             auto *completeExposureView         = new CompleteExposureView(std::move(completeExposureVM), m_mainWindow.get());
             auto *saveExposureSettingsView     = new SaveExposureSettingsView(std::move(saveExposureSettingsVM), m_mainWindow.get());
-            auto *adminPasswordView            = new AdminPasswordView(std::move(adminPasswordVM), m_mainWindow.get());
+            auto *configuratorPasswdView       = new AdminPasswordView(std::move(configuratorPasswdVM), m_mainWindow.get());
             auto *versionView                  = new VersionView(std::move(versionVM), m_mainWindow.get());
             auto *temperatureView              = new TemperatureView(std::move(temperatureVM), m_mainWindow.get());
             auto *operatingTimeView            = new OperatingTimesView(std::move(operatingTimeVM), m_mainWindow.get());
@@ -171,7 +198,7 @@ namespace Kub3
             m_mainWindow->addView(Kub3::UI::ViewId::EXPOSURE_MENU_VIEW, exposureMenuView);
             m_mainWindow->addView(Kub3::UI::ViewId::MACHINE_STATUS_VIEW, machineStatusView);
             m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_VIEW, settingsView);
-            m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_ADMIN_PASSWORD_VIEW, adminPasswordView);
+            m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_ADMIN_CONFIGURATOR_PASSWD_VIEW, configuratorPasswdView);
             m_mainWindow->addView(Kub3::UI::ViewId::EXPOSURE_SETTINGS_VIEW, exposureSettingsView);
             m_mainWindow->addView(Kub3::UI::ViewId::FAVORITE_EXPOSURE_SETTINGS_VIEW, favoriteExposureSettingsView);
             m_mainWindow->addView(Kub3::UI::ViewId::RECAP_EXPOSURE_SETTINGS_VIEW, recapExposureSettingsView);
@@ -227,6 +254,8 @@ namespace Kub3
         QObject::connect(msvm, &VM::MachineStatusViewModel::s_framerateValueChanged, m_masterFSM, &MFSM::MasterFSM::ps_requestFrameRateUpdate);
         QObject::connect(msvm, &VM::MachineStatusViewModel::s_centeredZoomValueChanged, m_masterFSM, &MFSM::MasterFSM::ps_requestCenteredZoomUpdate);
         QObject::connect(msvm, &VM::MachineStatusViewModel::s_roiChanged, m_masterFSM, &MFSM::MasterFSM::ps_requestROIUpdate);
+        // --- Settings
+        QObject::connect(m_configuratorPasswdVM.get(), &VM::Settings::AdminPasswordViewModel::s_authenticationSuccess, &launchConfigurator);
 
         // 3. Logic -> UI Wiring
         QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_stateChanged, m_mainWindow.get(), &MainWindow::ps_stateChanged);

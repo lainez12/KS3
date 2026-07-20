@@ -27,8 +27,8 @@ namespace Kub3::UI::Views::ViewsExposure
         void resizeEvent(QResizeEvent *event) override;
 
     private:
-        void onBackButtonClicked(const QString &buttonId);
-        void onValidateButtonClicked(const QString &buttonId) override;
+        void onBackButtonClicked();
+        void onValidateButtonClicked() override;
 
     private:
         Ui::ProgressExposureView *ui;

@@ -30,8 +30,8 @@ namespace Kub3::UI::Views::ViewsExposure
         void setNewNavButtonsConfigs();
         void populateStackedFavorite(const QList<FavoriteExposureSettingButton *> &favoriteButtons);
         void updateFavoritePageNavigation();
-        void onBackButtonClicked(const QString &buttonId);
-        void onValidateButtonClicked(const QString &buttonId) override;
+        void onBackButtonClicked();
+        void onValidateButtonClicked() override;
 
     private:
         Ui::FavoriteExposureSettingsView *ui;

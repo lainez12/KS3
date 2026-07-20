@@ -18,6 +18,14 @@ AdminPasswordView::AdminPasswordView(Unique<AdminPasswordViewModel> viewModel, Q
     m_keyboard.setupKeyboardConnections(this);
     setDefaultTitleBar("Admin Password");
     setNewNavButtonsConfigs();
+
+    if (!m_viewModel)
+        return;
+    AdminPasswordViewModel *vm = static_cast<AdminPasswordViewModel *>(m_viewModel.get());
+
+    connect(vm, &AdminPasswordViewModel::s_authenticationSuccess, this, &AdminPasswordView::onBackButtonClicked);
+
+    connect(ui->btnConfirm, &QPushButton::clicked, this, &AdminPasswordView::onValidateButtonClicked);
 }
 
 AdminPasswordView::~AdminPasswordView()
@@ -34,6 +42,11 @@ void AdminPasswordView::setNewNavButtonsConfigs()
 {
 }
 
-void AdminPasswordView::onValidateButtonClicked(const QString &buttonId)
+void AdminPasswordView::onValidateButtonClicked(void)
 {
+    if (!m_viewModel)
+        return;
+    AdminPasswordViewModel *vm = static_cast<AdminPasswordViewModel *>(m_viewModel.get());
+
+    vm->submitPassword(ui->lineEditPasswd->text());
 }

@@ -82,10 +82,7 @@ void MachineStatusView::createNavButtonsConfigs()
         QColor("#B2D4F4"),
         ":/icons/back.svg",
         "Back",
-        [this](const QString &) {
-            // Retourner à ExposureModeView
-            emit s_openView(Kub3::UI::ViewId::SETTINGS_VIEW);
-        });
+        [this]() { emit s_openView(Kub3::UI::ViewId::SETTINGS_VIEW); });
     addNavButton("left", backBtn);
 }
 

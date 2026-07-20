@@ -8,7 +8,6 @@
 #include <QPixmap>
 #include <QPointer>
 
-#include <Views/ExposureModeView.h>
 #include <Views/Alignment/ContactSelectionView.h>
 #include <Views/Alignment/DistanceView.h>
 #include <Views/Alignment/LoadParametersView.h>
@@ -23,6 +22,7 @@
 #include <Views/Exposure/RecapExposureSettingsView.h>
 #include <Views/Exposure/SaveExposureSettingsView.h>
 #include <Views/ExposureMenuView.h>
+#include <Views/ExposureModeView.h>
 #include <Views/HomeEightView.h>
 #include <Views/Settings/AdminPasswordView.h>
 #include <Views/Settings/LedTestView.h>
@@ -61,7 +61,7 @@ public slots:
 private slots:
     void onViewButtonConfigsUpdated();
     void onViewButtonStateChanged(const QString &buttonId, bool newState);
-    void changeButtonColor(const QString &buttonId, bool EnabledColor);
+    void changeButtonColor(const QString &buttonId, bool enabledColor);
     void onViewButtonTextChanged(const QString &buttonId, const QString &newText);
 
 protected:

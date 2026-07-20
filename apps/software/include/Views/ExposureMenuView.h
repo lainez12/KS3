@@ -30,7 +30,7 @@ namespace Kub3::UI::Views
         void configTitleBar();
 
     private slots:
-        void onBackButtonClicked(const QString &buttonId);
+        void onBackButtonClicked();
 
     private:
         Ui::ExposureMenuView *ui;

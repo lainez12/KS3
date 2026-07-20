@@ -209,26 +209,27 @@ void MainWindow::clearBottomBar()
 
 NavButton *MainWindow::createNavButton(const Kub3::UI::Views::NavButtonConfig &config)
 {
-    NavButton *btn = new NavButton();
-    NavButton::SetupParams setupParams;
-    setupParams.text = config.text;
-    setupParams.colorEnabled = config.colorEnabled;
-    setupParams.colorDisabled = config.colorDisabled;
-    setupParams.iconPath = config.iconPath;
+    NavButton *btn                     = new NavButton();
+    NavButton::SetupParams setupParams = {
+        .text          = config.text,
+        .colorEnabled  = config.colorEnabled,
+        .colorDisabled = config.colorDisabled,
+        .iconPath      = config.iconPath,
+    };
     btn->setup(setupParams);
     btn->setSize(77);
     btn->setEnabledNavButton(config.enabled);
-    if(config.isTextColorDifferent) {
+    if (config.isTextColorDifferent)
+    {
         btn->setTextColor(config.textColor);
     }
 
-    connect(btn, &NavButton::clicked,
-            this, [this, config]() {
-                if (config.callback)
-                {
-                    config.callback(config.buttonId);
-                }
-            });
+    connect(btn, &NavButton::clicked, this, [this, config]() {
+        if (config.callback)
+        {
+            config.callback();
+        }
+    });
 
     return btn;
 }

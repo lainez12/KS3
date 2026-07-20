@@ -18,7 +18,7 @@ namespace Kub3::UI::Views
             "Home",
             ":/icons/home.svg",
             "H",
-            std::bind(&ExposureViewBase::onHomeButtonClicked, this, std::placeholders::_1));
+            std::bind(&ExposureViewBase::onHomeButtonClicked, this));
         addNavButton("left", homeBtn, 0);
 
         NavButtonConfig validateBtn(
@@ -27,7 +27,7 @@ namespace Kub3::UI::Views
             QColor(GREEN_COLOR_SHADOW),
             ":/icons/check.svg",
             ID_BTN_VALIDATE,
-            std::bind(&ExposureViewBase::onValidateButtonClicked, this, std::placeholders::_1));
+            std::bind(&ExposureViewBase::onValidateButtonClicked, this));
         addNavButton("right", validateBtn);
 
         setNavButtonEnabled(ID_BTN_VALIDATE, false);
@@ -51,7 +51,7 @@ namespace Kub3::UI::Views
         });
     }
 
-    void ExposureViewBase::onHomeButtonClicked(const QString &buttonId)
+    void ExposureViewBase::onHomeButtonClicked()
     {
         emit s_openView(Kub3::UI::ViewId::HOME_VIEW);
     }

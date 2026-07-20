@@ -182,6 +182,16 @@ set_target_properties(Kub3Software PROPERTIES
     BUILD_WITH_INSTALL_RPATH FALSE
 )
 
+if(CMAKE_PRODUCTION_BUILD)
+    target_compile_definitions(Kub3Software PRIVATE 
+        KUB3_CONFIGURATOR_BIN_PATH="Kub3Configurator"
+    )
+else()
+    target_compile_definitions(Kub3Software PRIVATE 
+        KUB3_CONFIGURATOR_BIN_PATH="${CMAKE_BINARY_DIR}/apps/configurator/Kub3Configurator"
+    )
+endif()
+
 # Install App
 install(TARGETS Kub3Software RUNTIME DESTINATION bin)
 

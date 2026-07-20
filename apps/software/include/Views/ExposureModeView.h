@@ -41,8 +41,8 @@ namespace Kub3::UI::Views
         void createNavButtonsConfigs();
         void configTitleBar();
 
-        void onBackButtonClicked(const QString &buttonId);
-        void onBackToMainButtonClicked(const QString &buttonId);
+        void onBackButtonClicked();
+        void onBackToMainButtonClicked();
 
     private:
         Ui::ExposureModeView *ui;

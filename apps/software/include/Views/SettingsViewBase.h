@@ -11,15 +11,15 @@ namespace Kub3::UI::Views
 
     public:
         explicit SettingsViewBase(Unique<ViewModels::BaseViewModel> viewModel, QWidget *parent = nullptr);
-
         virtual ~SettingsViewBase() = default;
+
+    protected:
+        void onBackButtonClicked();
 
     private:
         void createNavButtonsConfigs() final override;
         void configTitleBar() override;
-
-        void onHomeButtonClicked(const QString &buttonId);
-        void onBackButtonClicked(const QString &buttonId);
+        void onHomeButtonClicked();
 
     protected:
         void setDefaultTitleBar(const QString &viewTitle);

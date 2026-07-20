@@ -69,7 +69,7 @@ void HomeEightView::createNavButtonsConfigs()
         QColor("#B2D4F4"),
         ":/icons/settings.svg",
         ID_BTN_SETTINGS,
-        std::bind(&HomeEightView::onSettingsButtonClicked, this, std::placeholders::_1));
+        std::bind(&HomeEightView::onSettingsButtonClicked, this));
     addNavButton("left", settingsBtn);
 }
 void HomeEightView::configTitleBar()
@@ -77,7 +77,7 @@ void HomeEightView::configTitleBar()
     setTitleBar(TitleBarConfig{});
 }
 
-void HomeEightView::onSettingsButtonClicked(const QString &buttonId)
+void HomeEightView::onSettingsButtonClicked()
 {
     emit s_openView(Kub3::UI::ViewId::SETTINGS_VIEW);
 }

@@ -29,7 +29,7 @@ namespace Kub3::UI
         SAVE_EXPOSURE_SETTINGS_VIEW,
         SETTINGS_VIEW,
         SETTINGS_ABOUT_VIEW,
-        SETTINGS_ADMIN_PASSWORD_VIEW,
+        SETTINGS_ADMIN_CONFIGURATOR_PASSWD_VIEW,
         SETTINGS_TEMPERATURE_VIEW,
         SETTINGS_OPERATING_TIMES_VIEW,
         SETTINGS_SCREENSHOT_EXPORT_VIEW,
@@ -170,7 +170,7 @@ namespace Kub3::UI::Views
 
         void s_buttonStateChanged(const QString &buttonId, bool newState);
         void s_buttonTextChanged(const QString &buttonId, const QString &newText);
-        void s_switchColorButton(const QString &buttonId, bool EnabledColor);
+        void s_switchColorButton(const QString &buttonId, bool enabledColor);
 
     protected:
         void showEvent(QShowEvent *event) override;
