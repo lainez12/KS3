@@ -1002,7 +1002,59 @@
              <property name="title">
               <string>Autoleveling / Horizontality</string>
              </property>
-             <layout class="QGridLayout" name="gridLayout_12" rowstretch="0,1,0,0,0,0,0">
+             <layout class="QGridLayout" name="gridLayout_12" rowstretch="0,1,0,0,0,0,0,0">
+              <item row="0" column="0" colspan="3">
+               <widget class="QCheckBox" name="cbEnableForceSensors">
+                <property name="text">
+                 <string>Enable force sensors</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="label_5">
+                <property name="font">
+                 <font>
+                  <pointsize>14</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="layoutDirection">
+                 <enum>Qt::LayoutDirection::LeftToRight</enum>
+                </property>
+                <property name="text">
+                 <string>Left Force</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignmentFlag::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="1">
+               <widget class="QPushButton" name="btnTareBack">
+                <property name="text">
+                 <string>Tare Back</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="2">
+               <widget class="QLabel" name="lblRightForce">
+                <property name="font">
+                 <font>
+                  <pointsize>14</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="layoutDirection">
+                 <enum>Qt::LayoutDirection::LeftToRight</enum>
+                </property>
+                <property name="text">
+                 <string>N.D.</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignmentFlag::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
               <item row="2" column="1">
                <widget class="QLabel" name="label_18">
                 <property name="font">
@@ -1016,6 +1068,32 @@
                 </property>
                 <property name="text">
                  <string>Back Force</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignmentFlag::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="2">
+               <widget class="QPushButton" name="btnTareRight">
+                <property name="text">
+                 <string>Tare Right</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="QLabel" name="lblBackForce">
+                <property name="font">
+                 <font>
+                  <pointsize>14</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="layoutDirection">
+                 <enum>Qt::LayoutDirection::LeftToRight</enum>
+                </property>
+                <property name="text">
+                 <string>N.D.</string>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -1041,10 +1119,10 @@
                 </property>
                </widget>
               </item>
-              <item row="4" column="2">
-               <widget class="QPushButton" name="btnTareRight">
+              <item row="7" column="0" colspan="3">
+               <widget class="QPushButton" name="btnStartAutolevel">
                 <property name="text">
-                 <string>Tare Right</string>
+                 <string>Autolevel</string>
                 </property>
                </widget>
               </item>
@@ -1058,48 +1136,30 @@
                 </property>
                </widget>
               </item>
-              <item row="4" column="0">
-               <widget class="QPushButton" name="btnTareLeft">
-                <property name="text">
-                 <string>Tare Left</string>
+              <item row="1" column="2">
+               <widget class="Kub3::Tools::Tester::RealTimeCurveWidget" name="pltRightForce" native="true">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>184</height>
+                 </size>
                 </property>
                </widget>
               </item>
-              <item row="3" column="1">
-               <widget class="QLabel" name="lblBackForce">
-                <property name="font">
-                 <font>
-                  <pointsize>14</pointsize>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="layoutDirection">
-                 <enum>Qt::LayoutDirection::LeftToRight</enum>
-                </property>
-                <property name="text">
-                 <string>N.D.</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignmentFlag::AlignCenter</set>
+              <item row="1" column="1">
+               <widget class="Kub3::Tools::Tester::RealTimeCurveWidget" name="pltBackForce" native="true">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>184</height>
+                 </size>
                 </property>
                </widget>
               </item>
-              <item row="3" column="2">
-               <widget class="QLabel" name="lblRightForce">
-                <property name="font">
-                 <font>
-                  <pointsize>14</pointsize>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="layoutDirection">
-                 <enum>Qt::LayoutDirection::LeftToRight</enum>
-                </property>
+              <item row="6" column="0" colspan="3">
+               <widget class="QPushButton" name="btnTareAll">
                 <property name="text">
-                 <string>N.D.</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignmentFlag::AlignCenter</set>
+                 <string>Tare All</string>
                 </property>
                </widget>
               </item>
@@ -1122,70 +1182,31 @@
                 </property>
                </widget>
               </item>
-              <item row="1" column="2">
-               <widget class="Kub3::Tools::Tester::RealTimeCurveWidget" name="pltRightForce" native="true">
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>184</height>
-                 </size>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="0" colspan="3">
-               <widget class="QCheckBox" name="cbEnableForceSensors">
+              <item row="5" column="0">
+               <widget class="QPushButton" name="btnTareLeft">
                 <property name="text">
-                 <string>Enable force sensors</string>
+                 <string>Tare Left</string>
                 </property>
                </widget>
               </item>
-              <item row="1" column="1">
-               <widget class="Kub3::Tools::Tester::RealTimeCurveWidget" name="pltBackForce" native="true">
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>184</height>
-                 </size>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="0">
-               <widget class="QLabel" name="label_5">
-                <property name="font">
-                 <font>
-                  <pointsize>14</pointsize>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="layoutDirection">
-                 <enum>Qt::LayoutDirection::LeftToRight</enum>
-                </property>
+              <item row="4" column="0">
+               <widget class="QCheckBox" name="cbLockScaleLeft">
                 <property name="text">
-                 <string>Left Force</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignmentFlag::AlignCenter</set>
-                </property>
-               </widget>
-              </item>
-              <item row="6" column="0" colspan="3">
-               <widget class="QPushButton" name="btnStartAutolevel">
-                <property name="text">
-                 <string>Autolevel</string>
+                 <string>Lock scale</string>
                 </property>
                </widget>
               </item>
               <item row="4" column="1">
-               <widget class="QPushButton" name="btnTareBack">
+               <widget class="QCheckBox" name="cbLockScaleBack">
                 <property name="text">
-                 <string>Tare Back</string>
+                 <string>Lock scale</string>
                 </property>
                </widget>
               </item>
-              <item row="5" column="0" colspan="3">
-               <widget class="QPushButton" name="btnTareAll">
+              <item row="4" column="2">
+               <widget class="QCheckBox" name="cbLockScaleRight">
                 <property name="text">
-                 <string>Tare All</string>
+                 <string>Lock scale</string>
                 </property>
                </widget>
               </item>
