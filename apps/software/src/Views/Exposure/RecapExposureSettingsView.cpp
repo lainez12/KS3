@@ -29,21 +29,21 @@ void RecapExposureSettingsView::resizeEvent(QResizeEvent *ev)
 
 void RecapExposureSettingsView::setNewNavButtonsConfigs()
 {
-
     NavButtonConfig backBtn(
         "Back",
         ":/icons/back.svg",
         ID_BTN_BACK,
-        std::bind(&RecapExposureSettingsView::onBackButtonClicked, this, std::placeholders::_1));
+        std::bind(&RecapExposureSettingsView::onBackButtonClicked, this));
+
     addNavButton("left", backBtn);
 }
 
-void RecapExposureSettingsView::onBackButtonClicked(const QString &buttonId)
+void RecapExposureSettingsView::onBackButtonClicked(void)
 {
     emit s_openView(Kub3::UI::ViewId::EXPOSURE_SETTINGS_VIEW);
 }
 
-void RecapExposureSettingsView::onValidateButtonClicked(const QString &buttonId)
+void RecapExposureSettingsView::onValidateButtonClicked(void)
 {
     emit s_openView(Kub3::UI::ViewId::PROGRESS_EXPOSURE_VIEW);
 }

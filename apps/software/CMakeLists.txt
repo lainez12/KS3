@@ -20,6 +20,7 @@ qt_add_executable(Kub3Software
     src/ViewModels/Exposure/CompleteExposureViewModel.cpp
     src/ViewModels/Exposure/ProgressExposureViewModel.cpp
     src/ViewModels/Exposure/SaveExposureSettingsViewModel.cpp
+    src/ViewModels/Settings/AdminPasswordViewModel.cpp
     src/ViewModels/Settings/MachineStatusViewModel.cpp
     src/ViewModels/Settings/VersionViewModel.cpp
     src/ViewModels/Settings/TemperatureViewModel.cpp
@@ -44,10 +45,11 @@ qt_add_executable(Kub3Software
     src/Views/AlignmentViewBase.cpp
     src/Views/SettingsViewBase.cpp
     src/Views/ExposureViewBase.cpp
-    src/Views/HomeView.cpp
+    src/Views/ExposureModeView.cpp
     src/Views/HomeEightView.cpp
     src/Views/ExposureMenuView.cpp
     src/Views/SettingsView.cpp
+    src/Views/Settings/AdminPasswordView.cpp
     src/Views/Settings/MachineStatusView.cpp
     src/Views/Settings/VersionView.cpp
     src/Views/Settings/TemperatureView.cpp
@@ -85,6 +87,7 @@ qt_add_executable(Kub3Software
     include/ViewModels/Exposure/CompleteExposureViewModel.h
     include/ViewModels/Exposure/ProgressExposureViewModel.h
     include/ViewModels/Exposure/SaveExposureSettingsViewModel.h
+    include/ViewModels/Settings/AdminPasswordViewModel.h
     include/ViewModels/Settings/MachineStatusViewModel.h
     include/ViewModels/Settings/VersionViewModel.h
     include/ViewModels/Settings/TemperatureViewModel.h
@@ -110,10 +113,11 @@ qt_add_executable(Kub3Software
     include/Views/AlignmentViewBase.h
     include/Views/SettingsViewBase.h
     include/Views/ExposureViewBase.h
-    include/Views/HomeView.h
+    include/Views/ExposureModeView.h
     include/Views/HomeEightView.h
     include/Views/ExposureMenuView.h
     include/Views/SettingsView.h
+    include/Views/Settings/AdminPasswordView.h
     include/Views/Settings/MachineStatusView.h
     include/Views/Settings/TemperatureView.h
     include/Views/Settings/VersionView.h
@@ -146,10 +150,11 @@ qt_add_executable(Kub3Software
     gui/Views/Exposure/RecapExposureSettingsView.ui
     gui/Views/Exposure/CompleteExposureView.ui
     gui/Views/Exposure/ProgressExposureView.ui
-    gui/Views/HomeView.ui
+    gui/Views/ExposureModeView.ui
     gui/Views/HomeEightView.ui
     gui/Views/ExposureMenuView.ui
     gui/Views/SettingsView.ui
+    gui/Views/Settings/AdminPasswordView.ui
     gui/Views/Settings/MachineStatusView.ui
     gui/Views/Settings/VersionView.ui
     gui/Views/Settings/TemperatureView.ui
@@ -176,6 +181,16 @@ set_target_properties(Kub3Software PROPERTIES
     INSTALL_RPATH "$ORIGIN;$ORIGIN/../lib;$ORIGIN/lib"
     BUILD_WITH_INSTALL_RPATH FALSE
 )
+
+if(CMAKE_PRODUCTION_BUILD)
+    target_compile_definitions(Kub3Software PRIVATE 
+        KUB3_CONFIGURATOR_BIN_PATH="Kub3Configurator"
+    )
+else()
+    target_compile_definitions(Kub3Software PRIVATE 
+        KUB3_CONFIGURATOR_BIN_PATH="${CMAKE_BINARY_DIR}/apps/configurator/Kub3Configurator"
+    )
+endif()
 
 # Install App
 install(TARGETS Kub3Software RUNTIME DESTINATION bin)

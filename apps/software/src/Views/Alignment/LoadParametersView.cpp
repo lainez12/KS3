@@ -32,15 +32,15 @@ void LoadParametersView::setNewNavButtonsConfigs()
         "Back",
         ":/icons/back.svg",
         "B",
-        std::bind(&LoadParametersView::onBackButtonClicked, this, std::placeholders::_1));
+        std::bind(&LoadParametersView::onBackButtonClicked, this));
     addNavButton("left", backBtn);
 }
 
-void LoadParametersView::onBackButtonClicked(const QString &buttonId)
+void LoadParametersView::onBackButtonClicked()
 {
     emit s_openView(Kub3::UI::ViewId::ALIGNMENT_VISUALISATION_VIEW);
 }
 
-void LoadParametersView::onValidateButtonClicked(const QString &buttonId)
+void LoadParametersView::onValidateButtonClicked()
 {
 }

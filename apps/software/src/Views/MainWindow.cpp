@@ -179,6 +179,7 @@ void MainWindow::showLogoIfNeeded(Kub3::UI::Views::ViewBase *view)
         QLabel *logo = new QLabel();
         logo->setPixmap(QPixmap(":/icons/logoKloe.svg").scaledToHeight(48));
         logo->setAlignment(Qt::AlignCenter);
+        logo->setContentsMargins(0, 0, 100, 0);
         m_bottomBarCenter->addWidget(logo);
     }
 }
@@ -208,18 +209,27 @@ void MainWindow::clearBottomBar()
 
 NavButton *MainWindow::createNavButton(const Kub3::UI::Views::NavButtonConfig &config)
 {
-    NavButton *btn = new NavButton();
-    btn->setup(config.text, config.colorEnabled, config.colorDisabled, config.iconPath);
+    NavButton *btn                     = new NavButton();
+    NavButton::SetupParams setupParams = {
+        .text          = config.text,
+        .colorEnabled  = config.colorEnabled,
+        .colorDisabled = config.colorDisabled,
+        .iconPath      = config.iconPath,
+    };
+    btn->setup(setupParams);
     btn->setSize(77);
     btn->setEnabledNavButton(config.enabled);
+    if (config.isTextColorDifferent)
+    {
+        btn->setTextColor(config.textColor);
+    }
 
-    connect(btn, &NavButton::clicked,
-            this, [this, config]() {
-                if (config.callback)
-                {
-                    config.callback(config.buttonId);
-                }
-            });
+    connect(btn, &NavButton::clicked, this, [this, config]() {
+        if (config.callback)
+        {
+            config.callback();
+        }
+    });
 
     return btn;
 }

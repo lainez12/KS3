@@ -1,5 +1,5 @@
-#ifndef HOMEVIEW_H
-#define HOMEVIEW_H
+#ifndef EXPOSUREMODEVIEW_H
+#define EXPOSUREMODEVIEW_H
 
 #include <QWidget>
 
@@ -10,21 +10,21 @@
 
 namespace Ui
 {
-    class HomeView;
+    class ExposureModeView;
 }
 
 namespace Kub3::UI::Views
 {
 
-    class HomeView final : public ViewBase
+    class ExposureModeView final : public ViewBase
     {
         using HomeViewModel = Kub3::UI::ViewModels::HomeViewModel;
 
         Q_OBJECT
 
     public:
-        explicit HomeView(Unique<HomeViewModel> viewModel, QWidget *parent = nullptr);
-        ~HomeView();
+        explicit ExposureModeView(Unique<HomeViewModel> viewModel, QWidget *parent = nullptr);
+        ~ExposureModeView();
 
     signals:
 
@@ -41,13 +41,14 @@ namespace Kub3::UI::Views
         void createNavButtonsConfigs();
         void configTitleBar();
 
-        void onBackButtonClicked(const QString &buttonId);
+        void onBackButtonClicked();
+        void onBackToMainButtonClicked();
 
     private:
-        Ui::HomeView *ui;
+        Ui::ExposureModeView *ui;
     };
 }
 
-using HomeView = Kub3::UI::Views::HomeView;
+using ExposureModeView = Kub3::UI::Views::ExposureModeView;
 
-#endif // HOMEVIEW_H
+#endif // EXPOSUREMODEVIEW_H

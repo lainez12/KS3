@@ -121,7 +121,7 @@ cameras positions</string>
         </property>
         <property name="icon">
          <iconset resource="../resources.qrc">
-          <normaloff>:/icons/fleche-bas.svg</normaloff>:/icons/fleche-bas.svg</iconset>
+          <normaloff>:/icons/fleche-haut.svg</normaloff>:/icons/fleche-haut.svg</iconset>
         </property>
         <property name="iconSize">
          <size>

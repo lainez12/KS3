@@ -30,8 +30,8 @@ namespace Kub3::UI::Views::ViewsAlignment
 
     private:
         void setNewNavButtonsConfigs();
-        void onValidateButtonClicked(const QString &buttonId) override;
-        void onBackButtonClicked(const QString &buttonId) override;
+        void onValidateButtonClicked() override;
+        void onBackButtonClicked() override;
 
     private:
         Ui::SaveParametersView *ui;

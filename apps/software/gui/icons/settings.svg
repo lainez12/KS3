@@ -1,9 +1,137 @@
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<!-- Uploaded to: SVG Repo, www.svgrepo.com, Transformed by: SVG Repo Mixer Tools -->
-<svg fill="#ffffff" width="800px" height="800px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" id="settings" class="icon glyph" stroke="#ffffff">
-<g id="SVGRepo_bgCarrier" stroke-width="0"/>
-<g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
-<g id="SVGRepo_iconCarrier">
-<path d="M20.89,9.78h-.65a1.16,1.16,0,0,1-1-.74V9a1.13,1.13,0,0,1,.22-1.26l.46-.46a1.13,1.13,0,0,0,0-1.58L18.29,4.14a1.13,1.13,0,0,0-1.58,0l-.46.46A1.13,1.13,0,0,1,15,4.82h0a1.16,1.16,0,0,1-.74-1V3.11A1.11,1.11,0,0,0,13.11,2H10.89A1.11,1.11,0,0,0,9.78,3.11v.65a1.16,1.16,0,0,1-.74,1H9A1.13,1.13,0,0,1,7.75,4.6l-.46-.46a1.13,1.13,0,0,0-1.58,0L4.14,5.71a1.13,1.13,0,0,0,0,1.58l.46.46A1.13,1.13,0,0,1,4.82,9V9a1.16,1.16,0,0,1-1,.74H3.11A1.11,1.11,0,0,0,2,10.89v2.22a1.11,1.11,0,0,0,1.11,1.11h.65a1.16,1.16,0,0,1,1,.74v0a1.13,1.13,0,0,1-.22,1.26l-.46.46a1.13,1.13,0,0,0,0,1.58l1.57,1.57a1.13,1.13,0,0,0,1.58,0l.46-.46A1.13,1.13,0,0,1,9,19.18H9a1.16,1.16,0,0,1,.74,1v.65A1.11,1.11,0,0,0,10.89,22h2.22a1.11,1.11,0,0,0,1.11-1.11v-.65a1.16,1.16,0,0,1,.74-1h0a1.13,1.13,0,0,1,1.26.22l.46.46a1.13,1.13,0,0,0,1.58,0l1.57-1.57a1.13,1.13,0,0,0,0-1.58l-.46-.46A1.13,1.13,0,0,1,19.18,15v0a1.16,1.16,0,0,1,1-.74h.65A1.11,1.11,0,0,0,22,13.11V10.89A1.11,1.11,0,0,0,20.89,9.78ZM12,16a4,4,0,1,1,4-4A4,4,0,0,1,12,16Z"/>
-</g>
-</svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   id="svg2"
+   width="300"
+   height="300"
+   viewBox="0 0 300 300"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs6">
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath937">
+      <g
+         id="g941"
+         transform="translate(-743.0957,-355.8867)">
+        <path
+           d="M 0,768 H 1366 V 0 H 0 Z"
+           id="path939" />
+      </g>
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath943">
+      <g
+         id="g947"
+         transform="translate(-731.9521,-358.6172)">
+        <path
+           d="M 0,768 H 1366 V 0 H 0 Z"
+           id="path945" />
+      </g>
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath949">
+      <g
+         id="g953"
+         transform="translate(-717.2441,-352.1729)">
+        <path
+           d="M 0,768 H 1366 V 0 H 0 Z"
+           id="path951" />
+      </g>
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath955">
+      <g
+         id="g959">
+        <path
+           d="M 0,768 H 1366 V 0 H 0 Z"
+           id="path957" />
+      </g>
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath961">
+      <g
+         id="g965"
+         transform="translate(-709.8496,-354.0586)">
+        <path
+           d="M 0,768 H 1366 V 0 H 0 Z"
+           id="path963" />
+      </g>
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath967">
+      <g
+         id="g971"
+         transform="translate(-703.1816,-354.0586)">
+        <path
+           d="M 0,768 H 1366 V 0 H 0 Z"
+           id="path969" />
+      </g>
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath973">
+      <g
+         id="g977"
+         transform="translate(-686.8223,-359.5908)">
+        <path
+           d="M 0,768 H 1366 V 0 H 0 Z"
+           id="path975" />
+      </g>
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath979">
+      <g
+         id="g983"
+         transform="translate(-668.7178,-357.6904)">
+        <path
+           d="M 0,768 H 1366 V 0 H 0 Z"
+           id="path981" />
+      </g>
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath985">
+      <g
+         id="g989"
+         transform="translate(-711.0537,-410.7959)">
+        <path
+           d="M 0,768 H 1366 V 0 H 0 Z"
+           id="path987" />
+      </g>
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath991">
+      <g
+         id="g995"
+         transform="translate(-689.3418,-379.668)">
+        <path
+           d="M 0,768 H 1366 V 0 H 0 Z"
+           id="path993" />
+      </g>
+    </clipPath>
+  </defs>
+  <g
+     id="g10"
+     transform="matrix(1.3333333,0,0,-1.3333333,0,1024)">
+    <g
+       id="g24"
+       transform="matrix(3.3242364,0,0,3.3242364,113.294,584.88963)"
+       clip-path="url(#clipPath985)">
+      <path
+         d="m 0,0 c -11.408,0 -20.656,9.248 -20.656,20.657 0,11.408 9.248,20.656 20.656,20.656 11.408,0 20.656,-9.247 20.657,-20.654 C 20.658,9.25 11.41,0.001 0.002,0 Z m 28.793,13.632 c 1.225,0.004 2.216,0.995 2.22,2.22 v 10.553 c -0.004,1.224 -0.995,2.216 -2.22,2.22 h -1.378 c -1.199,-0.016 -2.305,0.646 -2.857,1.711 -0.35,0.94 -0.818,3.987 0.046,4.849 l 1.04,1.042 c 0.864,0.868 0.864,2.271 0,3.139 l -7.462,7.462 c -0.869,0.863 -2.272,0.863 -3.14,0 l -1.199,-1.2 c -0.806,-0.85 -2.022,-1.174 -3.144,-0.837 -0.863,0.399 -3.261,2.225 -3.261,3.444 v 1.74 C 7.436,51.199 6.443,52.191 5.219,52.194 H -5.334 c -1.225,-0.003 -2.217,-0.995 -2.22,-2.219 v -1.771 c 0.033,-1.169 -0.603,-2.255 -1.637,-2.8 -0.902,-0.32 -3.862,-0.679 -4.725,0.184 l -1.239,1.24 c -0.869,0.863 -2.272,0.863 -3.14,0 l -7.462,-7.462 c -0.864,-0.868 -0.864,-2.271 0,-3.139 l 1.119,-1.12 c 0.855,-0.814 1.157,-2.05 0.775,-3.165 -0.439,-0.878 -2.34,-3.317 -3.562,-3.317 h -1.485 c -1.225,-0.004 -2.216,-0.996 -2.22,-2.22 V 15.86 c 0.004,-1.224 0.995,-2.216 2.22,-2.219 h 1.211 c 1.212,0.006 2.314,-0.698 2.817,-1.8 0.328,-0.99 0.763,-4.159 -0.101,-5.023 l -0.778,-0.779 c -0.864,-0.868 -0.864,-2.27 0,-3.138 l 7.462,-7.464 c 0.869,-0.861 2.27,-0.861 3.139,0 l 0.628,0.628 c 0.873,0.867 2.172,1.142 3.321,0.704 0.964,-0.478 3.653,-2.434 3.653,-3.653 v -0.828 c 0.003,-1.225 0.996,-2.216 2.219,-2.22 H 5.215 c 1.224,0.004 2.216,0.995 2.22,2.22 v 0.8 c 0.011,1.242 0.741,2.364 1.871,2.879 1.03,0.364 4.283,0.912 5.146,0.05 l 0.584,-0.586 c 0.869,-0.862 2.271,-0.862 3.14,0 l 7.462,7.464 c 0.863,0.868 0.863,2.27 0,3.137 l -0.71,0.712 c -0.865,0.863 -1.162,2.142 -0.768,3.298 0.442,0.951 2.314,3.599 3.535,3.599 z"
+         style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="path26" />
+    </g>
+  </g>
+</svg>

@@ -40,10 +40,10 @@ namespace Kub3::UI::Views::ViewsSettings
         void resizeEvent(QResizeEvent *event) override;
 
     private slots:
-        void onSelectAllButtonClicked(const QString &buttonId);
-        void onDeleteButtonClicked(const QString &buttonId);
-        void onDeselectAllButtonClicked(const QString &buttonId);
-        void onLoadOnUsbButtonClicked(const QString &buttonId);
+        void onSelectAllButtonClicked();
+        void onDeleteButtonClicked();
+        void onDeselectAllButtonClicked();
+        void onLoadOnUsbButtonClicked();
 
     private:
         Ui::ScreenshotExportView *ui;

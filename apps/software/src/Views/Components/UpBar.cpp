@@ -52,12 +52,6 @@ void UpBar::updateTitlePosition()
     }
 }
 
-void UpBar::resizeEvent(QResizeEvent *event)
-{
-    QFrame::resizeEvent(event);
-    updateTitlePosition(); // Recalculate center every time the UpBar resizes
-}
-
 void UpBar::setTextColor(const QColor &color)
 {
     m_topBarTitle->setStyleSheet(QString("%2 color: %1;").arg(color.name()).arg(TITLE_BAR));
@@ -82,6 +76,12 @@ void UpBar::setTitleBarConfig(Kub3::UI::Views::TitleBarConfig titleBar)
     m_sectionTitle->setText(titleBar.sectionTitle);
     m_iconPath->setPixmap(QPixmap(titleBar.iconPath));
     updateTitlePosition();
+}
+
+void UpBar::resizeEvent(QResizeEvent *event)
+{
+    QFrame::resizeEvent(event);
+    updateTitlePosition(); // Recalculate center every time the UpBar resizes
 }
 
 void UpBar::paintEvent(QPaintEvent *)

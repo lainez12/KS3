@@ -82,10 +82,7 @@ void MachineStatusView::createNavButtonsConfigs()
         QColor("#B2D4F4"),
         ":/icons/back.svg",
         "Back",
-        [this](const QString &) {
-            // Retourner à HomeView
-            emit s_openView(Kub3::UI::ViewId::SETTINGS_VIEW);
-        });
+        [this]() { emit s_openView(Kub3::UI::ViewId::SETTINGS_VIEW); });
     addNavButton("left", backBtn);
 }
 
@@ -95,7 +92,7 @@ void MachineStatusView::configTitleBar()
         .viewTitle      = "Machine Status",
         .textColor      = QColor("#FFF"),
         .bgColor        = QColor("#0072BA"),
-        .iconPath       = ":/icons/admin.svg",
+        .iconPath       = ":/icons/settings.svg",
         .sectionTitle   = "Settings",
         .showTitleBar   = true,
         .m_showLeftLogo = true,

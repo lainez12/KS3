@@ -62,14 +62,14 @@ void VisualisationView::setupUI()
     }
 
     // Setup Action Buttons
-    ui->speedCamRight->setup("Cam. Speed", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/speed-motor-low.svg");
-    ui->speedCamLeft->setup("Cam. Speed", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/speed-motor-low.svg");
-    ui->pickUpRight->setup("Go to X/Y", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/go-to.svg");
-    ui->pickUpLeft->setup("Go to X/Y", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/go-to.svg");
-    ui->gotoRight->setup("Pick Up X/Y", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/pick-up-xy.svg");
-    ui->gotoLeft->setup("Pick Up X/Y", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/pick-up-xy.svg");
-    ui->moveCamRight->setup("Move. Cam", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/move-cam.svg");
-    ui->moveCamLeft->setup("Move. Cam", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/move-cam.svg");
+    ui->speedCamRight->setup(NavButton::SetupParams{"Cam. Speed", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/speed-motor-low.svg", QFont("Arial", 12), 8, "#fff"});
+    ui->speedCamLeft->setup(NavButton::SetupParams{"Cam. Speed", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/speed-motor-low.svg", QFont("Arial", 12), 8, "#fff"});
+    ui->pickUpRight->setup(NavButton::SetupParams{"Go to X/Y", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/go-to.svg", QFont("Arial", 12), 8, "#fff"});
+    ui->pickUpLeft->setup(NavButton::SetupParams{"Go to X/Y", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/go-to.svg", QFont("Arial", 12), 8, "#fff"});
+    ui->gotoRight->setup(NavButton::SetupParams{"Pick Up X/Y", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/pick-up-xy.svg", QFont("Arial", 12), 8, "#fff"});
+    ui->gotoLeft->setup(NavButton::SetupParams{"Pick Up X/Y", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/pick-up-xy.svg", QFont("Arial", 12), 8, "#fff"});
+    ui->moveCamRight->setup(NavButton::SetupParams{"Move. Cam", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/move-cam.svg", QFont("Arial", 12), 8, "#fff"});
+    ui->moveCamLeft->setup(NavButton::SetupParams{"Move. Cam", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/move-cam.svg", QFont("Arial", 12), 8, "#fff"});
 
     ui->configCamLeftFrame->setVisible(false);
     ui->configCamRightFrame->setVisible(false);
@@ -263,25 +263,25 @@ void VisualisationView::mapPositionCamerasCloseMap()
 
 void VisualisationView::setNewNavButtonsConfigs()
 {
-    NavButtonConfig save("Save", ":/icons/save.svg", "S", std::bind(&VisualisationView::onSaveButtonClicked, this, std::placeholders::_1));
+    NavButtonConfig save("Save", ":/icons/save.svg", "S", std::bind(&VisualisationView::onSaveButtonClicked, this));
     addNavButton("center", save);
 
-    NavButtonConfig load("Load", ":/icons/load.svg", "L", std::bind(&VisualisationView::onLoadButtonClicked, this, std::placeholders::_1));
+    NavButtonConfig load("Load", ":/icons/load.svg", "L", std::bind(&VisualisationView::onLoadButtonClicked, this));
     addNavButton("center", load);
 
-    NavButtonConfig screenshot("Screenshot", ":/icons/screenshot.svg", "P", std::bind(&VisualisationView::onScreenshotButtonClicked, this, std::placeholders::_1));
+    NavButtonConfig screenshot("Screenshot", ":/icons/screenshot.svg", "P", std::bind(&VisualisationView::onScreenshotButtonClicked, this));
     addNavButton("center", screenshot);
 
-    NavButtonConfig hardForceCont("Hard Force Cont.", QColor(BLUE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/hard-force-contact.svg", "F", std::bind(&VisualisationView::onHardForceContButtonClicked, this, std::placeholders::_1));
+    NavButtonConfig hardForceCont("Hard Force Cont.", QColor(BLUE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/hard-force-contact.svg", "F", [this]() { onHardForceContButtonClicked("Hard Force Cont."); });
     addNavButton("center", hardForceCont);
 
-    NavButtonConfig speedMotorSubst("Subst. Speed", QColor(BLUE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/speed-motor-subst.svg", "U", std::bind(&VisualisationView::onSpeedMotorSubstButtonClicked, this, std::placeholders::_1));
+    NavButtonConfig speedMotorSubst("Subst. Speed", QColor(BLUE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/speed-motor-subst.svg", "U", std::bind(&VisualisationView::onSpeedMotorSubstButtonClicked, this));
     addNavButton("center", speedMotorSubst);
 
-    NavButtonConfig switchVacumAir("Vacum - Air.", QColor(BLUE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/vac_air_switch.svg", "M", std::bind(&VisualisationView::onSwitchVacumAirButtonClicked, this, std::placeholders::_1));
+    NavButtonConfig switchVacumAir("Vacum - Air.", QColor(BLUE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/vac_air_switch.svg", "M", std::bind(&VisualisationView::onSwitchVacumAirButtonClicked, this));
     addNavButton("center", switchVacumAir);
 
-    NavButtonConfig visualMark("Visual Mark", QColor(BLUE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/visual-mark.svg", "I", std::bind(&VisualisationView::onVisualMarkButtonClicked, this, std::placeholders::_1));
+    NavButtonConfig visualMark("Visual Mark", QColor(BLUE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/visual-mark.svg", "I", [this]() { onVisualMarkButtonClicked("Visual Mark"); });
     addNavButton("center", visualMark);
 }
 
@@ -319,24 +319,24 @@ void VisualisationView::rightCamConfigToggled(bool checked)
 // NAV BUTTON CALLBACKS
 // ==========================================
 
-void VisualisationView::onBackButtonClicked(const QString &buttonId) {}
+void VisualisationView::onBackButtonClicked() {}
 
-void VisualisationView::onValidateButtonClicked(const QString &buttonId)
+void VisualisationView::onValidateButtonClicked()
 {
     emit s_openView(Kub3::UI::ViewId::EXPOSURE_SETTINGS_VIEW);
 }
 
-void VisualisationView::onSaveButtonClicked(const QString &buttonId)
+void VisualisationView::onSaveButtonClicked()
 {
     emit s_openView(Kub3::UI::ViewId::ALIGNMENT_SAVE_PARAMETERS_VIEW);
 }
 
-void VisualisationView::onLoadButtonClicked(const QString &buttonId)
+void VisualisationView::onLoadButtonClicked()
 {
     emit s_openView(Kub3::UI::ViewId::ALIGNMENT_LOAD_PARAMETERS_VIEW);
 }
 
-void VisualisationView::onScreenshotButtonClicked(const QString &buttonId) {}
+void VisualisationView::onScreenshotButtonClicked() {}
 
 void VisualisationView::onHardForceContButtonClicked(const QString &buttonId)
 {
@@ -355,9 +355,9 @@ void VisualisationView::onHardForceContButtonClicked(const QString &buttonId)
     switchColorNavButton(buttonId, isHardForceContactFormVisible);
 }
 
-void VisualisationView::onSpeedMotorSubstButtonClicked(const QString &buttonId) {}
-void VisualisationView::onSwitchVacumAirButtonClicked(const QString &buttonId) {}
-void VisualisationView::onAntiCollisionButtonClicked(const QString &buttonId) {}
+void VisualisationView::onSpeedMotorSubstButtonClicked() {}
+void VisualisationView::onSwitchVacumAirButtonClicked() {}
+void VisualisationView::onAntiCollisionButtonClicked() {}
 
 void VisualisationView::onVisualMarkButtonClicked(const QString &buttonId)
 {
@@ -366,7 +366,7 @@ void VisualisationView::onVisualMarkButtonClicked(const QString &buttonId)
     ui->visualMarkRight->setVisible(!ui->visualMarkRight->isVisible());
 }
 
-void VisualisationView::onMeasurementButtonClicked(const QString &buttonId) {}
+void VisualisationView::onMeasurementButtonClicked() {}
 
 // ==========================================
 // HELPERS

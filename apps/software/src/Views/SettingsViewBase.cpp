@@ -13,17 +13,21 @@ namespace Kub3::UI::Views
     void SettingsViewBase::createNavButtonsConfigs()
     {
         NavButtonConfig homeBtn(
-            "Home",
-            ":/icons/home.svg",
+            "Back to Main",
+            QColor("#FFF"),
+            QColor("#B2D4F4"),
+            ":/icons/picto.png",
             "H",
-            std::bind(&SettingsViewBase::onHomeButtonClicked, this, std::placeholders::_1));
+            std::bind(&SettingsViewBase::onHomeButtonClicked, this));
+        homeBtn.isTextColorDifferent = true;
+        homeBtn.textColor            = QColor("#000");
         addNavButton("left", homeBtn);
 
         NavButtonConfig backBtn(
             "Back",
             ":/icons/back.svg",
             "B",
-            std::bind(&SettingsViewBase::onBackButtonClicked, this, std::placeholders::_1));
+            std::bind(&SettingsViewBase::onBackButtonClicked, this));
         addNavButton("left", backBtn);
     }
 
@@ -38,19 +42,19 @@ namespace Kub3::UI::Views
             .viewTitle      = viewTitle,
             .textColor      = QColor("#FFF"),
             .bgColor        = QColor(BLUE_COLOR),
-            .iconPath       = ":/icons/admin-circle.svg",
+            .iconPath       = ":/icons/settings.svg",
             .sectionTitle   = "Settings",
             .showTitleBar   = true,
             .m_showLeftLogo = true,
         });
     }
 
-    void SettingsViewBase::onHomeButtonClicked(const QString &buttonId)
+    void SettingsViewBase::onHomeButtonClicked()
     {
-        emit s_openView(Kub3::UI::ViewId::HOME_VIEW);
+        emit s_openView(Kub3::UI::ViewId::HOME_EIGHT_VIEW);
     }
 
-    void SettingsViewBase::onBackButtonClicked(const QString &buttonId)
+    void SettingsViewBase::onBackButtonClicked()
     {
         emit s_openView(Kub3::UI::ViewId::SETTINGS_VIEW);
     }

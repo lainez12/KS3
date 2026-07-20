@@ -57,17 +57,17 @@ namespace Kub3::UI::Views::ViewsAlignment
 
         // Nav configurations
         void setNewNavButtonsConfigs();
-        void onValidateButtonClicked(const QString &buttonId) override;
-        void onBackButtonClicked(const QString &buttonId) override;
-        void onSaveButtonClicked(const QString &buttonId);
-        void onLoadButtonClicked(const QString &buttonId);
-        void onScreenshotButtonClicked(const QString &buttonId);
+        void onValidateButtonClicked() override;
+        void onBackButtonClicked() override;
+        void onSaveButtonClicked();
+        void onLoadButtonClicked();
+        void onScreenshotButtonClicked();
         void onHardForceContButtonClicked(const QString &buttonId);
-        void onSpeedMotorSubstButtonClicked(const QString &buttonId);
-        void onSwitchVacumAirButtonClicked(const QString &buttonId);
-        void onAntiCollisionButtonClicked(const QString &buttonId);
+        void onSpeedMotorSubstButtonClicked();
+        void onSwitchVacumAirButtonClicked();
+        void onAntiCollisionButtonClicked();
         void onVisualMarkButtonClicked(const QString &buttonId);
-        void onMeasurementButtonClicked(const QString &buttonId);
+        void onMeasurementButtonClicked();
         void closeHardForceContactFormIfNeeded();
 
         // UI helpers

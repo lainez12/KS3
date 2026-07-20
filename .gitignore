@@ -110,3 +110,5 @@ CMakePresets.json
 aqtinstall.log
 dist
 admin_vault.bin
+
+MvSdkLog/

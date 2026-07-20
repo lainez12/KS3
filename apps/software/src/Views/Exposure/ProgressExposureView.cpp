@@ -26,12 +26,12 @@ void ProgressExposureView::resizeEvent(QResizeEvent *ev)
     QWidget::resizeEvent(ev);
 }
 
-void ProgressExposureView::onBackButtonClicked(const QString &buttonId)
+void ProgressExposureView::onBackButtonClicked()
 {
     // emit s_openView(Kub3::UI::ViewId::BACK_VIEW);
 }
 
-void ProgressExposureView::onValidateButtonClicked(const QString &buttonId)
+void ProgressExposureView::onValidateButtonClicked()
 {
     emit s_openView(Kub3::UI::ViewId::COMPLETE_EXPOSURE_VIEW);
 }

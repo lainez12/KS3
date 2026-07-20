@@ -30,16 +30,16 @@ void CompleteExposureView::setNewNavButtonsConfigs()
         "Home",
         ":/icons/home.svg",
         "H",
-        std::bind(&CompleteExposureView::onHomeButtonClicked, this, std::placeholders::_1));
+        std::bind(&CompleteExposureView::onHomeButtonClicked, this));
     addNavButton("left", homeBtn);
 }
 
-void CompleteExposureView::onBackButtonClicked(const QString &buttonId)
+void CompleteExposureView::onBackButtonClicked()
 {
     // emit s_openView(Kub3::UI::ViewId::BACK_VIEW);
 }
 
-void CompleteExposureView::onValidateButtonClicked(const QString &buttonId)
+void CompleteExposureView::onValidateButtonClicked()
 {
     // emit s_openView(Kub3::UI::ViewId::VALIDATE_VIEW);
 }

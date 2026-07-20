@@ -1,5 +1,4 @@
-#ifndef EXPOSURE_MENU_VIEW_H
-#define EXPOSURE_MENU_VIEW_H
+#pragma once
 
 #include <QWidget>
 
@@ -31,7 +30,7 @@ namespace Kub3::UI::Views
         void configTitleBar();
 
     private slots:
-        void onBackButtonClicked(const QString &buttonId);
+        void onBackButtonClicked();
 
     private:
         Ui::ExposureMenuView *ui;

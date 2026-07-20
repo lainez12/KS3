@@ -22,8 +22,9 @@
 #include <Views/Exposure/RecapExposureSettingsView.h>
 #include <Views/Exposure/SaveExposureSettingsView.h>
 #include <Views/ExposureMenuView.h>
+#include <Views/ExposureModeView.h>
 #include <Views/HomeEightView.h>
-#include <Views/HomeView.h>
+#include <Views/Settings/AdminPasswordView.h>
 #include <Views/Settings/LedTestView.h>
 #include <Views/Settings/MachineStatusView.h>
 #include <Views/Settings/OperatingTimesView.h>
@@ -60,7 +61,7 @@ public slots:
 private slots:
     void onViewButtonConfigsUpdated();
     void onViewButtonStateChanged(const QString &buttonId, bool newState);
-    void changeButtonColor(const QString &buttonId, bool EnabledColor);
+    void changeButtonColor(const QString &buttonId, bool enabledColor);
     void onViewButtonTextChanged(const QString &buttonId, const QString &newText);
 
 protected:

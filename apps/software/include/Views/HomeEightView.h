@@ -41,7 +41,7 @@ namespace Kub3::UI::Views
         void createNavButtonsConfigs();
         void configTitleBar();
 
-        void onSettingsButtonClicked(const QString &buttonId);
+        void onSettingsButtonClicked();
 
     private:
         Ui::HomeEightView *ui;
@@ -50,4 +50,4 @@ namespace Kub3::UI::Views
 
 using HomeEightView = Kub3::UI::Views::HomeEightView;
 
-#endif // HOMEVIEW_H
+#endif

@@ -130,7 +130,7 @@ void FavoriteExposureSettingsView::setNewNavButtonsConfigs()
         "Back",
         ":/icons/back.svg",
         ID_BTN_BACK,
-        std::bind(&FavoriteExposureSettingsView::onBackButtonClicked, this, std::placeholders::_1));
+        std::bind(&FavoriteExposureSettingsView::onBackButtonClicked, this));
     addNavButton("left", backBtn);
 }
 
@@ -205,12 +205,12 @@ void FavoriteExposureSettingsView::updateFavoritePageNavigation()
     ui->pushButtonRight->setEnabled(pageCount > 1 && currentIndex < pageCount - 1);
 }
 
-void FavoriteExposureSettingsView::onBackButtonClicked(const QString &buttonId)
+void FavoriteExposureSettingsView::onBackButtonClicked()
 {
     emit s_openView(Kub3::UI::ViewId::EXPOSURE_SETTINGS_VIEW);
 }
 
-void FavoriteExposureSettingsView::onValidateButtonClicked(const QString &buttonId)
+void FavoriteExposureSettingsView::onValidateButtonClicked()
 {
     // emit s_openView(Kub3::UI::ViewId::VALIDATE_VIEW);
 }

@@ -5,7 +5,7 @@
 #define ID_BTN_SETTINGS "S"
 #define ID_BTN_OPEN     "O"
 #define ID_BTN_CLOSE    "C"
-#define BUTTONS_SIZE    300
+#define BUTTONS_SIZE    280
 
 HomeEightView::HomeEightView(Unique<HomeViewModel> viewModel, QWidget *parent) :
     ViewBase(std::move(viewModel), parent),
@@ -14,9 +14,9 @@ HomeEightView::HomeEightView(Unique<HomeViewModel> viewModel, QWidget *parent) :
     ui->setupUi(this);
 
     QFont font("Arial", 22, QFont::Bold);
-    ui->maskBtn->setup("EJECT", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/insert.svg", font);
+    ui->maskBtn->setup(NavButton::SetupParams{"Mask", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/insert.svg", font});
     ui->maskBtn->setSize(BUTTONS_SIZE);
-    ui->waferBtn->setup("EJECT", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/insert.svg", font);
+    ui->waferBtn->setup(NavButton::SetupParams{"Wafer", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/insert.svg", font});
     ui->waferBtn->setSize(BUTTONS_SIZE);
 
     createNavButtonsConfigs();
@@ -45,14 +45,18 @@ void HomeEightView::updateMachineLogo(int h)
     if (h <= 0)
         return;
 
-    const int baseFontSize          = h * 0.1;             // 6% of window height
-    const int substrateSizeFontSize = baseFontSize * 0.64; // 64% of base
+    const int baseFontSize          = h * 0.11;            // 6% of window height
+    const int substrateSizeFontSize = baseFontSize * 0.45; // 64% of base
     // We use arg %1 for the logo size, arg %2 for the substrate size, arg %3 for the text
     const QString templateStr =
         "<span style='font-family:\"Art ttnorm\"; font-style:italic;"
-        "font-size:%1px; color:#0072ba;'>UV-KUB 3</span>"
+        "font-size:%1px; color:#0072ba; letter-spacing: 0px;'>&nbsp;UV-KUB 3</span>"
         "<span style='font-family:\"Art ttnorm\"; font-style:italic;"
-        "font-size:%2px; color:#e85420;'>&nbsp;%3-inch</span>";
+        "font-size:%1px; color:#e85420; letter-spacing: 0px;'> - </span>"
+        "<span style='font-family:\"Art ttnorm\"; font-style:italic;"
+        "font-size:%1px; color:#e85420; letter-spacing: 3px;'>%3</span>"
+        "<span style='font-family:\"Art ttnorm\"; font-style:italic;"
+        "font-size:%2px; color:#e85420; letter-spacing: 0px;'>-inch</span>";
 
     ui->mainTitle->setText(templateStr.arg(baseFontSize).arg(substrateSizeFontSize).arg(KUB_MODEL_STR));
 }
@@ -60,12 +64,12 @@ void HomeEightView::updateMachineLogo(int h)
 void HomeEightView::createNavButtonsConfigs()
 {
     NavButtonConfig settingsBtn(
-        "settings",
+        "Settings",
         QColor("#0072BA"),
         QColor("#B2D4F4"),
         ":/icons/settings.svg",
         ID_BTN_SETTINGS,
-        std::bind(&HomeEightView::onSettingsButtonClicked, this, std::placeholders::_1));
+        std::bind(&HomeEightView::onSettingsButtonClicked, this));
     addNavButton("left", settingsBtn);
 }
 void HomeEightView::configTitleBar()
@@ -73,7 +77,7 @@ void HomeEightView::configTitleBar()
     setTitleBar(TitleBarConfig{});
 }
 
-void HomeEightView::onSettingsButtonClicked(const QString &buttonId)
+void HomeEightView::onSettingsButtonClicked()
 {
     emit s_openView(Kub3::UI::ViewId::SETTINGS_VIEW);
 }

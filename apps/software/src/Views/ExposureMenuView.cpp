@@ -26,7 +26,7 @@ void ExposureMenuView::createNavButtonsConfigs()
         "Back",
         ":/icons/back.svg",
         "B",
-        std::bind(&ExposureMenuView::onBackButtonClicked, this, std::placeholders::_1));
+        std::bind(&ExposureMenuView::onBackButtonClicked, this));
     addNavButton("left", backBtn);
 }
 
@@ -37,13 +37,13 @@ void ExposureMenuView::configTitleBar()
         .textColor      = QColor("#FFF"),
         .bgColor        = QColor(BLUE_COLOR),
         .iconPath       = "",
-        .sectionTitle   = "Load",
+        .sectionTitle   = "",
         .showTitleBar   = true,
         .m_showLeftLogo = true,
     });
 }
 
-void ExposureMenuView::onBackButtonClicked(const QString &buttonId)
+void ExposureMenuView::onBackButtonClicked()
 {
     emit s_openView(Kub3::UI::ViewId::HOME_EIGHT_VIEW);
 }

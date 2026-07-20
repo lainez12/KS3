@@ -454,6 +454,9 @@ font-size: 20px;</string>
    </item>
    <item>
     <widget class="QWidget" name="content" native="true">
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
      <widget class="QWidget" name="moveLeftCamWidget" native="true">
       <property name="geometry">
        <rect>
@@ -568,6 +571,9 @@ color: #E85420;
            <property name="buttonSymbols">
             <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
            </property>
+           <property name="maximum">
+            <number>999999999</number>
+           </property>
           </widget>
          </item>
          <item>
@@ -628,6 +634,9 @@ color: #E85420;
            </property>
            <property name="buttonSymbols">
             <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+           </property>
+           <property name="maximum">
+            <number>999999999</number>
            </property>
           </widget>
          </item>
@@ -706,12 +715,22 @@ opacity: 1;</string>
               <enum>Qt::FocusPolicy::NoFocus</enum>
              </property>
              <property name="text">
-              <string>X</string>
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="../../resources.qrc">
+               <normaloff>:/icons/btnBackspace.svg</normaloff>:/icons/btnBackspace.svg</iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>30</width>
+               <height>30</height>
+              </size>
              </property>
             </widget>
            </item>
            <item row="3" column="2">
-            <widget class="QPushButton" name="btnBPoint_d">
+            <widget class="QPushButton" name="btnBPoint_g">
              <property name="focusPolicy">
               <enum>Qt::FocusPolicy::NoFocus</enum>
              </property>
@@ -841,7 +860,7 @@ opacity: 1;</string>
             </widget>
            </item>
            <item row="1" column="3">
-            <widget class="QPushButton" name="btnClear_d_2">
+            <widget class="QPushButton" name="btnClear_g">
              <property name="focusPolicy">
               <enum>Qt::FocusPolicy::NoFocus</enum>
              </property>
@@ -970,6 +989,9 @@ color: #E85420;
            <property name="buttonSymbols">
             <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
            </property>
+           <property name="maximum">
+            <number>999999999</number>
+           </property>
           </widget>
          </item>
          <item>
@@ -1030,6 +1052,9 @@ color: #E85420;
            </property>
            <property name="buttonSymbols">
             <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+           </property>
+           <property name="maximum">
+            <number>999999999</number>
            </property>
           </widget>
          </item>
@@ -1118,7 +1143,17 @@ height: 50px;
               <enum>Qt::FocusPolicy::NoFocus</enum>
              </property>
              <property name="text">
-              <string>X</string>
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="../../resources.qrc">
+               <normaloff>:/icons/btnBackspace.svg</normaloff>:/icons/btnBackspace.svg</iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>30</width>
+               <height>30</height>
+              </size>
              </property>
             </widget>
            </item>
@@ -2556,13 +2591,42 @@ font-size: 20px;</string>
        <rect>
         <x>480</x>
         <y>680</y>
-        <width>231</width>
-        <height>61</height>
+        <width>311</width>
+        <height>200</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_14">
        <item>
-        <widget class="NavButton" name="moveCamLeft" native="true"/>
+        <spacer name="horizontalSpacer_9">
+         <property name="orientation">
+          <enum>Qt::Orientation::Horizontal</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Policy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="NavButton" name="moveCamLeft" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>50</width>
+           <height>50</height>
+          </size>
+         </property>
+        </widget>
        </item>
        <item>
         <spacer name="horizontalSpacer_7">
@@ -2578,13 +2642,50 @@ font-size: 20px;</string>
         </spacer>
        </item>
        <item>
-        <widget class="NavButton" name="speedCamLeft" native="true"/>
+        <widget class="NavButton" name="speedCamLeft" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
        </item>
        <item>
-        <widget class="NavButton" name="pickUpLeft" native="true"/>
+        <widget class="NavButton" name="pickUpLeft" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
        </item>
        <item>
-        <widget class="NavButton" name="gotoLeft" native="true"/>
+        <widget class="NavButton" name="gotoLeft" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_11">
+         <property name="orientation">
+          <enum>Qt::Orientation::Horizontal</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Policy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>
@@ -2594,22 +2695,58 @@ font-size: 20px;</string>
         <x>1180</x>
         <y>680</y>
         <width>221</width>
-        <height>61</height>
+        <height>200</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_15">
        <item>
-        <widget class="NavButton" name="gotoRight" native="true">
+        <spacer name="horizontalSpacer_12">
+         <property name="orientation">
+          <enum>Qt::Orientation::Horizontal</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Policy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="NavButton" name="speedCamRight" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="styleSheet">
           <string notr="true"/>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="NavButton" name="pickUpRight" native="true"/>
+        <widget class="NavButton" name="pickUpRight" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
        </item>
        <item>
-        <widget class="NavButton" name="speedCamRight" native="true"/>
+        <widget class="NavButton" name="gotoRight" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
        </item>
        <item>
         <spacer name="horizontalSpacer_8">
@@ -2625,7 +2762,30 @@ font-size: 20px;</string>
         </spacer>
        </item>
        <item>
-        <widget class="NavButton" name="moveCamRight" native="true"/>
+        <widget class="NavButton" name="moveCamRight" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_10">
+         <property name="orientation">
+          <enum>Qt::Orientation::Horizontal</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Policy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>

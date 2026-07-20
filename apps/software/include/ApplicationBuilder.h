@@ -86,6 +86,7 @@ namespace Kub3
         QPointer<UI::ViewModels::Exposure::RecapExposureSettingsViewModel> m_recapExposureSettingsVM;
         QPointer<UI::ViewModels::Exposure::ProgressExposureViewModel> m_progressExposureVM;
         QPointer<UI::ViewModels::Exposure::CompleteExposureViewModel> m_completeExposureVM;
+        QPointer<UI::ViewModels::Settings::AdminPasswordViewModel> m_configuratorPasswdVM;
         QPointer<UI::ViewModels::Settings::VersionViewModel> m_versionVM;
         QPointer<UI::ViewModels::Settings::TemperatureViewModel> m_temperatureVM;
         QPointer<UI::ViewModels::Settings::OperatingTimesViewModel> m_operatingTimeVM;

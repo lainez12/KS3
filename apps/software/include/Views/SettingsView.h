@@ -6,12 +6,15 @@
 
 #include "ViewBase.h"
 
-namespace Ui {
+namespace Ui
+{
     class SettingsView;
 } // namespace UI
 
-namespace Kub3::UI::Views {
-    class SettingsView final : public ViewBase {
+namespace Kub3::UI::Views
+{
+    class SettingsView final : public ViewBase
+    {
         using SettingsViewModel = Kub3::UI::ViewModels::SettingsViewModel;
 
         Q_OBJECT
@@ -32,7 +35,7 @@ namespace Kub3::UI::Views {
     private:
         void createNavButtonsConfigs();
         void configTitleBar();
-        void onHomeButtonClicked(const QString &buttonId);
+        void onHomeButtonClicked();
 
     private:
         Ui::SettingsView *ui;

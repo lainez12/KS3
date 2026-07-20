@@ -29,9 +29,9 @@ namespace Kub3::UI::Views::ViewsExposure
 
     private:
         void setNewNavButtonsConfigs();
-        void onBackButtonClicked(const QString &buttonId);
-        void onSaveButtonClicked(const QString &buttonId);
-        void onValidateButtonClicked(const QString &buttonId) override;
+        void onBackButtonClicked();
+        void onSaveButtonClicked();
+        void onValidateButtonClicked() override;
 
     private:
         Ui::SaveExposureSettingsView *ui;

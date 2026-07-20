@@ -26,12 +26,12 @@ void ContactSelectionView::setNewNavButtonsConfigs()
 {
 }
 
-void ContactSelectionView::onBackButtonClicked(const QString &buttonId)
+void ContactSelectionView::onBackButtonClicked()
 {
     emit s_openView(Kub3::UI::ViewId::HOME_VIEW);
 }
 
-void ContactSelectionView::onValidateButtonClicked(const QString &buttonId)
+void ContactSelectionView::onValidateButtonClicked()
 {
     emit s_openView(Kub3::UI::ViewId::ALIGNMENT_VISUALISATION_VIEW);
 }

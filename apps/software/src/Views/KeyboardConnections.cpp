@@ -1,6 +1,9 @@
 // KeyboardConnections.cpp
 #include <QApplication>
+#include <QDebug>
+#include <QDoubleSpinBox>
 #include <QLineEdit>
+#include <QPushButton>
 #include <QSpinBox>
 
 #include <Views/KeyboardConnections.h>
@@ -8,15 +11,45 @@
 namespace Kub3::UI::Views
 {
 
+    namespace
+    {
+        static bool isEditableWidget(QWidget *widget)
+        {
+            return widget && (qobject_cast<QLineEdit *>(widget) || qobject_cast<QSpinBox *>(widget) || qobject_cast<QDoubleSpinBox *>(widget));
+        }
+
+        static QString widgetDescription(QWidget *widget)
+        {
+            if (!widget)
+                return QStringLiteral("<null>");
+
+            return QStringLiteral("%1 %2").arg(widget->metaObject()->className(), widget->objectName());
+        }
+    }
+
     KeyboardConnections::KeyboardConnections(QWidget *parent) :
         QWidget(parent)
     {
+        if (qApp)
+        {
+            connect(qApp, &QApplication::focusChanged, this, [this](QWidget *, QWidget *newWidget) {
+                updateLastEditableFocus(newWidget);
+            });
+        }
+    }
+
+    void KeyboardConnections::updateLastEditableFocus(QWidget *newWidget)
+    {
+        if (isEditableWidget(newWidget))
+        {
+            m_lastEditableFocus = newWidget;
+        }
     }
 
     void KeyboardConnections::simulationKey(Qt::Key keyCode, const QString &text)
     {
-        QWidget *focusedWidget = QApplication::focusWidget();
-        if (focusedWidget)
+        QWidget *focusedWidget = m_lastEditableFocus.data();
+        if (focusedWidget && (qobject_cast<QLineEdit *>(focusedWidget) || qobject_cast<QSpinBox *>(focusedWidget) || qobject_cast<QDoubleSpinBox *>(focusedWidget)))
         {
             QKeyEvent *keyPress = new QKeyEvent(QEvent::KeyPress, keyCode, Qt::NoModifier, text);
             QApplication::postEvent(focusedWidget, keyPress);
@@ -24,11 +57,15 @@ namespace Kub3::UI::Views
             QKeyEvent *keyRelease = new QKeyEvent(QEvent::KeyRelease, keyCode, Qt::NoModifier, text);
             QApplication::postEvent(focusedWidget, keyRelease);
         }
+        else
+        {
+            qDebug() << "No focused widget or focused widget is not a QLineEdit, QSpinBox, or QDoubleSpinBox.";
+        }
     }
 
     void KeyboardConnections::clearInputSelected()
     {
-        QWidget *focusedWidget = QApplication::focusWidget();
+        QWidget *focusedWidget = m_lastEditableFocus.data();
         if (!focusedWidget)
         {
             return;
@@ -96,6 +133,11 @@ namespace Kub3::UI::Views
         connectButton(parent, "btnB" + suffix, Qt::Key_B, "B");
         connectButton(parent, "btnN" + suffix, Qt::Key_N, "N");
         connectButton(parent, "btnM" + suffix, Qt::Key_M, "M");
+
+        connectButton(parent, "btnEspace" + suffix, Qt::Key_Space, " ");
+
+        connectCapitalButton(parent, "btnShift" + suffix);
+        // connectButton(parent, "btnShift" + suffix, Qt::Key_CapsLock, "");
     }
 
     void KeyboardConnections::connectButton(QWidget *parent, const QString &buttonName, Qt::Key keyCode, const QString &text)
@@ -118,6 +160,41 @@ namespace Kub3::UI::Views
                 clearInputSelected();
             });
         }
+    }
+
+    void KeyboardConnections::connectCapitalButton(QWidget *parent, const QString &buttonName)
+    {
+        QPushButton *btn = parent->findChild<QPushButton *>(buttonName);
+        if (btn)
+        {
+            connect(btn, &QPushButton::clicked, this, [this]() {
+                toggleCapitalState();
+                qDebug() << "Capital state toggled. New state: " << (isCapitalActive ? "Active" : "Inactive");
+            });
+        }
+    }
+
+    void KeyboardConnections::toggleCapitalState()
+    {
+        isCapitalActive = !isCapitalActive;
+        if (isCapitalActive)
+        {
+            // siwtchToUpperCase();
+        }
+        else
+        {
+            switchToLowerCase();
+        }
+    }
+
+    void KeyboardConnections::switchToUpperCase()
+    {
+        // switchLetterCase("btnQ", "Q", Qt::Key_Q);
+    }
+
+    void KeyboardConnections::switchToLowerCase()
+    {
+        // switchLetterCase("btnQ", "q", Qt::Key_Q);
     }
 
 }
