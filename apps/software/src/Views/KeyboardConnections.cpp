@@ -1,4 +1,3 @@
-// KeyboardConnections.cpp
 #include <QApplication>
 #include <QDebug>
 #include <QDoubleSpinBox>
@@ -105,39 +104,11 @@ namespace Kub3::UI::Views
 
         connectButton(parent, "btnEnter" + suffix, Qt::Key_Tab, "\t");
 
-        connectButton(parent, "btnQ" + suffix, Qt::Key_Q, "Q");
-        connectButton(parent, "btnW" + suffix, Qt::Key_W, "W");
-        connectButton(parent, "btnE" + suffix, Qt::Key_E, "E");
-        connectButton(parent, "btnR" + suffix, Qt::Key_R, "R");
-        connectButton(parent, "btnT" + suffix, Qt::Key_T, "T");
-        connectButton(parent, "btnY" + suffix, Qt::Key_Y, "Y");
-        connectButton(parent, "btnU" + suffix, Qt::Key_U, "U");
-        connectButton(parent, "btnI" + suffix, Qt::Key_I, "I");
-        connectButton(parent, "btnO" + suffix, Qt::Key_O, "O");
-        connectButton(parent, "btnP" + suffix, Qt::Key_P, "P");
-
-        connectButton(parent, "btnA" + suffix, Qt::Key_A, "A");
-        connectButton(parent, "btnS" + suffix, Qt::Key_S, "S");
-        connectButton(parent, "btnD" + suffix, Qt::Key_D, "D");
-        connectButton(parent, "btnF" + suffix, Qt::Key_F, "F");
-        connectButton(parent, "btnG" + suffix, Qt::Key_G, "G");
-        connectButton(parent, "btnH" + suffix, Qt::Key_H, "H");
-        connectButton(parent, "btnJ" + suffix, Qt::Key_J, "J");
-        connectButton(parent, "btnK" + suffix, Qt::Key_K, "K");
-        connectButton(parent, "btnL" + suffix, Qt::Key_L, "L");
-
-        connectButton(parent, "btnZ" + suffix, Qt::Key_Z, "Z");
-        connectButton(parent, "btnX" + suffix, Qt::Key_X, "X");
-        connectButton(parent, "btnC" + suffix, Qt::Key_C, "C");
-        connectButton(parent, "btnV" + suffix, Qt::Key_V, "V");
-        connectButton(parent, "btnB" + suffix, Qt::Key_B, "B");
-        connectButton(parent, "btnN" + suffix, Qt::Key_N, "N");
-        connectButton(parent, "btnM" + suffix, Qt::Key_M, "M");
+        switchToUpperCase();
 
         connectButton(parent, "btnEspace" + suffix, Qt::Key_Space, " ");
 
         connectCapitalButton(parent, "btnShift" + suffix);
-        // connectButton(parent, "btnShift" + suffix, Qt::Key_CapsLock, "");
     }
 
     void KeyboardConnections::connectButton(QWidget *parent, const QString &buttonName, Qt::Key keyCode, const QString &text)
@@ -169,7 +140,6 @@ namespace Kub3::UI::Views
         {
             connect(btn, &QPushButton::clicked, this, [this]() {
                 toggleCapitalState();
-                qDebug() << "Capital state toggled. New state: " << (isCapitalActive ? "Active" : "Inactive");
             });
         }
     }
@@ -179,7 +149,7 @@ namespace Kub3::UI::Views
         isCapitalActive = !isCapitalActive;
         if (isCapitalActive)
         {
-            // siwtchToUpperCase();
+            switchToUpperCase();
         }
         else
         {
@@ -189,12 +159,36 @@ namespace Kub3::UI::Views
 
     void KeyboardConnections::switchToUpperCase()
     {
-        // switchLetterCase("btnQ", "Q", Qt::Key_Q);
+        for (int i = 0; i < 26; ++i)
+        {
+            char letter        = 'A' + i;
+            QString buttonName = QString("btn%1").arg(letter);
+            QPushButton *btn   = this->parent()->findChild<QPushButton *>(buttonName);
+            if (btn)
+            {
+                btn->setText(QString(letter).toUpper());
+                disconnect(btn, &QPushButton::clicked, this, nullptr);
+                QWidget *parent = this->parentWidget();
+                connectButton(parent, buttonName, Qt::Key(letter), QString(letter).toUpper());
+            }
+        }
     }
 
     void KeyboardConnections::switchToLowerCase()
     {
-        // switchLetterCase("btnQ", "q", Qt::Key_Q);
+        for (int i = 0; i < 26; ++i)
+        {
+            char letter        = 'A' + i;
+            QString buttonName = QString("btn%1").arg(letter);
+            QPushButton *btn   = this->parent()->findChild<QPushButton *>(buttonName);
+            if (btn)
+            {
+                btn->setText(QString(letter).toLower());
+                disconnect(btn, &QPushButton::clicked, this, nullptr);
+                QWidget *parent = this->parentWidget();
+                connectButton(parent, buttonName, Qt::Key(letter), QString(letter).toLower());
+            }
+        }
     }
 
 }

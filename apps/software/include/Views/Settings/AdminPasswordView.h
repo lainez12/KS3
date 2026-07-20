@@ -27,6 +27,9 @@ namespace Kub3::UI::Views::ViewsSettings
     public:
         void resizeEvent(QResizeEvent *event) override;
 
+    private slots:
+        void onAuthenticationFailureFeedback(void);
+
     private:
         void setNewNavButtonsConfigs();
         void onValidateButtonClicked(void);

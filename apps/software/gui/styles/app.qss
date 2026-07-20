@@ -222,12 +222,10 @@ QFrame#navBtnIconCircle {
 
 .text-last-cycle {
     background: transparent; 
-    border-image: none; 
+    border-image: none;
     color: @orange;
-    text-align: left;
-    font: bold 25px Arial;
-    letter-spacing: 0px;
-    opacity: 1;
+    font-size: 20px;
+    font-weight: 700;
 }
 
 QScrollBar::handle:vertical {
@@ -336,18 +334,6 @@ QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
     font: 20px;
     font-weight: 700;
     font-family: arial;
-}
-
-#ExposureSettingsView QLabel,
-#ExposureSettingsView QSpinBox {
-    font: normal normal bold 25px/29px Arial;
-    letter-spacing: 0px;
-    color: #0070DB;
-}
-#ExposureSettingsView QLabel.orange,
-#ExposureSettingsView QLabel[style*="#E85420"],
-#ExposureSettingsView QSpinBox.orange {
-    color: #E85420;
 }
 
 /* Save/Load dialogs - common button and lineedit */

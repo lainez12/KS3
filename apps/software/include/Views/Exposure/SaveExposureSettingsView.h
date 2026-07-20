@@ -30,7 +30,6 @@ namespace Kub3::UI::Views::ViewsExposure
     private:
         void setNewNavButtonsConfigs();
         void onBackButtonClicked();
-        void onSaveButtonClicked();
         void onValidateButtonClicked() override;
 
     private:

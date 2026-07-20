@@ -13,8 +13,10 @@
 namespace
 {
     constexpr int kOverlayMargin = 36;
-    constexpr int kCardMaxWidth  = 760;
-    constexpr int kCardMinWidth  = 420;
+    constexpr int kCardMaxWidth  = 850;
+    constexpr int kCardMinWidth  = 520;
+    constexpr int kCardMinHeight = 380;
+    constexpr int kCardMaxHeight = 800;
 
     QPixmap renderSvgIcon(const QString &resourcePath, const QSize &size)
     {
@@ -65,6 +67,8 @@ void PopUpMessage::buildUi()
     m_card->setObjectName(QStringLiteral("PopUpMessageCard"));
     m_card->setMinimumWidth(kCardMinWidth);
     m_card->setMaximumWidth(kCardMaxWidth);
+    m_card->setMinimumHeight(kCardMinHeight);
+    m_card->setMaximumHeight(kCardMaxHeight);
     m_card->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
 
     auto *shadow = new QGraphicsDropShadowEffect(m_card);
