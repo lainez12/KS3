@@ -144,6 +144,9 @@ namespace Kub3::Tools::Tester
         connect(ui->btnTareLeft, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestForceSensorTare(ForceSensor::Left); });
         connect(ui->btnTareRight, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestForceSensorTare(ForceSensor::Right); });
         connect(ui->btnTareBack, &QPushButton::clicked, this, [this]() { m_procedureViewModel->uiRequestForceSensorTare(ForceSensor::Back); });
+        connect(ui->cbLockScaleLeft, &QPushButton::toggled, this, [this](bool c) { ui->pltLeftForce->setScaleLocked(c); });
+        connect(ui->cbLockScaleRight, &QPushButton::toggled, this, [this](bool c) { ui->pltRightForce->setScaleLocked(c); });
+        connect(ui->cbLockScaleBack, &QPushButton::toggled, this, [this](bool c) { ui->pltBackForce->setScaleLocked(c); });
         connect(ui->cbEnableForceSensors, &QCheckBox::toggled, this, [this](bool c) { m_procedureViewModel->uiRequestForceSensorsToggle(c); });
 
         // --- Vision (Cameras + Deck) ---

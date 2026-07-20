@@ -17,6 +17,7 @@
 #include <pages/ZAlgorithmicLimitsPage.h>
 #include <utils.h>
 
+#include <QCloseEvent>
 #include <QDoubleSpinBox>
 #include <QFile>
 #include <QGroupBox>
@@ -44,8 +45,9 @@ ConfigWindow::ConfigWindow(QString hwConfigPath, QString processConfigPath, QStr
     ui->setupUi(this);
 
     // Wire the buttons
-    connect(ui->saveBtn, &QPushButton::clicked, this, &ConfigWindow::onSaveClicked);
-    connect(ui->reloadBtn, &QPushButton::clicked, this, &ConfigWindow::onReloadClicked);
+    connect(ui->btnSave, &QPushButton::clicked, this, &ConfigWindow::onSaveClicked);
+    connect(ui->btnReload, &QPushButton::clicked, this, &ConfigWindow::onReloadClicked);
+    connect(ui->btnQuit, &QPushButton::clicked, this, &ConfigWindow::onQuitClicked);
 
     // Wire the two-tier navigation
     connect(ui->categoryList, &QListWidget::currentItemChanged, this, &ConfigWindow::onCategorySelectionChanged);
@@ -57,6 +59,11 @@ ConfigWindow::ConfigWindow(QString hwConfigPath, QString processConfigPath, QStr
 ConfigWindow::~ConfigWindow()
 {
     delete ui;
+}
+
+void ConfigWindow::onQuitClicked()
+{
+    close(); // Triggering close() will call closeEvent()
 }
 
 void ConfigWindow::onReloadClicked()
@@ -107,6 +114,25 @@ void ConfigWindow::onSaveClicked()
     catch (const std::exception &e)
     {
         QMessageBox::critical(this, "Save Error", e.what());
+    }
+}
+
+void ConfigWindow::closeEvent(QCloseEvent *event)
+{
+    // Ask for confirmation before discarding potential modifications
+    QMessageBox::StandardButton reply = QMessageBox::question(
+        this,
+        "Confirm Exit",
+        "Are you sure you want to exit? Any unsaved changes will be lost.",
+        QMessageBox::Yes | QMessageBox::No);
+
+    if (reply == QMessageBox::Yes)
+    {
+        event->accept(); // Allows the window to close, shutting down the app
+    }
+    else
+    {
+        event->ignore(); // Prevents the window from closing
     }
 }
 

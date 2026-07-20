@@ -45,6 +45,9 @@ namespace Kub3::Tools::Tester
         void addDataPoint(const QString &curveId, double value);
         void clear();
 
+        // Locks or unlocks the Y-axis bounds (stops auto-scaling)
+        void setScaleLocked(bool locked);
+
     protected:
         void paintEvent(QPaintEvent *event) override;
 
@@ -59,6 +62,8 @@ namespace Kub3::Tools::Tester
 
         double m_minY = -1.0;
         double m_maxY = 1.0;
+
+        bool m_scaleLocked = false; // Tracks if the Y-axis bounds are locked
 
         // Collection of curves keyed by their ID (e.g., "ref_pos", "real_pos")
         QMap<QString, CurveInfo> m_curves;

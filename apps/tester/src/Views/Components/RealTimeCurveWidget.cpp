@@ -57,13 +57,29 @@ namespace Kub3::Tools::Tester
             curve.data.clear();
             curve.currentValue = 0.0;
         }
-        m_minY = -1.0;
-        m_maxY = 1.0;
+
+        // Only reset bounds if the scale is not locked
+        if (!m_scaleLocked)
+        {
+            m_minY = -1.0;
+            m_maxY = 1.0;
+        }
+
         update();
+    }
+
+    void RealTimeCurveWidget::setScaleLocked(bool locked)
+    {
+        m_scaleLocked = locked;
+        update(); // Force visual refresh immediately
     }
 
     void RealTimeCurveWidget::calculateBounds()
     {
+        // If the scale is locked, skip recalculation to maintain the current bounds
+        if (m_scaleLocked)
+            return;
+
         bool hasData = false;
         double min   = 0.0;
         double max   = 0.0;
@@ -202,6 +218,11 @@ namespace Kub3::Tools::Tester
         painter.setClipRect(plotArea);
 
         double range = m_maxY - m_minY;
+
+        // Prevent division by zero if scale locked with m_maxY == m_minY
+        if (range == 0.0)
+            range = 1.0;
+
         for (const auto &curve : m_curves)
         {
             QPainterPath path;
