@@ -35,20 +35,24 @@ NavButton::NavButton(QWidget *parent) :
     layout->addWidget(m_text, 0, Qt::AlignHCenter);
 }
 
-void NavButton::setup(QString text, const QColor &colorEnabled, const QColor &colorDisabled, const QString &iconPath, const QFont &font, const uint gapPx, const QString &textBgColor)
+void NavButton::setup(const SetupParams &params)
 {
-    text[0] = text[0].toUpper();
+    QString text = params.text;
+    if (!text.isEmpty())
+    {
+        text[0] = text[0].toUpper();
+    }
     m_text->setText(text);
-    m_text->setFont(font);
-    m_circle->setColor(colorEnabled);
-    this->colorEnabled  = colorEnabled;
-    this->colorDisabled = colorDisabled;
-    this->textColor     = colorEnabled;
-    this->textBgColor   = textBgColor;
+    m_text->setFont(params.font);
+    m_circle->setColor(params.colorEnabled);
+    this->colorEnabled  = params.colorEnabled;
+    this->colorDisabled = params.colorDisabled;
+    this->textColor     = params.colorEnabled;
+    this->textBgColor   = params.textBgColor;
     m_text->setStyleSheet(QString("color: %1; background-color: %2; padding: 2px; border-radius: 5px;").arg(textColor.name()).arg(textBgColor));
-    if (!iconPath.isEmpty())
-        this->setIcon(iconPath);
-    this->setGap(gapPx);
+    if (!params.iconPath.isEmpty())
+        this->setIcon(params.iconPath);
+    this->setGap(params.gapPx);
 }
 
 void NavButton::setIcon(const QString &path)

@@ -62,14 +62,14 @@ void VisualisationView::setupUI()
     }
 
     // Setup Action Buttons
-    ui->speedCamRight->setup("Cam. Speed", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/speed-motor-low.svg", QFont("Arial", 12), 8, "#fff");
-    ui->speedCamLeft->setup("Cam. Speed", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/speed-motor-low.svg", QFont("Arial", 12), 8, "#fff");
-    ui->pickUpRight->setup("Go to X/Y", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/go-to.svg", QFont("Arial", 12), 8, "#fff");
-    ui->pickUpLeft->setup("Go to X/Y", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/go-to.svg", QFont("Arial", 12), 8, "#fff");
-    ui->gotoRight->setup("Pick Up X/Y", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/pick-up-xy.svg", QFont("Arial", 12), 8, "#fff");
-    ui->gotoLeft->setup("Pick Up X/Y", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/pick-up-xy.svg", QFont("Arial", 12), 8, "#fff");
-    ui->moveCamRight->setup("Move. Cam", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/move-cam.svg", QFont("Arial", 12), 8, "#fff");
-    ui->moveCamLeft->setup("Move. Cam", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/move-cam.svg", QFont("Arial", 12), 8, "#fff");
+    ui->speedCamRight->setup(NavButton::SetupParams{"Cam. Speed", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/speed-motor-low.svg", QFont("Arial", 12), 8, "#fff"});
+    ui->speedCamLeft->setup(NavButton::SetupParams{"Cam. Speed", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/speed-motor-low.svg", QFont("Arial", 12), 8, "#fff"});
+    ui->pickUpRight->setup(NavButton::SetupParams{"Go to X/Y", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/go-to.svg", QFont("Arial", 12), 8, "#fff"});
+    ui->pickUpLeft->setup(NavButton::SetupParams{"Go to X/Y", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/go-to.svg", QFont("Arial", 12), 8, "#fff"});
+    ui->gotoRight->setup(NavButton::SetupParams{"Pick Up X/Y", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/pick-up-xy.svg", QFont("Arial", 12), 8, "#fff"});
+    ui->gotoLeft->setup(NavButton::SetupParams{"Pick Up X/Y", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/pick-up-xy.svg", QFont("Arial", 12), 8, "#fff"});
+    ui->moveCamRight->setup(NavButton::SetupParams{"Move. Cam", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/move-cam.svg", QFont("Arial", 12), 8, "#fff"});
+    ui->moveCamLeft->setup(NavButton::SetupParams{"Move. Cam", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/move-cam.svg", QFont("Arial", 12), 8, "#fff"});
 
     ui->configCamLeftFrame->setVisible(false);
     ui->configCamRightFrame->setVisible(false);

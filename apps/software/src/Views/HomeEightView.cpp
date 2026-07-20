@@ -14,9 +14,9 @@ HomeEightView::HomeEightView(Unique<HomeViewModel> viewModel, QWidget *parent) :
     ui->setupUi(this);
 
     QFont font("Arial", 22, QFont::Bold);
-    ui->maskBtn->setup("Mask", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/insert.svg", font);
+    ui->maskBtn->setup(NavButton::SetupParams{"Mask", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/insert.svg", font});
     ui->maskBtn->setSize(BUTTONS_SIZE);
-    ui->waferBtn->setup("Wafer", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/insert.svg", font);
+    ui->waferBtn->setup(NavButton::SetupParams{"Wafer", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/insert.svg", font});
     ui->waferBtn->setSize(BUTTONS_SIZE);
 
     createNavButtonsConfigs();

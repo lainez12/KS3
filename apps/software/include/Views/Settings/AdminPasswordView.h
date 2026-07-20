@@ -1,6 +1,4 @@
-#ifndef ADMINPASSWORDVIEW_H
-#define ADMINPASSWORDVIEW_H
-
+#pragma once
 #include <QWidget>
 #include <ViewModels/Settings/AdminPasswordViewModel.h>
 #include <Views/SettingsViewBase.h>

@@ -16,7 +16,7 @@ AdminPasswordView::AdminPasswordView(Unique<AdminPasswordViewModel> viewModel, Q
 {
     ui->setupUi(this);
     m_keyboard.setupKeyboardConnections(this);
-    setDefaultTitleBar("Exposure Settings");
+    setDefaultTitleBar("Admin Password");
     setNewNavButtonsConfigs();
 }
 

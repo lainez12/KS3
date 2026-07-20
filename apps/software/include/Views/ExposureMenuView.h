@@ -1,5 +1,4 @@
-#ifndef EXPOSURE_MENU_VIEW_H
-#define EXPOSURE_MENU_VIEW_H
+#pragma once
 
 #include <QWidget>
 

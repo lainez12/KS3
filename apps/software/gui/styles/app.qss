@@ -216,6 +216,20 @@ QFrame#navBtnIconCircle {
     border: 2px solid #000;
 }
 
+.none-background-image {
+    background-image: "";
+}
+
+.text-last-cycle {
+    background: transparent; 
+    border-image: none; 
+    color: @orange;
+    text-align: left;
+    font: bold 25px Arial;
+    letter-spacing: 0px;
+    opacity: 1;
+}
+
 QScrollBar::handle:vertical {
     background-color: @blue;
     min-height: 40px;

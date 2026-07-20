@@ -210,7 +210,12 @@ void MainWindow::clearBottomBar()
 NavButton *MainWindow::createNavButton(const Kub3::UI::Views::NavButtonConfig &config)
 {
     NavButton *btn = new NavButton();
-    btn->setup(config.text, config.colorEnabled, config.colorDisabled, config.iconPath);
+    NavButton::SetupParams setupParams;
+    setupParams.text = config.text;
+    setupParams.colorEnabled = config.colorEnabled;
+    setupParams.colorDisabled = config.colorDisabled;
+    setupParams.iconPath = config.iconPath;
+    btn->setup(setupParams);
     btn->setSize(77);
     btn->setEnabledNavButton(config.enabled);
     if(config.isTextColorDifferent) {

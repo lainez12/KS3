@@ -64,7 +64,7 @@ void ActionBox::resizeEvent(QResizeEvent *event)
         return;
 
     const int spacing        = m_layout->spacing();
-    const int fontSize       = qMax(int(side * 0.08), 18); // 10% of width (min. font size = 18px)
+    const int fontSize       = qMax(int(side * 0.08), 18); // 8% of width (min. font size = 18px)
     const int iconSize       = side * 0.36;                // 36% of width
     const int remainingSpace = side - (fontSize + iconSize + spacing);
     const int topMargin      = remainingSpace * 0.40;

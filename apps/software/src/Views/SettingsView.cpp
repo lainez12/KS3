@@ -17,21 +17,21 @@ SettingsView::SettingsView(Unique<SettingsViewModel> viewModel, QWidget *parent)
     configTitleBar();
 
     QFont font("Arial", 22);
-    ui->opeTimesBtn->setup("Operation Times", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/operating-times.svg", font);
+    ui->opeTimesBtn->setup(NavButton::SetupParams{"Operation Times", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/operating-times.svg", font});
     ui->opeTimesBtn->setSize(BUTTONS_SIZE);
-    ui->aboutBtn->setup("About", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/about.svg", font);
+    ui->aboutBtn->setup(NavButton::SetupParams{"About", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/about.svg", font});
     ui->aboutBtn->setSize(BUTTONS_SIZE);
-    ui->temperatureBtn->setup("Temperature", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/temperature.svg", font);
+    ui->temperatureBtn->setup(NavButton::SetupParams{"Temperature", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/temperature.svg", font});
     ui->temperatureBtn->setSize(BUTTONS_SIZE);
-    ui->screenshootBtn->setup("Screenshot export", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/screenshots-export.svg", font);
+    ui->screenshootBtn->setup(NavButton::SetupParams{"Screenshot export", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/screenshots-export.svg", font});
     ui->screenshootBtn->setSize(BUTTONS_SIZE);
-    ui->ledTestBtn->setup("Led test", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/led-test.svg", font);
+    ui->ledTestBtn->setup(NavButton::SetupParams{"Led test", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/led-test.svg", font});
     ui->ledTestBtn->setSize(BUTTONS_SIZE);
-    ui->updateSoftBtn->setup("Update software", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/usb-software.svg", font);
+    ui->updateSoftBtn->setup(NavButton::SetupParams{"Update software", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/usb-software.svg", font});
     ui->updateSoftBtn->setSize(BUTTONS_SIZE);
-    ui->machineSettingsBtn->setup("Machine Status", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/select-all.svg", font);
+    ui->machineSettingsBtn->setup(NavButton::SetupParams{"Machine Status", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/select-all.svg", font});
     ui->machineSettingsBtn->setSize(BUTTONS_SIZE);
-    ui->adminBtn->setup("Admin", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/admin.svg", font);
+    ui->adminBtn->setup(NavButton::SetupParams{"Admin", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/admin.svg", font});
     ui->adminBtn->setSize(BUTTONS_SIZE);
 
     connect(ui->aboutBtn, &NavButton::clicked, this, [this]() { emit s_openView(Kub3::UI::ViewId::SETTINGS_ABOUT_VIEW); });

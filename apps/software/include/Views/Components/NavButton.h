@@ -1,7 +1,10 @@
 #pragma once
 
+#include <QColor>
+#include <QFont>
 #include <QLabel>
 #include <QMouseEvent>
+#include <QString>
 #include <QWidget>
 
 #include "BottomCroppedCircle.h"
@@ -10,9 +13,19 @@ class NavButton : public QWidget
 {
     Q_OBJECT
 public:
+    struct SetupParams {
+        QString text;
+        QColor colorEnabled;
+        QColor colorDisabled;
+        QString iconPath = "";
+        QFont font = QFont("Arial", 12);
+        uint gapPx = 0;
+        QString textBgColor = "";
+    };
+
     explicit NavButton(QWidget *parent = nullptr);
 
-    void setup(QString text, const QColor &colorEnabled, const QColor &colorDisabled, const QString &iconPath = "", const QFont &font = QFont("Arial", 12), const uint gapPx = 0, const QString &textBgColor = "");
+    void setup(const SetupParams &params);
     void setIcon(const QString &iconPath);
     void setText(const QString &newText);
     void setEnabledNavButton(bool state);
