@@ -1,4 +1,5 @@
 #pragma once
+
 #include <QWidget>
 #include <ViewModels/Settings/AdminPasswordViewModel.h>
 #include <Views/SettingsViewBase.h>
@@ -38,5 +39,3 @@ namespace Kub3::UI::Views::ViewsSettings
 } // namespace Kub3::UI::Views
 
 using AdminPasswordView = Kub3::UI::Views::ViewsSettings::AdminPasswordView;
-
-#endif

@@ -38,5 +38,3 @@ namespace Kub3::UI::Views
 }
 
 using ExposureMenuView = Kub3::UI::Views::ExposureMenuView;
-
-#endif // EXPOSURE_MENU_VIEW_H
