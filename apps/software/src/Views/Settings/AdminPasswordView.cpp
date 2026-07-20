@@ -27,6 +27,8 @@ AdminPasswordView::AdminPasswordView(Unique<AdminPasswordViewModel> viewModel, Q
     connect(vm, &AdminPasswordViewModel::s_authenticationFailure, this, &AdminPasswordView::onAuthenticationFailureFeedback);
 
     connect(ui->btnConfirm, &QPushButton::clicked, this, &AdminPasswordView::onValidateButtonClicked);
+    connect(ui->btnCancel, &QPushButton::clicked, this, &AdminPasswordView::onBackButtonClicked);
+    connect(ui->lineEditPasswd, &QLineEdit::returnPressed, this, &AdminPasswordView::onValidateButtonClicked);
 }
 
 AdminPasswordView::~AdminPasswordView()
@@ -54,8 +56,6 @@ void AdminPasswordView::onValidateButtonClicked(void)
 
 void AdminPasswordView::onAuthenticationFailureFeedback(void)
 {
-    PopUpMessage::ButtonConfig okButton = { "OK", [this]() {
-        ui->lineEditPasswd->clear();
-    } };
-    showPopUpMessage("Authentication Failed", "The password you entered is incorrect. Please try again.", { okButton });
+    PopUpMessage::ButtonConfig okButton = {"OK", [this]() { ui->lineEditPasswd->clear(); }};
+    showPopUpMessage("Authentication Failed", "The password you entered is incorrect. Please try again.", {okButton});
 }
