@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
     qInfo() << "  Version:" << KUB3_VERSION_STR;
     qInfo() << "  Model:" << KUB_MODEL_STR;
     qInfo() << "  Log path:" << Logger::file_location();
-    qInfo() << "  Kubconfigurator path:" << KUB3_CONFIGURATOR_BIN_PATH;
+    qInfo() << "  Configurator path:" << KUB3_CONFIGURATOR_BIN_PATH;
     qInfo() << "========================================";
 
     ApplicationBuilder appBuilder;
