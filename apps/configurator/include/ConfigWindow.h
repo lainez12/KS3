@@ -24,9 +24,13 @@ public:
     explicit ConfigWindow(QString hwConfigPath, QString processConfigPath, QString adminConfigPath, QWidget *parent = nullptr);
     ~ConfigWindow() override;
 
+protected:
+    void closeEvent(QCloseEvent *event) override;
+
 private slots:
     void onSaveClicked();
     void onReloadClicked();
+    void onQuitClicked();
 
     void onCategorySelectionChanged(QListWidgetItem *current, QListWidgetItem *previous);
     void onItemSelected(QListWidgetItem *current, QListWidgetItem *previous);
