@@ -41,23 +41,11 @@ void SaveExposureSettingsView::setNewNavButtonsConfigs()
         ID_BTN_BACK,
         std::bind(&SaveExposureSettingsView::onBackButtonClicked, this));
     addNavButton("left", backBtn, 1);
-
-    NavButtonConfig saveBtn(
-        "Save",
-        ":/icons/save.svg",
-        ID_BTN_SAVE,
-        std::bind(&SaveExposureSettingsView::onSaveButtonClicked, this));
-    addNavButton("right", saveBtn);
 }
 
 void SaveExposureSettingsView::onBackButtonClicked()
 {
     emit s_openView(Kub3::UI::ViewId::EXPOSURE_SETTINGS_VIEW);
-}
-
-void SaveExposureSettingsView::onSaveButtonClicked()
-{
-    // emit s_openView(Kub3::UI::ViewId::SAVE_VIEW);
 }
 
 void SaveExposureSettingsView::onValidateButtonClicked()

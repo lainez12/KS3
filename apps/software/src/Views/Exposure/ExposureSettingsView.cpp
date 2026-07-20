@@ -53,15 +53,14 @@ ExposureSettingsView::ExposureSettingsView(Unique<ExposureSettingsViewModel> vie
     paleta.setBrush(QPalette::Window, pixmapLastCycle.scaled(ui->containerLastCycle->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
     ui->containerLastCycle->setPalette(paleta);
     ui->containerLastCycle->setAutoFillBackground(true);
-    ui->containerLastCycle->setStyleSheet("border-image: url(:/icons/last-cycle-enabled.png);");
-
-    //ui->lastCycleTextLabel->setStyleSheet("background: transparent; border-image: none; color: " ORANGE_COLOR "; font-size: 18px; font-weight: 700;");
 
     connect(ui->favoriteSettingslabel, &QPushButton::clicked, this, [this]() { emit s_openView(Kub3::UI::ViewId::FAVORITE_EXPOSURE_SETTINGS_VIEW); });
     connect(ui->continuousModeBtn, &QPushButton::clicked, this, &ExposureSettingsView::switchToContinuousMode);
     connect(ui->flashingModeBtn, &QPushButton::clicked, this, &ExposureSettingsView::switchToFlashingMode);
 
     setNavButtonEnabled(ID_BTN_VALIDATE, true);
+    ui->exposureDuration->hide();
+    ui->titleExposureDuration->hide();
 }
 ExposureSettingsView::~ExposureSettingsView()
 {
