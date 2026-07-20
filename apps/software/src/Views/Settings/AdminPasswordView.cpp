@@ -24,6 +24,7 @@ AdminPasswordView::AdminPasswordView(Unique<AdminPasswordViewModel> viewModel, Q
     AdminPasswordViewModel *vm = static_cast<AdminPasswordViewModel *>(m_viewModel.get());
 
     connect(vm, &AdminPasswordViewModel::s_authenticationSuccess, this, &AdminPasswordView::onBackButtonClicked);
+    connect(vm, &AdminPasswordViewModel::s_authenticationFailure, this, &AdminPasswordView::onAuthenticationFailureFeedback);
 
     connect(ui->btnConfirm, &QPushButton::clicked, this, &AdminPasswordView::onValidateButtonClicked);
 }
@@ -49,4 +50,12 @@ void AdminPasswordView::onValidateButtonClicked(void)
     AdminPasswordViewModel *vm = static_cast<AdminPasswordViewModel *>(m_viewModel.get());
 
     vm->submitPassword(ui->lineEditPasswd->text());
+}
+
+void AdminPasswordView::onAuthenticationFailureFeedback(void)
+{
+    PopUpMessage::ButtonConfig okButton = { "OK", [this]() {
+        ui->lineEditPasswd->clear();
+    } };
+    showPopUpMessage("Authentication Failed", "The password you entered is incorrect. Please try again.", { okButton });
 }
