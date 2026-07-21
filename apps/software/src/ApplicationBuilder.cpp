@@ -261,6 +261,8 @@ namespace Kub3
         QObject::connect(msvm, &VM::MachineStatusViewModel::s_framerateValueChanged, m_masterFSM, &MFSM::MasterFSM::ps_requestFrameRateUpdate);
         QObject::connect(msvm, &VM::MachineStatusViewModel::s_centeredZoomValueChanged, m_masterFSM, &MFSM::MasterFSM::ps_requestCenteredZoomUpdate);
         QObject::connect(msvm, &VM::MachineStatusViewModel::s_roiChanged, m_masterFSM, &MFSM::MasterFSM::ps_requestROIUpdate);
+        // --- ExposureViewModels
+        QObject::connect(m_exposureSettingsVM.get(), &VM::Exposure::ExposureSettingsViewModel::s_requestSaveExposureSettings, m_favoriteExposureSettingsVM.get(), &VM::Exposure::FavoriteExposureSettingsViewModel::ps_saveExposureSettings);
         // --- Settings
         QObject::connect(m_configuratorPasswdVM.get(), &VM::Settings::AdminPasswordViewModel::s_authenticationSuccess, &launchConfigurator);
 

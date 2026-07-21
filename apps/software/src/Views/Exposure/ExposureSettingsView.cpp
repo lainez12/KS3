@@ -78,6 +78,19 @@ void ExposureSettingsView::onBackButtonClicked()
 
 void ExposureSettingsView::onSaveButtonClicked()
 {
+    PresetExposure settings({
+        .name       = "test",
+        .mode       = ExposureMode::Flashing,
+        .continuous = {
+            .duration = {
+                .minutes = 0,
+                .seconds = 0,
+            },
+            .power = 0,
+        },
+        .flashing = {},
+    });
+    static_cast<ExposureSettingsViewModel *>(m_viewModel.get())->ui_requestSaveExposureSettings(settings);
     emit s_openView(Kub3::UI::ViewId::SAVE_EXPOSURE_SETTINGS_VIEW);
 }
 

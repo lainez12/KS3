@@ -2,16 +2,19 @@
 #define FAVORITEEXPOSURESETTINGSVIEWMODEL_H
 
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
-#include <QObject>
 #include <ViewModels/BaseViewModel.h>
+#include <ViewModels/Exposure/ExposureSettingsViewModelBase.h>
 
 namespace Kub3::UI::ViewModels::Exposure
 {
-    class FavoriteExposureSettingsViewModel final : public BaseViewModel
+    class FavoriteExposureSettingsViewModel final : public ExposureSettingsViewModelBase
     {
     public:
         explicit FavoriteExposureSettingsViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent = nullptr);
         ~FavoriteExposureSettingsViewModel() override;
+
+    public slots:
+        void ps_saveExposureSettings(const PresetExposure &settings);
 
     private:
         Shared<HAL::MS::IMachineStatusRepo> m_repo;

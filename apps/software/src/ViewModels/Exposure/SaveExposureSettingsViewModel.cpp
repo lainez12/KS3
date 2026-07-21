@@ -10,19 +10,18 @@
 
 namespace
 {
-    constexpr auto kRootKey     = "presets";
-    constexpr auto kVersionKey  = "version";
-    constexpr auto kNameKey     = "name";
-    constexpr auto kModeKey     = "mode";
+    constexpr auto kRootKey       = "presets";
+    constexpr auto kVersionKey    = "version";
+    constexpr auto kNameKey       = "name";
+    constexpr auto kModeKey       = "mode";
     constexpr auto kContinuousKey = "continuous";
-    constexpr auto kFlashingKey  = "flashing";
+    constexpr auto kFlashingKey   = "flashing";
 }
 
 namespace Kub3::UI::ViewModels::Exposure
 {
     SaveExposureSettingsViewModel::SaveExposureSettingsViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent) :
-        BaseViewModel(parent),
-        m_repo(repo)
+        ExposureSettingsViewModelBase(repo, parent)
     {
     }
 
@@ -30,7 +29,7 @@ namespace Kub3::UI::ViewModels::Exposure
     {
     }
 
-    bool SaveExposureSettingsViewModel::savePreset(const Preset &preset, QString *errorMessage)
+    bool SaveExposureSettingsViewModel::savePreset(const PresetExposure &preset, QString *errorMessage)
     {
         if (!validatePreset(preset, errorMessage))
             return false;
@@ -83,8 +82,8 @@ namespace Kub3::UI::ViewModels::Exposure
             const QJsonObject currentPreset = presetsArray.at(index).toObject();
             if (currentPreset.value(QLatin1String(kNameKey)).toString() == preset.name)
             {
-                presetsArray[index]      = presetToJson(preset);
-                replacedExistingPreset   = true;
+                presetsArray[index]    = presetToJson(preset);
+                replacedExistingPreset = true;
                 break;
             }
         }
@@ -124,10 +123,10 @@ namespace Kub3::UI::ViewModels::Exposure
     {
         switch (mode)
         {
-            case ExposureMode::Continuous:
-                return QStringLiteral("continuous");
-            case ExposureMode::Flashing:
-                return QStringLiteral("flashing");
+        case ExposureMode::Continuous:
+            return QStringLiteral("continuous");
+        case ExposureMode::Flashing:
+            return QStringLiteral("flashing");
         }
 
         return QStringLiteral("continuous");
@@ -141,7 +140,7 @@ namespace Kub3::UI::ViewModels::Exposure
         return json;
     }
 
-    QJsonObject SaveExposureSettingsViewModel::presetToJson(const Preset &preset)
+    QJsonObject SaveExposureSettingsViewModel::presetToJson(const PresetExposure &preset)
     {
         QJsonObject json;
         json.insert(QLatin1String(kNameKey), preset.name);
@@ -167,7 +166,7 @@ namespace Kub3::UI::ViewModels::Exposure
         return json;
     }
 
-    bool SaveExposureSettingsViewModel::validatePreset(const Preset &preset, QString *errorMessage)
+    bool SaveExposureSettingsViewModel::validatePreset(const PresetExposure &preset, QString *errorMessage)
     {
         if (preset.name.trimmed().isEmpty())
         {
