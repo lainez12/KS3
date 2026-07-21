@@ -3,7 +3,7 @@
 namespace Kub3::UI::ViewModels::Exposure
 {
     FavoriteExposureSettingsViewModel::FavoriteExposureSettingsViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent) :
-        ExposureSettingsViewModelBase(repo, parent)
+        ExposureBaseViewModel(repo, parent)
     {
     }
     FavoriteExposureSettingsViewModel::~FavoriteExposureSettingsViewModel()
@@ -11,10 +11,6 @@ namespace Kub3::UI::ViewModels::Exposure
     }
 
     void FavoriteExposureSettingsViewModel::ps_saveExposureSettings(const PresetExposure &settings)
-    {
-        qDebug() << "[FavoriteExposureSettingsViewModel::ps_saveExposureSettings]: Saving exposure settings...";
-        QString modeStr = (settings.mode == ExposureMode::Continuous) ? "Continuous" : "Flashing";
-        qDebug() << "[FavoriteExposureSettingsViewModel::ps_saveExposureSettings]: Mode: " << modeStr;
-    }
+    {}
 
 } // namespace Kub3::UI::ViewModels::Exposure

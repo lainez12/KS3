@@ -21,7 +21,7 @@ namespace
 namespace Kub3::UI::ViewModels::Exposure
 {
     SaveExposureSettingsViewModel::SaveExposureSettingsViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent) :
-        ExposureSettingsViewModelBase(repo, parent)
+        ExposureBaseViewModel(repo, parent)
     {
     }
 

@@ -6,7 +6,7 @@
 
 namespace Kub3::UI::ViewModels::Exposure
 {
-    class ExposureSettingsViewModelBase : public QObject, public BaseViewModel
+    class ExposureBaseViewModel : public QObject, public BaseViewModel
     {
         Q_OBJECT
 
@@ -42,8 +42,8 @@ namespace Kub3::UI::ViewModels::Exposure
         };
 
     public:
-        explicit ExposureSettingsViewModelBase(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent = nullptr);
-        virtual ~ExposureSettingsViewModelBase() = default;
+        explicit ExposureBaseViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent = nullptr);
+        virtual ~ExposureBaseViewModel() = default;
 
     protected:
         Shared<HAL::MS::IMachineStatusRepo> m_repo;

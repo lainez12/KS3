@@ -2,11 +2,11 @@
 #define EXPOSURESETTINGSVIEWMODEL_H
 
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
-#include <ViewModels/Exposure/ExposureSettingsViewModelBase.h>
+#include <ViewModels/Exposure/ExposureBaseViewModel.h>
 
 namespace Kub3::UI::ViewModels::Exposure
 {
-    class ExposureSettingsViewModel final : public ExposureSettingsViewModelBase
+    class ExposureSettingsViewModel final : public ExposureBaseViewModel
     {
     public:
         explicit ExposureSettingsViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent = nullptr);

@@ -4,13 +4,13 @@
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
 #include <QJsonObject>
 #include <ViewModels/BaseViewModel.h>
-#include <ViewModels/Exposure/ExposureSettingsViewModelBase.h>
+#include <ViewModels/Exposure/ExposureBaseViewModel.h>
 
 #include <QString>
 
 namespace Kub3::UI::ViewModels::Exposure
 {
-    class SaveExposureSettingsViewModel final : public ExposureSettingsViewModelBase
+    class SaveExposureSettingsViewModel final : public ExposureBaseViewModel
     {
         Q_OBJECT
 
