@@ -114,6 +114,12 @@ namespace Kub3::UI::Views
         void hideEvent(QHideEvent *event) override;
         void setUpShadowedBoxStyle(QWidget *widget);
 
+        template <typename T>
+        T *getViewModel() const
+        {
+            return static_cast<T *>(m_viewModel.get());
+        }
+
     protected:
         Unique<ViewModels::BaseViewModel> m_viewModel;
         bool m_showCentralLogo  = false;

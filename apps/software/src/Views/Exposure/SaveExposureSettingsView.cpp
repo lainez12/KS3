@@ -62,5 +62,7 @@ void SaveExposureSettingsView::onConfirmButtonClicked()
         UPDATE_DYNAMIC_PROPERTY(ui->lineEdit, "class", "error-lineEdit");
         return;
     }
-    
+
+    QString name = ui->lineEdit->text();
+    getViewModel<SaveExposureSettingsViewModel>()->userConfirmSavePreset(name);
 }

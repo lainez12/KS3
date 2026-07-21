@@ -80,7 +80,7 @@ void ExposureSettingsView::onSaveButtonClicked()
 {
 
     PresetExposure settings = getCurrentPresetExposure();
-    static_cast<ExposureSettingsViewModel *>(m_viewModel.get())->ui_requestSaveExposureSettings(settings);
+    getViewModel<ExposureSettingsViewModel>()->ui_requestSaveExposureSettings(settings);
     emit s_openView(Kub3::UI::ViewId::SAVE_EXPOSURE_SETTINGS_VIEW);
 }
 
@@ -124,7 +124,6 @@ void ExposureSettingsView::switchToContinuousMode()
     ui->continuousCarre->setPixmap(QPixmap(":/icons/carre-bleu-fonce.png"));
 }
 
-
 PresetExposure ExposureSettingsView::getCurrentPresetExposure() const
 {
     PresetExposure preset;
@@ -138,7 +137,7 @@ PresetExposure ExposureSettingsView::getCurrentPresetExposure() const
     }
     else
     {
-        preset.flashing.numberOfCycles     = ui->numberCyclespinBox->value();
+        preset.flashing.numberOfCycles      = ui->numberCyclespinBox->value();
         preset.flashing.durationOn.minutes  = ui->minOnFlashingspinBox->value();
         preset.flashing.durationOn.seconds  = ui->segOnFlashingspinBox->value();
         preset.flashing.durationOff.minutes = ui->minOffFlashingspinBox->value();
