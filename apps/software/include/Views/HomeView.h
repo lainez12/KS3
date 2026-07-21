@@ -1,5 +1,4 @@
-#ifndef HOMEEIGHTVIEW_H
-#define HOMEEIGHTVIEW_H
+#pragma once
 
 #include <QWidget>
 
@@ -10,28 +9,30 @@
 
 namespace Ui
 {
-    class HomeEightView;
+    class HomeView;
 }
 
 namespace Kub3::UI::Views
 {
 
-    class HomeEightView final : public ViewBase
+    class HomeView final : public ViewBase
     {
-        using HomeViewModel = Kub3::UI::ViewModels::HomeViewModel;
+        using HomeViewModel = ViewModels::HomeViewModel;
 
         Q_OBJECT
 
     public:
-        explicit HomeEightView(Unique<HomeViewModel> viewModel, QWidget *parent = nullptr);
-        ~HomeEightView();
+        explicit HomeView(Unique<HomeViewModel> viewModel, QWidget *parent = nullptr);
+        ~HomeView();
 
     signals:
 
     public slots:
         void onExposureMenuClicked();
         void onMaskAlignmentClicked();
+
     private slots:
+        void onInitializationClicked();
 
     public:
         void resizeEvent(QResizeEvent *event) override;
@@ -44,10 +45,8 @@ namespace Kub3::UI::Views
         void onSettingsButtonClicked();
 
     private:
-        Ui::HomeEightView *ui;
+        Ui::HomeView *ui;
     };
 }
 
-using HomeEightView = Kub3::UI::Views::HomeEightView;
-
-#endif
+using HomeView = Kub3::UI::Views::HomeView;

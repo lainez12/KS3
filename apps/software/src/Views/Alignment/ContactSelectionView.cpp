@@ -28,7 +28,7 @@ void ContactSelectionView::setNewNavButtonsConfigs()
 
 void ContactSelectionView::onBackButtonClicked()
 {
-    emit s_openView(Kub3::UI::ViewId::HOME_VIEW);
+    emit s_openView(Kub3::UI::ViewId::EXPOSURE_MODE_VIEW);
 }
 
 void ContactSelectionView::onValidateButtonClicked()

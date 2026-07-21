@@ -8,12 +8,15 @@
 #include <QPixmap>
 #include <QPointer>
 
+#include <Common/Enums.h>
+#include <MFSM/MasterFSM.h>
 #include <Views/Alignment/ContactSelectionView.h>
 #include <Views/Alignment/DistanceView.h>
 #include <Views/Alignment/LoadParametersView.h>
 #include <Views/Alignment/SaveParametersView.h>
 #include <Views/Alignment/VisualisationView.h>
 #include <Views/Components/NavButton.h>
+#include <Views/Components/PopUpMessage.h>
 #include <Views/Components/UpBar.h>
 #include <Views/Exposure/CompleteExposureView.h>
 #include <Views/Exposure/ExposureSettingsView.h>
@@ -23,7 +26,7 @@
 #include <Views/Exposure/SaveExposureSettingsView.h>
 #include <Views/ExposureMenuView.h>
 #include <Views/ExposureModeView.h>
-#include <Views/HomeEightView.h>
+#include <Views/HomeView.h>
 #include <Views/Settings/AdminPasswordView.h>
 #include <Views/Settings/LedTestView.h>
 #include <Views/Settings/MachineStatusView.h>
@@ -52,11 +55,13 @@ public:
     void addView(Kub3::UI::ViewId viewId, Kub3::UI::Views::ViewBase *view);
 
 signals:
-    void s_initializationRequest(void);
+    void s_requestResetError();
+    void s_requestPowerOff();
+    void s_requestRetryBoot();
 
 public slots:
     void ps_openView(Kub3::UI::ViewId viewId);
-    void ps_stateChanged(const QString &stateName);
+    void ps_errorOccurred(const Kub3::MFSM::ErrorPayload &payload);
 
 private slots:
     void onViewButtonConfigsUpdated();
@@ -86,6 +91,7 @@ private:
     std::unordered_map<Kub3::UI::ViewId, Kub3::UI::Views::ViewBase *> m_views;
     UpBar *m_topBar       = nullptr;
     QLabel *m_topBarTitle = nullptr;
+    Unique<PopUpMessage> m_popup;
 
     QHBoxLayout *m_bottomBarLeft   = nullptr;
     QHBoxLayout *m_bottomBarCenter = nullptr;

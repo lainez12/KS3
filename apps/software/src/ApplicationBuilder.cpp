@@ -144,8 +144,8 @@ namespace Kub3
         // Building MachineStatusView
         {
             // View models creation
+            ASSIGN_VIEW_MODEL(UI::ViewModels::HomeViewModel, exposureModeVM, m_exposureModeVM, m_repo);
             ASSIGN_VIEW_MODEL(UI::ViewModels::HomeViewModel, homeVM, m_homeVM, m_repo);
-            ASSIGN_VIEW_MODEL(UI::ViewModels::HomeViewModel, homeEightVM, m_homeEightVM, m_repo);
             ASSIGN_VIEW_MODEL(UI::ViewModels::MachineStatusViewModel, machineStatusVM, m_machineStatusVM, m_repo);
             ASSIGN_VIEW_MODEL(UI::ViewModels::SettingsViewModel, settingsVM, m_settingsVM, m_repo);
             ASSIGN_VIEW_MODEL(UI::ViewModels::ExposureMenuViewModel, exposureMenuVM, m_exposureMenuVM, m_repo);
@@ -169,7 +169,7 @@ namespace Kub3
             ASSIGN_VIEW_MODEL(UI::ViewModels::Alignment::SaveParametersViewModel, saveParametersVM, m_saveParametersVM, m_repo);
 
             // Views creation
-            auto *homeEightView                = new HomeEightView(std::move(homeEightVM), m_mainWindow.get());
+            auto *homeView                     = new HomeView(std::move(homeVM), m_mainWindow.get());
             auto *machineStatusView            = new MachineStatusView(std::move(machineStatusVM), m_mainWindow.get());
             auto *exposureMenuView             = new ExposureMenuView(std::move(exposureMenuVM), m_mainWindow.get());
             auto *settingsView                 = new SettingsView(std::move(settingsVM), m_mainWindow.get());
@@ -191,10 +191,10 @@ namespace Kub3
             auto *visualisationView            = new VisualisationView(std::move(visualisationVM), m_mainWindow.get());
             auto *loadParametersView           = new LoadParametersView(std::move(loadParametersVM), m_mainWindow.get());
             auto *saveParametersView           = new SaveParametersView(std::move(saveParametersVM), m_mainWindow.get());
-            auto *exposureModeView             = new ExposureModeView(std::move(homeVM), m_mainWindow.get());
+            auto *exposureModeView             = new ExposureModeView(std::move(exposureModeVM), m_mainWindow.get());
 
-            m_mainWindow->addView(Kub3::UI::ViewId::HOME_VIEW, exposureModeView);
-            m_mainWindow->addView(Kub3::UI::ViewId::HOME_EIGHT_VIEW, homeEightView);
+            m_mainWindow->addView(Kub3::UI::ViewId::EXPOSURE_MODE_VIEW, exposureModeView);
+            m_mainWindow->addView(Kub3::UI::ViewId::HOME_VIEW, homeView);
             m_mainWindow->addView(Kub3::UI::ViewId::EXPOSURE_MENU_VIEW, exposureMenuView);
             m_mainWindow->addView(Kub3::UI::ViewId::MACHINE_STATUS_VIEW, machineStatusView);
             m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_VIEW, settingsView);
@@ -243,12 +243,18 @@ namespace Kub3
         QObject::connect(m_logicThread, &QThread::finished, m_logicThread, &QObject::deleteLater);
 
         // 2. UI -> Logic Wiring (Queued Connections implicitly used across threads)
+        // --- Main window
+        QObject::connect(m_mainWindow.get(), &MainWindow::s_requestRetryBoot, m_masterFSM, &MFSM::MasterFSM::ps_requestRetryBoot);
+        QObject::connect(m_mainWindow.get(), &MainWindow::s_requestResetError, m_masterFSM, &MFSM::MasterFSM::ps_requestResetError);
+        QObject::connect(m_mainWindow.get(), &MainWindow::s_requestPowerOff, m_masterFSM, &MFSM::MasterFSM::ps_systemPowerOff);
+        // --- HomeViewModel
+        QObject::connect(m_homeVM.get(), &VM::HomeViewModel::s_cancelOperation, m_masterFSM, &MFSM::MasterFSM::ps_requestAbortOperation);
+        QObject::connect(m_homeVM.get(), &VM::HomeViewModel::s_initializationRequest, m_masterFSM, &MFSM::MasterFSM::ps_requestInitialization);
         // --- VisualisationViewModel
         // QObject::connect(m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::cmdRunCameraMovement, m_masterFSM, &MFSM::MasterFSM::ps_requestPADCameraMovement);
         QObject::connect(m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::cmdRunAlignmentStageMovement, m_masterFSM, &MFSM::MasterFSM::ps_requestPADAlignmentStageMovement);
         // --- MachineStatusViewModel
         auto *msvm = m_machineStatusVM.get();
-        QObject::connect(m_mainWindow.get(), &MainWindow::s_initializationRequest, m_masterFSM, &MFSM::MasterFSM::ps_requestInitialization);
         QObject::connect(msvm, &VM::MachineStatusViewModel::s_exposureSliderValueChanged, m_masterFSM, &MFSM::MasterFSM::ps_requestExposureUpdate);
         QObject::connect(msvm, &VM::MachineStatusViewModel::s_gainSliderValueChanged, m_masterFSM, &MFSM::MasterFSM::ps_requestGainUpdate);
         QObject::connect(msvm, &VM::MachineStatusViewModel::s_framerateValueChanged, m_masterFSM, &MFSM::MasterFSM::ps_requestFrameRateUpdate);
@@ -258,7 +264,8 @@ namespace Kub3
         QObject::connect(m_configuratorPasswdVM.get(), &VM::Settings::AdminPasswordViewModel::s_authenticationSuccess, &launchConfigurator);
 
         // 3. Logic -> UI Wiring
-        QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_stateChanged, m_mainWindow.get(), &MainWindow::ps_stateChanged);
+        m_homeVM->bindConnection(m_masterFSM, &MFSM::MasterFSM::s_errorOccurred, m_mainWindow.get(), &MainWindow::ps_errorOccurred);
+        m_homeVM->bindConnection(m_masterFSM, &MFSM::MasterFSM::s_errorOccurred, m_homeVM.get(), &VM::HomeViewModel::ps_errorOccurred);
         msvm->bindConnection(m_hwManager.get(), &HAL::HardwareManager::s_cameraFrameReady,
                              msvm, &VM::BaseVisionViewModel::ps_onCameraFrameReceived);
         msvm->bindConnection(m_repo.get(), &HAL::MS::IMachineStatusRepo::s_machineValueChanged,
@@ -278,7 +285,7 @@ namespace Kub3
         m_logicThread->start();
 
         qInfo() << "[ApplicationBuilder::run]: Showing UI.";
-        m_mainWindow->ps_openView(Kub3::UI::ViewId::HOME_EIGHT_VIEW);
+        m_mainWindow->ps_openView(Kub3::UI::ViewId::HOME_VIEW);
 #if defined(BUILD_DEBUG)
         m_mainWindow->show();
 #else

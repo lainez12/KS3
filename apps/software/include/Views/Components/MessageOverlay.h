@@ -1,5 +1,5 @@
-#ifndef MESSAGEOVERLAY_h
-#define MESSAGEOVERLAY_h
+#pragma once
+
 #include <QEvent>
 #include <QPainter>
 #include <QResizeEvent>
@@ -21,5 +21,3 @@ private:
     bool warning = false;
     QString warningText;
 };
-
-#endif

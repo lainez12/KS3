@@ -24,7 +24,9 @@ namespace Kub3::MFSM
 
     struct StateError {
         SystemPosture posture; // Last known posture
+        ErrorSeverity severity = ErrorSeverity::Critical;
         std::string message;
+        ErrorAction allowedActions;
     };
 
     struct StateEmergencyStop {

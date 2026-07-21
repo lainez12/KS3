@@ -87,7 +87,7 @@ void ExposureModeView::onBackButtonClicked()
 
 void ExposureModeView::onBackToMainButtonClicked()
 {
-    emit s_openView(Kub3::UI::ViewId::HOME_EIGHT_VIEW);
+    emit s_openView(Kub3::UI::ViewId::HOME_VIEW);
 }
 
 void ExposureModeView::onFloodExposureClicked()

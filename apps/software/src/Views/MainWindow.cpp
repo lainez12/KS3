@@ -9,7 +9,8 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    m_popup(std::make_unique<PopUpMessage>(this))
 {
     ui->setupUi(this);
     m_backgroundPixmap = QPixmap(":/images/bg.png");
@@ -84,7 +85,7 @@ void MainWindow::connectViewSignals(Kub3::UI::Views::ViewBase *view)
                 }
             });
 
-    connect(view, &Kub3::UI::Views::ViewBase::s_goBackHome, this, [this]() { ps_openView(Kub3::UI::ViewId::HOME_VIEW); });
+    connect(view, &Kub3::UI::Views::ViewBase::s_goBackHome, this, [this]() { ps_openView(Kub3::UI::ViewId::EXPOSURE_MODE_VIEW); });
 
     connect(view, &Kub3::UI::Views::ViewBase::s_buttonConfigsUpdated, this, &MainWindow::onViewButtonConfigsUpdated);
 
@@ -115,6 +116,48 @@ void MainWindow::ps_openView(Kub3::UI::ViewId viewId)
     ui->stackedWidget->setCurrentWidget(view);
     m_currentView = view;
     m_currentView->resizeEventOverride(nullptr);
+}
+
+void MainWindow::ps_errorOccurred(const Kub3::MFSM::ErrorPayload &payload)
+{
+    if (payload.kind != Kub3::ErrorKind::Global)
+        return; // Leave Common errors to ViewModels
+
+    QVector<PopUpMessage::ButtonConfig> btns;
+
+    if (static_cast<bool>(payload.allowedActions & Kub3::ErrorAction::RetryConnection))
+    {
+        btns.push_back({
+            .text     = "Retry Connection",
+            .callback = [this]() {
+                emit s_requestRetryBoot();
+                m_popup->hide();
+            },
+        });
+    }
+    if (static_cast<bool>(payload.allowedActions & Kub3::ErrorAction::ResetMachine))
+    {
+        btns.push_back(PopUpMessage::ButtonConfig{
+            .text     = "Reset Machine",
+            .callback = [this]() {
+                emit s_requestResetError();
+                m_popup->hide();
+            },
+        });
+    }
+    if (static_cast<bool>(payload.allowedActions & Kub3::ErrorAction::PowerOff))
+    {
+        btns.push_back({"Shutdown", [this]() { emit s_requestPowerOff(); }});
+    }
+    if (static_cast<bool>(payload.allowedActions & Kub3::ErrorAction::Dismiss))
+    {
+        btns.push_back({"Dismiss", [this]() { m_popup->hide(); }});
+    }
+
+    m_popup->setTitleText(payload.severity == Kub3::ErrorSeverity::Fatal ? "FATAL ERROR" : "SYSTEM FAULT");
+    m_popup->setMessageText(payload.message);
+    m_popup->setButtons(btns);
+    m_popup->showMessage();
 }
 
 void MainWindow::updateTopBar(Kub3::UI::Views::ViewBase *view)
@@ -264,11 +307,6 @@ void MainWindow::onViewButtonTextChanged(const QString &buttonId, const QString 
     {
         it.value().button->setText(newText);
     }
-}
-
-void MainWindow::ps_stateChanged(const QString &stateName)
-{
-    // Mise à jour basée sur l'état de la machine
 }
 
 void MainWindow::paintEvent(QPaintEvent *event)

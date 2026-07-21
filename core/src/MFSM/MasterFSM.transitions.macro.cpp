@@ -48,7 +48,12 @@ namespace Kub3::MFSM
                 return StateWaitingInitialization{};
             },
             [&](const StateBooting &, const EvHardwareError &e) -> SystemState {
-                return StateError{.posture = {}, .message = e.reason};
+                return StateError{
+                    .posture        = {},
+                    .severity       = ErrorSeverity::Fatal,
+                    .message        = e.reason,
+                    .allowedActions = ErrorAction::RetryConnection | ErrorAction::PowerOff,
+                };
             },
 
             // --- INITIALIZATION ---
@@ -63,7 +68,17 @@ namespace Kub3::MFSM
                 };
             },
             [&](const StateInitializing &, const EvServiceError &e) -> SystemState {
-                return StateError{.posture = {}, .message = e.reason};
+                return StateError{
+                    .posture        = {},
+                    .severity       = ErrorSeverity::Critical,
+                    .message        = e.reason,
+                    .allowedActions = ErrorAction::ResetMachine | ErrorAction::PowerOff,
+                };
+            },
+            [&](const StateInitializing &, const CmdAbortOperation &) -> SystemState {
+                qInfo() << "MFSM: User aborted initialization.";
+                this->stopAllServices();
+                return StateWaitingInitialization{};
             },
 
             // --- OPERATIONAL (Delegation to Level 2) ---
@@ -78,7 +93,20 @@ namespace Kub3::MFSM
                     s.subState);
 
                 // A service error during operations crashes the macro-state down to Fault
-                return StateError{.posture = s.posture.invalidate(failedExpectation), .message = e.reason};
+                return StateError{
+                    .posture        = s.posture.invalidate(failedExpectation),
+                    .severity       = ErrorSeverity::Critical,
+                    .message        = e.reason,
+                    .allowedActions = ErrorAction::ResetMachine | ErrorAction::Recover,
+                };
+            },
+            [&](const StateOperational &s, const CmdAbortOperation &e) -> SystemState {
+                qInfo() << "MFSM: User aborted an operational sequence.";
+                this->stopAllServices(); // Halt the drawers/actuators immediately
+                // Because we stopped mid-movement, physical posture is strictly unknown
+                // We CANNOT stay in StateOperational.
+                // TODO: Automatically trigger smart RecoveryService to figure out the shortest path to a known position
+                TODO("Transition from StateOperational with CmdAbortOperation not implement.");
             },
             [&](const StateOperational &s, const auto &) -> SystemState {
                 // Delegate to Sub-FSM (MasterFSM.transitions_operational.cpp)
@@ -90,9 +118,17 @@ namespace Kub3::MFSM
             },
 
             // --- FAULT RECOVERY ---
+            [&](const StateError &s, const CmdRetryBoot &) -> SystemState {
+                if ((s.allowedActions & ErrorAction::RetryConnection) == ErrorAction::None)
+                    return s;
+                qInfo() << "MFSM: Retrying MCU connections.";
+                return StateBooting{}; // Send FSM back to the very beginning
+            },
             [&](const StateError &s, const CmdResetError &) -> SystemState {
-                qInfo() << "MFSM: Error reset acknowledged. Forcing reinitialization.";
+                if ((s.allowedActions & ErrorAction::ResetMachine) == ErrorAction::None)
+                    return s;
                 // TODO: Should not force re-initialization, find a way to recover properly though (`RecoveryService` ? `IHomingService::try_recover()` ?)
+                qInfo() << "MFSM: Error reset acknowledged. Forcing reinitialization.";
                 return StateWaitingInitialization{};
             },
 

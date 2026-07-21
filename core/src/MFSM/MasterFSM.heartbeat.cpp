@@ -53,7 +53,7 @@ namespace Kub3::MFSM
 #endif
         };
 
-        constexpr uint32_t TICKS_PER_SEC = 50;
+        constexpr uint32_t TICKS_PER_SEC = 1000u / LOGIC_TIMER_PERIOD_MS;
         constexpr uint32_t TIMEOUT_TICKS = 5 * TICKS_PER_SEC; // 5 seconds
         constexpr uint8_t MAX_RETRIES    = 3;
 

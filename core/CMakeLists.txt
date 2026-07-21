@@ -205,6 +205,10 @@ endif()
 # Global build definitions applied to everyone interacting with Core
 target_compile_definitions(Kub3Core PUBLIC KUB_MODEL_${KUB_MODEL} KUB_MODEL_STR="${KUB_MODEL}")
 
+if (CMAKE_PRODUCTION_BUILD)
+    target_compile_definitions(Kub3Core PUBLIC BUILD_PRODUCTION)
+endif()
+
 if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND NOT CMAKE_PRODUCTION_BUILD)
     target_compile_definitions(Kub3Core PUBLIC BUILD_DEBUG)
     target_compile_definitions(Kub3Core PUBLIC

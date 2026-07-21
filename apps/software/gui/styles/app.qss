@@ -301,15 +301,15 @@ QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
     color: #E85420;
 }
 
-/* HomeEightView (FormSplashScreen) */
-#HomeEightView #FormSplashScreen {
+/* HomeView (FormSplashScreen) */
+#HomeView #FormSplashScreen {
     background-color: rgb(255, 255, 255);
 }
-#HomeEightView QLabel#mainSubmenuTitle,
-#HomeEightView QLabel#waferLoaderSubmenuTitle,
-#HomeEightView QLabel#maskLoaderSubmenuTitle,
-#HomeEightView QWidget#widget_3,
-#HomeEightView QWidget#widget_4 {
+#HomeView QLabel#mainSubmenuTitle,
+#HomeView QLabel#waferLoaderSubmenuTitle,
+#HomeView QLabel#maskLoaderSubmenuTitle,
+#HomeView QWidget#widget_3,
+#HomeView QWidget#widget_4 {
     border-left: none;
     border-right: none;
 }
