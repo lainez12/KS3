@@ -14,6 +14,15 @@
 #include <Views/Components/PopUpMessage.h>
 #include <utils.h>
 
+#define UPDATE_DYNAMIC_PROPERTY(widget, propertyName, value) \
+    do                                                       \
+    {                                                        \
+        (widget)->setProperty(propertyName, value);          \
+        (widget)->style()->unpolish(widget);                 \
+        (widget)->style()->polish(widget);                   \
+        (widget)->update();                                  \
+    } while (0)
+
 namespace Kub3::UI
 {
     enum class ViewId

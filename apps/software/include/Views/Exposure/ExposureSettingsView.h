@@ -35,6 +35,8 @@ namespace Kub3::UI::Views::ViewsExposure
         void switchToFlashingMode();
         void switchToContinuousMode();
 
+        PresetExposure getCurrentPresetExposure() const;
+
     private:
         Ui::ExposureSettingsView *ui;
         KeyboardConnections m_keyboard;

@@ -78,18 +78,8 @@ void ExposureSettingsView::onBackButtonClicked()
 
 void ExposureSettingsView::onSaveButtonClicked()
 {
-    PresetExposure settings({
-        .name       = "test",
-        .mode       = ExposureMode::Flashing,
-        .continuous = {
-            .duration = {
-                .minutes = 0,
-                .seconds = 0,
-            },
-            .power = 0,
-        },
-        .flashing = {},
-    });
+
+    PresetExposure settings = getCurrentPresetExposure();
     static_cast<ExposureSettingsViewModel *>(m_viewModel.get())->ui_requestSaveExposureSettings(settings);
     emit s_openView(Kub3::UI::ViewId::SAVE_EXPOSURE_SETTINGS_VIEW);
 }
@@ -132,4 +122,29 @@ void ExposureSettingsView::switchToContinuousMode()
     styleSheet.replace(QRegularExpression(BLUE_COLOR), BLUE_COLOR_SHADOW);
     ui->flashingModeBtn->setStyleSheet(styleSheet);
     ui->continuousCarre->setPixmap(QPixmap(":/icons/carre-bleu-fonce.png"));
+}
+
+
+PresetExposure ExposureSettingsView::getCurrentPresetExposure() const
+{
+    PresetExposure preset;
+    preset.mode = m_isFlashingMode ? ExposureMode::Flashing : ExposureMode::Continuous;
+
+    if (preset.mode == ExposureMode::Continuous)
+    {
+        preset.continuous.duration.minutes = ui->minContinuouspinBox->value();
+        preset.continuous.duration.seconds = ui->segContinuouspinBox->value();
+        preset.continuous.power            = ui->powerContinuouspinBox->value();
+    }
+    else
+    {
+        preset.flashing.numberOfCycles     = ui->numberCyclespinBox->value();
+        preset.flashing.durationOn.minutes  = ui->minOnFlashingspinBox->value();
+        preset.flashing.durationOn.seconds  = ui->segOnFlashingspinBox->value();
+        preset.flashing.durationOff.minutes = ui->minOffFlashingspinBox->value();
+        preset.flashing.durationOff.seconds = ui->segOffFlashingspinBox->value();
+        preset.flashing.power               = ui->powerFlashingspinBox->value();
+    }
+
+    return preset;
 }

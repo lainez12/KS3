@@ -1,5 +1,6 @@
 #include <ViewModels/Exposure/SaveExposureSettingsViewModel.h>
 
+#include <QDebug>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
@@ -7,8 +8,6 @@
 #include <QJsonDocument>
 #include <QSaveFile>
 #include <QTextStream>
-
-
 
 namespace Kub3::UI::ViewModels::Exposure
 {
@@ -54,16 +53,11 @@ namespace Kub3::UI::ViewModels::Exposure
     {
         m_currentPreset.name = name;
         QString errorMessage;
+        qDebug() << "Attempting to save preset: " << m_currentPreset.name;
         if (!savePreset(m_currentPreset, &errorMessage))
         {
-            // Handle error (e.g., show a message to the user)
+            qDebug() << "Failed to save preset: " << errorMessage;
         }
     }
-
-    
-
-    
-
-    
 
 } // namespace Kub3::UI::ViewModels::Exposure

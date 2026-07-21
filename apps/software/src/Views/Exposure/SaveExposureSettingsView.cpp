@@ -2,6 +2,7 @@
 #include <QGraphicsDropShadowEffect>
 #include <QRegularExpression>
 #include <QString>
+#include <QStyle>
 #include <Views/Components/Colors.h>
 #include <Views/Exposure/SaveExposureSettingsView.h>
 
@@ -24,6 +25,7 @@ SaveExposureSettingsView::SaveExposureSettingsView(Unique<SaveExposureSettingsVi
     setDefaultTitleBar("Save parameters");
     connect(ui->btnConfirm, &QPushButton::clicked, this, &SaveExposureSettingsView::onConfirmButtonClicked);
 }
+
 SaveExposureSettingsView::~SaveExposureSettingsView()
 {
 }
@@ -55,4 +57,10 @@ void SaveExposureSettingsView::onValidateButtonClicked()
 
 void SaveExposureSettingsView::onConfirmButtonClicked()
 {
+    if (ui->lineEdit->text().isEmpty())
+    {
+        UPDATE_DYNAMIC_PROPERTY(ui->lineEdit, "class", "error-lineEdit");
+        return;
+    }
+    
 }
