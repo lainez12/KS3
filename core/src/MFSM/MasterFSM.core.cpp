@@ -32,9 +32,9 @@ namespace Kub3::MFSM
         m_exposureService(std::move(exposureService)),
         m_logicTimer(this)
     {
-        // Hard-wire the FSM Logic Loop to 50Hz (20ms)
+        // Hard-wire the FSM Logic Loop every LOGIC_TIMER_PERIOD_MS milliseconds
         // Zero Thread Blocking: The logic loop must never sleep/wait.
-        m_logicTimer.setInterval(20);
+        m_logicTimer.setInterval(LOGIC_TIMER_PERIOD_MS);
         m_logicTimer.setTimerType(Qt::PreciseTimer);
         connect(&m_logicTimer, &QTimer::timeout, this, &MasterFSM::onLogicTick);
     }
@@ -93,6 +93,11 @@ namespace Kub3::MFSM
     // TIER 1 (UI) -> TIER 2 (LOGIC) PUBLIC SLOTS
     // ==========================================================================
     // These slots securely package primitive UI commands into type-safe SystemEvents.
+
+    void MasterFSM::ps_requestRetryBoot(void)
+    {
+        dispatch(CmdRetryBoot{});
+    }
 
     void MasterFSM::ps_requestInitialization(void)
     {

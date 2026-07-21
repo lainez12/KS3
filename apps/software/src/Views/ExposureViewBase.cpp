@@ -53,7 +53,7 @@ namespace Kub3::UI::Views
 
     void ExposureViewBase::onHomeButtonClicked()
     {
-        emit s_openView(Kub3::UI::ViewId::HOME_VIEW);
+        emit s_openView(Kub3::UI::ViewId::EXPOSURE_MODE_VIEW);
     }
 
 } // namespace Kub3::UI::Views

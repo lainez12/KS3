@@ -76,8 +76,8 @@ namespace Kub3
         Unique<MainWindow> m_mainWindow;
         // --- View models
         QPointer<UI::ViewModels::MachineStatusViewModel> m_machineStatusVM;
+        QPointer<UI::ViewModels::HomeViewModel> m_exposureModeVM;
         QPointer<UI::ViewModels::HomeViewModel> m_homeVM;
-        QPointer<UI::ViewModels::HomeViewModel> m_homeEightVM;
         QPointer<UI::ViewModels::SettingsViewModel> m_settingsVM;
         QPointer<UI::ViewModels::ExposureMenuViewModel> m_exposureMenuVM;
         QPointer<UI::ViewModels::Exposure::SaveExposureSettingsViewModel> m_saveExposureSettingsVM;

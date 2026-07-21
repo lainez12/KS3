@@ -15,6 +15,32 @@
 namespace Kub3
 {
 
+    enum class ErrorKind
+    {
+        Common,
+        Global,
+    };
+
+    enum class ErrorSeverity
+    {
+        Info,
+        Warning,
+        Critical,
+        Fatal,
+    };
+
+    enum class ErrorAction : uint32_t
+    {
+        None            = 0,
+        Dismiss         = 1u << 0, // Close the popup
+        Acknowledge     = 1u << 1, // Close the popup and signal FSM to continue
+        Recover         = 1u << 2, // Ask FSM to attempt autonomous recovery
+        ResetMachine    = 1u << 3, // Drops to StateWaitingInitialization
+        RetryConnection = 1u << 4, // Drops to StateBooting
+        PowerOff        = 1u << 5  // Emits EvPowerOff
+    };
+    impl_bin_operators_for_enum(ErrorAction);
+
     enum class DrawerTarget : uint32_t
     {
         None  = 0,

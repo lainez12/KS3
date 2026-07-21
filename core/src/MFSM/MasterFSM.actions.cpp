@@ -36,13 +36,23 @@ namespace Kub3::MFSM
             [&](const StateError &s) {
                 this->stopAllServices(); // Non-blocking Services stop
                 // TODO: Add a emergency stop service to perform full HAL stop
-                emit s_errorOccurred(QString::fromStdString(s.message));
+                emit s_errorOccurred(ErrorPayload{
+                    .kind           = ErrorKind::Global,
+                    .severity       = s.severity,
+                    .message        = QString::fromStdString(s.message),
+                    .allowedActions = s.allowedActions,
+                });
             },
             [&](const StateEmergencyStop &s) {
                 qCritical() << "MFSM: EMERGENCY STOP ENTERED - Stopping all hardware.";
                 this->stopAllServices();
                 // TODO: Add a emergency stop service to perform full HAL stop
-                emit s_errorOccurred(QStringLiteral("EMERGENCY-STOP: ") + QString::fromStdString(s.reason));
+                emit s_errorOccurred(ErrorPayload{
+                    .kind           = ErrorKind::Global,
+                    .severity       = ErrorSeverity::Fatal,
+                    .message        = QStringLiteral("EMERGENCY-STOP: ") + QString::fromStdString(s.reason),
+                    .allowedActions = ErrorAction::ResetMachine | ErrorAction::PowerOff,
+                });
             },
             [&](const StatePreparePowerOff &s) {
                 qWarning() << "MFSM: Preparing machine power off.";

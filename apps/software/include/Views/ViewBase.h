@@ -18,8 +18,8 @@ namespace Kub3::UI
 {
     enum class ViewId
     {
+        EXPOSURE_MODE_VIEW,
         HOME_VIEW,
-        HOME_EIGHT_VIEW,
         EXPOSURE_MENU_VIEW,
         EXPOSURE_SETTINGS_VIEW,
         FAVORITE_EXPOSURE_SETTINGS_VIEW,

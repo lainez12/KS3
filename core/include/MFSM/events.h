@@ -36,6 +36,7 @@ namespace Kub3::MFSM
 
     // --- MACRO SYSTEM COMMANDS ---
 
+    struct CmdRetryBoot {};
     struct CmdStartInitialization {};
     struct CmdResetError {};
     struct EvEmergencyStopTriggered {
@@ -123,6 +124,7 @@ namespace Kub3::MFSM
 
         // User commands
         CmdResetError,
+        CmdRetryBoot,
         CmdStartInitialization,
         // --- Drawers/Conveyors
         CmdOperateDrawer,

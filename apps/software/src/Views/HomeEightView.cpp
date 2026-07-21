@@ -25,6 +25,12 @@ HomeEightView::HomeEightView(Unique<HomeViewModel> viewModel, QWidget *parent) :
 
     this->updateMachineLogo(this->height());
 
+    HomeViewModel *vm = static_cast<HomeViewModel *>(m_viewModel.get());
+
+    if (vm)
+    {
+        connect(ui->btnInitialization, &QPushButton::clicked, vm, &HomeViewModel::uiRequestInitialization);
+    }
     connect(ui->mainSubmenuExposureBtn, &QPushButton::clicked, this, &HomeEightView::onExposureMenuClicked);
 }
 

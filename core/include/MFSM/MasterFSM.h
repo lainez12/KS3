@@ -19,8 +19,17 @@
 #include <Services/Stowage/IStowageService.h>
 #include <Services/Vision/IVisionService.h>
 
+#define LOGIC_TIMER_PERIOD_MS 20u
+
 namespace Kub3::MFSM
 {
+
+    struct ErrorPayload {
+        ErrorKind kind;
+        ErrorSeverity severity;
+        QString message;
+        ErrorAction allowedActions;
+    };
 
     class MasterFSM final : public QObject
     {
@@ -47,7 +56,7 @@ namespace Kub3::MFSM
 
         // Error Management
         void s_warningOccurred(const QString &warningMessage); // E.g., Interlock rejections
-        void s_errorOccurred(const QString &errorMessage);     // Hard faults / E-Stops
+        void s_errorOccurred(const ErrorPayload &payload);     // Hard faults / E-Stops
 
         // --- Tier 2 (Logic) -> Tier 3 (I/O threads) ---
         void s_requestHardwareRetry(const QString &hardwareId);
@@ -58,6 +67,7 @@ namespace Kub3::MFSM
         // --- Tier 1 (UI) -> Tier 2 (Logic) Thread-Safe Commands ---
 
         // System lifecycle
+        void ps_requestRetryBoot(void);
         void ps_requestInitialization(void);
         void ps_requestResetError(void);
         void ps_requestEmergencyStop(void);

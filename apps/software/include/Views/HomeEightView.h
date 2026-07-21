@@ -31,7 +31,6 @@ namespace Kub3::UI::Views
     public slots:
         void onExposureMenuClicked();
         void onMaskAlignmentClicked();
-    private slots:
 
     public:
         void resizeEvent(QResizeEvent *event) override;

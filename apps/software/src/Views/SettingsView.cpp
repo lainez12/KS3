@@ -80,5 +80,5 @@ void SettingsView::configTitleBar()
 
 void SettingsView::onHomeButtonClicked()
 {
-    emit s_openView(Kub3::UI::ViewId::HOME_EIGHT_VIEW);
+    emit s_openView(Kub3::UI::ViewId::HOME_VIEW);
 }
