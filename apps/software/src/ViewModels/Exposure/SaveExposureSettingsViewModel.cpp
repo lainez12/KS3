@@ -114,6 +114,9 @@ namespace Kub3::UI::ViewModels::Exposure
         return true;
     }
 
+    void SaveExposureSettingsViewModel::ps_saveExposureSettings(const PresetExposure &settings)
+    {}
+
     QString SaveExposureSettingsViewModel::storagePath()
     {
         return QStringLiteral(KUB3_SAVES_EXPOSURE_SETTINGS_PATH);

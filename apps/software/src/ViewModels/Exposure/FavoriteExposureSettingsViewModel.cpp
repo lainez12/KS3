@@ -10,7 +10,4 @@ namespace Kub3::UI::ViewModels::Exposure
     {
     }
 
-    void FavoriteExposureSettingsViewModel::ps_saveExposureSettings(const PresetExposure &settings)
-    {}
-
 } // namespace Kub3::UI::ViewModels::Exposure

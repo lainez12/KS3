@@ -20,6 +20,9 @@ namespace Kub3::UI::ViewModels::Exposure
 
         bool savePreset(const PresetExposure &preset, QString *errorMessage = nullptr);
 
+    public slots:
+        void ps_saveExposureSettings(const PresetExposure &settings);
+    
     private:
         static QString storagePath();
         static QString modeToString(ExposureMode mode);
