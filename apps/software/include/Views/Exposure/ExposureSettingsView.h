@@ -44,7 +44,5 @@ namespace Kub3::UI::Views::ViewsExposure
 } // namespace Kub3::UI::Views
 
 using ExposureSettingsView = Kub3::UI::Views::ViewsExposure::ExposureSettingsView;
-using PresetExposure       = Kub3::UI::ViewModels::Exposure::ExposureBaseViewModel::PresetExposure;
-using ExposureMode         = Kub3::UI::ViewModels::Exposure::ExposureBaseViewModel::ExposureMode;
 
 #endif

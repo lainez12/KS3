@@ -19,17 +19,14 @@ namespace Kub3::UI::ViewModels::Exposure
         ~SaveExposureSettingsViewModel() override;
 
         bool savePreset(const PresetExposure &preset, QString *errorMessage = nullptr);
+        void userConfirmSavePreset(const QString &name);
 
     public slots:
         void ps_saveExposureSettings(const PresetExposure &settings);
-    
+
     private:
-        static QString storagePath();
-        static QString modeToString(ExposureMode mode);
-        static QJsonObject durationToJson(const Duration &duration);
-        static QJsonObject presetToJson(const PresetExposure &preset);
-        static bool validatePreset(const PresetExposure &preset, QString *errorMessage);
-        static bool ensureParentDirectory(const QString &path, QString *errorMessage);
+        PresetExposure m_currentPreset;
+        QString m_nameUserInput;
     };
 
 } // namespace Kub3::UI::ViewModels

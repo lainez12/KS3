@@ -1,6 +1,7 @@
 #pragma once
 
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
+#include <QJsonArray>
 #include <QObject>
 #include <ViewModels/BaseViewModel.h>
 
@@ -46,7 +47,29 @@ namespace Kub3::UI::ViewModels::Exposure
         virtual ~ExposureBaseViewModel() = default;
 
     protected:
+        bool validatePreset(const PresetExposure &preset, QString *errorMessage);
+        static QString storagePath();
+        static bool ensureParentDirectory(const QString &path, QString *errorMessage);
+        static bool loadPresetsFromFile(const QString &path, QJsonArray *presetsArray, QString *errorMessage);
+        static bool presetExistsInFile(const QJsonArray &presetsArray, const QString &presetName, QString *errorMessage);
+        static bool savePresetsToFile(const QString &path, const QJsonArray &presetsArray, QString *errorMessage);
+
+        static QJsonObject presetToJson(const PresetExposure &preset);
+
+        static PresetExposure jsonToPreset(const QJsonObject &json, QString *errorMessage);
+
+    protected:
         Shared<HAL::MS::IMachineStatusRepo> m_repo;
+
+    private:
+        static QString modeToString(ExposureMode mode);
+        static ExposureMode stringToMode(const QString &modeString);
+        static QJsonObject durationToJson(const Duration &duration);
+        static Duration jsonToDuration(const QJsonObject &json, QString *errorMessage);
     };
 
 } // namespace Kub3::UI::ViewModels::Exposure
+
+using PresetExposure = Kub3::UI::ViewModels::Exposure::ExposureBaseViewModel::PresetExposure;
+using ExposureMode = Kub3::UI::ViewModels::Exposure::ExposureBaseViewModel::ExposureMode;
+using Duration = Kub3::UI::ViewModels::Exposure::ExposureBaseViewModel::Duration;

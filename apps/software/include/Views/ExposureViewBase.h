@@ -1,5 +1,6 @@
 #pragma once
 
+#include <ViewModels/Exposure/ExposureBaseViewModel.h>
 #include <Views/ViewBase.h>
 
 namespace Kub3::UI::Views
@@ -25,3 +26,6 @@ namespace Kub3::UI::Views
     };
 
 } // namespace Kub3::UI::Views
+
+using PresetExposure = Kub3::UI::ViewModels::Exposure::ExposureBaseViewModel::PresetExposure;
+using ExposureMode   = Kub3::UI::ViewModels::Exposure::ExposureBaseViewModel::ExposureMode;
