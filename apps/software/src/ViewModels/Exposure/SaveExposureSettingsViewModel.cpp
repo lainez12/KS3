@@ -53,11 +53,35 @@ namespace Kub3::UI::ViewModels::Exposure
     {
         m_currentPreset.name = name;
         QString errorMessage;
-        qDebug() << "Attempting to save preset: " << m_currentPreset.name;
         if (!savePreset(m_currentPreset, &errorMessage))
         {
-            qDebug() << "Failed to save preset: " << errorMessage;
         }
+    }
+
+    QList<PresetExposure> SaveExposureSettingsViewModel::getAllPresets(QString *errorMessage)
+    {
+        QJsonArray presetsArray;
+        if (!loadPresetsFromFile(storagePath(), &presetsArray, errorMessage))
+        {
+            return {};
+        }
+
+        QList<PresetExposure> presetsList;
+        for (const QJsonValue &value : presetsArray)
+        {
+            if (value.isObject())
+            {
+                QString errorMsg;
+                PresetExposure preset = jsonToPreset(value.toObject(), &errorMsg);
+                if (!errorMsg.isEmpty())
+                {
+                    qDebug() << "Error parsing preset: " << errorMsg;
+                    continue;
+                }
+                presetsList.append(preset);
+            }
+        }
+        return presetsList;
     }
 
 } // namespace Kub3::UI::ViewModels::Exposure

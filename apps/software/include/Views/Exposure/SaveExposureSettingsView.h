@@ -32,6 +32,8 @@ namespace Kub3::UI::Views::ViewsExposure
         void onBackButtonClicked();
         void onValidateButtonClicked() override;
 
+        void populateViewWithCurrentPreset();
+
     public slots:
         void onConfirmButtonClicked();
 

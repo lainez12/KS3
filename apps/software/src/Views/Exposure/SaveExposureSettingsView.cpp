@@ -24,6 +24,8 @@ SaveExposureSettingsView::SaveExposureSettingsView(Unique<SaveExposureSettingsVi
     createNavButtonsConfigs();
     setDefaultTitleBar("Save parameters");
     connect(ui->btnConfirm, &QPushButton::clicked, this, &SaveExposureSettingsView::onConfirmButtonClicked);
+    connect(ui->btnCancel, &QPushButton::clicked, this, &SaveExposureSettingsView::onBackButtonClicked);
+    populateViewWithCurrentPreset();
 }
 
 SaveExposureSettingsView::~SaveExposureSettingsView()
@@ -63,6 +65,30 @@ void SaveExposureSettingsView::onConfirmButtonClicked()
         return;
     }
 
-    QString name = ui->lineEdit->text();
-    getViewModel<SaveExposureSettingsViewModel>()->userConfirmSavePreset(name);
+    QString name   = ui->lineEdit->text();
+    auto viewModel = getViewModel<SaveExposureSettingsViewModel>();
+    if (viewModel)
+    {
+        viewModel->userConfirmSavePreset(name);
+    }
+}
+
+void SaveExposureSettingsView::populateViewWithCurrentPreset()
+{
+    auto viewModel = getViewModel<SaveExposureSettingsViewModel>();
+    if (!viewModel)
+    {
+        return;
+    }
+    QString errorMessage;
+    QList<PresetExposure> presets = viewModel->getAllPresets(&errorMessage);
+    QVBoxLayout *layout           = new QVBoxLayout(ui->listPrestsQWidget);
+    ui->listPrestsQWidget->setLayout(layout);
+    for (const PresetExposure &preset : presets)
+    {
+        QPushButton *presetButton = new QPushButton(preset.name);
+        presetButton->setFixedHeight(50);
+        presetButton->setProperty("class", "button-blue");
+        ui->listPrestsQWidget->layout()->addWidget(presetButton);
+    }
 }

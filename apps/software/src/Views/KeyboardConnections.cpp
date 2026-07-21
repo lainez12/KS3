@@ -58,7 +58,6 @@ namespace Kub3::UI::Views
         }
         else
         {
-            qDebug() << "No focused widget or focused widget is not a QLineEdit, QSpinBox, or QDoubleSpinBox.";
         }
     }
 

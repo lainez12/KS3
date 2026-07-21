@@ -21,6 +21,8 @@ namespace Kub3::UI::ViewModels::Exposure
         bool savePreset(const PresetExposure &preset, QString *errorMessage = nullptr);
         void userConfirmSavePreset(const QString &name);
 
+        QList<PresetExposure> getAllPresets(QString *errorMessage);
+
     public slots:
         void ps_saveExposureSettings(const PresetExposure &settings);
 
