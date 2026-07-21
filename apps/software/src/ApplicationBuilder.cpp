@@ -169,7 +169,7 @@ namespace Kub3
             ASSIGN_VIEW_MODEL(UI::ViewModels::Alignment::SaveParametersViewModel, saveParametersVM, m_saveParametersVM, m_repo);
 
             // Views creation
-            auto *homeView                     = new HomeEightView(std::move(homeVM), m_mainWindow.get());
+            auto *homeView                     = new HomeView(std::move(homeVM), m_mainWindow.get());
             auto *machineStatusView            = new MachineStatusView(std::move(machineStatusVM), m_mainWindow.get());
             auto *exposureMenuView             = new ExposureMenuView(std::move(exposureMenuVM), m_mainWindow.get());
             auto *settingsView                 = new SettingsView(std::move(settingsVM), m_mainWindow.get());
@@ -248,6 +248,7 @@ namespace Kub3
         QObject::connect(m_mainWindow.get(), &MainWindow::s_requestResetError, m_masterFSM, &MFSM::MasterFSM::ps_requestResetError);
         QObject::connect(m_mainWindow.get(), &MainWindow::s_requestPowerOff, m_masterFSM, &MFSM::MasterFSM::ps_systemPowerOff);
         // --- HomeViewModel
+        QObject::connect(m_homeVM.get(), &VM::HomeViewModel::s_cancelOperation, m_masterFSM, &MFSM::MasterFSM::ps_requestAbortOperation);
         QObject::connect(m_homeVM.get(), &VM::HomeViewModel::s_initializationRequest, m_masterFSM, &MFSM::MasterFSM::ps_requestInitialization);
         // --- VisualisationViewModel
         // QObject::connect(m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::cmdRunCameraMovement, m_masterFSM, &MFSM::MasterFSM::ps_requestPADCameraMovement);

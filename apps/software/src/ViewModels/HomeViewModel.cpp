@@ -13,6 +13,11 @@ namespace Kub3::UI::ViewModels
     {
     }
 
+    void HomeViewModel::uiRequestCancel()
+    {
+        emit s_cancelOperation();
+    }
+
     void HomeViewModel::uiRequestInitialization()
     {
         emit s_initializationRequest();

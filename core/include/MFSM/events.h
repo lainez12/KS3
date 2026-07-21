@@ -38,6 +38,7 @@ namespace Kub3::MFSM
 
     struct CmdRetryBoot {};
     struct CmdStartInitialization {};
+    struct CmdAbortOperation {};
     struct CmdResetError {};
     struct EvEmergencyStopTriggered {
         std::string reason;
@@ -126,6 +127,7 @@ namespace Kub3::MFSM
         CmdResetError,
         CmdRetryBoot,
         CmdStartInitialization,
+        CmdAbortOperation,
         // --- Drawers/Conveyors
         CmdOperateDrawer,
         // --- Stowage (Wafer holder securing / Mask to exposure)

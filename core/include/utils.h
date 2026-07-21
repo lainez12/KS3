@@ -5,6 +5,8 @@
 #include <optional>
 #include <utility>
 
+#define TODO(msg) throw msg
+
 namespace Kub3::Utils
 {
     // Multiplies the input by 2

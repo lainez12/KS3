@@ -75,6 +75,11 @@ namespace Kub3::MFSM
                     .allowedActions = ErrorAction::ResetMachine | ErrorAction::PowerOff,
                 };
             },
+            [&](const StateInitializing &, const CmdAbortOperation &) -> SystemState {
+                qInfo() << "MFSM: User aborted initialization.";
+                this->stopAllServices();
+                return StateWaitingInitialization{};
+            },
 
             // --- OPERATIONAL (Delegation to Level 2) ---
             [&](const StateOperational &s, const EvServiceError &e) -> SystemState {
@@ -94,6 +99,14 @@ namespace Kub3::MFSM
                     .message        = e.reason,
                     .allowedActions = ErrorAction::ResetMachine | ErrorAction::Recover,
                 };
+            },
+            [&](const StateOperational &s, const CmdAbortOperation &e) -> SystemState {
+                qInfo() << "MFSM: User aborted an operational sequence.";
+                this->stopAllServices(); // Halt the drawers/actuators immediately
+                // Because we stopped mid-movement, physical posture is strictly unknown
+                // We CANNOT stay in StateOperational.
+                // TODO: Automatically trigger smart RecoveryService to figure out the shortest path to a known position
+                TODO("Transition from StateOperational with CmdAbortOperation not implement.");
             },
             [&](const StateOperational &s, const auto &) -> SystemState {
                 // Delegate to Sub-FSM (MasterFSM.transitions_operational.cpp)

@@ -15,9 +15,11 @@ namespace Kub3::UI::ViewModels
         ~HomeViewModel() override;
 
     signals:
+        void s_cancelOperation();
         void s_initializationRequest();
 
     public slots:
+        void uiRequestCancel();
         void uiRequestInitialization();
         void uiRequestDrawerInsertion(DrawerTarget tgt);
         void uiRequestDrawerEjection(DrawerTarget tgt);

@@ -99,6 +99,11 @@ namespace Kub3::MFSM
         dispatch(CmdRetryBoot{});
     }
 
+    void MasterFSM::ps_requestAbortOperation(void)
+    {
+        dispatch(CmdAbortOperation{});
+    }
+
     void MasterFSM::ps_requestInitialization(void)
     {
         dispatch(CmdStartInitialization{});

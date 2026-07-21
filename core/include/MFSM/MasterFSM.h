@@ -68,6 +68,7 @@ namespace Kub3::MFSM
 
         // System lifecycle
         void ps_requestRetryBoot(void);
+        void ps_requestAbortOperation(void);
         void ps_requestInitialization(void);
         void ps_requestResetError(void);
         void ps_requestEmergencyStop(void);

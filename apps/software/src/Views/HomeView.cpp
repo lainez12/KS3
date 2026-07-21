@@ -1,15 +1,15 @@
-#include <Views/HomeEightView.h>
+#include <Views/HomeView.h>
 
-#include "ui_HomeEightView.h"
+#include "ui_HomeView.h"
 
 #define ID_BTN_SETTINGS "S"
 #define ID_BTN_OPEN     "O"
 #define ID_BTN_CLOSE    "C"
 #define BUTTONS_SIZE    280
 
-HomeEightView::HomeEightView(Unique<HomeViewModel> viewModel, QWidget *parent) :
+HomeView::HomeView(Unique<HomeViewModel> viewModel, QWidget *parent) :
     ViewBase(std::move(viewModel), parent),
-    ui(new Ui::HomeEightView)
+    ui(new Ui::HomeView)
 {
     ui->setupUi(this);
 
@@ -25,28 +25,23 @@ HomeEightView::HomeEightView(Unique<HomeViewModel> viewModel, QWidget *parent) :
 
     this->updateMachineLogo(this->height());
 
-    HomeViewModel *vm = static_cast<HomeViewModel *>(m_viewModel.get());
-
-    if (vm)
-    {
-        connect(ui->btnInitialization, &QPushButton::clicked, vm, &HomeViewModel::uiRequestInitialization);
-    }
-    connect(ui->mainSubmenuExposureBtn, &QPushButton::clicked, this, &HomeEightView::onExposureMenuClicked);
+    connect(ui->btnInitialization, &QPushButton::clicked, this, &HomeView::onInitializationClicked);
+    connect(ui->mainSubmenuExposureBtn, &QPushButton::clicked, this, &HomeView::onExposureMenuClicked);
 }
 
-HomeEightView::~HomeEightView()
+HomeView::~HomeView()
 {
     delete ui;
 }
 
-void HomeEightView::resizeEvent(QResizeEvent *ev)
+void HomeView::resizeEvent(QResizeEvent *ev)
 {
     QWidget::resizeEvent(ev);
 
     this->updateMachineLogo(this->height());
 }
 
-void HomeEightView::updateMachineLogo(int h)
+void HomeView::updateMachineLogo(int h)
 {
     if (h <= 0)
         return;
@@ -67,7 +62,7 @@ void HomeEightView::updateMachineLogo(int h)
     ui->mainTitle->setText(templateStr.arg(baseFontSize).arg(substrateSizeFontSize).arg(KUB_MODEL_STR));
 }
 
-void HomeEightView::createNavButtonsConfigs()
+void HomeView::createNavButtonsConfigs()
 {
     NavButtonConfig settingsBtn(
         "Settings",
@@ -75,25 +70,48 @@ void HomeEightView::createNavButtonsConfigs()
         QColor("#B2D4F4"),
         ":/icons/settings.svg",
         ID_BTN_SETTINGS,
-        std::bind(&HomeEightView::onSettingsButtonClicked, this));
+        std::bind(&HomeView::onSettingsButtonClicked, this));
     addNavButton("left", settingsBtn);
 }
-void HomeEightView::configTitleBar()
+void HomeView::configTitleBar()
 {
     setTitleBar(TitleBarConfig{});
 }
 
-void HomeEightView::onSettingsButtonClicked()
+void HomeView::onSettingsButtonClicked()
 {
     emit s_openView(Kub3::UI::ViewId::SETTINGS_VIEW);
 }
 
-void HomeEightView::onExposureMenuClicked()
+void HomeView::onExposureMenuClicked()
 {
     emit s_openView(Kub3::UI::ViewId::EXPOSURE_MENU_VIEW);
 }
 
-void HomeEightView::onMaskAlignmentClicked()
+void HomeView::onMaskAlignmentClicked()
 {
     emit s_openView(Kub3::UI::ViewId::ALIGNMENT_DISTANCE_VIEW);
+}
+
+void HomeView::onInitializationClicked()
+{
+    HomeViewModel *vm = static_cast<HomeViewModel *>(m_viewModel.get());
+
+    if (vm)
+    {
+        this->showPopUpMessage(
+            "Initialization",
+            "Initialization in progress",
+            {
+                PopUpMessage::ButtonConfig{
+                    .text     = "Cancel",
+                    .callback = [vm]() { vm->uiRequestCancel(); },
+                },
+            });
+        vm->uiRequestInitialization();
+    }
+    else
+    {
+        qCritical() << "[HomeView::onInitializationClicked] Failed to retrieve view model.";
+    }
 }
