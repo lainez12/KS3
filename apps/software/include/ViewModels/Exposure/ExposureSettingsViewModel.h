@@ -14,9 +14,11 @@ namespace Kub3::UI::ViewModels::Exposure
 
     public:
         void ui_requestSaveExposureSettings(const PresetExposure &settings);
+        void ui_requestExposureSettingsByForm(const PresetExposure &settings);
 
     signals:
         void s_requestSaveExposureSettings(const PresetExposure &settings);
+        void s_requestExposureSettingsByForm(const PresetExposure &settings);
 
     private:
     };

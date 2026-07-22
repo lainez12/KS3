@@ -15,4 +15,10 @@ namespace Kub3::UI::ViewModels::Exposure
         emit s_requestSaveExposureSettings(settings);
     }
 
+    void ExposureSettingsViewModel::ui_requestExposureSettingsByForm(const PresetExposure &settings)
+    {
+        qDebug() << "onValidateButtonClicked";
+        emit s_requestExposureSettingsByForm(settings);
+    }
+
 } // namespace Kub3::UI::ViewModels::Exposure

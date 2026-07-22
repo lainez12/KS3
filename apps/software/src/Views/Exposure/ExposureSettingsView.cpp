@@ -86,7 +86,13 @@ void ExposureSettingsView::onSaveButtonClicked()
 
 void ExposureSettingsView::onValidateButtonClicked()
 {
-    
+    auto mv = getViewModel<ExposureSettingsViewModel>();
+    if (mv)
+    {
+        PresetExposure settings = getCurrentPresetExposure();
+        settings.name           = "current"; // Temporary name for validation purposes
+        mv->ui_requestExposureSettingsByForm(settings);
+    }
     emit s_openView(Kub3::UI::ViewId::RECAP_EXPOSURE_SETTINGS_VIEW);
 }
 

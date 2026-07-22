@@ -95,7 +95,8 @@ void SaveExposureSettingsView::onConfirmButtonClicked()
     {
         viewModel->userConfirmSavePreset(name);
     }
-    return;
+    ui->lineEdit->clear();
+    onBackButtonClicked();
 }
 
 void SaveExposureSettingsView::userConfirmSaveReplacementPreset(const QString &name)
