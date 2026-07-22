@@ -173,7 +173,10 @@ void FavoriteExposureSettingsView::populateStackedFavorite(const QList<FavoriteE
         if (FavoriteExposureSettingButton *button = favoriteButtons.at(buttonIndex))
         {
             targetLayout->addWidget(button);
-            setUpShadowedBoxStyle(button);
+            setUpShawedBoxStyle(button);
+            connect(button, &QPushButton::clicked, this, [this, button]() {
+                this->userChoseExposurePreset(button);
+            });
         }
     }
 
@@ -214,4 +217,16 @@ void FavoriteExposureSettingsView::populateViewWithCurrentPreset()
         return;
     }
     populateStackedFavorite(favoriteButtons);
+}
+
+void FavoriteExposureSettingsView::userChoseExposurePreset(FavoriteExposureSettingButton *button)
+{
+    if (!button)
+        return;
+
+    auto *vm = getViewModel<FavoriteExposureSettingsViewModel>();
+    if (!vm)
+        return;
+
+    QString presetName = button->titleText();
 }
