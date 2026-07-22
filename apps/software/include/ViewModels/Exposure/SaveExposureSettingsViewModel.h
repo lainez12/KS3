@@ -23,6 +23,10 @@ namespace Kub3::UI::ViewModels::Exposure
 
         QList<PresetExposure> getAllPresets(QString *errorMessage);
 
+    signals:
+        void s_presetSaved();
+        void s_errorSavingPreset(const QString &errorMessage);
+
     public slots:
         void ps_saveExposureSettings(const PresetExposure &settings);
 

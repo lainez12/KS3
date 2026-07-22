@@ -55,7 +55,10 @@ namespace Kub3::UI::ViewModels::Exposure
         QString errorMessage;
         if (!savePreset(m_currentPreset, &errorMessage))
         {
+            emit s_errorSavingPreset(errorMessage);
+            return;
         }
+        emit s_presetSaved();
     }
 
     QList<PresetExposure> SaveExposureSettingsViewModel::getAllPresets(QString *errorMessage)

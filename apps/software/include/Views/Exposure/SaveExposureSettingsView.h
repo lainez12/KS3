@@ -36,6 +36,8 @@ namespace Kub3::UI::Views::ViewsExposure
 
     public slots:
         void onConfirmButtonClicked();
+        void s_onPresetSaved();
+        void s_onErrorSavingPreset(const QString &errorMessage);
 
     private:
         Ui::SaveExposureSettingsView *ui;

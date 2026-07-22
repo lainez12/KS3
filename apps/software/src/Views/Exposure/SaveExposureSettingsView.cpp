@@ -20,11 +20,18 @@ SaveExposureSettingsView::SaveExposureSettingsView(Unique<SaveExposureSettingsVi
     ui->setupUi(this);
     m_keyboard.setupKeyboardConnections(this);
 
+    QVBoxLayout *layout = new QVBoxLayout(ui->listPrestsQWidget);
+    ui->listPrestsQWidget->setLayout(layout);
+
     setNewNavButtonsConfigs();
     createNavButtonsConfigs();
     setDefaultTitleBar("Save parameters");
     connect(ui->btnConfirm, &QPushButton::clicked, this, &SaveExposureSettingsView::onConfirmButtonClicked);
     connect(ui->btnCancel, &QPushButton::clicked, this, &SaveExposureSettingsView::onBackButtonClicked);
+
+    connect(getViewModel<SaveExposureSettingsViewModel>(), &SaveExposureSettingsViewModel::s_presetSaved, this, &SaveExposureSettingsView::s_onPresetSaved);
+    connect(getViewModel<SaveExposureSettingsViewModel>(), &SaveExposureSettingsViewModel::s_errorSavingPreset, this, &SaveExposureSettingsView::s_onErrorSavingPreset);
+
     populateViewWithCurrentPreset();
 }
 
@@ -62,6 +69,7 @@ void SaveExposureSettingsView::onConfirmButtonClicked()
     if (ui->lineEdit->text().isEmpty())
     {
         UPDATE_DYNAMIC_PROPERTY(ui->lineEdit, "class", "error-lineEdit");
+        ui->lineEdit->setFocus();
         return;
     }
 
@@ -71,6 +79,7 @@ void SaveExposureSettingsView::onConfirmButtonClicked()
     {
         viewModel->userConfirmSavePreset(name);
     }
+    return;
 }
 
 void SaveExposureSettingsView::populateViewWithCurrentPreset()
@@ -82,8 +91,7 @@ void SaveExposureSettingsView::populateViewWithCurrentPreset()
     }
     QString errorMessage;
     QList<PresetExposure> presets = viewModel->getAllPresets(&errorMessage);
-    QVBoxLayout *layout           = new QVBoxLayout(ui->listPrestsQWidget);
-    ui->listPrestsQWidget->setLayout(layout);
+
     for (const PresetExposure &preset : presets)
     {
         QPushButton *presetButton = new QPushButton(preset.name);
@@ -91,4 +99,14 @@ void SaveExposureSettingsView::populateViewWithCurrentPreset()
         presetButton->setProperty("class", "button-blue");
         ui->listPrestsQWidget->layout()->addWidget(presetButton);
     }
+}
+
+void SaveExposureSettingsView::s_onPresetSaved()
+{
+    //showPopUpMessage("Preset Saved", "The preset has been saved successfully.", {{"OK", []() {}}});
+}
+
+void SaveExposureSettingsView::s_onErrorSavingPreset(const QString &errorMessage)
+{
+    showPopUpMessage("Error Saving Preset", errorMessage, {{"OK", []() {}}});
 }
