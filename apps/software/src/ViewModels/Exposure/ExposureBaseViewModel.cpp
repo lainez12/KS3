@@ -36,7 +36,8 @@ namespace Kub3::UI::ViewModels::Exposure
         }
 
         const auto validateDuration = [errorMessage](const Duration &duration, const QString &label) {
-            if (duration.minutes < 0 || duration.seconds < 0 || duration.seconds >= 60)
+            bool zeroDuration = (duration.minutes == 0 && duration.seconds == 0);
+            if (duration.minutes < 0 || duration.seconds < 0 || duration.seconds >= 60 || zeroDuration)
             {
                 if (errorMessage)
                     *errorMessage = QStringLiteral("The duration %1 must have minutes >= 0 and seconds between 0 and 59.").arg(label);

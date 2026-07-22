@@ -27,6 +27,9 @@ namespace Kub3::UI::Views::ViewsExposure
     public:
         void resizeEvent(QResizeEvent *event) override;
 
+    private slots:
+        void watchForChangesInPresetExposure();
+
     private:
         void onBackButtonClicked();
         void onSaveButtonClicked();
@@ -34,6 +37,7 @@ namespace Kub3::UI::Views::ViewsExposure
 
         void switchToFlashingMode();
         void switchToContinuousMode();
+        void connectQSpinBoxSignals();
 
         PresetExposure getCurrentPresetExposure() const;
 

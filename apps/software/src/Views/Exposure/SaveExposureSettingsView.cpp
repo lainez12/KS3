@@ -105,6 +105,7 @@ void SaveExposureSettingsView::userConfirmSaveReplacementPreset(const QString &n
     {
         viewModel->userConfirmSavePreset(name);
     }
+    onBackButtonClicked();
 }
 
 void SaveExposureSettingsView::populateViewWithCurrentPreset()

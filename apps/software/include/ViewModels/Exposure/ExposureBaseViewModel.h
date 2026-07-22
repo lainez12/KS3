@@ -49,9 +49,9 @@ namespace Kub3::UI::ViewModels::Exposure
     public:
         static QString presetDetailsToStr(const PresetExposure &preset);
         static QString modeToString(ExposureMode mode);
+        bool validatePreset(const PresetExposure &preset, QString *errorMessage);
 
     protected:
-        bool validatePreset(const PresetExposure &preset, QString *errorMessage);
         static QString storagePath();
         static bool ensureParentDirectory(const QString &path, QString *errorMessage);
         static bool loadPresetsFromFile(const QString &path, QJsonArray *presetsArray, QString *errorMessage);
