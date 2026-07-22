@@ -141,7 +141,7 @@ namespace Kub3::UI::ViewModels::Exposure
         return true;
     }
 
-    bool ExposureBaseViewModel::presetExistsInFile(const QJsonArray &presetsArray, const QString &presetName, QString *errorMessage)
+    bool ExposureBaseViewModel::presetExistsInFile(const QJsonArray &presetsArray, const QString &presetName)
     {
         for (const QJsonValue &value : presetsArray)
         {
@@ -150,6 +150,19 @@ namespace Kub3::UI::ViewModels::Exposure
                 return true;
         }
         return false;
+    }
+
+    void ExposureBaseViewModel::replaceExistingPreset(QJsonArray &presetsArray, const PresetExposure &preset)
+    {
+        for (int i = 0; i < presetsArray.size(); ++i)
+        {
+            QJsonObject presetObject = presetsArray[i].toObject();
+            if (presetObject.value(QLatin1String(kNameKey)).toString() == preset.name)
+            {
+                presetsArray[i] = presetToJson(preset);
+                break;
+            }
+        }
     }
 
     bool ExposureBaseViewModel::savePresetsToFile(const QString &path, const QJsonArray &presetsArray, QString *errorMessage)

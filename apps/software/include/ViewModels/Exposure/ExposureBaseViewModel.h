@@ -51,8 +51,10 @@ namespace Kub3::UI::ViewModels::Exposure
         static QString storagePath();
         static bool ensureParentDirectory(const QString &path, QString *errorMessage);
         static bool loadPresetsFromFile(const QString &path, QJsonArray *presetsArray, QString *errorMessage);
-        static bool presetExistsInFile(const QJsonArray &presetsArray, const QString &presetName, QString *errorMessage);
+        static bool presetExistsInFile(const QJsonArray &presetsArray, const QString &presetName);
         static bool savePresetsToFile(const QString &path, const QJsonArray &presetsArray, QString *errorMessage);
+        static void replaceExistingPreset(QJsonArray &presetsArray, const PresetExposure &preset);
+
 
         static QJsonObject presetToJson(const PresetExposure &preset);
 
@@ -71,5 +73,5 @@ namespace Kub3::UI::ViewModels::Exposure
 } // namespace Kub3::UI::ViewModels::Exposure
 
 using PresetExposure = Kub3::UI::ViewModels::Exposure::ExposureBaseViewModel::PresetExposure;
-using ExposureMode = Kub3::UI::ViewModels::Exposure::ExposureBaseViewModel::ExposureMode;
-using Duration = Kub3::UI::ViewModels::Exposure::ExposureBaseViewModel::Duration;
+using ExposureMode   = Kub3::UI::ViewModels::Exposure::ExposureBaseViewModel::ExposureMode;
+using Duration       = Kub3::UI::ViewModels::Exposure::ExposureBaseViewModel::Duration;

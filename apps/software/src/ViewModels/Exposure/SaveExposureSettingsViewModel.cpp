@@ -20,7 +20,7 @@ namespace Kub3::UI::ViewModels::Exposure
     {
     }
 
-    bool SaveExposureSettingsViewModel::savePreset(const PresetExposure &preset, QString *errorMessage)
+    bool SaveExposureSettingsViewModel::savePreset(const PresetExposure &preset, QString *errorMessage, bool replaceExisting)
     {
         if (!validatePreset(preset, errorMessage))
             return false;
@@ -36,10 +36,18 @@ namespace Kub3::UI::ViewModels::Exposure
             return false;
         }
 
-        bool replacedExistingPreset = presetExistsInFile(presetsArray, preset.name, errorMessage);
+        bool replacedExistingPreset = presetExistsInFile(presetsArray, preset.name);
+
+        if (replacedExistingPreset && !replaceExisting)
+        {
+            *errorMessage = "A preset with the same name already exists. Please choose a different name or enable replacement.";
+            return false;
+        }
 
         if (!replacedExistingPreset)
             presetsArray.append(presetToJson(preset));
+        else
+            replaceExistingPreset(presetsArray, preset);
 
         return savePresetsToFile(path, presetsArray, errorMessage);
     }

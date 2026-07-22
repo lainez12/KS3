@@ -26,6 +26,7 @@ namespace Kub3::UI::Views::ViewsExposure
 
     public:
         void resizeEvent(QResizeEvent *event) override;
+        void showEvent(QShowEvent *event) override;
 
     private:
         void setNewNavButtonsConfigs();
@@ -38,11 +39,16 @@ namespace Kub3::UI::Views::ViewsExposure
         void onConfirmButtonClicked();
         void s_onPresetSaved();
         void s_onErrorSavingPreset(const QString &errorMessage);
+        void setAPresetSavedInThisSession(bool saved);
+        bool isAPresetSavedInThisSession() const;
+        void userConfirmSaveReplacementPreset(const QString &name);
 
     private:
         Ui::SaveExposureSettingsView *ui;
         KeyboardConnections m_keyboard;
         bool m_isFlashingMode = false;
+        bool m_PresetSaved    = true; // true to avoid populating the view with presets when the view is first opened
+        QMap<QString, QPushButton *> m_presetsButton;
     };
 
 } // namespace Kub3::UI::Views

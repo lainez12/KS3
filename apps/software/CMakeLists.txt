@@ -63,6 +63,7 @@ qt_add_executable(Kub3Software
     src/Views/Alignment/VisualisationView.cpp
     src/Views/Alignment/DistanceView.cpp
     src/Views/Alignment/ContactSelectionView.cpp
+    src/Views/Components/DoubleClickButton.cpp
     src/Views/Components/FavoriteExposureSettingButton.cpp
     src/Views/Components/HardForceContactForm.cpp
     src/Views/Components/RealPositionCameras.cpp
@@ -132,6 +133,7 @@ qt_add_executable(Kub3Software
     include/Views/Alignment/VisualisationView.h
     include/Views/Alignment/DistanceView.h
     include/Views/Alignment/ContactSelectionView.h
+    include/Views/Components/DoubleClickButton.h
     include/Views/Components/FavoriteExposureSettingButton.h
     include/Views/Components/NavButtonManager.h
     include/Views/Components/HardForceContactForm.h
