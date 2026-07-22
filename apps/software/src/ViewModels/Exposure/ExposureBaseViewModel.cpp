@@ -286,6 +286,27 @@ namespace Kub3::UI::ViewModels::Exposure
         return preset;
     }
 
+    QString ExposureBaseViewModel::presetDetailsToStr(const PresetExposure &preset)
+    {
+        if (preset.mode == ExposureMode::Continuous)
+        {
+            return QStringLiteral("Exposure duration: %1min %2s\nExposure power: %3%")
+                .arg(preset.continuous.duration.minutes)
+                .arg(preset.continuous.duration.seconds)
+                .arg(preset.continuous.power);
+        }
+        else
+        {
+            return QStringLiteral("Number of cycles: %1\nDuration Ton: %2min %3s\nDuration Toff: %4min %5s\nExposure power: %6%")
+                .arg(preset.flashing.numberOfCycles)
+                .arg(preset.flashing.durationOn.minutes)
+                .arg(preset.flashing.durationOn.seconds)
+                .arg(preset.flashing.durationOff.minutes)
+                .arg(preset.flashing.durationOff.seconds)
+                .arg(preset.flashing.power);
+        }
+        }
+
     ExposureMode ExposureBaseViewModel::stringToMode(const QString &modeString)
     {
         if (modeString == QStringLiteral("continuous"))

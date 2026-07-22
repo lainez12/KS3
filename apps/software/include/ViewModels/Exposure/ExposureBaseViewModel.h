@@ -55,10 +55,11 @@ namespace Kub3::UI::ViewModels::Exposure
         static bool savePresetsToFile(const QString &path, const QJsonArray &presetsArray, QString *errorMessage);
         static void replaceExistingPreset(QJsonArray &presetsArray, const PresetExposure &preset);
 
-
         static QJsonObject presetToJson(const PresetExposure &preset);
 
         static PresetExposure jsonToPreset(const QJsonObject &json, QString *errorMessage);
+
+        static QString presetDetailsToStr(const PresetExposure &preset);
 
     protected:
         Shared<HAL::MS::IMachineStatusRepo> m_repo;

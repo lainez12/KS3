@@ -26,8 +26,12 @@ namespace Kub3::UI::Views::ViewsExposure
         explicit FavoriteExposureSettingsView(Unique<FavoriteExposureSettingsViewModel> viewModel, QWidget *parent = nullptr);
         ~FavoriteExposureSettingsView();
 
+    public:
+        void showEvent(QShowEvent *event) override;
+
     private:
         void setNewNavButtonsConfigs();
+        void populateViewWithCurrentPreset();
         void populateStackedFavorite(const QList<FavoriteExposureSettingButton *> &favoriteButtons);
         void updateFavoritePageNavigation();
         void onBackButtonClicked();

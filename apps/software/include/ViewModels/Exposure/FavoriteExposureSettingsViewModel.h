@@ -4,6 +4,7 @@
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
 #include <ViewModels/BaseViewModel.h>
 #include <ViewModels/Exposure/ExposureBaseViewModel.h>
+#include <Views/Components/FavoriteExposureSettingButton.h>
 
 namespace Kub3::UI::ViewModels::Exposure
 {
@@ -12,6 +13,8 @@ namespace Kub3::UI::ViewModels::Exposure
     public:
         explicit FavoriteExposureSettingsViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent = nullptr);
         ~FavoriteExposureSettingsViewModel() override;
+
+        bool getAllExposureSettings(QList<FavoriteExposureSettingButton *> &presetButtons, QString *errorMessage);
 
     private:
         Shared<HAL::MS::IMachineStatusRepo> m_repo;

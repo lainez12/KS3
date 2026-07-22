@@ -101,26 +101,16 @@ FavoriteExposureSettingsView::FavoriteExposureSettingsView(Unique<FavoriteExposu
 
     connect(ui->stackedFavorites, &QStackedWidget::currentChanged, this, [this](int) { updateFavoritePageNavigation(); });
 
-    QList<FavoriteExposureSettingButton *> favoriteButtons;
-    auto *btnFirst  = new FavoriteExposureSettingButton("First", "Exposure duration: 10s\nExposure power: 20%");
-    auto *btnFirst1 = new FavoriteExposureSettingButton("First1", "Exposure duration: 10s\nExposure power: 20%");
-    favoriteButtons.append(btnFirst);
-    favoriteButtons.append(new FavoriteExposureSettingButton(*btnFirst));
-    favoriteButtons.append(btnFirst1);
-    auto *btnThird  = new FavoriteExposureSettingButton("Third", "Exposure duration: 30s\nExposure power: 50%");
-    auto *btnThird1 = new FavoriteExposureSettingButton("Third1", "Exposure duration: 30s\nExposure power: 50%");
-    favoriteButtons.append(btnThird);
-    favoriteButtons.append(new FavoriteExposureSettingButton(*btnThird));
-    favoriteButtons.append(btnThird1);
-    favoriteButtons.append(new FavoriteExposureSettingButton(*btnThird1));
-    auto *btnFifth = new FavoriteExposureSettingButton("Fifth", "Number of cycles: 6\nDuration Ton: 0min 5s\nDuration Toff: 0min 10s\nExposure power: 20%");
-    favoriteButtons.append(btnFifth);
-    favoriteButtons.append(new FavoriteExposureSettingButton(*btnFifth));
-
-    populateStackedFavorite(favoriteButtons);
+    populateViewWithCurrentPreset();
 }
 FavoriteExposureSettingsView::~FavoriteExposureSettingsView()
 {
+}
+
+void FavoriteExposureSettingsView::showEvent(QShowEvent *event)
+{
+    // populateViewWithCurrentPreset();
+    QWidget::showEvent(event);
 }
 
 void FavoriteExposureSettingsView::setNewNavButtonsConfigs()
@@ -165,7 +155,6 @@ void FavoriteExposureSettingsView::populateStackedFavorite(const QList<FavoriteE
     {
         extraPages.append(createFavoritePage(ui->stackedFavorites));
     }
-
     for (int buttonIndex = 0; buttonIndex < totalButtons; ++buttonIndex)
     {
         const int pageIndex       = buttonIndex / FAVORITES_PER_PAGE;
@@ -181,7 +170,6 @@ void FavoriteExposureSettingsView::populateStackedFavorite(const QList<FavoriteE
             const FavoritePageWidgets &pageWidgets = extraPages.at(pageIndex - 1);
             targetLayout                           = indexInPage < FAVORITES_PER_COLUMN ? pageWidgets.leftLayout : pageWidgets.rightLayout;
         }
-
         if (FavoriteExposureSettingButton *button = favoriteButtons.at(buttonIndex))
         {
             targetLayout->addWidget(button);
@@ -213,4 +201,17 @@ void FavoriteExposureSettingsView::onBackButtonClicked()
 void FavoriteExposureSettingsView::onValidateButtonClicked()
 {
     // emit s_openView(Kub3::UI::ViewId::VALIDATE_VIEW);
+}
+
+void FavoriteExposureSettingsView::populateViewWithCurrentPreset()
+{
+    QList<FavoriteExposureSettingButton *> favoriteButtons;
+    QString errorMessage;
+    auto *vm = getViewModel<FavoriteExposureSettingsViewModel>();
+    if (!vm->getAllExposureSettings(favoriteButtons, &errorMessage))
+    {
+        showPopUpMessage("Error loading favorite settings", errorMessage, {{"OK", []() {}}});
+        return;
+    }
+    populateStackedFavorite(favoriteButtons);
 }

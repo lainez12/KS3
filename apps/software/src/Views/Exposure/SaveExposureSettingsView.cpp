@@ -110,7 +110,7 @@ void SaveExposureSettingsView::userConfirmSaveReplacementPreset(const QString &n
 void SaveExposureSettingsView::populateViewWithCurrentPreset()
 {
     m_presetsButton.clear();
-
+    clearWidget(ui->listPrestsQWidget);
     auto viewModel = getViewModel<SaveExposureSettingsViewModel>();
     if (!viewModel)
     {

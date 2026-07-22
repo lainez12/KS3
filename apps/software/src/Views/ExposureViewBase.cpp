@@ -37,6 +37,10 @@ namespace Kub3::UI::Views
     {
         // setDefaultTitleBar("");
     }
+    void ExposureViewBase::showEvent(QShowEvent *event)
+    {
+        ViewBase::showEvent(event);
+    }
 
     void ExposureViewBase::setDefaultTitleBar(const QString &viewTitle)
     {

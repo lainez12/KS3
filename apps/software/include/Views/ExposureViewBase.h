@@ -15,6 +15,9 @@ namespace Kub3::UI::Views
 
         virtual ~ExposureViewBase() = default;
 
+    public:
+        void showEvent(QShowEvent *event) override;
+
     private:
         void configTitleBar() override;
 
