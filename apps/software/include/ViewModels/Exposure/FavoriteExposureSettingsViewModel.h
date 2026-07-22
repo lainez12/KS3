@@ -15,6 +15,10 @@ namespace Kub3::UI::ViewModels::Exposure
         ~FavoriteExposureSettingsViewModel() override;
 
         bool getAllExposureSettings(QList<FavoriteExposureSettingButton *> &presetButtons, QString *errorMessage);
+        bool ui_userChoseExposurePreset(QString &presetName);
+
+    signals:
+        void s_exposurePresetChosen(const PresetExposure &preset);
 
     private:
         Shared<HAL::MS::IMachineStatusRepo> m_repo;

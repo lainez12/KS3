@@ -55,6 +55,8 @@ namespace Kub3::UI::ViewModels::Exposure
         static bool savePresetsToFile(const QString &path, const QJsonArray &presetsArray, QString *errorMessage);
         static void replaceExistingPreset(QJsonArray &presetsArray, const PresetExposure &preset);
 
+        static PresetExposure getPresetByName(const QJsonArray &presetsArray, const QString &presetName, QString *errorMessage);
+
         static QJsonObject presetToJson(const PresetExposure &preset);
 
         static PresetExposure jsonToPreset(const QJsonObject &json, QString *errorMessage);

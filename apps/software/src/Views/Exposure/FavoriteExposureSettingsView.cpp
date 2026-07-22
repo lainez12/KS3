@@ -229,4 +229,9 @@ void FavoriteExposureSettingsView::userChoseExposurePreset(FavoriteExposureSetti
         return;
 
     QString presetName = button->titleText();
+    if (!vm->ui_userChoseExposurePreset(presetName))
+    {
+        showPopUpMessage("Error", "Failed to apply the selected preset.", {{"OK", []() {}}});
+        return;
+    }
 }

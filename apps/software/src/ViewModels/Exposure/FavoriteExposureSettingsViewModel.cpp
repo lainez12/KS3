@@ -37,4 +37,27 @@ namespace Kub3::UI::ViewModels::Exposure
         return true;
     }
 
+    bool FavoriteExposureSettingsViewModel::ui_userChoseExposurePreset(QString &presetName)
+    {
+        QJsonArray presetsArray;
+        QString errorMessage;
+        if (!loadPresetsFromFile(storagePath(), &presetsArray, &errorMessage))
+        {
+            qDebug() << "Error loading presets: " << errorMessage;
+            return false;
+        }
+
+        PresetExposure chosenPreset = getPresetByName(presetsArray, presetName, &errorMessage);
+
+        if (chosenPreset.name.isEmpty())
+        {
+            qDebug() << "Preset not found: " << presetName;
+            return false;
+        }
+
+        qDebug() << "User chose preset: " << chosenPreset.name;
+        emit s_exposurePresetChosen(chosenPreset);
+        return true;
+    }
+
 } // namespace Kub3::UI::ViewModels::Exposure
