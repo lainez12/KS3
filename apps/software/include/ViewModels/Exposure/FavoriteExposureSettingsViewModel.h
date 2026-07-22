@@ -21,7 +21,6 @@ namespace Kub3::UI::ViewModels::Exposure
         void s_exposurePresetChosen(const PresetExposure &preset);
 
     private:
-        Shared<HAL::MS::IMachineStatusRepo> m_repo;
     };
 
 } // namespace Kub3::UI::ViewModels::Exposure

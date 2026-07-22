@@ -19,20 +19,20 @@ namespace Kub3::UI::ViewModels::Exposure
         };
 
         struct Duration {
-            int minutes = 0;
-            int seconds = 0;
+            int minutes;
+            int seconds;
         };
 
         struct ContinuousSettings {
             Duration duration;
-            int power = 0;
+            int power;
         };
 
         struct FlashingSettings {
-            int numberOfCycles = 0;
+            int numberOfCycles;
             Duration durationOn;
             Duration durationOff;
-            int power = 0;
+            int power;
         };
 
         struct PresetExposure {
@@ -45,6 +45,10 @@ namespace Kub3::UI::ViewModels::Exposure
     public:
         explicit ExposureBaseViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent = nullptr);
         virtual ~ExposureBaseViewModel() = default;
+
+    public:
+        static QString presetDetailsToStr(const PresetExposure &preset);
+        static QString modeToString(ExposureMode mode);
 
     protected:
         bool validatePreset(const PresetExposure &preset, QString *errorMessage);
@@ -59,15 +63,12 @@ namespace Kub3::UI::ViewModels::Exposure
 
         static QJsonObject presetToJson(const PresetExposure &preset);
 
-        static PresetExposure jsonToPreset(const QJsonObject &json, QString *errorMessage);
-
-        static QString presetDetailsToStr(const PresetExposure &preset);
+        static PresetExposure jsonToPreset(const QJsonObject json, QString *errorMessage);
 
     protected:
         Shared<HAL::MS::IMachineStatusRepo> m_repo;
 
     private:
-        static QString modeToString(ExposureMode mode);
         static ExposureMode stringToMode(const QString &modeString);
         static QJsonObject durationToJson(const Duration &duration);
         static Duration jsonToDuration(const QJsonObject &json, QString *errorMessage);

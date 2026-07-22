@@ -14,8 +14,8 @@ namespace
     constexpr auto kVersionKey    = "version";
     constexpr auto kNameKey       = "name";
     constexpr auto kModeKey       = "mode";
-    constexpr auto kContinuousKey = "continuous";
-    constexpr auto kFlashingKey   = "flashing";
+    constexpr auto kContinuousKey = "Continuous";
+    constexpr auto kFlashingKey   = "Flashing";
 }
 
 namespace Kub3::UI::ViewModels::Exposure
@@ -48,7 +48,7 @@ namespace Kub3::UI::ViewModels::Exposure
 
         if (preset.mode == ExposureMode::Continuous)
         {
-            if (!validateDuration(preset.continuous.duration, QStringLiteral("continuous")))
+            if (!validateDuration(preset.continuous.duration, QStringLiteral("Continuous")))
                 return false;
             if (preset.continuous.power < 0)
             {
@@ -172,7 +172,14 @@ namespace Kub3::UI::ViewModels::Exposure
             const QJsonObject presetObject = value.toObject();
             if (presetObject.value(QLatin1String(kNameKey)).toString() == presetName)
             {
-                return jsonToPreset(presetObject, errorMessage);
+                PresetExposure preset = jsonToPreset(presetObject, errorMessage);
+                if (!preset.name.isEmpty() && (errorMessage == nullptr || errorMessage->isEmpty()))
+                    return preset;
+                else
+                {
+                    qDebug() << "Error parsing preset: " << *errorMessage;
+                    return {};
+                }
             }
         }
 
@@ -237,12 +244,12 @@ namespace Kub3::UI::ViewModels::Exposure
         switch (mode)
         {
         case ExposureMode::Continuous:
-            return QStringLiteral("continuous");
+            return QStringLiteral("Continuous");
         case ExposureMode::Flashing:
-            return QStringLiteral("flashing");
+            return QStringLiteral("Flashing");
         }
 
-        return QStringLiteral("continuous");
+        return QStringLiteral("Continuous");
     }
 
     QJsonObject ExposureBaseViewModel::durationToJson(const Duration &duration)
@@ -253,7 +260,7 @@ namespace Kub3::UI::ViewModels::Exposure
         return json;
     }
 
-    PresetExposure ExposureBaseViewModel::jsonToPreset(const QJsonObject &json, QString *errorMessage)
+    PresetExposure ExposureBaseViewModel::jsonToPreset(const QJsonObject json, QString *errorMessage)
     {
         PresetExposure preset;
 
@@ -321,13 +328,13 @@ namespace Kub3::UI::ViewModels::Exposure
                 .arg(preset.flashing.durationOff.seconds)
                 .arg(preset.flashing.power);
         }
-        }
+    }
 
     ExposureMode ExposureBaseViewModel::stringToMode(const QString &modeString)
     {
-        if (modeString == QStringLiteral("continuous"))
+        if (modeString == QStringLiteral("Continuous"))
             return ExposureMode::Continuous;
-        else if (modeString == QStringLiteral("flashing"))
+        else if (modeString == QStringLiteral("Flashing"))
             return ExposureMode::Flashing;
 
         // Default to Continuous if the string is unrecognized

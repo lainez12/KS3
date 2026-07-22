@@ -55,7 +55,6 @@ namespace Kub3::UI::ViewModels::Exposure
             return false;
         }
 
-        qDebug() << "User chose preset: " << chosenPreset.name;
         emit s_exposurePresetChosen(chosenPreset);
         return true;
     }

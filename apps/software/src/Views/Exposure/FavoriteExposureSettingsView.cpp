@@ -100,8 +100,6 @@ FavoriteExposureSettingsView::FavoriteExposureSettingsView(Unique<FavoriteExposu
     });
 
     connect(ui->stackedFavorites, &QStackedWidget::currentChanged, this, [this](int) { updateFavoritePageNavigation(); });
-
-    populateViewWithCurrentPreset();
 }
 FavoriteExposureSettingsView::~FavoriteExposureSettingsView()
 {
@@ -109,7 +107,7 @@ FavoriteExposureSettingsView::~FavoriteExposureSettingsView()
 
 void FavoriteExposureSettingsView::showEvent(QShowEvent *event)
 {
-    // populateViewWithCurrentPreset();
+    populateViewWithCurrentPreset();
     QWidget::showEvent(event);
 }
 
@@ -234,4 +232,6 @@ void FavoriteExposureSettingsView::userChoseExposurePreset(FavoriteExposureSetti
         showPopUpMessage("Error", "Failed to apply the selected preset.", {{"OK", []() {}}});
         return;
     }
+
+    emit s_openView(Kub3::UI::ViewId::RECAP_EXPOSURE_SETTINGS_VIEW);
 }

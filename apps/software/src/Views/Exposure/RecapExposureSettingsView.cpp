@@ -27,6 +27,18 @@ void RecapExposureSettingsView::resizeEvent(QResizeEvent *ev)
     QWidget::resizeEvent(ev);
 }
 
+void RecapExposureSettingsView::showEvent(QShowEvent *event)
+{
+    auto vm = getViewModel<RecapExposureSettingsViewModel>();
+    if (vm && vm->isPresetSetAndValid())
+    {
+        PresetExposure preset = vm->getCurrentPreset();
+        ui->modeExposureLabel->setText(vm->modeToString(preset.mode) + " exposure");
+        ui->detailsExposure->setText(vm->presetDetailsToStr(preset));
+    }
+    QWidget::showEvent(event);
+}
+
 void RecapExposureSettingsView::setNewNavButtonsConfigs()
 {
     NavButtonConfig backBtn(

@@ -25,6 +25,7 @@ namespace Kub3::UI::Views::ViewsExposure
 
     public:
         void resizeEvent(QResizeEvent *event) override;
+        void showEvent(QShowEvent *event) override;
 
     private:
         void setNewNavButtonsConfigs();
