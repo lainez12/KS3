@@ -13,20 +13,33 @@ HomeView::HomeView(Unique<HomeViewModel> viewModel, QWidget *parent) :
 {
     ui->setupUi(this);
 
-    QFont font("Arial", 22, QFont::Bold);
-    ui->maskBtn->setup(NavButton::SetupParams{"Mask", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/insert.svg", font});
-    ui->maskBtn->setSize(BUTTONS_SIZE);
-    ui->waferBtn->setup(NavButton::SetupParams{"Wafer", BLUE_COLOR, BLUE_COLOR_SHADOW, ":/icons/insert.svg", font});
-    ui->waferBtn->setSize(BUTTONS_SIZE);
-
     createNavButtonsConfigs();
     m_showCentralLogo = true;
     configTitleBar();
 
     this->updateMachineLogo(this->height());
 
+    ps_setDrawerActionsLock(true);
+    ps_setExposureModeLock(true);
+    ps_setHomingLock(true);
+    ps_setInitializationLock(false); // Only allow init at boot
+
     connect(ui->btnInitialization, &QPushButton::clicked, this, &HomeView::onInitializationClicked);
+    connect(ui->btnMaskInsert, &QPushButton::clicked, this, &HomeView::onMaskInsertBtnClicked);
+    connect(ui->btnWaferInsert, &QPushButton::clicked, this, &HomeView::onWaferInsertBtnClicked);
+    connect(ui->btnMaskEject, &QPushButton::clicked, this, &HomeView::onMaskEjectBtnClicked);
+    connect(ui->btnWaferEject, &QPushButton::clicked, this, &HomeView::onWaferEjectBtnClicked);
     connect(ui->mainSubmenuExposureBtn, &QPushButton::clicked, this, &HomeView::onExposureMenuClicked);
+
+    HomeViewModel *vm = static_cast<HomeViewModel *>(m_viewModel.get());
+
+    if (vm)
+    {
+        connect(vm, &HomeViewModel::s_setDrawerActionsLock, this, &HomeView::ps_setDrawerActionsLock);
+        connect(vm, &HomeViewModel::s_setExposureModeLock, this, &HomeView::ps_setExposureModeLock);
+        connect(vm, &HomeViewModel::s_setHomingLock, this, &HomeView::ps_setHomingLock);
+        connect(vm, &HomeViewModel::s_setInitializationLock, this, &HomeView::ps_setInitializationLock);
+    }
 }
 
 HomeView::~HomeView()
@@ -78,6 +91,29 @@ void HomeView::configTitleBar()
     setTitleBar(TitleBarConfig{});
 }
 
+void HomeView::ps_setDrawerActionsLock(bool lock)
+{
+    ui->btnMaskInsert->setEnabled(!lock);
+    ui->btnWaferInsert->setEnabled(!lock);
+    ui->btnMaskEject->setEnabled(!lock);
+    ui->btnWaferEject->setEnabled(!lock);
+}
+
+void HomeView::ps_setExposureModeLock(bool lock)
+{
+    ui->mainSubmenuExposureBtn->setEnabled(!lock);
+}
+
+void HomeView::ps_setHomingLock(bool lock)
+{
+    ui->mainSubmenuStandByBtn->setEnabled(!lock);
+}
+
+void HomeView::ps_setInitializationLock(bool lock)
+{
+    ui->btnInitialization->setEnabled(!lock);
+}
+
 void HomeView::onSettingsButtonClicked()
 {
     emit s_openView(Kub3::UI::ViewId::SETTINGS_VIEW);
@@ -99,19 +135,46 @@ void HomeView::onInitializationClicked()
 
     if (vm)
     {
-        this->showPopUpMessage(
-            "Initialization",
-            "Initialization in progress",
-            {
-                PopUpMessage::ButtonConfig{
-                    .text     = "Cancel",
-                    .callback = [vm]() { vm->uiRequestCancel(); },
-                },
-            });
         vm->uiRequestInitialization();
     }
     else
     {
         qCritical() << "[HomeView::onInitializationClicked] Failed to retrieve view model.";
     }
+}
+
+void HomeView::onWaferInsertBtnClicked()
+{
+    HomeViewModel *vm = static_cast<HomeViewModel *>(m_viewModel.get());
+
+    if (!vm)
+        return;
+    vm->uiRequestDrawerOperation(DrawerTarget::Wafer, false);
+}
+
+void HomeView::onMaskInsertBtnClicked()
+{
+    HomeViewModel *vm = static_cast<HomeViewModel *>(m_viewModel.get());
+
+    if (!vm)
+        return;
+    vm->uiRequestDrawerOperation(DrawerTarget::Mask, false);
+}
+
+void HomeView::onWaferEjectBtnClicked()
+{
+    HomeViewModel *vm = static_cast<HomeViewModel *>(m_viewModel.get());
+
+    if (!vm)
+        return;
+    vm->uiRequestDrawerOperation(DrawerTarget::Wafer, true);
+}
+
+void HomeView::onMaskEjectBtnClicked()
+{
+    HomeViewModel *vm = static_cast<HomeViewModel *>(m_viewModel.get());
+
+    if (!vm)
+        return;
+    vm->uiRequestDrawerOperation(DrawerTarget::Mask, true);
 }

@@ -7,9 +7,8 @@
 
 namespace Kub3::UI::ViewModels::Settings
 {
-    class UpdateSoftwareViewModel final : public QObject, public BaseViewModel
+    class UpdateSoftwareViewModel final : public BaseViewModel
     {
-        Q_OBJECT
     public:
         explicit UpdateSoftwareViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent = nullptr);
         ~UpdateSoftwareViewModel() override;

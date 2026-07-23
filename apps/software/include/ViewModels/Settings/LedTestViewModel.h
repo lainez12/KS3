@@ -7,9 +7,8 @@
 
 namespace Kub3::UI::ViewModels::Settings
 {
-    class LedTestViewModel final : public QObject, public BaseViewModel
+    class LedTestViewModel final : public BaseViewModel
     {
-        Q_OBJECT
     public:
         explicit LedTestViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent = nullptr);
         ~LedTestViewModel() override;

@@ -51,8 +51,13 @@ namespace Kub3::MFSM
 
     signals:
         // --- Tier 2 (Logic) -> Tier 1 (UI) Outputs ---
-        void s_stateChanged(const QString &stateName);
+        void s_stateEntered(const QString &stateName);
         void s_postureChanged(const MFSM::SystemPosture &posture); // To drive UI indicators
+        void s_operationCanceled();
+
+        void s_initializationSuccess();
+        void s_serviceOpSuccess();
+        void s_serviceOpError(const QString &);
 
         // Error Management
         void s_warningOccurred(const QString &warningMessage); // E.g., Interlock rejections
@@ -76,7 +81,7 @@ namespace Kub3::MFSM
 
         // TODO: define correct parameter types
         // Hardware sequences
-        void ps_requestOperateDrawer(int targetInt, int operationInt);
+        void ps_requestOperateDrawer(DrawerTarget tgt, bool eject);
         void ps_requestStowage(int targetInt);
         void ps_requestUnstowage(int targetInt);
         void ps_requestExposure(const Services::ExposurePayload &payload);

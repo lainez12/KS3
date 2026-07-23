@@ -7,9 +7,8 @@
 
 namespace Kub3::UI::ViewModels::Exposure
 {
-    class ProgressExposureViewModel final : public QObject, public BaseViewModel
+    class ProgressExposureViewModel final : public BaseViewModel
     {
-        Q_OBJECT
     public:
         explicit ProgressExposureViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent = nullptr);
         ~ProgressExposureViewModel() override;

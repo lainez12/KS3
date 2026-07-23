@@ -24,7 +24,7 @@ namespace Kub3::MFSM
 
         QString macroName = std::visit(macroStateNameMuseum, newState);
         if (!macroName.isEmpty()) // Fire signal only if relevant
-            emit s_stateChanged(macroName);
+            emit s_stateEntered(macroName);
 
         // 2. Perform Physical Macro State Entry Actions
         const auto entryActionsMuseum = overloadedCallable{
@@ -86,7 +86,7 @@ namespace Kub3::MFSM
             [](const StateExposureReady &) { return QStringLiteral("EXPOSURE_READY"); },
             [](const StateExposing &) { return QStringLiteral("EXPOSING"); }};
 
-        emit s_stateChanged(std::visit<QString>(microStateNameMuseum, newSubState));
+        emit s_stateEntered(std::visit<QString>(microStateNameMuseum, newSubState));
 
         // 2. Trigger Physical Micro Side-Effects
         const auto entryActionsMuseum = overloadedCallable{

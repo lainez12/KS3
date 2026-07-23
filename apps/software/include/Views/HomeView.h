@@ -25,14 +25,20 @@ namespace Kub3::UI::Views
         explicit HomeView(Unique<HomeViewModel> viewModel, QWidget *parent = nullptr);
         ~HomeView();
 
-    signals:
-
     public slots:
-        void onExposureMenuClicked();
-        void onMaskAlignmentClicked();
+        void ps_setDrawerActionsLock(bool lock);
+        void ps_setExposureModeLock(bool lock);
+        void ps_setHomingLock(bool lock);
+        void ps_setInitializationLock(bool lock);
 
     private slots:
+        void onExposureMenuClicked();
+        void onMaskAlignmentClicked();
         void onInitializationClicked();
+        void onWaferInsertBtnClicked();
+        void onMaskInsertBtnClicked();
+        void onWaferEjectBtnClicked();
+        void onMaskEjectBtnClicked();
 
     public:
         void resizeEvent(QResizeEvent *event) override;

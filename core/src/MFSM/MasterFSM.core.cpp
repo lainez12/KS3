@@ -37,6 +37,11 @@ namespace Kub3::MFSM
         m_logicTimer.setInterval(LOGIC_TIMER_PERIOD_MS);
         m_logicTimer.setTimerType(Qt::PreciseTimer);
         connect(&m_logicTimer, &QTimer::timeout, this, &MasterFSM::onLogicTick);
+        connect(this, &MasterFSM::s_postureChanged, [](const Kub3::MFSM::SystemPosture &posture) {
+            qDebug().noquote() << "Updated posture:\n\tWafer=" << posture.wafer
+                               << "\n\tMask=" << posture.mask
+                               << "\n\tVision=" << posture.vision;
+        });
     }
 
     void MasterFSM::start(void)
@@ -78,8 +83,11 @@ namespace Kub3::MFSM
             m_state = nextState;
 
             if (macroChanged)
+            {
+                // TODO: emit signal of state transition ? For debug ?
                 // A system change (e.g., Booting -> Init, or Operational -> Fault)
                 onStateEntered(m_state);
+            }
             else if (microChanged)
             {
                 // A focused operation change (e.g., Idle -> DrawerOp)
@@ -124,11 +132,11 @@ namespace Kub3::MFSM
         dispatch(EvPowerOff{});
     }
 
-    void MasterFSM::ps_requestOperateDrawer(int targetInt, int operationInt)
+    void MasterFSM::ps_requestOperateDrawer(DrawerTarget tgt, bool eject)
     {
         dispatch(CmdOperateDrawer{
-            .target    = static_cast<DrawerTarget>(targetInt),
-            .operation = static_cast<DrawerOperation>(operationInt),
+            .target    = tgt,
+            .operation = eject ? DrawerOperation::EJECT : DrawerOperation::INSERT,
         });
     }
 

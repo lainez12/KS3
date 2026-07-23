@@ -1,5 +1,6 @@
 #include <Views/Components/PopUpMessage.h>
 
+#include <QCloseEvent>
 #include <QGraphicsDropShadowEffect>
 #include <QHBoxLayout>
 #include <QLabel>
@@ -40,26 +41,25 @@ PopUpMessage::PopUpMessage(QWidget *parent) : QWidget(parent)
     setAttribute(Qt::WA_StyledBackground, true);
     setWindowFlags(windowFlags() | Qt::FramelessWindowHint);
 
-    buildUi();
+    buildUI();
 
     if (parent)
     {
-        parent->installEventFilter(this);
         resize(parent->size());
-        raise();
     }
 
     hide();
 }
 
-PopUpMessage::PopUpMessage(const QString &title, const QString &message, const QVector<ButtonConfig> &buttons, QWidget *parent) : PopUpMessage(parent)
+PopUpMessage::PopUpMessage(const QString &title, const QString &message, const PopUpActions &buttons, QWidget *parent) :
+    PopUpMessage(parent)
 {
     setTitleText(title);
     setMessageText(message);
     setButtons(buttons);
 }
 
-void PopUpMessage::buildUi()
+void PopUpMessage::buildUI()
 {
     setObjectName(QStringLiteral("PopUpMessageOverlay"));
 
@@ -162,7 +162,7 @@ void PopUpMessage::setMessageText(const QString &message)
     refreshContent();
 }
 
-void PopUpMessage::setButtons(const QVector<ButtonConfig> &buttons)
+void PopUpMessage::setButtons(const PopUpActions &buttons)
 {
     m_buttons = buttons;
     refreshButtons();
@@ -172,11 +172,24 @@ void PopUpMessage::showMessage()
 {
     if (parentWidget())
     {
+        // Install event filter only when popup becomes visible
+        parentWidget()->installEventFilter(this);
         resize(parentWidget()->size());
         raise();
     }
 
     show();
+}
+
+void PopUpMessage::hideEvent(QHideEvent *event)
+{
+    // Automatically detach the event filter whenever hide() is called
+    if (parentWidget())
+    {
+        parentWidget()->removeEventFilter(this);
+    }
+
+    QWidget::hideEvent(event);
 }
 
 void PopUpMessage::refreshContent()
@@ -199,6 +212,7 @@ void PopUpMessage::refreshButtons()
         return;
     }
 
+    // Safely clear old buttons when setButtons() is called with new actions
     while (QLayoutItem *item = m_buttonsLayout->takeAt(0))
     {
         if (QWidget *widget = item->widget())
@@ -211,13 +225,15 @@ void PopUpMessage::refreshButtons()
     for (const auto &buttonConfig : m_buttons)
     {
         auto *button = new QPushButton(buttonConfig.text, m_buttonsContainer);
-        connect(button, &QPushButton::clicked, this, [this, callback = buttonConfig.callback]() {
-            if (callback)
-            {
-                callback();
-            }
-            hide();
-        });
+
+        connect(
+            button, &QPushButton::clicked, this,
+            [this, callback = buttonConfig.callback]() {
+                if (callback)
+                {
+                    callback();
+                }
+            });
         m_buttonsLayout->addWidget(button);
     }
 
@@ -240,7 +256,8 @@ void PopUpMessage::paintEvent(QPaintEvent *)
 
 bool PopUpMessage::eventFilter(QObject *obj, QEvent *ev)
 {
-    if (obj == parent())
+    // Only process events when this popup is actually visible
+    if (isVisible() && obj == parent())
     {
         if (ev->type() == QEvent::Resize)
         {

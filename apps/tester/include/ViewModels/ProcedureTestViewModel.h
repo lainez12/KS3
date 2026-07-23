@@ -15,7 +15,7 @@ namespace Kub3::HAL::MS
 namespace Kub3::Tools::Tester
 {
 
-    class ProcedureTestViewModel : public QObject, public UI::ViewModels::BaseViewModel
+    class ProcedureTestViewModel : public UI::ViewModels::BaseViewModel
     {
         Q_OBJECT
 

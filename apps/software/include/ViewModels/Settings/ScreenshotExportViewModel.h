@@ -7,9 +7,8 @@
 
 namespace Kub3::UI::ViewModels::Settings
 {
-    class ScreenshotExportViewModel final : public QObject, public BaseViewModel
+    class ScreenshotExportViewModel final : public BaseViewModel
     {
-        Q_OBJECT
     public:
         explicit ScreenshotExportViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent = nullptr);
         ~ScreenshotExportViewModel() override;

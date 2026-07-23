@@ -7,9 +7,8 @@
 
 namespace Kub3::UI::ViewModels
 {
-    class SettingsViewModel final : public QObject, public BaseViewModel
+    class SettingsViewModel final : public BaseViewModel
     {
-        Q_OBJECT
     public:
         explicit SettingsViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent = nullptr);
         ~SettingsViewModel() override;

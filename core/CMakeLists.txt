@@ -99,6 +99,7 @@ qt_add_library(Kub3Core STATIC
     include/Views/Traits/PadReceiverViewTrait.h
     include/ViewModels/BaseViewModel.h
     include/ViewModels/BaseVisionViewModel.h
+    include/ViewModels/PopUpTypes.h
     include/MFSM/events.h
     include/MFSM/interlocks.h
     include/MFSM/MasterFSM.h

@@ -7,7 +7,7 @@
 
 namespace Kub3::UI::ViewModels::Settings
 {
-    class AdminPasswordViewModel final : public QObject, public BaseViewModel
+    class AdminPasswordViewModel final : public BaseViewModel
     {
         Q_OBJECT
 

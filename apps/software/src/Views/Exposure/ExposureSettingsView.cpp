@@ -37,15 +37,15 @@ ExposureSettingsView::ExposureSettingsView(Unique<ExposureSettingsViewModel> vie
     addNavButton("left", backBtn);
     setDefaultTitleBar("Exposure settings");
 
-    setUpShawedBoxStyle(ui->minContinuouspinBox);
-    setUpShawedBoxStyle(ui->segContinuouspinBox);
-    setUpShawedBoxStyle(ui->numberCyclespinBox);
-    setUpShawedBoxStyle(ui->minOnFlashingspinBox);
-    setUpShawedBoxStyle(ui->segOnFlashingspinBox);
-    setUpShawedBoxStyle(ui->minOffFlashingspinBox);
-    setUpShawedBoxStyle(ui->segOffFlashingspinBox);
-    setUpShawedBoxStyle(ui->powerContinuouspinBox);
-    setUpShawedBoxStyle(ui->powerFlashingspinBox);
+    setUpShadowedBoxStyle(ui->minContinuouspinBox);
+    setUpShadowedBoxStyle(ui->segContinuouspinBox);
+    setUpShadowedBoxStyle(ui->numberCyclespinBox);
+    setUpShadowedBoxStyle(ui->minOnFlashingspinBox);
+    setUpShadowedBoxStyle(ui->segOnFlashingspinBox);
+    setUpShadowedBoxStyle(ui->minOffFlashingspinBox);
+    setUpShadowedBoxStyle(ui->segOffFlashingspinBox);
+    setUpShadowedBoxStyle(ui->powerContinuouspinBox);
+    setUpShadowedBoxStyle(ui->powerFlashingspinBox);
 
     QPixmap pixmapLastCycle(":icons/last-cycle-enabled.png");
 

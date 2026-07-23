@@ -11,7 +11,7 @@
 namespace Kub3::Tools::Tester
 {
 
-    class MotorTestViewModel : public QObject, public UI::ViewModels::BaseViewModel
+    class MotorTestViewModel : public UI::ViewModels::BaseViewModel
     {
         Q_OBJECT
 

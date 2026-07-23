@@ -30,13 +30,19 @@ namespace Kub3::MFSM
                     return s; // Reject transition
                 }
 
-                ExpectedSystemPosture expected{};
+                ExpectedSystemPosture success{}, abort{};
                 if (cmd.target == DrawerTarget::Mask || cmd.target == DrawerTarget::Both)
-                    expected.newMaskPosture = isEject ? MaskPosture::Ejected : MaskPosture::Homed;
+                {
+                    success.newMaskPosture = isEject ? MaskPosture::Ejected : MaskPosture::Homed;
+                    abort.newMaskPosture   = MaskPosture::DrawerMidway;
+                }
                 if (cmd.target == DrawerTarget::Wafer || cmd.target == DrawerTarget::Both)
-                    expected.newWaferPosture = isEject ? WaferPosture::Ejected : WaferPosture::Homed;
+                {
+                    success.newWaferPosture = isEject ? WaferPosture::Ejected : WaferPosture::Homed;
+                    abort.newWaferPosture   = WaferPosture::DrawerMidway;
+                }
 
-                return StateDrawerOp{.kind = cmd.operation, .target = cmd.target, .expectedSuccess = expected};
+                return StateDrawerOp{.kind = cmd.operation, .target = cmd.target, .expectedSuccess = success, .expectedAbort = abort};
             },
 
             [&](const StateIdle &s, const CmdOperateStowage &cmd) -> OperationalState {
@@ -48,13 +54,19 @@ namespace Kub3::MFSM
                     return s;
                 }
 
-                ExpectedSystemPosture expected{};
+                ExpectedSystemPosture success{}, abort{};
                 if (cmd.target == Services::StowageTarget::WAFER)
-                    expected.newWaferPosture = WaferPosture::AlignmentZone;
+                {
+                    success.newWaferPosture = WaferPosture::AlignmentZone;
+                    abort.newWaferPosture   = WaferPosture::ElevatorMidway;
+                }
                 else
-                    expected.newMaskPosture = MaskPosture::Exposure;
+                {
+                    success.newMaskPosture = MaskPosture::Exposure;
+                    abort.newMaskPosture   = MaskPosture::ExposureMidway;
+                }
 
-                return StateStowing{.expectedSuccess = expected};
+                return StateStowing{.expectedSuccess = success, .expectedAbort = abort};
             },
 
             [&](const StateIdle &s, const CmdOperateUnstowage &cmd) -> OperationalState {
@@ -66,14 +78,19 @@ namespace Kub3::MFSM
                 }
 
                 // Granularly calculate expected success based on requested homing bits
-                ExpectedSystemPosture expected{};
-
+                ExpectedSystemPosture success{}, abort{};
                 if (cmd.target & Services::StowageTarget::MASK)
-                    expected.newMaskPosture = MaskPosture::Homed;
+                {
+                    success.newMaskPosture = MaskPosture::Homed;
+                    abort.newMaskPosture   = MaskPosture::ExposureMidway;
+                }
                 if (cmd.target & Services::StowageTarget::WAFER)
-                    expected.newWaferPosture = WaferPosture::Homed;
+                {
+                    success.newWaferPosture = WaferPosture::Homed;
+                    abort.newWaferPosture   = WaferPosture::ElevatorMidway;
+                }
 
-                return StateUnstowing{.target = cmd.target, .expectedSuccess = expected};
+                return StateUnstowing{.target = cmd.target, .expectedSuccess = success};
             },
 
             [&](const StateIdle &s, const CmdEnterAlignmentMode &cmd) -> OperationalState {
@@ -173,7 +190,18 @@ namespace Kub3::MFSM
                 return s;
             });
 
-        return std::visit(museum, opState.subState, event);
+        OperationalState updatedState = std::visit(museum, opState.subState, event);
+
+        if (std::holds_alternative<EvServiceSuccess>(event))
+        {
+            emit s_serviceOpSuccess();
+        }
+        else if (const EvServiceError *err = std::get_if<EvServiceError>(&event))
+        {
+            emit s_serviceOpError(QString::fromStdString(err->reason));
+        }
+
+        return updatedState;
     }
 
 } // namespace Kub3::MFSM

@@ -7,9 +7,8 @@
 
 namespace Kub3::UI::ViewModels::Alignment
 {
-    class DistanceViewModel final : public QObject, public BaseViewModel
+    class DistanceViewModel final : public BaseViewModel
     {
-        Q_OBJECT
     public:
         explicit DistanceViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent = nullptr);
         ~DistanceViewModel() override;

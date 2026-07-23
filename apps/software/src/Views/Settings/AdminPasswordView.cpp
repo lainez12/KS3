@@ -56,6 +56,7 @@ void AdminPasswordView::onValidateButtonClicked(void)
 
 void AdminPasswordView::onAuthenticationFailureFeedback(void)
 {
-    PopUpMessage::ButtonConfig okButton = {"OK", [this]() { ui->lineEditPasswd->clear(); }};
-    showPopUpMessage("Authentication Failed", "The password you entered is incorrect. Please try again.", {okButton});
+    popup_action_t okButton = {"OK", [this]() { ui->lineEditPasswd->clear(); }};
+
+    ps_createPopUpWithText("Authentication Failed", {okButton}, "The password you entered is incorrect. Please try again.");
 }

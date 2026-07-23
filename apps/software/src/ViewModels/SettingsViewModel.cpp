@@ -3,7 +3,7 @@
 namespace Kub3::UI::ViewModels
 {
     SettingsViewModel::SettingsViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent) :
-        QObject(parent),
+        BaseViewModel(parent),
         m_repo(repo)
     {
     }

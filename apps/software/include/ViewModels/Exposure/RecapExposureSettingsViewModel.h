@@ -7,9 +7,8 @@
 
 namespace Kub3::UI::ViewModels::Exposure
 {
-    class RecapExposureSettingsViewModel final : public QObject, public BaseViewModel
+    class RecapExposureSettingsViewModel final : public BaseViewModel
     {
-        Q_OBJECT
     public:
         explicit RecapExposureSettingsViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent = nullptr);
         ~RecapExposureSettingsViewModel() override;

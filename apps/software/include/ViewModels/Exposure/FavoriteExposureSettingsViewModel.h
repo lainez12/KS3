@@ -7,9 +7,8 @@
 
 namespace Kub3::UI::ViewModels::Exposure
 {
-    class FavoriteExposureSettingsViewModel final : public QObject, public BaseViewModel
+    class FavoriteExposureSettingsViewModel final : public BaseViewModel
     {
-        Q_OBJECT
     public:
         explicit FavoriteExposureSettingsViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent = nullptr);
         ~FavoriteExposureSettingsViewModel() override;

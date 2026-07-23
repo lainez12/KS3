@@ -7,9 +7,8 @@
 
 namespace Kub3::UI::ViewModels::Settings
 {
-    class VersionViewModel final : public QObject, public BaseViewModel
+    class VersionViewModel final : public BaseViewModel
     {
-        Q_OBJECT
     public:
         explicit VersionViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent = nullptr);
         ~VersionViewModel() override;

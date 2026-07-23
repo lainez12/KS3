@@ -27,16 +27,19 @@ namespace Kub3::MFSM
         DrawerOperation kind;
         DrawerTarget target;
         ExpectedSystemPosture expectedSuccess;
+        ExpectedSystemPosture expectedAbort;
     };
 
     struct StateStowing {
         Services::StowageTarget target;
         ExpectedSystemPosture expectedSuccess;
+        ExpectedSystemPosture expectedAbort;
     };
 
     struct StateUnstowing {
         Services::StowageTarget target;
         ExpectedSystemPosture expectedSuccess;
+        ExpectedSystemPosture expectedAbort;
     };
 
     struct StateAlignment {
@@ -47,6 +50,7 @@ namespace Kub3::MFSM
     struct StatePreparingAlignment {
         StateAlignment alignment;
         ExpectedSystemPosture expectedSuccess;
+        ExpectedSystemPosture expectedAbort;
     };
 
     struct StateExposureReady {
@@ -56,6 +60,7 @@ namespace Kub3::MFSM
     struct StatePreparingExposure {
         ContactPhase savedContactPhase;
         ExpectedSystemPosture expectedSuccess;
+        ExpectedSystemPosture expectedAbort;
     };
 
     struct StateExposing {

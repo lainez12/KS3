@@ -3,7 +3,7 @@
 
 namespace Kub3::UI::ViewModels
 {
-    BaseVisionViewModel::BaseVisionViewModel(QObject *parent) : QObject(parent)
+    BaseVisionViewModel::BaseVisionViewModel(QObject *parent) : BaseViewModel(parent)
     {
     }
 
