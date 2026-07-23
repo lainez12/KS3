@@ -112,7 +112,7 @@ namespace Kub3::UI::Views
     protected:
         void showEvent(QShowEvent *event) override;
         void hideEvent(QHideEvent *event) override;
-        void setUpShawedBoxStyle(QWidget *widget);
+        void setUpShadowedBoxStyle(QWidget *widget);
         void clearWidget(QWidget *widget);
 
         template <typename T>
