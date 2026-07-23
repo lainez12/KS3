@@ -1,11 +1,8 @@
 #pragma once
 
 #include <QWidget>
-
 #include <ViewModels/HomeViewModel.h>
-#include <Views/Components/NavButton.h>
-
-#include "ViewBase.h"
+#include <Views/ViewBase.h>
 
 namespace Ui
 {
@@ -14,45 +11,35 @@ namespace Ui
 
 namespace Kub3::UI::Views
 {
-
     class HomeView final : public ViewBase
     {
-        using HomeViewModel = ViewModels::HomeViewModel;
-
         Q_OBJECT
 
     public:
-        explicit HomeView(Unique<HomeViewModel> viewModel, QWidget *parent = nullptr);
-        ~HomeView();
+        explicit HomeView(Unique<ViewModels::HomeViewModel> viewModel, QWidget *parent = nullptr);
+        ~HomeView() override;
 
-    public slots:
-        void ps_setDrawerActionsLock(bool lock);
-        void ps_setExposureModeLock(bool lock);
-        void ps_setHomingLock(bool lock);
-        void ps_setInitializationLock(bool lock);
-
-    private slots:
-        void onExposureMenuClicked();
-        void onMaskAlignmentClicked();
-        void onInitializationClicked();
-        void onWaferInsertBtnClicked();
-        void onMaskInsertBtnClicked();
-        void onWaferEjectBtnClicked();
-        void onMaskEjectBtnClicked();
-
-    public:
         void resizeEvent(QResizeEvent *event) override;
 
-    private:
-        void updateMachineLogo(int h);
-        void createNavButtonsConfigs();
-        void configTitleBar();
+    public slots:
+        // Triggered by the view model
+        void setDrawerActionsLocked(bool locked);
+        void setExposureModeLocked(bool locked);
+        void setHomingLocked(bool locked);
+        void setInitializationLocked(bool locked);
 
-        void onSettingsButtonClicked();
+    private:
+        void setupConnections();
+        void updateMachineLogo(int h);
+        void createNavButtonsConfigs() override;
+        void configTitleBar() override;
 
     private:
         Ui::HomeView *ui;
+        // Typed, non-owning pointer for fast, clean access.
+        // Guaranteed valid because ViewBase owns the unique_ptr.
+        ViewModels::HomeViewModel *m_vm;
     };
-}
+} // namespace Kub3::UI::Views
 
 using HomeView = Kub3::UI::Views::HomeView;

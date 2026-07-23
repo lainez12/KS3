@@ -265,8 +265,11 @@ namespace Kub3
         QObject::connect(m_configuratorPasswdVM.get(), &VM::Settings::AdminPasswordViewModel::s_authenticationSuccess, &launchConfigurator);
 
         // 3. Logic -> UI Wiring
+        // @note: `QObject::connect` connections are permanent while `bindConnection` only activates connections when the view is shown
         QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_errorOccurred, m_mainWindow.get(), &MainWindow::ps_errorOccurred);
         // --- Home View Model
+        QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_systemStateChanged, m_homeVM.get(), &VM::HomeViewModel::ps_onSystemStateChanged);
+        QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_operationalSubstateChanged, m_homeVM.get(), &VM::HomeViewModel::ps_onOperationalSubstateChanged);
         m_homeVM->bindConnection(m_masterFSM, &MFSM::MasterFSM::s_operationCanceled, m_homeVM.get(), &VM::HomeViewModel::ps_operationEnded);
         m_homeVM->bindConnection(m_masterFSM, &MFSM::MasterFSM::s_errorOccurred, m_homeVM.get(), &VM::HomeViewModel::ps_errorOccurred);
         m_homeVM->bindConnection(m_masterFSM, &MFSM::MasterFSM::s_initializationSuccess, m_homeVM.get(), &VM::HomeViewModel::ps_initializationSuccess);

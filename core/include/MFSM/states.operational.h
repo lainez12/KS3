@@ -1,5 +1,6 @@
 #pragma once
 
+#include <type_traits>
 #include <variant>
 
 #include <Common/Enums.h>
@@ -68,6 +69,19 @@ namespace Kub3::MFSM
         Services::ExposurePayload payload;
     };
 
+    enum class OperationalStateKind
+    {
+        Idle,
+        DrawerOp,
+        Stowing,
+        Unstowing,
+        PreparingAlignment,
+        Alignment,
+        PreparingExposure,
+        ExposureReady,
+        Exposing
+    };
+
     using OperationalState = std::variant<
         StateIdle,
         StateDrawerOp,
@@ -78,5 +92,33 @@ namespace Kub3::MFSM
         StatePreparingExposure,
         StateExposureReady,
         StateExposing>;
+
+    inline OperationalStateKind kindOf(const OperationalState &state)
+    {
+        return std::visit(
+            [](const auto &s) -> OperationalStateKind {
+                using T = std::decay_t<decltype(s)>;
+
+                if constexpr (std::is_same_v<T, StateIdle>)
+                    return OperationalStateKind::Idle;
+                else if constexpr (std::is_same_v<T, StateDrawerOp>)
+                    return OperationalStateKind::DrawerOp;
+                else if constexpr (std::is_same_v<T, StateStowing>)
+                    return OperationalStateKind::Stowing;
+                else if constexpr (std::is_same_v<T, StateUnstowing>)
+                    return OperationalStateKind::Unstowing;
+                else if constexpr (std::is_same_v<T, StatePreparingAlignment>)
+                    return OperationalStateKind::PreparingAlignment;
+                else if constexpr (std::is_same_v<T, StateAlignment>)
+                    return OperationalStateKind::Alignment;
+                else if constexpr (std::is_same_v<T, StatePreparingExposure>)
+                    return OperationalStateKind::PreparingExposure;
+                else if constexpr (std::is_same_v<T, StateExposureReady>)
+                    return OperationalStateKind::ExposureReady;
+                else
+                    return OperationalStateKind::Exposing;
+            },
+            state);
+    }
 
 } // namespace Kub3::MFSM

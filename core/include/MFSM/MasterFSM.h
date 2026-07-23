@@ -51,7 +51,8 @@ namespace Kub3::MFSM
 
     signals:
         // --- Tier 2 (Logic) -> Tier 1 (UI) Outputs ---
-        void s_stateEntered(const QString &stateName);
+        void s_systemStateChanged(SystemStateKind kind);
+        void s_operationalSubstateChanged(OperationalStateKind kind);
         void s_postureChanged(const MFSM::SystemPosture &posture); // To drive UI indicators
         void s_operationCanceled();
 

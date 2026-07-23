@@ -84,8 +84,7 @@ namespace Kub3::MFSM
 
             if (macroChanged)
             {
-                // TODO: emit signal of state transition ? For debug ?
-                // A system change (e.g., Booting -> Init, or Operational -> Fault)
+                // The system state changed (e.g., Booting -> Init, or Operational -> Fault)
                 onStateEntered(m_state);
             }
             else if (microChanged)
