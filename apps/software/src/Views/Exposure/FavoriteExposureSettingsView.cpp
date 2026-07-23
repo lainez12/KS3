@@ -209,9 +209,15 @@ void FavoriteExposureSettingsView::populateViewWithCurrentPreset()
     QString errorMessage;
     auto *vm = getViewModel<FavoriteExposureSettingsViewModel>();
 
-    if (vm->getAllExposureSettings(favoriteButtons, &errorMessage))
+    const auto res = vm->getAllExposureSettings();
+
+    if (res)
     {
-        populateStackedFavorite(favoriteButtons);
+        populateStackedFavorite(*res);
+    }
+    else
+    {
+        qWarning() << "Failed to populate with current preset:" << res.unwrap_err();
     }
 }
 

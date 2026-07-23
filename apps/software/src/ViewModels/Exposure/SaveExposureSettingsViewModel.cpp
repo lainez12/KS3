@@ -16,32 +16,28 @@ namespace Kub3::UI::ViewModels::Exposure
     {
     }
 
-    SaveExposureSettingsViewModel::~SaveExposureSettingsViewModel()
+    Result<Unit, QString> SaveExposureSettingsViewModel::savePreset(const PresetExposure &preset, bool replaceExisting)
     {
-    }
-
-    bool SaveExposureSettingsViewModel::savePreset(const PresetExposure &preset, QString *errorMessage, bool replaceExisting)
-    {
-        if (!validatePreset(preset, errorMessage))
-            return false;
+        auto validRes = validatePreset(preset);
+        if (validRes.is_err())
+            return Err(QString(validRes.unwrap_err()));
 
         const QString path = storagePath();
-        if (!ensureParentDirectory(path, errorMessage))
-            return false;
+
+        auto dirRes = ensureParentDirectory(path);
+        if (dirRes.is_err())
+            return Err(dirRes.unwrap_err());
 
         QJsonArray presetsArray;
-
-        if (!loadPresetsFromFile(path, &presetsArray, errorMessage))
-        {
-            return false;
-        }
+        auto loadRes = loadPresetsFromFile(path, &presetsArray);
+        if (loadRes.is_err())
+            return Err(loadRes.unwrap_err());
 
         bool replacedExistingPreset = presetExistsInFile(presetsArray, preset.name);
 
         if (replacedExistingPreset && !replaceExisting)
         {
-            *errorMessage = "A preset with the same name already exists. Please choose a different name or enable replacement.";
-            return false;
+            return Err(QStringLiteral("A preset with the same name already exists. Please choose a different name or enable replacement."));
         }
 
         if (!replacedExistingPreset)
@@ -49,7 +45,7 @@ namespace Kub3::UI::ViewModels::Exposure
         else
             replaceExistingPreset(presetsArray, preset);
 
-        return savePresetsToFile(path, presetsArray, errorMessage);
+        return savePresetsToFile(path, presetsArray);
     }
 
     void SaveExposureSettingsViewModel::ps_saveExposureSettings(const PresetExposure &settings)
@@ -60,40 +56,39 @@ namespace Kub3::UI::ViewModels::Exposure
     void SaveExposureSettingsViewModel::userConfirmSavePreset(const QString &name)
     {
         m_currentPreset.name = name;
-        QString errorMessage;
 
-        if (!savePreset(m_currentPreset, &errorMessage))
+        auto saveRes = savePreset(m_currentPreset);
+        if (saveRes.is_err())
         {
-            emit s_errorSavingPreset(errorMessage);
+            emit s_errorSavingPreset(saveRes.unwrap_err());
             return;
         }
         emit s_presetSaved();
     }
 
-    QList<PresetExposure> SaveExposureSettingsViewModel::getAllPresets(QString *errorMessage)
+    Result<QList<PresetExposure>, QString> SaveExposureSettingsViewModel::getAllPresets()
     {
         QJsonArray presetsArray;
-        if (!loadPresetsFromFile(storagePath(), &presetsArray, errorMessage))
-        {
-            return {};
-        }
+        auto loadRes = loadPresetsFromFile(storagePath(), &presetsArray);
+
+        if (loadRes.is_err())
+            return Err(loadRes.unwrap_err());
 
         QList<PresetExposure> presetsList;
         for (const QJsonValue &value : presetsArray)
         {
             if (value.isObject())
             {
-                QString errorMsg;
-                PresetExposure preset = jsonToPreset(value.toObject(), &errorMsg);
-                if (!errorMsg.isEmpty())
+                auto presetRes = jsonToPreset(value.toObject());
+                if (presetRes.is_err())
                 {
-                    qDebug() << "Error parsing preset: " << errorMsg;
+                    qCritical() << "Error parsing preset:" << presetRes.unwrap_err();
                     continue;
                 }
-                presetsList.append(preset);
+                presetsList.append(presetRes.unwrap());
             }
         }
-        return presetsList;
+        return Ok(presetsList);
     }
 
 } // namespace Kub3::UI::ViewModels::Exposure

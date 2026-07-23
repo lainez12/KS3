@@ -1,5 +1,4 @@
-#ifndef RECAPEXPOSURESETTINGSVIEWMODEL_H
-#define RECAPEXPOSURESETTINGSVIEWMODEL_H
+#pragma once
 
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
 #include <ViewModels/BaseViewModel.h>
@@ -9,9 +8,10 @@ namespace Kub3::UI::ViewModels::Exposure
 {
     class RecapExposureSettingsViewModel final : public ExposureBaseViewModel
     {
+        Q_OBJECT
     public:
         explicit RecapExposureSettingsViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent = nullptr);
-        ~RecapExposureSettingsViewModel() override;
+        ~RecapExposureSettingsViewModel() override = default;
 
     public:
         bool isPresetSetAndValid() const;
@@ -22,11 +22,8 @@ namespace Kub3::UI::ViewModels::Exposure
 
     private:
         PresetExposure m_currentPreset;
-        bool m_isPresetSet    = false;
-        bool m_isPresetValid  = false;
-        bool m_isFlashingMode = false;
+        bool m_isPresetSet   = false;
+        bool m_isPresetValid = false;
     };
 
-} // namespace Kub3::UI::ViewModels
-
-#endif
+} // namespace Kub3::UI::ViewModels::Exposure

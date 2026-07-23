@@ -126,24 +126,33 @@ void SaveExposureSettingsView::populateViewWithCurrentPreset()
     m_presetsButton.clear();
     clearWidget(ui->presetsListWidget);
     auto viewModel = getViewModel<SaveExposureSettingsViewModel>();
+
     if (!viewModel)
     {
         return;
     }
-    QString errorMessage;
-    QList<PresetExposure> presets = viewModel->getAllPresets(&errorMessage);
 
-    for (const PresetExposure &preset : presets)
+    if (auto res = viewModel->getAllPresets())
     {
-        DoubleClickButton *presetButton = new DoubleClickButton(preset.name);
-        m_presetsButton.insert(preset.name, presetButton);
-        presetButton->setFixedHeight(50);
-        presetButton->setProperty("class", "button-blue");
-        ui->presetsListWidget->layout()->addWidget(presetButton);
-        connect(presetButton, &DoubleClickButton::doubleClicked, this, [this, preset]() {
-            ui->lineEdit->setText(preset.name);
-            ui->lineEdit->setFocus();
-        });
+        const auto &presets = *res;
+
+        for (const PresetExposure &preset : presets)
+        {
+            DoubleClickButton *presetButton = new DoubleClickButton(preset.name);
+
+            m_presetsButton.insert(preset.name, presetButton);
+            presetButton->setFixedHeight(50);
+            presetButton->setProperty("class", "button-blue");
+            ui->presetsListWidget->layout()->addWidget(presetButton);
+            connect(presetButton, &DoubleClickButton::doubleClicked, this, [this, preset]() {
+                ui->lineEdit->setText(preset.name);
+                ui->lineEdit->setFocus();
+            });
+        }
+    }
+    else
+    {
+        qWarning() << "Failed to load presets:" << res.unwrap_err();
     }
 }
 

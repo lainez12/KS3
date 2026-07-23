@@ -8,58 +8,61 @@ namespace Kub3::UI::ViewModels::Exposure
     {
     }
 
-    bool FavoriteExposureSettingsViewModel::getAllExposureSettings(QList<FavoriteExposureSettingButton *> &presetButtons, QString *errorMessage)
+    Result<QList<FavoriteExposureSettingButton *>, QString> FavoriteExposureSettingsViewModel::getAllExposureSettings()
     {
         QJsonArray presetsArray;
+        auto loadRes = loadPresetsFromFile(storagePath(), &presetsArray);
 
-        if (!loadPresetsFromFile(storagePath(), &presetsArray, errorMessage))
+        if (loadRes.is_err())
         {
-            emit s_createPopUpWithText("Error loading favorite settings", {{"OK", []() {}}}, *errorMessage);
-            return false;
+            emit s_createPopUpWithText("Error loading favorite settings", {{"OK", []() {}}}, loadRes.unwrap_err());
+            return Err(loadRes.unwrap_err());
         }
 
+        QList<FavoriteExposureSettingButton *> presetButtons;
         for (const QJsonValue &value : presetsArray)
         {
             if (value.isObject())
             {
-                QString errorMsg;
-                PresetExposure preset = jsonToPreset(value.toObject(), &errorMsg);
+                auto presetRes = jsonToPreset(value.toObject());
 
-                if (!errorMsg.isEmpty())
+                if (presetRes.is_err())
                 {
-                    qCritical() << "Error parsing exposure preset: " << errorMsg;
+                    qCritical() << "Error parsing exposure preset:" << presetRes.unwrap_err();
                     continue;
                 }
+
+                PresetExposure preset                 = presetRes.unwrap();
                 FavoriteExposureSettingButton *button = new FavoriteExposureSettingButton(preset.name, presetDetailsToStr(preset));
                 presetButtons.append(button);
             }
         }
-        return true;
+        return Ok(presetButtons);
     }
 
-    bool FavoriteExposureSettingsViewModel::uiLoadExposurePreset(QString &presetName)
+    Result<Unit, QString> FavoriteExposureSettingsViewModel::uiLoadExposurePreset(const QString &presetName)
     {
         QJsonArray presetsArray;
-        QString errorMessage;
+        auto loadRes = loadPresetsFromFile(storagePath(), &presetsArray);
 
-        if (!loadPresetsFromFile(storagePath(), &presetsArray, &errorMessage))
+        if (loadRes.is_err())
         {
-            qCritical() << "Failed to load preset: " << errorMessage;
+            qCritical() << "Failed to load preset file:" << loadRes.unwrap_err();
             emit s_createPopUpWithText("Error", {{"OK", []() {}}}, "Failed to apply the selected preset.");
-            return false;
+            return Err(loadRes.unwrap_err());
         }
 
-        PresetExposure chosenPreset = getPresetByName(presetsArray, presetName, &errorMessage);
+        auto chosenRes = getPresetByName(presetsArray, presetName);
 
-        if (chosenPreset.name.isEmpty())
+        if (chosenRes.is_err())
         {
-            qCritical() << "Exposure preset not found: " << presetName;
+            qCritical() << "Exposure preset not found:" << presetName << "(" << chosenRes.unwrap_err() << ")";
             emit s_createPopUpWithText("Error", {{"OK", []() {}}}, "Failed to apply the selected preset.");
-            return false;
+            return Err(chosenRes.unwrap_err());
         }
 
-        emit s_exposurePresetLoaded(chosenPreset);
-        return true;
+        emit s_exposurePresetLoaded(chosenRes.unwrap());
+        return Ok<Unit>({});
     }
 
 } // namespace Kub3::UI::ViewModels::Exposure

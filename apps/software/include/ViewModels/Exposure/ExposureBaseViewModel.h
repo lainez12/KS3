@@ -1,8 +1,10 @@
 #pragma once
 
-#include <HAL/MachineStatus/IMachineStatusRepo.h>
 #include <QJsonArray>
 #include <QObject>
+
+#include <Common/Result.h>
+#include <HAL/MachineStatus/IMachineStatusRepo.h>
 #include <ViewModels/BaseViewModel.h>
 
 namespace Kub3::UI::ViewModels::Exposure
@@ -19,20 +21,20 @@ namespace Kub3::UI::ViewModels::Exposure
         };
 
         struct Duration {
-            int minutes;
-            int seconds;
+            uint32_t minutes;
+            uint32_t seconds;
         };
 
         struct ContinuousSettings {
             Duration duration;
-            int power;
+            uint32_t power;
         };
 
         struct FlashingSettings {
-            int numberOfCycles;
+            uint32_t numberOfCycles;
             Duration durationOn;
             Duration durationOff;
-            int power;
+            uint32_t power;
         };
 
         struct PresetExposure {
@@ -49,21 +51,21 @@ namespace Kub3::UI::ViewModels::Exposure
     public:
         static QString presetDetailsToStr(const PresetExposure &preset);
         static QString modeToString(ExposureMode mode);
-        bool validatePreset(const PresetExposure &preset, QString *errorMessage);
+        Result<Unit, const char *> validatePreset(const PresetExposure &preset);
 
     protected:
         static QString storagePath();
-        static bool ensureParentDirectory(const QString &path, QString *errorMessage);
-        static bool loadPresetsFromFile(const QString &path, QJsonArray *presetsArray, QString *errorMessage);
+        static Result<Unit, QString> ensureParentDirectory(const QString &path);
+        static Result<Unit, QString> loadPresetsFromFile(const QString &path, QJsonArray *presetsArray);
         static bool presetExistsInFile(const QJsonArray &presetsArray, const QString &presetName);
-        static bool savePresetsToFile(const QString &path, const QJsonArray &presetsArray, QString *errorMessage);
+        static Result<Unit, QString> savePresetsToFile(const QString &path, const QJsonArray &presetsArray);
         static void replaceExistingPreset(QJsonArray &presetsArray, const PresetExposure &preset);
 
-        static PresetExposure getPresetByName(const QJsonArray &presetsArray, const QString &presetName, QString *errorMessage);
+        static Result<PresetExposure, QString> getPresetByName(const QJsonArray &presetsArray, const QString &presetName);
 
         static QJsonObject presetToJson(const PresetExposure &preset);
 
-        static PresetExposure jsonToPreset(const QJsonObject json, QString *errorMessage);
+        static Result<PresetExposure, QString> jsonToPreset(const QJsonObject json);
 
     protected:
         Shared<HAL::MS::IMachineStatusRepo> m_repo;
@@ -71,7 +73,7 @@ namespace Kub3::UI::ViewModels::Exposure
     private:
         static ExposureMode stringToMode(const QString &modeString);
         static QJsonObject durationToJson(const Duration &duration);
-        static Duration jsonToDuration(const QJsonObject &json, QString *errorMessage);
+        static Result<Duration, QString> jsonToDuration(const QJsonObject &json);
     };
 
 } // namespace Kub3::UI::ViewModels::Exposure

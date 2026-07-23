@@ -1,12 +1,13 @@
-#ifndef SAVEEXPOSURESETTINGSVIEWMODEL_H
-#define SAVEEXPOSURESETTINGSVIEWMODEL_H
+#pragma once
 
-#include <HAL/MachineStatus/IMachineStatusRepo.h>
 #include <QJsonObject>
+#include <QList>
+#include <QString>
+
+#include <Common/Result.h>
+#include <HAL/MachineStatus/IMachineStatusRepo.h>
 #include <ViewModels/BaseViewModel.h>
 #include <ViewModels/Exposure/ExposureBaseViewModel.h>
-
-#include <QString>
 
 namespace Kub3::UI::ViewModels::Exposure
 {
@@ -16,11 +17,12 @@ namespace Kub3::UI::ViewModels::Exposure
 
     public:
         explicit SaveExposureSettingsViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent = nullptr);
-        ~SaveExposureSettingsViewModel() override;
+        ~SaveExposureSettingsViewModel() override = default;
 
-        bool savePreset(const PresetExposure &preset, QString *errorMessage = nullptr, bool replaceExisting = true);
+        Result<Unit, QString> savePreset(const PresetExposure &preset, bool replaceExisting = true);
         void userConfirmSavePreset(const QString &name);
-        QList<PresetExposure> getAllPresets(QString *errorMessage);
+
+        Result<QList<PresetExposure>, QString> getAllPresets();
 
     signals:
         void s_presetSaved();
@@ -31,9 +33,6 @@ namespace Kub3::UI::ViewModels::Exposure
 
     private:
         PresetExposure m_currentPreset;
-        QString m_nameUserInput;
     };
 
-} // namespace Kub3::UI::ViewModels
-
-#endif
+} // namespace Kub3::UI::ViewModels::Exposure

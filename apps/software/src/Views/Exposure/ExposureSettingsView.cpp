@@ -165,7 +165,8 @@ void ExposureSettingsView::watchForChangesInPresetExposure()
     if (vm)
     {
         QString errorMessage;
-        bool isValid = vm->validatePreset(currentPreset, &errorMessage);
+        const bool isValid = vm->validatePreset(currentPreset).is_ok();
+
         setNavButtonEnabled(ID_BTN_VALIDATE, isValid);
         setNavButtonEnabled(ID_BTN_SAVE, isValid);
     }
