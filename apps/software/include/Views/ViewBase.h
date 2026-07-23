@@ -14,6 +14,15 @@
 #include <Views/Components/PopUpMessage.h>
 #include <utils.h>
 
+#define UPDATE_DYNAMIC_PROPERTY(widget, propertyName, value) \
+    do                                                       \
+    {                                                        \
+        (widget)->setProperty(propertyName, value);          \
+        (widget)->style()->unpolish(widget);                 \
+        (widget)->style()->polish(widget);                   \
+        (widget)->update();                                  \
+    } while (0)
+
 namespace Kub3::UI
 {
     enum class ViewId
@@ -104,6 +113,13 @@ namespace Kub3::UI::Views
         void showEvent(QShowEvent *event) override;
         void hideEvent(QHideEvent *event) override;
         void setUpShadowedBoxStyle(QWidget *widget);
+        void clearWidget(QWidget *widget);
+
+        template <typename T>
+        T *getViewModel() const
+        {
+            return static_cast<T *>(m_viewModel.get());
+        }
 
     protected:
         Unique<ViewModels::BaseViewModel> m_viewModel;

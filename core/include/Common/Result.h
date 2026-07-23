@@ -132,7 +132,7 @@ namespace Kub3
             throw BadResultAccess("Called unwrap() on an Err value");
         }
 
-        [[nodiscard]] E &unwrap_err()
+        [[nodiscard]] const E &unwrap_err() const
         {
             if (is_err())
                 return std::get<Err<E>>(m_data).value;

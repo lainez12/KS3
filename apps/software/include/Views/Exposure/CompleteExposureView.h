@@ -26,10 +26,11 @@ namespace Kub3::UI::Views::ViewsExposure
     public:
         void resizeEvent(QResizeEvent *event) override;
 
+    private slots:
+        void onValidateButtonClicked() override;
+
     private:
         void setNewNavButtonsConfigs();
-        void onBackButtonClicked();
-        void onValidateButtonClicked() override;
 
     private:
         Ui::CompleteExposureView *ui;

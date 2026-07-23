@@ -38,7 +38,7 @@
       <number>0</number>
      </property>
      <item row="0" column="0" colspan="2">
-      <widget class="QLabel" name="date">
+      <widget class="QLabel" name="modeExposureLabel">
        <property name="text">
         <string>Continuous exposure</string>
        </property>
@@ -51,7 +51,7 @@
       </widget>
      </item>
      <item row="1" column="0" colspan="2">
-      <widget class="QLabel" name="label">
+      <widget class="QLabel" name="detailsExposure">
        <property name="layoutDirection">
         <enum>Qt::LayoutDirection::LeftToRight</enum>
        </property>

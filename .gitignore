@@ -112,3 +112,5 @@ dist
 admin_vault.bin
 
 MvSdkLog/
+
+tests/exposure_settings.json

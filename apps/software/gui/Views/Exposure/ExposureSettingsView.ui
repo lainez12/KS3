@@ -964,7 +964,7 @@ font-size: 40px;</string>
        <item>
         <widget class="QStackedWidget" name="inputsStack">
          <property name="currentIndex">
-          <number>0</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="pageFlashing">
           <layout class="QGridLayout" name="gridLayout_4">
@@ -1235,6 +1235,9 @@ color: #E85420;</string>
              <property name="buttonSymbols">
               <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
              </property>
+             <property name="value">
+              <number>1</number>
+             </property>
             </widget>
            </item>
            <item row="3" column="1">
@@ -1342,7 +1345,7 @@ color: #E85420;</string>
               <number>100</number>
              </property>
              <property name="value">
-              <number>0</number>
+              <number>20</number>
              </property>
             </widget>
            </item>
@@ -1525,6 +1528,12 @@ opacity: 1;</string>
              <property name="buttonSymbols">
               <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
              </property>
+             <property name="singleStep">
+              <number>1</number>
+             </property>
+             <property name="value">
+              <number>1</number>
+             </property>
             </widget>
            </item>
            <item row="8" column="2">
@@ -1676,7 +1685,7 @@ color: #E85420;</string>
               <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
              </property>
              <property name="minimum">
-              <number>1</number>
+              <number>0</number>
              </property>
              <property name="maximum">
               <number>59</number>
@@ -1778,7 +1787,7 @@ color: #E85420;</string>
               <number>100</number>
              </property>
              <property name="value">
-              <number>0</number>
+              <number>20</number>
              </property>
             </widget>
            </item>

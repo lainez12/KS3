@@ -58,10 +58,11 @@ ExposureSettingsView::ExposureSettingsView(Unique<ExposureSettingsViewModel> vie
     connect(ui->continuousModeBtn, &QPushButton::clicked, this, &ExposureSettingsView::switchToContinuousMode);
     connect(ui->flashingModeBtn, &QPushButton::clicked, this, &ExposureSettingsView::switchToFlashingMode);
 
-    setNavButtonEnabled(ID_BTN_VALIDATE, true);
+    connectQSpinBoxSignals();
     ui->exposureDuration->hide();
     ui->titleExposureDuration->hide();
 }
+
 ExposureSettingsView::~ExposureSettingsView()
 {
 }
@@ -73,16 +74,26 @@ void ExposureSettingsView::resizeEvent(QResizeEvent *ev)
 
 void ExposureSettingsView::onBackButtonClicked()
 {
-    // emit s_openView(Kub3::UI::ViewId::BACK_VIEW);
 }
 
 void ExposureSettingsView::onSaveButtonClicked()
 {
+    PresetExposure settings = getCurrentPresetExposure();
+
+    getViewModel<ExposureSettingsViewModel>()->uiRequestSaveExposureSettings(settings);
     emit s_openView(Kub3::UI::ViewId::SAVE_EXPOSURE_SETTINGS_VIEW);
 }
 
 void ExposureSettingsView::onValidateButtonClicked()
 {
+    auto mv = getViewModel<ExposureSettingsViewModel>();
+
+    if (mv)
+    {
+        PresetExposure settings = getCurrentPresetExposure();
+        settings.name           = "current"; // Temporary name for validation purposes
+        mv->uiRequestExposureSettingsByForm(settings);
+    }
     emit s_openView(Kub3::UI::ViewId::RECAP_EXPOSURE_SETTINGS_VIEW);
 }
 
@@ -119,4 +130,57 @@ void ExposureSettingsView::switchToContinuousMode()
     styleSheet.replace(QRegularExpression(BLUE_COLOR), BLUE_COLOR_SHADOW);
     ui->flashingModeBtn->setStyleSheet(styleSheet);
     ui->continuousCarre->setPixmap(QPixmap(":/icons/carre-bleu-fonce.png"));
+}
+
+PresetExposure ExposureSettingsView::getCurrentPresetExposure() const
+{
+    PresetExposure preset;
+
+    preset.mode = m_isFlashingMode ? ExposureMode::Flashing : ExposureMode::Continuous;
+    if (preset.mode == ExposureMode::Continuous)
+    {
+        preset.continuous.duration.minutes = ui->minContinuouspinBox->value();
+        preset.continuous.duration.seconds = ui->segContinuouspinBox->value();
+        preset.continuous.power            = ui->powerContinuouspinBox->value();
+    }
+    else
+    {
+        preset.flashing.numberOfCycles      = ui->numberCyclespinBox->value();
+        preset.flashing.durationOn.minutes  = ui->minOnFlashingspinBox->value();
+        preset.flashing.durationOn.seconds  = ui->segOnFlashingspinBox->value();
+        preset.flashing.durationOff.minutes = ui->minOffFlashingspinBox->value();
+        preset.flashing.durationOff.seconds = ui->segOffFlashingspinBox->value();
+        preset.flashing.power               = ui->powerFlashingspinBox->value();
+    }
+
+    return preset;
+}
+
+void ExposureSettingsView::watchForChangesInPresetExposure()
+{
+    auto vm                      = getViewModel<ExposureSettingsViewModel>();
+    PresetExposure currentPreset = getCurrentPresetExposure();
+
+    currentPreset.name = "current"; // Temporary name for validation purposes
+    if (vm)
+    {
+        QString errorMessage;
+        const bool isValid = vm->validatePreset(currentPreset).is_ok();
+
+        setNavButtonEnabled(ID_BTN_VALIDATE, isValid);
+        setNavButtonEnabled(ID_BTN_SAVE, isValid);
+    }
+}
+
+void ExposureSettingsView::connectQSpinBoxSignals()
+{
+    connect(ui->minContinuouspinBox, &QSpinBox::valueChanged, this, &ExposureSettingsView::watchForChangesInPresetExposure);
+    connect(ui->segContinuouspinBox, &QSpinBox::valueChanged, this, &ExposureSettingsView::watchForChangesInPresetExposure);
+    connect(ui->powerContinuouspinBox, &QSpinBox::valueChanged, this, &ExposureSettingsView::watchForChangesInPresetExposure);
+    connect(ui->numberCyclespinBox, &QSpinBox::valueChanged, this, &ExposureSettingsView::watchForChangesInPresetExposure);
+    connect(ui->minOnFlashingspinBox, &QSpinBox::valueChanged, this, &ExposureSettingsView::watchForChangesInPresetExposure);
+    connect(ui->segOnFlashingspinBox, &QSpinBox::valueChanged, this, &ExposureSettingsView::watchForChangesInPresetExposure);
+    connect(ui->minOffFlashingspinBox, &QSpinBox::valueChanged, this, &ExposureSettingsView::watchForChangesInPresetExposure);
+    connect(ui->segOffFlashingspinBox, &QSpinBox::valueChanged, this, &ExposureSettingsView::watchForChangesInPresetExposure);
+    connect(ui->powerFlashingspinBox, &QSpinBox::valueChanged, this, &ExposureSettingsView::watchForChangesInPresetExposure);
 }

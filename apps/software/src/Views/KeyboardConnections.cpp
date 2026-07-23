@@ -56,10 +56,6 @@ namespace Kub3::UI::Views
             QKeyEvent *keyRelease = new QKeyEvent(QEvent::KeyRelease, keyCode, Qt::NoModifier, text);
             QApplication::postEvent(focusedWidget, keyRelease);
         }
-        else
-        {
-            qDebug() << "No focused widget or focused widget is not a QLineEdit, QSpinBox, or QDoubleSpinBox.";
-        }
     }
 
     void KeyboardConnections::clearInputSelected()

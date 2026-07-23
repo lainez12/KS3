@@ -466,10 +466,7 @@ QLabel#machineLogoSubtrateSize {
     font-weight: 700;
     font-family: arial;
 }
-#SaveExposureSettingsView QLineEdit,
-#SaveParametersView QLineEdit {
-    border: 1px solid #0070DB;
-}
+
 #SaveExposureSettingsView QScrollArea,
 #SaveParametersView QScrollArea,
 #LoadParametersView QScrollArea {
@@ -508,3 +505,19 @@ QLabel#machineLogoSubtrateSize {
 }
 
 /* End of extracted rules */
+
+.error-lineEdit {
+    border: 2px solid @orange;
+    text-align: left;
+    font: normal normal bold 25px/29px Arial;
+    letter-spacing: 0px;
+    color: #E85420;
+}
+
+.lineEdit {
+    border: 2px solid @blue-kloe;
+    text-align: left;
+    font: normal normal bold 25px/29px Arial;
+    letter-spacing: 0px;
+    color: #E85420;
+}

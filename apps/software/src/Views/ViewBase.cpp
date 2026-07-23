@@ -167,4 +167,19 @@ namespace Kub3::UI::Views
         return m_titleBar;
     }
 
+    void ViewBase::clearWidget(QWidget *widget)
+    {
+        if (!widget)
+            return;
+
+        // Find all direct child widgets
+        QList<QWidget *> children = widget->findChildren<QWidget *>(QString(), Qt::FindDirectChildrenOnly);
+
+        for (QWidget *child : children)
+        {
+            child->setParent(nullptr); // Detach from parent
+            child->deleteLater();      // Schedule safe deletion
+        }
+    }
+
 } // namespace Kub3::UI::Views
