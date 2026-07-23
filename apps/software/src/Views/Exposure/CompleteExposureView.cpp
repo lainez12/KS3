@@ -34,12 +34,6 @@ void CompleteExposureView::setNewNavButtonsConfigs()
     addNavButton("left", homeBtn);
 }
 
-void CompleteExposureView::onBackButtonClicked()
-{
-    // emit s_openView(Kub3::UI::ViewId::BACK_VIEW);
-}
-
 void CompleteExposureView::onValidateButtonClicked()
 {
-    // emit s_openView(Kub3::UI::ViewId::VALIDATE_VIEW);
 }

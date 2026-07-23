@@ -1180,7 +1180,7 @@ border: 1px solid #0070DB;</string>
        <property name="widgetResizable">
         <bool>true</bool>
        </property>
-       <widget class="QWidget" name="listPrestsQWidget">
+       <widget class="QWidget" name="presetsListWidget">
         <property name="geometry">
          <rect>
           <x>0</x>

@@ -33,7 +33,6 @@ namespace Kub3::UI::Views
 
     void SettingsViewBase::configTitleBar()
     {
-        // setDefaultTitleBar("");
     }
 
     void SettingsViewBase::setDefaultTitleBar(const QString &viewTitle)

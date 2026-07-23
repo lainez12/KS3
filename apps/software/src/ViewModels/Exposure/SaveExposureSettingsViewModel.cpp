@@ -61,6 +61,7 @@ namespace Kub3::UI::ViewModels::Exposure
     {
         m_currentPreset.name = name;
         QString errorMessage;
+
         if (!savePreset(m_currentPreset, &errorMessage))
         {
             emit s_errorSavingPreset(errorMessage);

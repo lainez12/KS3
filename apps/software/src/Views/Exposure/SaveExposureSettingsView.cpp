@@ -21,17 +21,17 @@ SaveExposureSettingsView::SaveExposureSettingsView(Unique<SaveExposureSettingsVi
     ui->setupUi(this);
     m_keyboard.setupKeyboardConnections(this);
 
-    QVBoxLayout *layout = new QVBoxLayout(ui->listPrestsQWidget);
-    ui->listPrestsQWidget->setLayout(layout);
+    QVBoxLayout *layout = new QVBoxLayout(ui->presetsListWidget);
 
+    ui->presetsListWidget->setLayout(layout);
     setNewNavButtonsConfigs();
     createNavButtonsConfigs();
     setDefaultTitleBar("Save parameters");
-    connect(ui->btnConfirm, &QPushButton::clicked, this, &SaveExposureSettingsView::onConfirmButtonClicked);
-    connect(ui->btnCancel, &QPushButton::clicked, this, &SaveExposureSettingsView::onBackButtonClicked);
+    connect(ui->btnConfirm, &QPushButton::clicked, this, &SaveExposureSettingsView::ps_onConfirmButtonClicked);
+    connect(ui->btnCancel, &QPushButton::clicked, this, &SaveExposureSettingsView::ps_onBackButtonClicked);
 
-    connect(getViewModel<SaveExposureSettingsViewModel>(), &SaveExposureSettingsViewModel::s_presetSaved, this, &SaveExposureSettingsView::s_onPresetSaved);
-    connect(getViewModel<SaveExposureSettingsViewModel>(), &SaveExposureSettingsViewModel::s_errorSavingPreset, this, &SaveExposureSettingsView::s_onErrorSavingPreset);
+    connect(getViewModel<SaveExposureSettingsViewModel>(), &SaveExposureSettingsViewModel::s_presetSaved, this, &SaveExposureSettingsView::ps_onPresetSaved);
+    connect(getViewModel<SaveExposureSettingsViewModel>(), &SaveExposureSettingsViewModel::s_errorSavingPreset, this, &SaveExposureSettingsView::ps_onErrorSavingPreset);
 }
 
 SaveExposureSettingsView::~SaveExposureSettingsView()
@@ -56,16 +56,16 @@ void SaveExposureSettingsView::showEvent(QShowEvent *event)
 
 void SaveExposureSettingsView::setNewNavButtonsConfigs()
 {
-
     NavButtonConfig backBtn(
         "Back",
         ":/icons/back.svg",
         ID_BTN_BACK,
-        std::bind(&SaveExposureSettingsView::onBackButtonClicked, this));
+        std::bind(&SaveExposureSettingsView::ps_onBackButtonClicked, this));
+
     addNavButton("left", backBtn, 1);
 }
 
-void SaveExposureSettingsView::onBackButtonClicked()
+void SaveExposureSettingsView::ps_onBackButtonClicked()
 {
     emit s_openView(Kub3::UI::ViewId::EXPOSURE_SETTINGS_VIEW);
 }
@@ -74,7 +74,7 @@ void SaveExposureSettingsView::onValidateButtonClicked()
 {
 }
 
-void SaveExposureSettingsView::onConfirmButtonClicked()
+void SaveExposureSettingsView::ps_onConfirmButtonClicked()
 {
     if (ui->lineEdit->text().isEmpty())
     {
@@ -84,35 +84,47 @@ void SaveExposureSettingsView::onConfirmButtonClicked()
     }
 
     QString name = ui->lineEdit->text();
+
     if (m_presetsButton.contains(name))
     {
-        showPopUpMessage("Preset Already Exists", "Choose a different name or replacement.", {{"Cancel", []() {}}, {"Replace", [this, name]() { this->userConfirmSaveReplacementPreset(name); }}});
+        ps_createPopUpWithText(
+            "Preset Already Exists",
+            {
+                {"Cancel", []() {}},
+                {"Replace", [this, name]() { this->userConfirmSaveReplacementPreset(name); }},
+            },
+            "Choose a different name or replacement.");
         return;
     }
 
     auto viewModel = getViewModel<SaveExposureSettingsViewModel>();
+
     if (viewModel)
     {
         viewModel->userConfirmSavePreset(name);
     }
     ui->lineEdit->clear();
-    onBackButtonClicked();
+    ps_onBackButtonClicked();
 }
 
 void SaveExposureSettingsView::userConfirmSaveReplacementPreset(const QString &name)
 {
     auto viewModel = getViewModel<SaveExposureSettingsViewModel>();
+
     if (viewModel)
     {
         viewModel->userConfirmSavePreset(name);
     }
-    onBackButtonClicked();
+
+    ui->lineEdit->clear();
+    ps_closePopUp();
+    ps_onBackButtonClicked();
 }
 
 void SaveExposureSettingsView::populateViewWithCurrentPreset()
 {
     m_presetsButton.clear();
-    clearWidget(ui->listPrestsQWidget);
+    clearWidget(ui->presetsListWidget);
     auto viewModel = getViewModel<SaveExposureSettingsViewModel>();
     if (!viewModel)
     {
@@ -127,7 +139,7 @@ void SaveExposureSettingsView::populateViewWithCurrentPreset()
         m_presetsButton.insert(preset.name, presetButton);
         presetButton->setFixedHeight(50);
         presetButton->setProperty("class", "button-blue");
-        ui->listPrestsQWidget->layout()->addWidget(presetButton);
+        ui->presetsListWidget->layout()->addWidget(presetButton);
         connect(presetButton, &DoubleClickButton::doubleClicked, this, [this, preset]() {
             ui->lineEdit->setText(preset.name);
             ui->lineEdit->setFocus();
@@ -135,23 +147,22 @@ void SaveExposureSettingsView::populateViewWithCurrentPreset()
     }
 }
 
-void SaveExposureSettingsView::s_onPresetSaved()
+void SaveExposureSettingsView::ps_onPresetSaved()
 {
     setAPresetSavedInThisSession(true);
-    // showPopUpMessage("Preset Saved", "The preset has been saved successfully.", {{"OK", []() {}}});
 }
 
-void SaveExposureSettingsView::s_onErrorSavingPreset(const QString &errorMessage)
+void SaveExposureSettingsView::ps_onErrorSavingPreset(const QString &errorMessage)
 {
-    showPopUpMessage("Error Saving Preset", errorMessage, {{"OK", []() {}}});
+    ps_createPopUpWithText("Error Saving Preset", {{"OK", []() {}}}, errorMessage);
 }
 
 void SaveExposureSettingsView::setAPresetSavedInThisSession(bool saved)
 {
-    m_PresetSaved = saved;
+    m_presetSaved = saved;
 }
 
 bool SaveExposureSettingsView::isAPresetSavedInThisSession() const
 {
-    return m_PresetSaved;
+    return m_presetSaved;
 }

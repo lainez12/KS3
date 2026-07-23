@@ -18,14 +18,18 @@ namespace Kub3::UI::Views
     public:
         void showEvent(QShowEvent *event) override;
 
+    protected:
+        // Populate
+        void createNavButtonsConfigs() final override;
+        void setDefaultTitleBar(const QString &viewTitle);
+
+    protected slots:
+        // Buttons
+        void onHomeButtonClicked();
+        virtual void onValidateButtonClicked() = 0;
+
     private:
         void configTitleBar() override;
-
-    protected:
-        void setDefaultTitleBar(const QString &viewTitle);
-        void onHomeButtonClicked();
-        void createNavButtonsConfigs() final override;
-        virtual void onValidateButtonClicked() = 0;
     };
 
 } // namespace Kub3::UI::Views

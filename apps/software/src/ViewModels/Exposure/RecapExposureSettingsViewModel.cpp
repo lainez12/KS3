@@ -13,7 +13,6 @@ namespace Kub3::UI::ViewModels::Exposure
 
     void RecapExposureSettingsViewModel::ps_setExposurePreset(const PresetExposure &preset)
     {
-        qDebug() << "onValidateButtonClicked";
         m_currentPreset  = preset;
         m_isPresetSet    = true;
         m_isPresetValid  = validatePreset(preset, nullptr);
@@ -28,11 +27,6 @@ namespace Kub3::UI::ViewModels::Exposure
     bool RecapExposureSettingsViewModel::isPresetSetAndValid() const
     {
         return m_isPresetSet && m_isPresetValid;
-    }
-
-    bool RecapExposureSettingsViewModel::isFlashingMode() const
-    {
-        return m_isFlashingMode;
     }
 
 } // namespace Kub3::UI::ViewModels::Exposure

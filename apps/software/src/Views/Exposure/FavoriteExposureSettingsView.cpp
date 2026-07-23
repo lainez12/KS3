@@ -201,7 +201,6 @@ void FavoriteExposureSettingsView::onBackButtonClicked()
 
 void FavoriteExposureSettingsView::onValidateButtonClicked()
 {
-    // emit s_openView(Kub3::UI::ViewId::VALIDATE_VIEW);
 }
 
 void FavoriteExposureSettingsView::populateViewWithCurrentPreset()
@@ -209,12 +208,11 @@ void FavoriteExposureSettingsView::populateViewWithCurrentPreset()
     QList<FavoriteExposureSettingButton *> favoriteButtons;
     QString errorMessage;
     auto *vm = getViewModel<FavoriteExposureSettingsViewModel>();
-    if (!vm->getAllExposureSettings(favoriteButtons, &errorMessage))
+
+    if (vm->getAllExposureSettings(favoriteButtons, &errorMessage))
     {
-        showPopUpMessage("Error loading favorite settings", errorMessage, {{"OK", []() {}}});
-        return;
+        populateStackedFavorite(favoriteButtons);
     }
-    populateStackedFavorite(favoriteButtons);
 }
 
 void FavoriteExposureSettingsView::userChoseExposurePreset(FavoriteExposureSettingButton *button)
@@ -227,11 +225,9 @@ void FavoriteExposureSettingsView::userChoseExposurePreset(FavoriteExposureSetti
         return;
 
     QString presetName = button->titleText();
-    if (!vm->ui_userChoseExposurePreset(presetName))
-    {
-        showPopUpMessage("Error", "Failed to apply the selected preset.", {{"OK", []() {}}});
-        return;
-    }
 
-    emit s_openView(Kub3::UI::ViewId::RECAP_EXPOSURE_SETTINGS_VIEW);
+    if (vm->uiLoadExposurePreset(presetName))
+    {
+        emit s_openView(Kub3::UI::ViewId::RECAP_EXPOSURE_SETTINGS_VIEW);
+    }
 }

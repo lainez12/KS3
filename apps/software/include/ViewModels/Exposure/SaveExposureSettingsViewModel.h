@@ -20,8 +20,6 @@ namespace Kub3::UI::ViewModels::Exposure
 
         bool savePreset(const PresetExposure &preset, QString *errorMessage = nullptr, bool replaceExisting = true);
         void userConfirmSavePreset(const QString &name);
-        void userConfirmSaveReplacementPreset(const QString &name);
-
         QList<PresetExposure> getAllPresets(QString *errorMessage);
 
     signals:

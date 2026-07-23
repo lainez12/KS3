@@ -1,5 +1,4 @@
-#ifndef EXPOSURESETTINGSVIEWMODEL_H
-#define EXPOSURESETTINGSVIEWMODEL_H
+#pragma once
 
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
 #include <ViewModels/Exposure/ExposureBaseViewModel.h>
@@ -8,13 +7,15 @@ namespace Kub3::UI::ViewModels::Exposure
 {
     class ExposureSettingsViewModel final : public ExposureBaseViewModel
     {
+        Q_OBJECT
+
     public:
         explicit ExposureSettingsViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent = nullptr);
         ~ExposureSettingsViewModel() override;
 
     public:
-        void ui_requestSaveExposureSettings(const PresetExposure &settings);
-        void ui_requestExposureSettingsByForm(const PresetExposure &settings);
+        void uiRequestSaveExposureSettings(const PresetExposure &settings);
+        void uiRequestExposureSettingsByForm(const PresetExposure &settings);
 
     signals:
         void s_requestSaveExposureSettings(const PresetExposure &settings);
@@ -24,5 +25,3 @@ namespace Kub3::UI::ViewModels::Exposure
     };
 
 } // namespace Kub3::UI::ViewModels::Exposure
-
-#endif

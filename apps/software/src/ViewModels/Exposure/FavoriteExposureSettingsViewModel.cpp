@@ -7,15 +7,14 @@ namespace Kub3::UI::ViewModels::Exposure
         ExposureBaseViewModel(repo, parent)
     {
     }
-    FavoriteExposureSettingsViewModel::~FavoriteExposureSettingsViewModel()
-    {
-    }
 
     bool FavoriteExposureSettingsViewModel::getAllExposureSettings(QList<FavoriteExposureSettingButton *> &presetButtons, QString *errorMessage)
     {
         QJsonArray presetsArray;
+
         if (!loadPresetsFromFile(storagePath(), &presetsArray, errorMessage))
         {
+            emit s_createPopUpWithText("Error loading favorite settings", {{"OK", []() {}}}, *errorMessage);
             return false;
         }
 
@@ -25,9 +24,10 @@ namespace Kub3::UI::ViewModels::Exposure
             {
                 QString errorMsg;
                 PresetExposure preset = jsonToPreset(value.toObject(), &errorMsg);
+
                 if (!errorMsg.isEmpty())
                 {
-                    qDebug() << "Error parsing preset: " << errorMsg;
+                    qCritical() << "Error parsing exposure preset: " << errorMsg;
                     continue;
                 }
                 FavoriteExposureSettingButton *button = new FavoriteExposureSettingButton(preset.name, presetDetailsToStr(preset));
@@ -37,13 +37,15 @@ namespace Kub3::UI::ViewModels::Exposure
         return true;
     }
 
-    bool FavoriteExposureSettingsViewModel::ui_userChoseExposurePreset(QString &presetName)
+    bool FavoriteExposureSettingsViewModel::uiLoadExposurePreset(QString &presetName)
     {
         QJsonArray presetsArray;
         QString errorMessage;
+
         if (!loadPresetsFromFile(storagePath(), &presetsArray, &errorMessage))
         {
-            qDebug() << "Error loading presets: " << errorMessage;
+            qCritical() << "Failed to load preset: " << errorMessage;
+            emit s_createPopUpWithText("Error", {{"OK", []() {}}}, "Failed to apply the selected preset.");
             return false;
         }
 
@@ -51,11 +53,12 @@ namespace Kub3::UI::ViewModels::Exposure
 
         if (chosenPreset.name.isEmpty())
         {
-            qDebug() << "Preset not found: " << presetName;
+            qCritical() << "Exposure preset not found: " << presetName;
+            emit s_createPopUpWithText("Error", {{"OK", []() {}}}, "Failed to apply the selected preset.");
             return false;
         }
 
-        emit s_exposurePresetChosen(chosenPreset);
+        emit s_exposurePresetLoaded(chosenPreset);
         return true;
     }
 

@@ -62,6 +62,7 @@ ExposureSettingsView::ExposureSettingsView(Unique<ExposureSettingsViewModel> vie
     ui->exposureDuration->hide();
     ui->titleExposureDuration->hide();
 }
+
 ExposureSettingsView::~ExposureSettingsView()
 {
 }
@@ -73,25 +74,25 @@ void ExposureSettingsView::resizeEvent(QResizeEvent *ev)
 
 void ExposureSettingsView::onBackButtonClicked()
 {
-    // emit s_openView(Kub3::UI::ViewId::BACK_VIEW);
 }
 
 void ExposureSettingsView::onSaveButtonClicked()
 {
-
     PresetExposure settings = getCurrentPresetExposure();
-    getViewModel<ExposureSettingsViewModel>()->ui_requestSaveExposureSettings(settings);
+
+    getViewModel<ExposureSettingsViewModel>()->uiRequestSaveExposureSettings(settings);
     emit s_openView(Kub3::UI::ViewId::SAVE_EXPOSURE_SETTINGS_VIEW);
 }
 
 void ExposureSettingsView::onValidateButtonClicked()
 {
     auto mv = getViewModel<ExposureSettingsViewModel>();
+
     if (mv)
     {
         PresetExposure settings = getCurrentPresetExposure();
         settings.name           = "current"; // Temporary name for validation purposes
-        mv->ui_requestExposureSettingsByForm(settings);
+        mv->uiRequestExposureSettingsByForm(settings);
     }
     emit s_openView(Kub3::UI::ViewId::RECAP_EXPOSURE_SETTINGS_VIEW);
 }
@@ -134,8 +135,8 @@ void ExposureSettingsView::switchToContinuousMode()
 PresetExposure ExposureSettingsView::getCurrentPresetExposure() const
 {
     PresetExposure preset;
-    preset.mode = m_isFlashingMode ? ExposureMode::Flashing : ExposureMode::Continuous;
 
+    preset.mode = m_isFlashingMode ? ExposureMode::Flashing : ExposureMode::Continuous;
     if (preset.mode == ExposureMode::Continuous)
     {
         preset.continuous.duration.minutes = ui->minContinuouspinBox->value();
@@ -157,9 +158,10 @@ PresetExposure ExposureSettingsView::getCurrentPresetExposure() const
 
 void ExposureSettingsView::watchForChangesInPresetExposure()
 {
-    PresetExposure currentPreset = getCurrentPresetExposure();
-    currentPreset.name           = "current"; // Temporary name for validation purposes
     auto vm                      = getViewModel<ExposureSettingsViewModel>();
+    PresetExposure currentPreset = getCurrentPresetExposure();
+
+    currentPreset.name = "current"; // Temporary name for validation purposes
     if (vm)
     {
         QString errorMessage;

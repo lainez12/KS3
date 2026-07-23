@@ -7,7 +7,7 @@
 
 namespace Kub3::UI::ViewModels::Exposure
 {
-    class ExposureBaseViewModel : public QObject, public BaseViewModel
+    class ExposureBaseViewModel : public BaseViewModel
     {
         Q_OBJECT
 

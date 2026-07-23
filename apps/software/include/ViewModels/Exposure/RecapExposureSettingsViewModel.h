@@ -13,11 +13,12 @@ namespace Kub3::UI::ViewModels::Exposure
         explicit RecapExposureSettingsViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent = nullptr);
         ~RecapExposureSettingsViewModel() override;
 
+    public:
+        bool isPresetSetAndValid() const;
+        PresetExposure getCurrentPreset() const;
+
     public slots:
         void ps_setExposurePreset(const PresetExposure &preset);
-        PresetExposure getCurrentPreset() const;
-        bool isPresetSetAndValid() const;
-        bool isFlashingMode() const;
 
     private:
         PresetExposure m_currentPreset;

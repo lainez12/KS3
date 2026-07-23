@@ -56,9 +56,6 @@ namespace Kub3::UI::Views
             QKeyEvent *keyRelease = new QKeyEvent(QEvent::KeyRelease, keyCode, Qt::NoModifier, text);
             QApplication::postEvent(focusedWidget, keyRelease);
         }
-        else
-        {
-        }
     }
 
     void KeyboardConnections::clearInputSelected()
