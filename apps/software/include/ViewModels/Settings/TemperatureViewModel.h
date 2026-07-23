@@ -7,9 +7,8 @@
 
 namespace Kub3::UI::ViewModels::Settings
 {
-    class TemperatureViewModel final : public QObject, public BaseViewModel
+    class TemperatureViewModel final : public BaseViewModel
     {
-        Q_OBJECT
     public:
         explicit TemperatureViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent = nullptr);
         ~TemperatureViewModel() override;

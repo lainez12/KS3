@@ -115,38 +115,13 @@ background-color: rgb(255, 255, 255);
        <number>96</number>
       </property>
       <property name="verticalSpacing">
-       <number>48</number>
+       <number>32</number>
       </property>
-      <item row="1" column="2" rowspan="3">
-       <widget class="NavButton" name="waferBtn" native="true"/>
-      </item>
-      <item row="3" column="1">
-       <widget class="QPushButton" name="btnInitialization">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>130</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>500</width>
-          <height>130</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>INITIALISATION</string>
-        </property>
-        <property name="styleClass" stdset="0">
-         <string>clearradius</string>
-        </property>
-        <property name="class" stdset="0">
-         <string>text-medium color-white button-fat text-bold border-radius-25 bg-orange</string>
-        </property>
-       </widget>
-      </item>
       <item row="2" column="1">
        <widget class="QPushButton" name="mainSubmenuStandByBtn">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
           <horstretch>0</horstretch>
@@ -171,35 +146,41 @@ background-color: rgb(255, 255, 255);
         <property name="text">
          <string>STANDBY MODE</string>
         </property>
-        <property name="styleClass" stdset="0">
-         <string>clearradius</string>
-        </property>
         <property name="class" stdset="0">
-         <string>text-medium color-white button-fat text-bold  border-radius-25 bg-blue-kloe</string>
+         <string>btn-blue-lg</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <spacer name="verticalSpacer">
-        <property name="orientation">
-         <enum>Qt::Orientation::Vertical</enum>
+      <item row="3" column="1">
+       <widget class="QPushButton" name="btnInitialization">
+        <property name="enabled">
+         <bool>false</bool>
         </property>
-        <property name="sizeType">
-         <enum>QSizePolicy::Policy::Fixed</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
+        <property name="minimumSize">
          <size>
-          <width>20</width>
+          <width>0</width>
           <height>130</height>
          </size>
         </property>
-       </spacer>
-      </item>
-      <item row="1" column="0" rowspan="3">
-       <widget class="NavButton" name="maskBtn" native="true"/>
+        <property name="maximumSize">
+         <size>
+          <width>500</width>
+          <height>130</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>INITIALISATION</string>
+        </property>
+        <property name="class" stdset="0">
+         <string>btn-orange-lg</string>
+        </property>
+       </widget>
       </item>
       <item row="1" column="1">
        <widget class="QPushButton" name="mainSubmenuExposureBtn">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
           <horstretch>0</horstretch>
@@ -224,11 +205,100 @@ background-color: rgb(255, 255, 255);
         <property name="text">
          <string>EXPOSURE MENU</string>
         </property>
-        <property name="styleClass" stdset="0">
-         <string>clearradius</string>
+        <property name="class" stdset="0">
+         <string>btn-blue-lg</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QPushButton" name="btnMaskInsert">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>500</width>
+          <height>130</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>CLOSE MASK</string>
         </property>
         <property name="class" stdset="0">
-         <string>text-medium color-white button-fat text-bold  border-radius-25 bg-blue-kloe</string>
+         <string>outline-btn-blue-lg</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <spacer name="verticalSpacer">
+        <property name="orientation">
+         <enum>Qt::Orientation::Vertical</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Policy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>100</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="1" column="2">
+       <widget class="QPushButton" name="btnWaferInsert">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>500</width>
+          <height>130</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>CLOSE WAFER</string>
+        </property>
+        <property name="class" stdset="0">
+         <string>outline-btn-blue-lg</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QPushButton" name="btnMaskEject">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>500</width>
+          <height>130</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>OPEN MASK</string>
+        </property>
+        <property name="class" stdset="0">
+         <string>outline-btn-blue-lg</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="2">
+       <widget class="QPushButton" name="btnWaferEject">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>500</width>
+          <height>130</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>OPEN WAFER</string>
+        </property>
+        <property name="class" stdset="0">
+         <string>outline-btn-blue-lg</string>
         </property>
        </widget>
       </item>
@@ -237,14 +307,6 @@ background-color: rgb(255, 255, 255);
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>NavButton</class>
-   <extends>QWidget</extends>
-   <header>Views/Components/NavButton.h</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
  <resources>
   <include location="../resources.qrc"/>
  </resources>

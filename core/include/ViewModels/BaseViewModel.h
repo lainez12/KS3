@@ -1,13 +1,18 @@
 #pragma once
 
-#include <QMetaObject>
+#include <QObject>
+
+#include <ViewModels/PopUpTypes.h>
 
 namespace Kub3::UI::ViewModels
 {
 
-    class BaseViewModel
+    class BaseViewModel : public QObject
     {
+        Q_OBJECT
+
     public:
+        BaseViewModel(QObject *parent = nullptr);
         virtual ~BaseViewModel();
 
         template <typename Sender, typename Signal, typename Slot>
@@ -28,6 +33,12 @@ namespace Kub3::UI::ViewModels
 
         virtual void loadConnections(void);
         virtual void unloadConnections(void);
+
+    signals:
+        void s_showOverlayMsg(QString text);
+        void s_createPopUp(const QString &title, const PopUpActions &buttons);
+        void s_createPopUpWithText(const QString &title, const PopUpActions &buttons, const QString &initialText);
+        void s_closePopUp();
 
     private:
         std::vector<std::function<QMetaObject::Connection()>> m_connectionBuilders;

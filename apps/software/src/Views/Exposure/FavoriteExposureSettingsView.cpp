@@ -185,7 +185,7 @@ void FavoriteExposureSettingsView::populateStackedFavorite(const QList<FavoriteE
         if (FavoriteExposureSettingButton *button = favoriteButtons.at(buttonIndex))
         {
             targetLayout->addWidget(button);
-            setUpShawedBoxStyle(button);
+            setUpShadowedBoxStyle(button);
         }
     }
 

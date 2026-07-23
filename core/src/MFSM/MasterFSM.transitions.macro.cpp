@@ -61,9 +61,16 @@ namespace Kub3::MFSM
                 return StateInitializing{};
             },
             [&](const StateInitializing &, const EvInitializationComplete &) -> SystemState {
+                const SystemPosture posture = {
+                    .wafer  = WaferPosture::Homed,
+                    .mask   = MaskPosture::Homed,
+                    .vision = VisionPosture::Homed,
+                };
+
+                emit s_postureChanged(posture);
                 // Init successful: Provide the baseline posture and enter operational `Idle` state
                 return StateOperational{
-                    .posture  = {.wafer = WaferPosture::Homed, .mask = MaskPosture::Homed, .vision = VisionPosture::Homed},
+                    .posture  = posture,
                     .subState = StateIdle{},
                 };
             },
@@ -101,15 +108,43 @@ namespace Kub3::MFSM
                 };
             },
             [&](const StateOperational &s, const CmdAbortOperation &e) -> SystemState {
-                qInfo() << "MFSM: User aborted an operational sequence.";
-                this->stopAllServices(); // Halt the drawers/actuators immediately
-                // Because we stopped mid-movement, physical posture is strictly unknown
-                // We CANNOT stay in StateOperational.
-                // TODO: Automatically trigger smart RecoveryService to figure out the shortest path to a known position
-                TODO("Transition from StateOperational with CmdAbortOperation not implement.");
+                qInfo() << "MFSM: User aborted sequence. Computing updated physical posture.";
+
+                // Museum dynamically extracting the expected success/abort posture
+                const auto museum                                 = overloadedCallable{[](const auto &sub) {
+                    ExpectedSystemPosture abort{}, success{};
+                    if constexpr (requires { sub.expectedAbort; })
+                        abort = sub.expectedAbort;
+                    if constexpr (requires { sub.expectedSuccess; })
+                        success = sub.expectedSuccess;
+
+                    return std::make_pair(abort, success);
+                }};
+                SystemPosture newPosture                          = s.posture;
+                const auto [abortExpectation, successExpectation] = std::visit(museum, s.subState);
+
+                if (abortExpectation.hasValue())
+                {
+                    newPosture.merge(abortExpectation);
+                }
+                else
+                {
+                    // Fallback: If a state doesn't define expectedAbort but expects a success
+                    // (e.g. Vision deck moving), we invalidate the posture making it Unknown.
+                    newPosture = newPosture.invalidate(successExpectation);
+                }
+
+                emit s_postureChanged(newPosture);
+                emit s_operationCanceled();
+                // The FSM dispatcher will detect the change to StateIdle and automatically
+                // trigger onOperationalStateEntered(StateIdle), which calls stopAllServices().
+                return StateOperational{
+                    .posture  = newPosture,
+                    .subState = StateIdle{}, // Drop cleanly back to Idle
+                };
             },
             [&](const StateOperational &s, const auto &) -> SystemState {
-                // Delegate to Sub-FSM (MasterFSM.transitions_operational.cpp)
+                // Delegate to Sub-FSM (MasterFSM.transitions.operational.cpp)
                 OperationalState nextSubState = this->processOperationalTransition(s, event);
 
                 // Return a fresh copy of the macro state containing the new Level 2 sub-state.

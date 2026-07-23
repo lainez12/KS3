@@ -9,7 +9,7 @@ namespace Kub3::Tools::Tester
 {
 
     ProcedureTestViewModel::ProcedureTestViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent) :
-        QObject(parent),
+        UI::ViewModels::BaseViewModel(parent),
         m_repo(std::move(repo))
     {
     }

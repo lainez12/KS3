@@ -9,39 +9,72 @@ namespace Kub3::Interlocks
 
     Result<Unit, const char *> canOperateDrawer(const SystemPosture &p, DrawerTarget target, bool isEject)
     {
-        if (p.wafer == WaferPosture::AlignmentZone || p.wafer == WaferPosture::Unknown)
-            return Err("Action Rejected: Cannot operate drawer while Wafer is stowed.");
+        if (p.wafer == WaferPosture::Unknown)
+            return Err("Action Rejected - Cannot operate drawer while Wafer is in the following posture: UNKNOWN");
+        if (p.wafer == WaferPosture::ElevatorMidway)
+            return Err("Action Rejected - Cannot operate drawer while Wafer is in the following posture: ELEVATORS MIDWAY");
+        if (p.wafer == WaferPosture::AlignmentZone)
+            return Err("Action Rejected - Cannot operate drawer while Wafer is in the following posture: ALIGNMENT ZONE");
+
         return Ok<Unit>({});
     }
 
     Result<Unit, const char *> canOperateStowage(const SystemPosture &p, Services::StowageTarget target)
     {
-        if (target == Services::StowageTarget::WAFER)
+        if (target & Services::StowageTarget::WAFER)
         {
             // Rule: Wafer cannot be stowed (raised to alignment) if Mask is not stowed (secured)
             if (p.mask != MaskPosture::Exposure)
-                return Err("Action Rejected: Secure Mask in Exposure position before raising Wafer.");
+                return Err("Action Rejected - Cannot stow Wafer while mask is not in exposure position.");
+            // Invalid wafer stowage states
+            if (p.wafer == WaferPosture::Unknown)
+                return Err("Action Rejected - Cannot perform stowage while Wafer is in the following posture: UNKNOWN");
+            if (p.wafer == WaferPosture::Ejected)
+                return Err("Action Rejected - Cannot perform stowage while Wafer is in the following posture: EJECTED");
+            if (p.wafer == WaferPosture::DrawerMidway)
+                return Err("Action Rejected - Cannot perform stowage while Wafer is in the following posture: DRAWER MIDWAY");
         }
 
-        // Ensure subsystems are at least homed before moving to stowage positions
-        if (p.mask == MaskPosture::Unknown || p.wafer == WaferPosture::Unknown)
-            return Err("Action Rejected: Initialization required.");
+        if (target & Services::StowageTarget::MASK)
+        {
+            if (p.mask == MaskPosture::Unknown)
+                return Err("Action Rejected - Cannot perform stowage while Mask is in the following posture: UNKNOWN");
+        }
 
         return Ok<Unit>({});
     }
 
     Result<Unit, const char *> canOperateUnstowage(const SystemPosture &p, Services::StowageTarget target)
     {
-        if (target == Services::StowageTarget::MASK)
+        if (target & Services::StowageTarget::MASK)
         {
             // Rule: Mask cannot be unstowed if Wafer is stowed (secured)
-            if (p.wafer != WaferPosture::Homed)
-                return Err("Action Rejected: Unstow wafer before unstowing mask.");
+            if (p.wafer == WaferPosture::ElevatorMidway)
+                return Err("Action Rejected - Cannot unstow Mask while Wafer is in the following posture: ELEVATOR MIDWAY");
+            if (p.wafer == WaferPosture::AlignmentZone)
+                return Err("Action Rejected - Cannot unstow Mask while Wafer is in the following posture: ALIGNMENT ZONE");
+            // Invalid mask unstowage states
+            if (p.mask == MaskPosture::Ejected)
+                return Err("Action Rejected - Cannot unstow Mask while it is in the following posture: EJECTED");
+            if (p.mask == MaskPosture::DrawerMidway)
+                return Err("Action Rejected - Cannot unstow Mask while it is in the following posture: DRAWER MIDWAY");
+            if (p.mask == MaskPosture::Homed)
+                return Err("Action Rejected - Cannot unstow Mask while it is in the following posture: HOMED");
+            if (p.mask == MaskPosture::Unknown)
+                return Err("Action Rejected - Cannot unstow Mask while it is in the following posture: UNKNOWN");
         }
 
-        // Ensure subsystems are at least homed before moving to stowage positions
-        if (p.mask == MaskPosture::Unknown || p.wafer == WaferPosture::Unknown)
-            return Err("Action Rejected: Initialization required.");
+        if (target & Services::StowageTarget::WAFER)
+        {
+            if (p.wafer == WaferPosture::Ejected)
+                return Err("Action Rejected - Cannot unstow Wafer while it is in the following posture: EJECTED");
+            if (p.wafer == WaferPosture::DrawerMidway)
+                return Err("Action Rejected - Cannot unstow Wafer while it is in the following posture: DRAWER MIDWAY");
+            if (p.wafer == WaferPosture::Homed)
+                return Err("Action Rejected - Cannot unstow Wafer while it is in the following posture: HOMED");
+            if (p.wafer == WaferPosture::Unknown)
+                return Err("Action Rejected - Cannot unstow Wafer while it is in the following posture: UNKNOWN");
+        }
 
         return Ok<Unit>({});
     }
@@ -50,7 +83,7 @@ namespace Kub3::Interlocks
     {
         // Must have both components in their respective operational zones
         if (p.mask != MaskPosture::Exposure || p.wafer != WaferPosture::AlignmentZone)
-            return Err("Action Rejected: Mask and Wafer must be stowed before Alignment.");
+            return Err("Action Rejected - Mask and Wafer must be stowed before Alignment.");
 
         return Ok<Unit>({});
     }
@@ -59,7 +92,10 @@ namespace Kub3::Interlocks
     {
         // Basic geometric check: Stages must be in alignment zone
         if (p.wafer != WaferPosture::AlignmentZone)
-            return Err("Action Rejected: Wafer stage is not in the Alignment Zone.");
+            return Err("Action Rejected - Wafer stage is not in the Alignment Zone.");
+        // Mask must be stowed
+        if (p.mask != MaskPosture::Exposure)
+            return Err("Action Rejected - Mask is not in the required posture: EXPOSURE");
 
         return Ok<Unit>({});
     }
@@ -69,7 +105,7 @@ namespace Kub3::Interlocks
         // Rule: Exposure prohibits Vision block movement.
         // Rule: Exposure requires Vision deck to be Homed (Safe light path)
         if (p.vision != VisionPosture::Homed)
-            return Err("Action Rejected: Move Vision deck to Home before Exposure (Optical obstruction).");
+            return Err("Action Rejected - Move Vision deck to Home before Exposure (Optical obstruction).");
 
         return Ok<Unit>({});
     }
@@ -78,7 +114,7 @@ namespace Kub3::Interlocks
     {
         // Prevent X/Y/Theta movement if components are not in alignment zone
         if (p.wafer != WaferPosture::AlignmentZone)
-            return Err("Action Rejected: Stages must be in Alignment Zone for X/Y/Theta movement.");
+            return Err("Action Rejected - Stages must be in Alignment Zone for X/Y/Theta movement.");
 
         return Ok<Unit>({});
     }

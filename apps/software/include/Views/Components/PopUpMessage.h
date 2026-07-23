@@ -1,10 +1,9 @@
-#ifndef PopUpMessage_H
-#define PopUpMessage_H
+#pragma once
 
 #include <QEvent>
 #include <QWidget>
 
-#include <functional>
+#include <ViewModels/PopUpTypes.h>
 
 class QLabel;
 class QPushButton;
@@ -17,29 +16,26 @@ class PopUpMessage : public QWidget
     Q_OBJECT
 
 public:
-    struct ButtonConfig {
-        QString text;
-        std::function<void()> callback;
-    };
-
     explicit PopUpMessage(QWidget *parent = nullptr);
-    PopUpMessage(const QString &title, const QString &message, const QVector<ButtonConfig> &buttons, QWidget *parent = nullptr);
+    PopUpMessage(const QString &title, const QString &message, const PopUpActions &buttons, QWidget *parent = nullptr);
 
     void setTitleText(const QString &title);
     void setMessageText(const QString &message);
-    void setButtons(const QVector<ButtonConfig> &buttons);
+    void setButtons(const PopUpActions &buttons);
 
     void showMessage();
 
 protected:
     void paintEvent(QPaintEvent *event) override;
     bool eventFilter(QObject *obj, QEvent *ev) override;
+    void hideEvent(QHideEvent *event) override;
 
 private:
-    void buildUi();
+    void buildUI();
     void refreshContent();
     void refreshButtons();
 
+private:
     QWidget *m_card              = nullptr;
     QWidget *m_header            = nullptr;
     QWidget *m_body              = nullptr;
@@ -52,7 +48,5 @@ private:
 
     QString m_titleText;
     QString m_messageText;
-    QVector<ButtonConfig> m_buttons;
+    PopUpActions m_buttons;
 };
-
-#endif

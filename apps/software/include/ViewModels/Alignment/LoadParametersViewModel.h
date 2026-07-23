@@ -7,9 +7,8 @@
 
 namespace Kub3::UI::ViewModels::Alignment
 {
-    class LoadParametersViewModel final : public QObject, public BaseViewModel
+    class LoadParametersViewModel final : public BaseViewModel
     {
-        Q_OBJECT
 
     public:
         explicit LoadParametersViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent = nullptr);

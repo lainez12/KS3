@@ -250,6 +250,7 @@ namespace Kub3
         // --- HomeViewModel
         QObject::connect(m_homeVM.get(), &VM::HomeViewModel::s_cancelOperation, m_masterFSM, &MFSM::MasterFSM::ps_requestAbortOperation);
         QObject::connect(m_homeVM.get(), &VM::HomeViewModel::s_initializationRequest, m_masterFSM, &MFSM::MasterFSM::ps_requestInitialization);
+        QObject::connect(m_homeVM.get(), &VM::HomeViewModel::s_cmdRunDrawerOperation, m_masterFSM, &MFSM::MasterFSM::ps_requestOperateDrawer);
         // --- VisualisationViewModel
         // QObject::connect(m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::cmdRunCameraMovement, m_masterFSM, &MFSM::MasterFSM::ps_requestPADCameraMovement);
         QObject::connect(m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::cmdRunAlignmentStageMovement, m_masterFSM, &MFSM::MasterFSM::ps_requestPADAlignmentStageMovement);
@@ -264,8 +265,17 @@ namespace Kub3
         QObject::connect(m_configuratorPasswdVM.get(), &VM::Settings::AdminPasswordViewModel::s_authenticationSuccess, &launchConfigurator);
 
         // 3. Logic -> UI Wiring
-        m_homeVM->bindConnection(m_masterFSM, &MFSM::MasterFSM::s_errorOccurred, m_mainWindow.get(), &MainWindow::ps_errorOccurred);
+        // @note: `QObject::connect` connections are permanent while `bindConnection` only activates connections when the view is shown
+        QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_errorOccurred, m_mainWindow.get(), &MainWindow::ps_errorOccurred);
+        // --- Home View Model
+        QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_systemStateChanged, m_homeVM.get(), &VM::HomeViewModel::ps_onSystemStateChanged);
+        QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_operationalSubstateChanged, m_homeVM.get(), &VM::HomeViewModel::ps_onOperationalSubstateChanged);
+        m_homeVM->bindConnection(m_masterFSM, &MFSM::MasterFSM::s_operationCanceled, m_homeVM.get(), &VM::HomeViewModel::ps_operationEnded);
         m_homeVM->bindConnection(m_masterFSM, &MFSM::MasterFSM::s_errorOccurred, m_homeVM.get(), &VM::HomeViewModel::ps_errorOccurred);
+        m_homeVM->bindConnection(m_masterFSM, &MFSM::MasterFSM::s_initializationSuccess, m_homeVM.get(), &VM::HomeViewModel::ps_initializationSuccess);
+        m_homeVM->bindConnection(m_masterFSM, &MFSM::MasterFSM::s_serviceOpSuccess, m_homeVM.get(), &VM::HomeViewModel::ps_operationEnded);
+        m_homeVM->bindConnection(m_masterFSM, &MFSM::MasterFSM::s_serviceOpError, m_homeVM.get(), &VM::HomeViewModel::ps_operationEnded);
+        // --- Machine Status View Model
         msvm->bindConnection(m_hwManager.get(), &HAL::HardwareManager::s_cameraFrameReady,
                              msvm, &VM::BaseVisionViewModel::ps_onCameraFrameReceived);
         msvm->bindConnection(m_repo.get(), &HAL::MS::IMachineStatusRepo::s_machineValueChanged,

@@ -9,9 +9,10 @@
 namespace Kub3::UI::ViewModels
 {
 
-    class BaseVisionViewModel : public QObject, public BaseViewModel
+    class BaseVisionViewModel : public BaseViewModel
     {
         Q_OBJECT
+
     public:
         explicit BaseVisionViewModel(QObject *parent = nullptr);
 

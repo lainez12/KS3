@@ -7,9 +7,8 @@
 
 namespace Kub3::UI::ViewModels::Settings
 {
-    class OperatingTimesViewModel final : public QObject, public BaseViewModel
+    class OperatingTimesViewModel final : public BaseViewModel
     {
-        Q_OBJECT
     public:
         explicit OperatingTimesViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent = nullptr);
         ~OperatingTimesViewModel() override;

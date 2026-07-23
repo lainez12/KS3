@@ -1,10 +1,12 @@
 /* 
 Definitions colors 
 @blue: #0072ba;
+@blue-disabled: #D5E1ED;
 @blue-kloe: #0070DB;
 @blue-dark: #0E00DB;
 @blue-light: #B2D4F4;
 @orange: #e85420;
+@orange-disabled: #FACBB9;
 @lightGray: #f0f0f0;
 @violet: #7D20E8;
 @darkGray: #333333;
@@ -24,40 +26,36 @@ Font Families
 }
 */
 
+/* ==========================================================================
+   Base / Global Widgets
+   ========================================================================== */
+
 QMainWindow {
     background-color: @white;
 }
 
-QWidget#ExposureModeView, QWidget#MachineStatusView {
+QLabel {
+    font-family: "Arial";
+}
+
+QWidget#ExposureModeView,
+QWidget#MachineStatusView {
     background: transparent;
 }
 
-.positions-machine-status-text {
-    font-family: @artTtnorm;
-    font-size: 20px;
-    font-weight: 700;
+QScrollBar::handle:vertical {
+    background-color: @blue;
+    min-height: 40px;
 }
 
-QMainWindow QWidget#kloeLogo QLabel {
-    font-size: 60px;
-    /* font-style: italic; */
+QScrollBar::up-arrow:vertical,
+QScrollBar::down-arrow:vertical {
+    background-color: @white;;
 }
 
-QLabel#machineLogo {
-    font-family: @artTtnorm;
-    font-size: 44px;
-    font-weight: 700;
-    font-style: italic;
-    color: @blue;
-}
-
-QLabel#machineLogoSubtrateSize {
-    font-family: @artTtnorm;
-    font-size: 28px;
-    font-weight: 700;
-    font-style: italic;
-    color: @orange;
-}
+/* ==========================================================================
+   Layout Containers, Frames & Headers
+   ========================================================================== */
 
 QFrame#bottomBar {
     background-color: @white;
@@ -67,78 +65,59 @@ QFrame#bottomBar {
     /*border-bottom: 3px solid rgba(0, 112, 219, 160);*/
 }
 
+QFrame#navBtnIconCircle {
+    background-color: rgb(0, 114, 186);
+}
+
+QMainWindow QWidget#kloeLogo QLabel {
+    font-size: 60px;
+    /* font-style: italic; */
+}
+
 QLabel#kloeLogo {
-    font-family: @artTtnorm;
     font-size: 56px;
     font-weight: 900;
     font-style: italic;
     color: @blue; 
 }
 
-QLabel {
-    font-family: "Arial";
-}
-
-QFrame#navBtnIconCircle {
-    background-color: rgb(0, 114, 186);
-}
-
-.color-blue {
+QLabel#machineLogo {
+    font-size: 44px;
+    font-weight: 700;
+    font-style: italic;
     color: @blue;
 }
 
-.color-orange {
+QLabel#machineLogoSubtrateSize {
+    font-size: 28px;
+    font-weight: 700;
+    font-style: italic;
     color: @orange;
 }
 
-.bg-orange {
-    background-color: @orange;
-}
-
-.bg-violet {
-    background-color: @violet;
-}
-
-.bg-blue-dark {
-    background-color: @blue-dark;
-}
-
-.bg-turquoise {
-    background-color: @turquoise;
-}
-
-.color-white {
-    color: @white;
-}
-
-.bg-blue-kloe {
-    background-color: @blue-kloe;
-}
+/* ==========================================================================
+   Utility Classes - Typography
+   ========================================================================== */
 
 .text-extra-large {
-    font-family: @artTtnorm;
     font-size: 42px;
     font-weight: 700;
 }
 
 .text-large {
-    font-family: @artTtnorm;
     font-size: 32px;
     font-weight: 700;
 }
 
 .text-medium {
-    font-family: @artTtnorm;
-    font-size: 25px;
+    font-size: 24px;
 }
 
 .text-small {
-    font-family: @artTtnorm;
     font-size: 20px;
 }
 
 .text-extra-small {
-    font-family: @artTtnorm;
     font-size: 16px;
 }
 
@@ -146,78 +125,9 @@ QFrame#navBtnIconCircle {
     font-weight: 700;
 }
 
-.title-favorite-exposure
-{
-    font-weight: bold; 
-    text-decoration: underline; 
-    border: none;
-}
-
-.details-favorite-exposure
-{
-    font-weight: bold; 
-    border: none;
-    qproperty-alignment: 'AlignJustify';
-    qproperty-wordWrap: true;
-}
-
-.button-blue, .button-numpad
-{
-    border: 2px solid @blue;
-    background-color: @white;
-    color: @blue;
-    font: 20px;
+.positions-machine-status-text {
+    font-size: 20px;
     font-weight: 700;
-    font-family: arial;
-}
-
-.button-fat 
-{
-    border: none;
-}
-
-.button-blue:checked
-{
-    border: 2px solid @blue;
-    background-color: @blue;
-    color: @white;
-}
-
-.button-blue:disabled
-{
-    border: 2px solid @blue-light;
-    background-color: @white;
-    color: @blue-light;
-    font: 20px;
-    font-weight: 700;
-    font-family: arial;
-}
-
-.favorite-exposure-button
-{
-    border: 1px solid #75B2E5;
-    background-color: transparent;
-}
-
-.favorite-exposure-button:hover {
-    background-color: #E6F0FA;
-}
-
-.favorite-exposure-button:pressed {
-    background-color: #CCE4F7;
-}
-
-
-.border-radius-25 {
-    border-radius: 25px;
-}
-
-.border-solid-2 {
-    border: 2px solid #000;
-}
-
-.none-background-image {
-    background-image: "";
 }
 
 .text-last-cycle {
@@ -228,13 +138,222 @@ QFrame#navBtnIconCircle {
     font-weight: 700;
 }
 
-QScrollBar::handle:vertical {
-    background-color: @blue;
-    min-height: 40px;
+/* ==========================================================================
+   Utility Classes - Colors & Backgrounds
+   ========================================================================== */
+
+.color-blue {
+    color: @blue;
 }
 
-QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
-    background-color: @white;;
+.color-blue-light {
+    color: @blue-light;
+}
+
+.color-orange {
+    color: @orange;
+}
+
+.color-white {
+    color: @white;
+}
+
+.bg-white {
+    background-color: @white;
+}
+
+.bg-blue-kloe {
+    background-color: @blue-kloe;
+}
+
+.bg-blue-dark {
+    background-color: @blue-dark;
+}
+
+.bg-orange {
+    background-color: @orange;
+}
+
+.bg-violet {
+    background-color: @violet;
+}
+
+.bg-turquoise {
+    background-color: @turquoise;
+}
+
+.none-background-image {
+    background-image: "";
+}
+
+/* ==========================================================================
+   Utility Classes - Borders & Outlines
+   ========================================================================== */
+
+.border-radius-25 {
+    border-radius: 25px;
+}
+
+.border-solid-2 {
+    border: 2px solid #000;
+}
+
+.border-solid-blue-small {
+    border: 1px solid @blue;
+}
+
+.border-solid-blue {
+    border: 2px solid @blue;
+}
+
+.border-solid-blue-medium {
+    border: 4px solid @blue;
+}
+
+.border-solid-blue-large {
+    border: 6px solid @blue;
+}
+
+.border-solid-blue-small:disabled {
+    border: 1px solid @blue-light;
+}
+
+.border-solid-blue:disabled {
+    border: 2px solid @blue-light;
+}
+
+.border-solid-blue-medium:disabled {
+    border: 4px solid @blue-light;
+}
+
+.border-solid-blue-large:disabled {
+    border: 6px solid @blue-light;
+}
+
+/* ==========================================================================
+   Buttons & Controls
+   ========================================================================== */
+
+.button-blue,
+.button-numpad {
+    border: 2px solid @blue;
+    background-color: @white;
+    color: @blue;
+    font: 20px;
+    font-weight: 700;
+    font-family: arial;
+}
+
+.button-fat {
+    border: none;
+}
+
+.button-blue:checked {
+    border: 2px solid @blue;
+    background-color: @blue;
+    color: @white;
+}
+
+.button-blue:disabled {
+    border: 2px solid @blue-light;
+    background-color: @white;
+    color: @blue-light;
+    font: 20px;
+    font-weight: 700;
+    font-family: arial;
+}
+
+.btn-blue, .btn-blue-lg {
+    border: 2px solid @blue;
+    border-radius: 25px;
+    background-color: @blue;
+    color: @white;
+    font: 20px;
+    font-weight: 700;
+    font-family: arial;
+}
+
+.btn-blue-lg {
+    border-width: 6px;
+    font: 24px;
+    font-weight: 700;
+}
+
+.btn-blue-lg:disabled {
+    border-color: @blue-disabled;
+    background-color: @blue-disabled;
+}
+
+.btn-orange, .btn-orange-lg {
+    border: 2px solid @orange;
+    border-radius: 25px;
+    background-color: @orange;
+    color: @white;
+    font: 20px;
+    font-weight: 700;
+    font-family: arial;
+}
+
+.btn-orange-lg {
+    border-width: 6px;
+    font: 24px;
+    font-weight: 700;
+}
+
+.btn-orange-lg:disabled {
+    border-color: @orange-disabled;
+    background-color: @orange-disabled;
+}
+
+.outline-btn-blue, .outline-btn-blue-lg {
+    border: 2px solid @blue;
+    border-radius: 25px;
+    background-color: @white;
+    color: @blue;
+    font: 20px;
+    font-weight: 700;
+    font-family: arial;
+}
+
+.outline-btn-blue-lg {
+    border-width: 6px;
+    font: 24px;
+    font-weight: 700;
+}
+
+.outline-btn-blue:disabled, .outline-btn-blue-lg:disabled {
+    border-color: @blue-disabled;
+    color: @blue-disabled;
+}
+
+/* ==========================================================================
+   Favorite Exposure Components
+   ========================================================================== */
+
+.title-favorite-exposure {
+    font-weight: bold; 
+    text-decoration: underline; 
+    border: none;
+}
+
+.details-favorite-exposure {
+    font-weight: bold; 
+    border: none;
+    qproperty-alignment: 'AlignJustify';
+    qproperty-wordWrap: true;
+}
+
+.favorite-exposure-button {
+    border: 1px solid #75B2E5;
+    background-color: transparent;
+}
+
+.favorite-exposure-button:hover {
+    background-color: #E6F0FA;
+}
+
+.favorite-exposure-button:pressed {
+    background-color: #CCE4F7;
 }
 
 /* ===== Extracted from apps/software/gui/Views/*.ui ===== */
@@ -389,4 +508,3 @@ QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
 }
 
 /* End of extracted rules */
-

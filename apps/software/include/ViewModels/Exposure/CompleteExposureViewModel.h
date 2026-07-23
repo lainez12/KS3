@@ -8,9 +8,8 @@
 namespace Kub3::UI::ViewModels::Exposure
 {
 
-    class CompleteExposureViewModel final : public QObject, public BaseViewModel
+    class CompleteExposureViewModel final : public BaseViewModel
     {
-        Q_OBJECT
 
     public:
         explicit CompleteExposureViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent = nullptr);

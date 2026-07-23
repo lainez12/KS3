@@ -47,9 +47,9 @@ namespace Kub3::MFSM
 
         static const std::vector<BootDependency> requiredDependencies = {
 #if defined(KUB_MODEL_8)
-            // {MCU_ARDUINO1_ID, MCU_ARDUINO1_READY},
-            // {MCU_ARDUINO2_ID, MCU_ARDUINO2_READY},
-            {MCU_ARDUINO3_ID, MCU_ARDUINO3_READY}
+        // {MCU_ARDUINO1_ID, MCU_ARDUINO1_READY},
+        // {MCU_ARDUINO2_ID, MCU_ARDUINO2_READY},
+        // {MCU_ARDUINO3_ID, MCU_ARDUINO3_READY}
 #endif
         };
 
@@ -113,10 +113,13 @@ namespace Kub3::MFSM
         m_homingService->tick();
         const Services::ServiceStatus status = m_homingService->getStatus();
 
-        if (status == Services::ServiceStatus::Success)
-            dispatch(EvInitializationComplete{});
-        else if (status == Services::ServiceStatus::Error)
+        if (status == Services::ServiceStatus::Error)
             dispatch(EvServiceError{.reason = m_homingService->getErrorReason()});
+        else if (status == Services::ServiceStatus::Success)
+        {
+            dispatch(EvInitializationComplete{});
+            emit s_initializationSuccess();
+        }
     }
 
     void MasterFSM::onStatePreparePowerOffTick(const StatePreparePowerOff &s)

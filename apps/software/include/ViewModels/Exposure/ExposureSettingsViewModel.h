@@ -7,9 +7,8 @@
 
 namespace Kub3::UI::ViewModels::Exposure
 {
-    class ExposureSettingsViewModel final : public QObject, public BaseViewModel
+    class ExposureSettingsViewModel final : public BaseViewModel
     {
-        Q_OBJECT
     public:
         explicit ExposureSettingsViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent = nullptr);
         ~ExposureSettingsViewModel() override;

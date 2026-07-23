@@ -7,9 +7,8 @@
 
 namespace Kub3::UI::ViewModels::Alignment
 {
-    class SaveParametersViewModel final : public QObject, public BaseViewModel
+    class SaveParametersViewModel final : public BaseViewModel
     {
-        Q_OBJECT
 
     public:
         explicit SaveParametersViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent = nullptr);

@@ -66,101 +66,23 @@ namespace Kub3::UI::Views
         virtual ~ViewBase() = default;
 
     public:
-        void showAnOverlayMessage(QString text);
-        void showPopUpMessage(const QString &title, const QVector<PopUpMessage::ButtonConfig> &buttons);
-        void showPopUpMessage(const QString &title, const QString &message, const QVector<PopUpMessage::ButtonConfig> &buttons);
-
-        void resizeEventOverride(QResizeEvent *event)
-        {
-            resizeEvent(event);
-        }
+        void resizeEventOverride(QResizeEvent *event);
 
         // --- Display Properties ---
-        QString getViewTitle() const
-        {
-            return m_titleBar.viewTitle;
-        }
-
-        bool showTitleBar() const
-        {
-            return m_titleBar.showTitleBar;
-        }
-
-        bool showCentralLogo() const
-        {
-            return m_showCentralLogo;
-        }
-
-        bool shadowedBoxStyle() const
-        {
-            return m_shadowedBoxStyle;
-        }
-
-        const NavButtonManager &getNavButtonManager() const
-        {
-            return m_buttonManager;
-        }
-
-        void addNavButton(const QString &position, const NavButtonConfig &config, int order = -1)
-        {
-            m_buttonManager.addButton(position, config, order);
-            emit s_buttonConfigsUpdated();
-        }
-
-        void removeNavButton(const QString &buttonId)
-        {
-            m_buttonManager.removeButton(buttonId);
-            emit s_buttonConfigsUpdated();
-        }
-
-        void clearNavButtons()
-        {
-            m_buttonManager.clearButtons();
-            emit s_buttonConfigsUpdated();
-        }
-
-        void setNavButtonEnabled(const QString &buttonId, bool enabled)
-        {
-            if (m_buttonManager.setButtonEnabled(buttonId, enabled))
-            {
-                emit s_buttonStateChanged(buttonId, enabled);
-            }
-        }
-
-        void switchColorNavButton(const QString &buttonId, bool enabled)
-        {
-            NavButtonConfig *button = m_buttonManager.getButton(buttonId);
-            if (button)
-            {
-                emit s_switchColorButton(buttonId, enabled);
-            }
-        }
-
-        void setNavButtonVisible(const QString &buttonId, bool visible)
-        {
-            if (m_buttonManager.setButtonVisible(buttonId, visible))
-            {
-                emit s_buttonStateChanged(buttonId, visible);
-            }
-        }
-
-        void setNavButtonText(const QString &buttonId, const QString &text)
-        {
-            if (m_buttonManager.setButtonText(buttonId, text))
-            {
-                emit s_buttonTextChanged(buttonId, text);
-            }
-        }
-
-        void setTitleBar(const TitleBarConfig &titleBar)
-        {
-            m_titleBar = titleBar;
-        }
-
-        const TitleBarConfig &getTitleBar(void)
-        {
-            return m_titleBar;
-        }
+        QString getViewTitle() const;
+        bool showTitleBar() const;
+        bool showCentralLogo() const;
+        bool shadowedBoxStyle() const;
+        const NavButtonManager &getNavButtonManager() const;
+        void addNavButton(const QString &position, const NavButtonConfig &config, int order = -1);
+        void removeNavButton(const QString &buttonId);
+        void clearNavButtons();
+        void setNavButtonEnabled(const QString &buttonId, bool enabled);
+        void switchColorNavButton(const QString &buttonId, bool enabled);
+        void setNavButtonVisible(const QString &buttonId, bool visible);
+        void setNavButtonText(const QString &buttonId, const QString &text);
+        void setTitleBar(const TitleBarConfig &titleBar);
+        const TitleBarConfig &getTitleBar(void);
 
     signals:
         void s_openView(Kub3::UI::ViewId viewId);
@@ -172,10 +94,16 @@ namespace Kub3::UI::Views
         void s_buttonTextChanged(const QString &buttonId, const QString &newText);
         void s_switchColorButton(const QString &buttonId, bool enabledColor);
 
+    public slots:
+        void ps_showOverlayMsg(QString text);
+        void ps_createPopUp(const QString &title, const PopUpActions &buttons);
+        void ps_createPopUpWithText(const QString &title, const PopUpActions &buttons, const QString &initialText);
+        void ps_closePopUp();
+
     protected:
         void showEvent(QShowEvent *event) override;
         void hideEvent(QHideEvent *event) override;
-        void setUpShawedBoxStyle(QWidget *widget);
+        void setUpShadowedBoxStyle(QWidget *widget);
 
     protected:
         Unique<ViewModels::BaseViewModel> m_viewModel;

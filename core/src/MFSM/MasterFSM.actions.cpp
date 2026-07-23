@@ -10,23 +10,10 @@ namespace Kub3::MFSM
     // ==========================================================================
     void MasterFSM::onStateEntered(const SystemState &newState)
     {
-        // 1. Broadcast Macro UI Name
-        const auto macroStateNameMuseum = overloadedCallable{
-            [](const StateBooting &) { return QStringLiteral("BOOTING"); },
-            [](const StateWaitingInitialization &) { return QStringLiteral("WAITING_INIT"); },
-            [](const StateInitializing &) { return QStringLiteral("INITIALIZING"); },
-            [](const StateError &) { return QStringLiteral("FAULT"); },
-            [](const StateEmergencyStop &) { return QStringLiteral("E-STOP"); },
-            [](const StatePreparePowerOff &) { return QStringLiteral("PREPARE_POWER_OFF"); },
-            [](const StatePowerOff &) { return QStringLiteral("POWERING_OFF"); },
-            // If Operational, the sub-state handler will broadcast the precise name.
-            [](const StateOperational &) { return QString(); }};
+        // Broadcast entered state
+        emit s_systemStateChanged(kindOf(newState));
 
-        QString macroName = std::visit(macroStateNameMuseum, newState);
-        if (!macroName.isEmpty()) // Fire signal only if relevant
-            emit s_stateChanged(macroName);
-
-        // 2. Perform Physical Macro State Entry Actions
+        // Perform Physical Macro State Entry Actions
         const auto entryActionsMuseum = overloadedCallable{
             [&](const StateBooting &) { /* no-op */ },
             [&](const StateWaitingInitialization &) { /* no-op */ },
@@ -74,21 +61,10 @@ namespace Kub3::MFSM
     {
         using HT = Services::HomingTarget::Type;
 
-        // 1. Broadcast Micro UI Name
-        const auto microStateNameMuseum = overloadedCallable{
-            [](const StateIdle &) { return QStringLiteral("IDLE"); },
-            [](const StateDrawerOp &) { return QStringLiteral("OPERATING"); },
-            [](const StateStowing &) { return QStringLiteral("STOWING"); },
-            [](const StateUnstowing &) { return QStringLiteral("UNSTOWING"); },
-            [](const StatePreparingAlignment &) { return QStringLiteral("PREPARING_ALIGNMENT"); },
-            [](const StateAlignment &) { return QStringLiteral("ALIGNMENT"); },
-            [](const StatePreparingExposure &) { return QStringLiteral("PREPARING_EXPOSURE"); },
-            [](const StateExposureReady &) { return QStringLiteral("EXPOSURE_READY"); },
-            [](const StateExposing &) { return QStringLiteral("EXPOSING"); }};
+        // Broadcast operational state
+        emit s_operationalSubstateChanged(kindOf(newSubState));
 
-        emit s_stateChanged(std::visit<QString>(microStateNameMuseum, newSubState));
-
-        // 2. Trigger Physical Micro Side-Effects
+        // Trigger Physical Micro Side-Effects
         const auto entryActionsMuseum = overloadedCallable{
             // Ensure all operational hardware locks are released
             [&](const StateIdle &) {

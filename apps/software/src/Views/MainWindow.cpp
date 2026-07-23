@@ -123,11 +123,11 @@ void MainWindow::ps_errorOccurred(const Kub3::MFSM::ErrorPayload &payload)
     if (payload.kind != Kub3::ErrorKind::Global)
         return; // Leave Common errors to ViewModels
 
-    QVector<PopUpMessage::ButtonConfig> btns;
+    PopUpActions btns;
 
     if (static_cast<bool>(payload.allowedActions & Kub3::ErrorAction::RetryConnection))
     {
-        btns.push_back({
+        btns.push_back(popup_action_t{
             .text     = "Retry Connection",
             .callback = [this]() {
                 emit s_requestRetryBoot();
@@ -137,7 +137,7 @@ void MainWindow::ps_errorOccurred(const Kub3::MFSM::ErrorPayload &payload)
     }
     if (static_cast<bool>(payload.allowedActions & Kub3::ErrorAction::ResetMachine))
     {
-        btns.push_back(PopUpMessage::ButtonConfig{
+        btns.push_back(popup_action_t{
             .text     = "Reset Machine",
             .callback = [this]() {
                 emit s_requestResetError();
@@ -147,11 +147,11 @@ void MainWindow::ps_errorOccurred(const Kub3::MFSM::ErrorPayload &payload)
     }
     if (static_cast<bool>(payload.allowedActions & Kub3::ErrorAction::PowerOff))
     {
-        btns.push_back({"Shutdown", [this]() { emit s_requestPowerOff(); }});
+        btns.push_back(popup_action_t{"Shutdown", [this]() { emit s_requestPowerOff(); }});
     }
     if (static_cast<bool>(payload.allowedActions & Kub3::ErrorAction::Dismiss))
     {
-        btns.push_back({"Dismiss", [this]() { m_popup->hide(); }});
+        btns.push_back(popup_action_t{"Dismiss", [this]() { m_popup->hide(); }});
     }
 
     m_popup->setTitleText(payload.severity == Kub3::ErrorSeverity::Fatal ? "FATAL ERROR" : "SYSTEM FAULT");

@@ -4,7 +4,7 @@ namespace Kub3::UI::ViewModels::Alignment
 {
 
     ContactSelectionViewModel::ContactSelectionViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent) :
-        QObject(parent),
+        BaseViewModel(parent),
         m_repo(repo)
     {
     }

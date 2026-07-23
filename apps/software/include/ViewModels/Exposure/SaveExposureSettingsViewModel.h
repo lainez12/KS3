@@ -7,9 +7,8 @@
 
 namespace Kub3::UI::ViewModels::Exposure
 {
-    class SaveExposureSettingsViewModel final : public QObject, public BaseViewModel
+    class SaveExposureSettingsViewModel final : public BaseViewModel
     {
-        Q_OBJECT
     public:
         explicit SaveExposureSettingsViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent = nullptr);
         ~SaveExposureSettingsViewModel() override;

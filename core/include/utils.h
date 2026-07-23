@@ -7,6 +7,28 @@
 
 #define TODO(msg) throw msg
 
+/**
+ * @brief NO_COMMIT macro for temporary debug/testing code.
+ *
+ * Wrap any temporary code inside NO_COMMIT(...). The code will execute
+ * normally during local builds, but the Git pre-commit hook will reject
+ * commits containing this macro.
+ *
+ * Examples:
+ *
+ * 1. Single statement:
+ *    NO_COMMIT(std::cout << "Debugging value: " << x << std::endl;);
+ *
+ * 2. Multi-line block with templates/commas:
+ *    NO_COMMIT(
+ *        std::map<int, std::string> debugMap = {{1, "test"}};
+ *        for (const auto& [key, val] : debugMap) {
+ *            logDebug(key, val);
+ *        }
+ *    );
+ */
+#define NO_COMMIT(...) __VA_ARGS__
+
 namespace Kub3::Utils
 {
     // Multiplies the input by 2

@@ -7,9 +7,8 @@
 
 namespace Kub3::UI::ViewModels::Alignment
 {
-    class ContactSelectionViewModel final : public QObject, public BaseViewModel
+    class ContactSelectionViewModel final : public BaseViewModel
     {
-        Q_OBJECT
     public:
         explicit ContactSelectionViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent = nullptr);
         ~ContactSelectionViewModel() override;

@@ -3,7 +3,7 @@
 namespace Kub3::Tools::Tester
 {
 
-    MotorTestViewModel::MotorTestViewModel(QObject *parent) : QObject(parent) {}
+    MotorTestViewModel::MotorTestViewModel(QObject *parent) : UI::ViewModels::BaseViewModel(parent) {}
 
     void MotorTestViewModel::setAvailableMotors(const QList<QPair<QString, bool>> &motors)
     {

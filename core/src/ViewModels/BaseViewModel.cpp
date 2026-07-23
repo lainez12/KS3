@@ -4,6 +4,8 @@
 namespace Kub3::UI::ViewModels
 {
 
+    BaseViewModel::BaseViewModel(QObject *parent) : QObject(parent) {}
+
     BaseViewModel::~BaseViewModel()
     {
         unloadConnections();
