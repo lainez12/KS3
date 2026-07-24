@@ -57,5 +57,6 @@ void RecapExposureSettingsView::onBackButtonClicked(void)
 
 void RecapExposureSettingsView::onValidateButtonClicked(void)
 {
+    getViewModel<RecapExposureSettingsViewModel>()->ui_requestLaunchExposure();
     emit s_openView(Kub3::UI::ViewId::PROGRESS_EXPOSURE_VIEW);
 }

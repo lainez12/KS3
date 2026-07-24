@@ -1,6 +1,7 @@
 #pragma once
 
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
+#include <Services/Exposure/IExposureService.h>
 #include <ViewModels/BaseViewModel.h>
 #include <ViewModels/Exposure/ExposureBaseViewModel.h>
 
@@ -17,8 +18,12 @@ namespace Kub3::UI::ViewModels::Exposure
         bool isPresetSetAndValid() const;
         PresetExposure getCurrentPreset() const;
 
+    signals:
+        void s_launchExposure(const Services::ExposurePayload &payload);
+
     public slots:
         void ps_setExposurePreset(const PresetExposure &preset);
+        void ui_requestLaunchExposure(void);
 
     private:
         PresetExposure m_currentPreset;
