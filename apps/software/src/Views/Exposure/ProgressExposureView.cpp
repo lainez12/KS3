@@ -1,4 +1,5 @@
 #include "ui_ProgressExposureView.h"
+#include <QShowEvent>
 #include <QString>
 #include <Views/Components/Colors.h>
 #include <Views/Exposure/ProgressExposureView.h>
@@ -13,9 +14,11 @@ ProgressExposureView::ProgressExposureView(Unique<ProgressExposureViewModel> vie
 {
     ui->setupUi(this);
 
+    m_progressTimer.setInterval(10);
+    connect(&m_progressTimer, &QTimer::timeout, this, &ProgressExposureView::updateProgressBar);
+
     createNavButtonsConfigs();
     setDefaultTitleBar("Exposure in progress");
-    setNavButtonEnabled(ID_BTN_VALIDATE, true);
 }
 ProgressExposureView::~ProgressExposureView()
 {
@@ -28,17 +31,47 @@ void ProgressExposureView::resizeEvent(QResizeEvent *ev)
 
 void ProgressExposureView::showEvent(QShowEvent *event)
 {
+    setNavButtonEnabled(ID_BTN_VALIDATE, false);
     auto vm = getViewModel<ProgressExposureViewModel>();
-    if (vm)
+    if (!vm)
     {
-        PresetExposure preset = vm->getCurrentPreset();
-        ui->exposureModeLabel->setText(vm->modeToString(preset.mode) + " exposure");
-        ui->detailsExposureLabel->setText(vm->presetDetailsToStr(preset));
-
-        qDebug() << "Preset details: " << vm->presetDetailsToStr(preset);
+        QWidget::showEvent(event);
+        return;
     }
+    PresetExposure preset = vm->getCurrentPreset();
+    ui->exposureModeLabel->setText(vm->modeToString(preset.mode) + " exposure");
+    ui->detailsExposureLabel->setText(vm->presetDetailsToStr(preset));
+
+    m_durationInMS = preset.getDurationInMS();
+    ui->progressBar->setRange(0, m_durationInMS);
     ui->progressBar->setValue(0);
+
+    m_progressTimer.stop();
+    if (m_durationInMS > 0)
+    {
+        m_progressTimer.start();
+        m_elapsedTimer.restart();
+    }
+
     QWidget::showEvent(event);
+}
+
+void ProgressExposureView::updateProgressBar()
+{
+    const qint64 elapsedTime = m_elapsedTimer.elapsed();
+
+    if (elapsedTime >= m_durationInMS)
+    {
+        ui->progressBar->setValue(m_durationInMS);
+        m_progressTimer.stop();
+        setNavButtonEnabled(ID_BTN_VALIDATE, true);
+        return;
+    }
+
+    ui->progressBar->setValue(elapsedTime);
+    int min = (m_durationInMS - elapsedTime) / 60000;
+    int sec = ((m_durationInMS - (min * 60000)) - elapsedTime) / 1000;
+    ui->remainTimeLabel->setText(QString::number(min) + ":" + QString::number(sec, 10).rightJustified(2, '0'));
 }
 
 void ProgressExposureView::onBackButtonClicked()

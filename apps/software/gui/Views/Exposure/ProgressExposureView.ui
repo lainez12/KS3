@@ -169,7 +169,7 @@ color: #E85420;</string>
          <string>text-large color-blue</string>
         </property>
        </widget>
-       <widget class="QLabel" name="minRemainLabel">
+       <widget class="QLabel" name="remainTimeLabel">
         <property name="geometry">
          <rect>
           <x>280</x>
@@ -180,22 +180,6 @@ color: #E85420;</string>
         </property>
         <property name="text">
          <string>0min</string>
-        </property>
-        <property name="class" stdset="0">
-         <string>text-large color-blue</string>
-        </property>
-       </widget>
-       <widget class="QLabel" name="secRemeainLabel">
-        <property name="geometry">
-         <rect>
-          <x>360</x>
-          <y>380</y>
-          <width>57</width>
-          <height>41</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>4s</string>
         </property>
         <property name="class" stdset="0">
          <string>text-large color-blue</string>

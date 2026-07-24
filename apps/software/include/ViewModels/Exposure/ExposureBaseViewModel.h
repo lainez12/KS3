@@ -22,19 +22,19 @@ namespace Kub3::UI::ViewModels::Exposure
 
         struct Duration {
             uint32_t minutes;
-            uint32_t seconds;
+            uint32_t miliseconds;
         };
 
         struct ContinuousSettings {
             Duration duration;
-            uint32_t power;
+            uint8_t power;
         };
 
         struct FlashingSettings {
             uint32_t numberOfCycles;
             Duration durationOn;
             Duration durationOff;
-            uint32_t power;
+            uint8_t power;
         };
 
         struct PresetExposure {
@@ -42,6 +42,19 @@ namespace Kub3::UI::ViewModels::Exposure
             ExposureMode mode = ExposureMode::Continuous;
             ContinuousSettings continuous;
             FlashingSettings flashing;
+
+            uint32_t getDurationInMS() const
+            {
+                if (mode == ExposureMode::Continuous)
+                {
+                    return (continuous.duration.minutes * 60000 + continuous.duration.miliseconds);
+                }
+                else if (mode == ExposureMode::Flashing)
+                {
+                    return flashing.numberOfCycles * ((flashing.durationOn.minutes * 60000 + flashing.durationOn.miliseconds) + (flashing.durationOff.minutes * 60000 + flashing.durationOff.miliseconds));
+                }
+                return 0;
+            }
         };
 
     public:

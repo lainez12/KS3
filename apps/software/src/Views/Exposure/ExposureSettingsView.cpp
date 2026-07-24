@@ -61,6 +61,7 @@ ExposureSettingsView::ExposureSettingsView(Unique<ExposureSettingsViewModel> vie
     connectQSpinBoxSignals();
     ui->exposureDuration->hide();
     ui->titleExposureDuration->hide();
+    setNavButtonEnabled(ID_BTN_SAVE, false);
 }
 
 ExposureSettingsView::~ExposureSettingsView()
@@ -139,18 +140,18 @@ PresetExposure ExposureSettingsView::getCurrentPresetExposure() const
     preset.mode = m_isFlashingMode ? ExposureMode::Flashing : ExposureMode::Continuous;
     if (preset.mode == ExposureMode::Continuous)
     {
-        preset.continuous.duration.minutes = ui->minContinuouspinBox->value();
-        preset.continuous.duration.seconds = ui->segContinuouspinBox->value();
-        preset.continuous.power            = ui->powerContinuouspinBox->value();
+        preset.continuous.duration.minutes     = ui->minContinuouspinBox->value();
+        preset.continuous.duration.miliseconds = ui->segContinuouspinBox->value() * 1000; // Convert seconds to milliseconds
+        preset.continuous.power                = ui->powerContinuouspinBox->value();
     }
     else
     {
-        preset.flashing.numberOfCycles      = ui->numberCyclespinBox->value();
-        preset.flashing.durationOn.minutes  = ui->minOnFlashingspinBox->value();
-        preset.flashing.durationOn.seconds  = ui->segOnFlashingspinBox->value();
-        preset.flashing.durationOff.minutes = ui->minOffFlashingspinBox->value();
-        preset.flashing.durationOff.seconds = ui->segOffFlashingspinBox->value();
-        preset.flashing.power               = ui->powerFlashingspinBox->value();
+        preset.flashing.numberOfCycles          = ui->numberCyclespinBox->value();
+        preset.flashing.durationOn.minutes      = ui->minOnFlashingspinBox->value();
+        preset.flashing.durationOn.miliseconds  = ui->segOnFlashingspinBox->value() * 1000; // Convert seconds to milliseconds
+        preset.flashing.durationOff.minutes     = ui->minOffFlashingspinBox->value();
+        preset.flashing.durationOff.miliseconds = ui->segOffFlashingspinBox->value() * 1000; // Convert seconds to milliseconds
+        preset.flashing.power                   = ui->powerFlashingspinBox->value();
     }
 
     return preset;
@@ -175,12 +176,12 @@ void ExposureSettingsView::watchForChangesInPresetExposure()
 void ExposureSettingsView::connectQSpinBoxSignals()
 {
     connect(ui->minContinuouspinBox, &QSpinBox::valueChanged, this, &ExposureSettingsView::watchForChangesInPresetExposure);
-    connect(ui->segContinuouspinBox, &QSpinBox::valueChanged, this, &ExposureSettingsView::watchForChangesInPresetExposure);
+    connect(ui->segContinuouspinBox, &QDoubleSpinBox::valueChanged, this, &ExposureSettingsView::watchForChangesInPresetExposure);
     connect(ui->powerContinuouspinBox, &QSpinBox::valueChanged, this, &ExposureSettingsView::watchForChangesInPresetExposure);
     connect(ui->numberCyclespinBox, &QSpinBox::valueChanged, this, &ExposureSettingsView::watchForChangesInPresetExposure);
     connect(ui->minOnFlashingspinBox, &QSpinBox::valueChanged, this, &ExposureSettingsView::watchForChangesInPresetExposure);
-    connect(ui->segOnFlashingspinBox, &QSpinBox::valueChanged, this, &ExposureSettingsView::watchForChangesInPresetExposure);
+    connect(ui->segOnFlashingspinBox, &QDoubleSpinBox::valueChanged, this, &ExposureSettingsView::watchForChangesInPresetExposure);
     connect(ui->minOffFlashingspinBox, &QSpinBox::valueChanged, this, &ExposureSettingsView::watchForChangesInPresetExposure);
-    connect(ui->segOffFlashingspinBox, &QSpinBox::valueChanged, this, &ExposureSettingsView::watchForChangesInPresetExposure);
+    connect(ui->segOffFlashingspinBox, &QDoubleSpinBox::valueChanged, this, &ExposureSettingsView::watchForChangesInPresetExposure);
     connect(ui->powerFlashingspinBox, &QSpinBox::valueChanged, this, &ExposureSettingsView::watchForChangesInPresetExposure);
 }

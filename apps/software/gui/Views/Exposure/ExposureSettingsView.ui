@@ -964,7 +964,7 @@ font-size: 40px;</string>
        <item>
         <widget class="QStackedWidget" name="inputsStack">
          <property name="currentIndex">
-          <number>1</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="pageFlashing">
           <layout class="QGridLayout" name="gridLayout_4">
@@ -1194,49 +1194,6 @@ opacity: 1;</string>
              </property>
              <property name="buttonSymbols">
               <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
-             </property>
-            </widget>
-           </item>
-           <item row="8" column="3">
-            <widget class="QSpinBox" name="segOffFlashingspinBox">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>50</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>120</width>
-               <height>77</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>0</width>
-               <height>50</height>
-              </size>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">
-width: 85px;
-height: 55px;
-text-align: left;
-font: normal normal bold 25px/29px Arial;
-letter-spacing: 0px;
-color: #E85420;</string>
-             </property>
-             <property name="frame">
-              <bool>false</bool>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignmentFlag::AlignCenter</set>
-             </property>
-             <property name="buttonSymbols">
-              <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
-             </property>
-             <property name="value">
-              <number>1</number>
              </property>
             </widget>
            </item>
@@ -1490,52 +1447,6 @@ opacity: 1;</string>
              </property>
             </spacer>
            </item>
-           <item row="5" column="3">
-            <widget class="QSpinBox" name="segOnFlashingspinBox">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>50</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>120</width>
-               <height>77</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>0</width>
-               <height>50</height>
-              </size>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">
-/* UI Properties */
-text-align: left;
-font: normal normal bold 25px/29px Arial;
-letter-spacing: 0px;
-color: #E85420;
-opacity: 1;</string>
-             </property>
-             <property name="frame">
-              <bool>false</bool>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignmentFlag::AlignCenter</set>
-             </property>
-             <property name="buttonSymbols">
-              <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
-             </property>
-             <property name="singleStep">
-              <number>1</number>
-             </property>
-             <property name="value">
-              <number>1</number>
-             </property>
-            </widget>
-           </item>
            <item row="8" column="2">
             <widget class="QLabel" name="label_15">
              <property name="sizePolicy">
@@ -1594,6 +1505,92 @@ opacity: 1;</string>
              </property>
             </spacer>
            </item>
+           <item row="5" column="3">
+            <widget class="QDoubleSpinBox" name="segOnFlashingspinBox">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>50</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>120</width>
+               <height>77</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>0</width>
+               <height>50</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">
+/* UI Properties */
+text-align: left;
+font: normal normal bold 25px/29px Arial;
+letter-spacing: 0px;
+color: #E85420;
+opacity: 1;</string>
+             </property>
+             <property name="frame">
+              <bool>false</bool>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignmentFlag::AlignCenter</set>
+             </property>
+             <property name="buttonSymbols">
+              <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+             </property>
+             <property name="decimals">
+              <number>1</number>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="3">
+            <widget class="QDoubleSpinBox" name="segOffFlashingspinBox">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>50</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>120</width>
+               <height>77</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>0</width>
+               <height>50</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">
+width: 85px;
+height: 55px;
+text-align: left;
+font: normal normal bold 25px/29px Arial;
+letter-spacing: 0px;
+color: #E85420;</string>
+             </property>
+             <property name="frame">
+              <bool>false</bool>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignmentFlag::AlignCenter</set>
+             </property>
+             <property name="buttonSymbols">
+              <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+             </property>
+             <property name="decimals">
+              <number>1</number>
+             </property>
+            </widget>
+           </item>
           </layout>
          </widget>
          <widget class="QWidget" name="pageContinuous">
@@ -1644,54 +1641,6 @@ opacity: 1;</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft</set>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="3">
-            <widget class="QSpinBox" name="segContinuouspinBox">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>100</horstretch>
-               <verstretch>50</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>120</width>
-               <height>77</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>70</width>
-               <height>50</height>
-              </size>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">
-
-text-align: left;
-font: normal normal bold 25px/29px Arial;
-letter-spacing: 0px;
-color: #E85420;</string>
-             </property>
-             <property name="frame">
-              <bool>false</bool>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignmentFlag::AlignCenter</set>
-             </property>
-             <property name="buttonSymbols">
-              <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
-             </property>
-             <property name="minimum">
-              <number>0</number>
-             </property>
-             <property name="maximum">
-              <number>59</number>
-             </property>
-             <property name="value">
-              <number>1</number>
              </property>
             </widget>
            </item>
@@ -1986,6 +1935,60 @@ color: #E85420;</string>
               </size>
              </property>
             </spacer>
+           </item>
+           <item row="2" column="3">
+            <widget class="QDoubleSpinBox" name="segContinuouspinBox">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>100</horstretch>
+               <verstretch>50</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>120</width>
+               <height>77</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>70</width>
+               <height>50</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">
+
+text-align: left;
+font: normal normal bold 25px/29px Arial;
+letter-spacing: 0px;
+color: #E85420;</string>
+             </property>
+             <property name="frame">
+              <bool>false</bool>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignmentFlag::AlignCenter</set>
+             </property>
+             <property name="buttonSymbols">
+              <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+             </property>
+             <property name="decimals">
+              <number>1</number>
+             </property>
+             <property name="minimum">
+              <double>0.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>100.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>1.000000000000000</double>
+             </property>
+             <property name="value">
+              <double>0.000000000000000</double>
+             </property>
+            </widget>
            </item>
           </layout>
          </widget>

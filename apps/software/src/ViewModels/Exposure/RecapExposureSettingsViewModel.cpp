@@ -26,9 +26,9 @@ namespace Kub3::UI::ViewModels::Exposure
 
         if (m_currentPreset.mode == ExposureMode::Continuous)
         {
-            uint32_t duration   = m_currentPreset.continuous.duration.minutes * 60 * 1000 + m_currentPreset.continuous.duration.seconds * 1000; //TODO seconds should be a double to allow for sub-second precision
-            uint8_t centerPower = m_currentPreset.continuous.power * 0.5; // TODO
-            uint8_t crownPower  = m_currentPreset.continuous.power * 0.5; // TODO
+            uint32_t duration   = m_currentPreset.continuous.duration.minutes * 60 * 1000 + m_currentPreset.continuous.duration.miliseconds; // TODO seconds should be a double to allow for sub-second precision
+            uint8_t centerPower = m_currentPreset.continuous.power * 0.5;                                                                    // TODO
+            uint8_t crownPower  = m_currentPreset.continuous.power * 0.5;                                                                    // TODO
             payload             = HAL::Act::ContinuousExposureParams{
                 .durationMs     = duration,
                 .centerPowerPct = centerPower,
@@ -36,8 +36,8 @@ namespace Kub3::UI::ViewModels::Exposure
         }
         else if (m_currentPreset.mode == ExposureMode::Flashing)
         {
-            uint32_t duration   = m_currentPreset.flashing.durationOn.minutes * 60 * 1000 + m_currentPreset.flashing.durationOn.seconds * 1000;
-            uint32_t pauseTime  = m_currentPreset.flashing.durationOff.minutes * 60 * 1000 + m_currentPreset.flashing.durationOff.seconds * 1000;
+            uint32_t duration   = m_currentPreset.flashing.durationOn.minutes * 60 * 1000 + m_currentPreset.flashing.durationOn.miliseconds;
+            uint32_t pauseTime  = m_currentPreset.flashing.durationOff.minutes * 60 * 1000 + m_currentPreset.flashing.durationOff.miliseconds;
             uint8_t centerPower = m_currentPreset.flashing.power * 0.5; // TODO
             uint8_t crownPower  = m_currentPreset.flashing.power * 0.5; // TODO
             payload             = HAL::Act::FlashingExposureParams{
