@@ -20,6 +20,7 @@ namespace Kub3::UI::ViewModels::Exposure
 
     signals:
         void s_launchExposure(const Services::ExposurePayload &payload);
+        void s_exposurePresetLaunched(const PresetExposure &preset);
 
     public slots:
         void ps_setExposurePreset(const PresetExposure &preset);

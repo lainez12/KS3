@@ -13,6 +13,12 @@ namespace Kub3::UI::ViewModels::Exposure
 
     void ProgressExposureViewModel::ps_launchExposure(const PresetExposure &preset)
     {
+        m_currentPreset = preset;
+    }
+
+    PresetExposure ProgressExposureViewModel::getCurrentPreset() const
+    {
+        return m_currentPreset;
     }
 
 } // namespace Kub3::UI::ViewModels::Exposure

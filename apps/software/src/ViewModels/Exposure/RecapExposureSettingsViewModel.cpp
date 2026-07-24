@@ -54,6 +54,7 @@ namespace Kub3::UI::ViewModels::Exposure
         }
 
         emit s_launchExposure(payload);
+        emit s_exposurePresetLaunched(m_currentPreset);
     }
 
     PresetExposure RecapExposureSettingsViewModel::getCurrentPreset() const

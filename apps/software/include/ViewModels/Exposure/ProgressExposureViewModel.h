@@ -13,10 +13,14 @@ namespace Kub3::UI::ViewModels::Exposure
         explicit ProgressExposureViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent = nullptr);
         ~ProgressExposureViewModel() override;
 
+    public:
+        PresetExposure getCurrentPreset() const;
+
     public slots:
         void ps_launchExposure(const PresetExposure &preset);
 
     private:
+        PresetExposure m_currentPreset;
     };
 
 } // namespace Kub3::UI::ViewModels

@@ -71,33 +71,17 @@
          <string>text-large color-blue</string>
         </property>
        </widget>
-       <widget class="QLabel" name="label_3">
+       <widget class="QLabel" name="detailsExposureLabel">
         <property name="geometry">
          <rect>
           <x>140</x>
           <y>400</y>
           <width>431</width>
-          <height>51</height>
+          <height>211</height>
          </rect>
         </property>
         <property name="text">
          <string>Duration: 0min 10s</string>
-        </property>
-        <property name="class" stdset="0">
-         <string>text-large color-orange</string>
-        </property>
-       </widget>
-       <widget class="QLabel" name="powerLabel">
-        <property name="geometry">
-         <rect>
-          <x>140</x>
-          <y>470</y>
-          <width>441</width>
-          <height>41</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Exposure power: 20%</string>
         </property>
         <property name="class" stdset="0">
          <string>text-large color-orange</string>
@@ -169,7 +153,7 @@ color: #E85420;</string>
          <enum>QProgressBar::Direction::BottomToTop</enum>
         </property>
        </widget>
-       <widget class="QLabel" name="label_5">
+       <widget class="QLabel" name="reamainingTitle">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -185,7 +169,7 @@ color: #E85420;</string>
          <string>text-large color-blue</string>
         </property>
        </widget>
-       <widget class="QLabel" name="label">
+       <widget class="QLabel" name="minRemainLabel">
         <property name="geometry">
          <rect>
           <x>280</x>
@@ -201,7 +185,7 @@ color: #E85420;</string>
          <string>text-large color-blue</string>
         </property>
        </widget>
-       <widget class="QLabel" name="label_2">
+       <widget class="QLabel" name="secRemeainLabel">
         <property name="geometry">
          <rect>
           <x>360</x>

@@ -26,6 +26,21 @@ void ProgressExposureView::resizeEvent(QResizeEvent *ev)
     QWidget::resizeEvent(ev);
 }
 
+void ProgressExposureView::showEvent(QShowEvent *event)
+{
+    auto vm = getViewModel<ProgressExposureViewModel>();
+    if (vm)
+    {
+        PresetExposure preset = vm->getCurrentPreset();
+        ui->exposureModeLabel->setText(vm->modeToString(preset.mode) + " exposure");
+        ui->detailsExposureLabel->setText(vm->presetDetailsToStr(preset));
+        
+        qDebug() << "Preset details: " << vm->presetDetailsToStr(preset);
+    }
+    ui->progressBar->setValue(0);
+    QWidget::showEvent(event);
+}
+
 void ProgressExposureView::onBackButtonClicked()
 {
     // emit s_openView(Kub3::UI::ViewId::BACK_VIEW);
