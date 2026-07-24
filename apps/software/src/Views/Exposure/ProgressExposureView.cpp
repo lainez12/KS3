@@ -14,7 +14,7 @@ ProgressExposureView::ProgressExposureView(Unique<ProgressExposureViewModel> vie
     ui->setupUi(this);
 
     createNavButtonsConfigs();
-    setDefaultTitleBar("Exposure Settings");
+    setDefaultTitleBar("Exposure in progress");
     setNavButtonEnabled(ID_BTN_VALIDATE, true);
 }
 ProgressExposureView::~ProgressExposureView()
@@ -34,7 +34,7 @@ void ProgressExposureView::showEvent(QShowEvent *event)
         PresetExposure preset = vm->getCurrentPreset();
         ui->exposureModeLabel->setText(vm->modeToString(preset.mode) + " exposure");
         ui->detailsExposureLabel->setText(vm->presetDetailsToStr(preset));
-        
+
         qDebug() << "Preset details: " << vm->presetDetailsToStr(preset);
     }
     ui->progressBar->setValue(0);

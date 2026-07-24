@@ -14,7 +14,7 @@ LoadParametersView::LoadParametersView(Unique<LoadParametersViewModel> viewModel
     ui(new Ui::LoadParametersView)
 {
     ui->setupUi(this);
-    setDefaultTitleBar("Exposure Settings");
+    setDefaultTitleBar("Exposure settings");
     setNewNavButtonsConfigs();
 }
 LoadParametersView::~LoadParametersView()

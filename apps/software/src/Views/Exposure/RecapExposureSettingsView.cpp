@@ -15,7 +15,7 @@ RecapExposureSettingsView::RecapExposureSettingsView(Unique<RecapExposureSetting
 
     createNavButtonsConfigs();
     setNewNavButtonsConfigs();
-    setDefaultTitleBar("Exposure Settings");
+    setDefaultTitleBar("Exposure parameters");
     setNavButtonEnabled(ID_BTN_VALIDATE, true);
 }
 RecapExposureSettingsView::~RecapExposureSettingsView()

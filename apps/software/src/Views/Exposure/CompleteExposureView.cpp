@@ -13,7 +13,7 @@ CompleteExposureView::CompleteExposureView(Unique<CompleteExposureViewModel> vie
 {
     ui->setupUi(this);
     setNewNavButtonsConfigs();
-    setDefaultTitleBar("Exposure Settings");
+    setDefaultTitleBar("Exposure complete");
 }
 CompleteExposureView::~CompleteExposureView()
 {
