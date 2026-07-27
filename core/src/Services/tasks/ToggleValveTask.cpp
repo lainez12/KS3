@@ -1,3 +1,6 @@
+#include <cctype>
+
+#include <HAL/MachineStatus/actuators_labels.h>
 #include <HAL/MachineStatus/sensors_labels.h>
 #include <HAL/MachineStatus/utils.h>
 #include <Services/tasks/ToggleValveTask.h>
@@ -18,6 +21,31 @@ namespace Kub3::Services
 
     void ToggleValveTask::start()
     {
+        const auto valveId = m_valve->getId();
+        std::string valveName;
+
+        if (valveId == MASK_VACUUM_VALVE)
+            valveName = "mask vacuum";
+        else if (valveId == WAFER_VACUUM_VALVE)
+            valveName = "wafer vacuum";
+        else if (valveId == WAFER_COMPRESSED_AIR_VALVE)
+            valveName = "compressed air";
+        else
+        {
+            qCritical() << "Toggling anonymous valve. Abnormal behaviour.";
+            return;
+        }
+
+        auto capitalizeFirst = [](std::string str) {
+            if (!str.empty())
+                str[0] = static_cast<char>(std::toupper(static_cast<unsigned char>(str[0])));
+            return str;
+        };
+
+        if (HAL::MS::readBool(m_repo, m_targetSensor) == m_targetSensorState)
+            postInfo(std::format("{} already {}. Skipping.", capitalizeFirst(valveName), m_targetSensorState ? "active" : "disabled"));
+        else
+            postInfo(std::format("{} {}...", (m_targetSensorState ? "Enabling" : "Disabling"), valveName));
     }
 
     bool ToggleValveTask::tick()

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Common/Enums.h>
 #include <Config/conf.h>
 #include <HAL/Actuators/ActuatorRegistry.h>
 #include <HAL/Actuators/Motors/IMotor.h>
@@ -14,13 +15,6 @@
 
 namespace Kub3::Services
 {
-
-    enum StowageTarget : uint32_t
-    {
-        MASK  = 0x1 << 0,
-        WAFER = 0x1 << 1,
-        BOTH  = MASK & WAFER,
-    };
 
     class StowageService final : public BaseTaskService<IStowageService>
     {

@@ -35,6 +35,7 @@ namespace Kub3::Services
 
         // IContactService overrides
         void startContactRoutine(ContactPayload kind) override;
+        void retractFromContact(void) override;
         void moveZManual(ZDirection dir) override;
         void stopZManual(void) override;
         [[nodiscard]] bool isInContact(void) const override;

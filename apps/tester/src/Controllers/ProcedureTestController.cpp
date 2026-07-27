@@ -263,7 +263,7 @@ namespace Kub3::Tools::Tester
 
     void ProcedureTestController::ps_runStowage(int targetInt)
     {
-        auto target = static_cast<Services::StowageTarget>(targetInt);
+        auto target = static_cast<StowageTarget>(targetInt);
         m_stowageService->startStowage(target);
         startServiceRoutine(m_stowageService.get(), "Stowage Sequence");
     }

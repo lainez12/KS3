@@ -43,6 +43,30 @@ namespace Kub3::Services
     {
         m_started           = false;
         m_fineProfileActive = false;
+
+        switch (m_targetLimit)
+        {
+        case ZLimit::_Z2:
+        {
+            postInfo(m_limitTargetState ? "Moving wafer up to alignment zone..."
+                                        : "Moving wafer down to alignment zone...");
+            break;
+        }
+        case ZLimit::_WAFER_ON:
+        {
+            postInfo(m_limitTargetState ? "Stowing wafer..."
+                                        : "Unstowing wafer...");
+            break;
+        }
+        case ZLimit::_Z1:
+        {
+            postInfo(m_limitTargetState ? "Moving alignment block up to stowing zone..."
+                                        : "Moving alignment block down out of stowing zone...");
+            break;
+        }
+        default:
+            break;
+        }
     }
 
     bool StowageMoveZToLimitTask::tick(void)

@@ -35,7 +35,7 @@ namespace Kub3::UI::ViewModels
 
         // From the FSM
         void ps_onSystemStateChanged(MFSM::SystemStateKind state);
-        void ps_onOperationalSubstateChanged(MFSM::OperationalStateKind state);
+        void ps_onOperationalSubstateKindChanged(MFSM::OperationalStateKind state);
         void ps_initializationSuccess();
         void ps_errorOccurred(const MFSM::ErrorPayload &payload);
         void ps_operationEnded();

@@ -2,6 +2,7 @@
 
 #include <QObject>
 
+#include <Common/ProcessMessage.h>
 #include <ViewModels/PopUpTypes.h>
 
 namespace Kub3::UI::ViewModels
@@ -39,6 +40,9 @@ namespace Kub3::UI::ViewModels
         void s_createPopUp(const QString &title, const PopUpActions &buttons);
         void s_createPopUpWithText(const QString &title, const PopUpActions &buttons, const QString &initialText);
         void s_closePopUp();
+
+    public slots:
+        virtual void ps_onProcessMessageBroadcast(const Common::ProcessMessage &msg) {};
 
     private:
         std::vector<std::function<QMetaObject::Connection()>> m_connectionBuilders;

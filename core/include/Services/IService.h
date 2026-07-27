@@ -2,6 +2,8 @@
 
 #include <string>
 
+#include <Common/Enums.h>
+
 #define UNWRAP_OR_THROW(var_name, result_expr, error_prefix)                                \
     auto _res_##var_name = (result_expr);                                                   \
     if (!_res_##var_name)                                                                   \
@@ -43,7 +45,10 @@ namespace Kub3::Services
     class IService
     {
     public:
-        virtual ~IService() = default;
+        using LogCallback = std::function<void(LogLevel, const std::string &)>;
+
+        virtual ~IService()                         = default;
+        virtual void setLogCallback(LogCallback cb) = 0;
 
         virtual void tick(void) = 0;
         virtual void stop(void) = 0;

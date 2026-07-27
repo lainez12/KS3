@@ -17,6 +17,7 @@ qt_add_library(Kub3Core STATIC
     src/Views/Components/DoubleRatioSlider.cpp
     src/Views/Components/KeyboardFilter.cpp
     src/Views/Traits/PadReceiverViewTrait.cpp
+    src/Views/Components/SpinningLabel.cpp
     src/ViewModels/BaseViewModel.cpp
     src/ViewModels/BaseVisionViewModel.cpp
     src/MFSM/MasterFSM.actions.cpp
@@ -78,6 +79,8 @@ qt_add_library(Kub3Core STATIC
     # Headers
     include/utils.h
     include/Common/Enums.h
+    include/Common/ProcessMessage.h
+    include/Common/Result.h
     include/Common/TestToken.h
     include/Config/ConfigLoader.h
     include/Config/ConfigSaver.h
@@ -96,6 +99,7 @@ qt_add_library(Kub3Core STATIC
     include/Views/Components/CameraStreamWidget.h
     include/Views/Components/DoubleRatioSlider.h
     include/Views/Components/KeyboardFilter.h
+    include/Views/Components/SpinningLabel.h
     include/Views/Traits/PadReceiverViewTrait.h
     include/ViewModels/BaseViewModel.h
     include/ViewModels/BaseVisionViewModel.h

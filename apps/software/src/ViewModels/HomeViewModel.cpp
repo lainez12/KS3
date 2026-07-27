@@ -18,7 +18,7 @@ namespace Kub3::UI::ViewModels
         evaluatePopup(prevState);
     }
 
-    void HomeViewModel::ps_onOperationalSubstateChanged(MFSM::OperationalStateKind state)
+    void HomeViewModel::ps_onOperationalSubstateKindChanged(MFSM::OperationalStateKind state)
     {
         auto prevState = m_currentSysState;
 

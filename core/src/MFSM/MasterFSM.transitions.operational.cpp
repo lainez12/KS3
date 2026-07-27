@@ -4,6 +4,7 @@
 #include <MFSM/MasterFSM.h>
 #include <MFSM/interlocks.h>
 #include <Services/Stowage/StowageService.h>
+#include <type_traits>
 #include <utils.h>
 
 namespace Kub3::MFSM
@@ -55,7 +56,7 @@ namespace Kub3::MFSM
                 }
 
                 ExpectedSystemPosture success{}, abort{};
-                if (cmd.target == Services::StowageTarget::WAFER)
+                if (cmd.target == StowageTarget::Wafer)
                 {
                     success.newWaferPosture = WaferPosture::AlignmentZone;
                     abort.newWaferPosture   = WaferPosture::ElevatorMidway;
@@ -66,7 +67,7 @@ namespace Kub3::MFSM
                     abort.newMaskPosture   = MaskPosture::ExposureMidway;
                 }
 
-                return StateStowing{.expectedSuccess = success, .expectedAbort = abort};
+                return StateStowing{.target = cmd.target, .expectedSuccess = success, .expectedAbort = abort};
             },
 
             [&](const StateIdle &s, const CmdOperateUnstowage &cmd) -> OperationalState {
@@ -79,18 +80,34 @@ namespace Kub3::MFSM
 
                 // Granularly calculate expected success based on requested homing bits
                 ExpectedSystemPosture success{}, abort{};
-                if (cmd.target & Services::StowageTarget::MASK)
+                if (has_flag(cmd.target, StowageTarget::Mask))
                 {
                     success.newMaskPosture = MaskPosture::Homed;
                     abort.newMaskPosture   = MaskPosture::ExposureMidway;
                 }
-                if (cmd.target & Services::StowageTarget::WAFER)
+                if (has_flag(cmd.target, StowageTarget::Wafer))
                 {
-                    success.newWaferPosture = WaferPosture::Homed;
-                    abort.newWaferPosture   = WaferPosture::ElevatorMidway;
+                    success.newWaferPosture  = WaferPosture::Homed;
+                    success.newLevelingValid = false;
+                    abort.newWaferPosture    = WaferPosture::ElevatorMidway;
+                    abort.newLevelingValid   = false;
                 }
 
-                return StateUnstowing{.target = cmd.target, .expectedSuccess = success};
+                return StateUnstowing{.target = cmd.target, .expectedSuccess = success, .expectedAbort = abort};
+            },
+
+            [&](const StateIdle &s, const CmdStartAutolevel &cmd) -> OperationalState {
+                auto guard = Interlocks::canOperateAutolevel(opState.posture);
+                if (!guard)
+                {
+                    emit s_warningOccurred(QString::fromUtf8(guard.unwrap_err()));
+                    return s;
+                }
+
+                return StateAutoleveling{
+                    .expectedSuccess = {.newLevelingValid = true},
+                    .expectedAbort   = {.newLevelingValid = false},
+                };
             },
 
             [&](const StateIdle &s, const CmdEnterAlignmentMode &cmd) -> OperationalState {
@@ -123,6 +140,50 @@ namespace Kub3::MFSM
                     return s;
                 }
                 // return StatePreparingAlignmentExit{};
+                return StateIdle{};
+            },
+
+            // ==========================================
+            // STOWAGE
+            // ==========================================
+
+            [&](const StateStowing &s, const EvServiceError &e) -> OperationalState {
+                // Notify the UI
+                emit s_warningOccurred("Stowage failed. Returning to home position.");
+
+                // Compute where it needs to go to recover
+                ExpectedSystemPosture expected{}, aborted{};
+                if (has_flag(s.target, StowageTarget::Mask))
+                {
+                    expected.newMaskPosture = MaskPosture::Homed;
+                    aborted.newMaskPosture  = MaskPosture::ExposureMidway;
+                }
+                if (has_flag(s.target, StowageTarget::Wafer))
+                {
+                    expected.newWaferPosture = WaferPosture::Homed;
+                    aborted.newWaferPosture  = WaferPosture::ElevatorMidway;
+                }
+
+                // Automatically trigger Unstowing (which runs the HomingService)
+                return StateUnstowing{.target = s.target, .expectedSuccess = expected, .expectedAbort = aborted};
+            },
+
+            // ==========================================
+            // AUTOLEVELING / HORIZONTALITY
+            // ==========================================
+
+            [&](const StateAutoleveling &s, const EvServiceError &e) -> OperationalState {
+                // Notify the UI
+                emit s_warningOccurred("Auto-leveling failed. Retracting Z elevators...");
+
+                // Automatically trigger a retraction sequence
+                return StateRetractingZ{
+                    .expectedSuccess = {.newWaferPosture = WaferPosture::AlignmentZone},
+                    .expectedAbort   = {.newWaferPosture = WaferPosture::AlignmentZone}, // In both case the wafer posture is the alignment zone
+                };
+            },
+
+            [&](const StateAutoleveling &s, const EvServiceSuccess &) -> OperationalState {
                 return StateIdle{};
             },
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <type_traits>
 
 #define impl_bin_operators_for_enum(EnumClass)                                                  \
     inline EnumClass operator&(EnumClass lhs, EnumClass rhs)                                    \
@@ -14,6 +15,21 @@
 
 namespace Kub3
 {
+
+    template <typename EnumT>
+    constexpr bool has_flag(EnumT value, EnumT flag)
+    {
+        using U = std::underlying_type_t<EnumT>;
+        return (static_cast<U>(value) & static_cast<U>(flag)) != 0;
+    }
+
+    enum class LogLevel
+    {
+        Info,
+        Success,
+        Warning,
+        Error
+    };
 
     enum class ErrorKind
     {
@@ -49,6 +65,15 @@ namespace Kub3
         Both  = Wafer | Mask
     };
     impl_bin_operators_for_enum(DrawerTarget);
+
+    enum class StowageTarget : uint32_t
+    {
+        None  = 0,
+        Mask  = 1u << 0,
+        Wafer = 1u << 1,
+        Both  = Mask | Wafer,
+    };
+    impl_bin_operators_for_enum(StowageTarget);
 
     enum class ForceSensor : uint32_t
     {

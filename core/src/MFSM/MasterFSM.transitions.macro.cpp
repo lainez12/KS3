@@ -89,24 +89,6 @@ namespace Kub3::MFSM
             },
 
             // --- OPERATIONAL (Delegation to Level 2) ---
-            [&](const StateOperational &s, const EvServiceError &e) -> SystemState {
-                // Dynamically extract expected posture if the active sub-state has one
-                const ExpectedSystemPosture failedExpectation = std::visit(
-                    overloadedCallable{[](const auto &sub) -> ExpectedSystemPosture {
-                        if constexpr (requires { sub.expectedSuccess; })
-                            return sub.expectedSuccess;
-                        return {};
-                    }},
-                    s.subState);
-
-                // A service error during operations crashes the macro-state down to Fault
-                return StateError{
-                    .posture        = s.posture.invalidate(failedExpectation),
-                    .severity       = ErrorSeverity::Critical,
-                    .message        = e.reason,
-                    .allowedActions = ErrorAction::ResetMachine | ErrorAction::Recover,
-                };
-            },
             [&](const StateOperational &s, const CmdAbortOperation &e) -> SystemState {
                 qInfo() << "MFSM: User aborted sequence. Computing updated physical posture.";
 
@@ -143,13 +125,57 @@ namespace Kub3::MFSM
                     .subState = StateIdle{}, // Drop cleanly back to Idle
                 };
             },
-            [&](const StateOperational &s, const auto &) -> SystemState {
-                // Delegate to Sub-FSM (MasterFSM.transitions.operational.cpp)
+
+            // @note: Here, using `SystemEvent` has the same effect as using `auto`.
+            [&](const StateOperational &s, const auto &event) -> SystemState {
+                // 1. Delegate to Sub-FSM (in MasterFSM.transitions.operational.cpp)
                 OperationalState nextSubState = this->processOperationalTransition(s, event);
 
+                // 2. Check if the Sub-FSM actually handled the transition.
+                if (nextSubState.index() == s.subState.index())
+                {
+                    // The Sub-FSM ignored the event.
+                    // If it was an Error, it means the Sub-FSM didn't know how to recover from it.
+                    if constexpr (std::is_same_v<std::decay_t<decltype(event)>, EvServiceError>)
+                    {
+                        const ExpectedSystemPosture failedExpectation = std::visit(
+                            overloadedCallable{[](const auto &sub) -> ExpectedSystemPosture {
+                                if constexpr (requires { sub.expectedSuccess; })
+                                    return sub.expectedSuccess;
+                                return {};
+                            }},
+                            s.subState);
+
+                        // ESCALATE TO SYSTEM FAULT.
+                        return StateError{
+                            .posture        = s.posture.invalidate(failedExpectation),
+                            .severity       = ErrorSeverity::Critical,
+                            .message        = event.reason,
+                            .allowedActions = ErrorAction::ResetMachine | ErrorAction::Recover,
+                        };
+                    }
+                }
+
+                // 3. The Sub-FSM successfully handled the event.
+                SystemPosture newPosture = s.posture;
+
+                // If it handled an EvServiceError, it means it triggered an automatic recovery.
+                // We must invalidate the posture of whatever was moving before recovering.
+                if constexpr (std::is_same_v<std::decay_t<decltype(event)>, EvServiceError>)
+                {
+                    const ExpectedSystemPosture failedExpectation = std::visit(
+                        overloadedCallable{[](const auto &sub) -> ExpectedSystemPosture {
+                            if constexpr (requires { sub.expectedSuccess; })
+                                return sub.expectedSuccess;
+                            return {};
+                        }},
+                        s.subState);
+
+                    newPosture = newPosture.invalidate(failedExpectation);
+                }
+
                 // Return a fresh copy of the macro state containing the new Level 2 sub-state.
-                // Note: The posture itself is not modified here. Postures update on `EvServiceSuccess`.
-                return StateOperational{.posture = s.posture, .subState = nextSubState};
+                return StateOperational{.posture = newPosture, .subState = nextSubState};
             },
 
             // --- FAULT RECOVERY ---
@@ -169,6 +195,7 @@ namespace Kub3::MFSM
 
             // Fallback: Event not handled for this Macro State
             [&](const auto &, const auto &) -> SystemState {
+                qDebug() << "No matches found: event skipped.";
                 return currentState;
             });
 

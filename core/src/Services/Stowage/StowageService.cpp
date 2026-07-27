@@ -7,7 +7,6 @@
 #include <HAL/MachineStatus/utils.h>
 #include <HAL/MachineStatus/virtual_labels.h>
 #include <Services/Stowage/StowageService.h>
-
 #include <Services/Stowage/tasks/StowageCenterStagesTask.h>
 #include <Services/Stowage/tasks/StowageMoveZToLimitTask.h>
 #include <Services/tasks/ToggleValveTask.h>
@@ -41,12 +40,12 @@ namespace Kub3::Services
     void StowageService::startStowage(StowageTarget target)
     {
         this->clearTasks();
-        if (target && StowageTarget::MASK)
+        if ((target & StowageTarget::Mask) != StowageTarget::None)
         {
             if (!buildMaskStowageTaskQueue())
                 return;
         }
-        if (target && StowageTarget::WAFER)
+        if ((target & StowageTarget::Wafer) != StowageTarget::None)
         {
             if (!buildWaferStowageTaskQueue())
                 return;
