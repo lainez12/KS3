@@ -114,6 +114,7 @@ void ExposureSettingsView::switchToFlashingMode()
     ui->flashingCarre->setPixmap(QPixmap(":/icons/carre-bleu-fonce.png"));
     m_isFlashingMode = true;
     ui->imageFlashingMode->setPixmap(QPixmap(":/icons/schema-flashing.svg"));
+    watchForChangesInPresetExposure();
 }
 
 void ExposureSettingsView::switchToContinuousMode()
@@ -131,6 +132,7 @@ void ExposureSettingsView::switchToContinuousMode()
     styleSheet.replace(QRegularExpression(BLUE_COLOR), BLUE_COLOR_SHADOW);
     ui->flashingModeBtn->setStyleSheet(styleSheet);
     ui->continuousCarre->setPixmap(QPixmap(":/icons/carre-bleu-fonce.png"));
+    watchForChangesInPresetExposure();
 }
 
 PresetExposure ExposureSettingsView::getCurrentPresetExposure() const
