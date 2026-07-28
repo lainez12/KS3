@@ -111,9 +111,12 @@ void PopUpMessage::buildUI()
     bodyLayout->setContentsMargins(28, 28, 28, 20);
     bodyLayout->setSpacing(22);
 
-    m_messageLabel = new QLabel(m_body);
-    m_messageLabel->setAlignment(Qt::AlignCenter);
-    m_messageLabel->setWordWrap(true);
+    m_messageBrowser = new QTextBrowser(m_body);
+    m_messageBrowser->setReadOnly(true);
+    m_messageBrowser->setFrameShape(QFrame::NoFrame); // Hide borders
+    m_messageBrowser->setOpenLinks(false);
+    m_messageBrowser->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    m_messageBrowser->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 
     m_buttonsContainer = new QWidget(m_body);
     m_buttonsLayout    = new QHBoxLayout(m_buttonsContainer);
@@ -121,7 +124,7 @@ void PopUpMessage::buildUI()
     m_buttonsLayout->setSpacing(18);
     m_buttonsLayout->setAlignment(Qt::AlignCenter);
 
-    bodyLayout->addWidget(m_messageLabel);
+    bodyLayout->addWidget(m_messageBrowser);
     bodyLayout->addWidget(m_buttonsContainer);
 
     m_cardLayout->addWidget(m_header);
@@ -138,7 +141,7 @@ void PopUpMessage::buildUI()
 
     m_titleLabel->setObjectName(QStringLiteral("PopUpMessageTitle"));
     m_titleLabel->setStyleSheet("color: white; font-size: 30px; font-weight: 700;");
-    m_messageLabel->setStyleSheet("color: #1976D2; font-size: 28px; font-weight: 700;");
+    m_messageBrowser->setStyleSheet("QTextBrowser { background: transparent; color: #1976D2; font-size: 24px; font-weight: 700; }");
 
     refreshContent();
     refreshButtons();
@@ -199,9 +202,9 @@ void PopUpMessage::refreshContent()
         m_titleLabel->setText(m_titleText);
     }
 
-    if (m_messageLabel)
+    if (m_messageBrowser)
     {
-        m_messageLabel->setText(m_messageText);
+        m_messageBrowser->setHtml(QString("<div align='center'>%1</div>").arg(m_messageText));
     }
 }
 
@@ -273,4 +276,12 @@ bool PopUpMessage::eventFilter(QObject *obj, QEvent *ev)
     }
 
     return QWidget::eventFilter(obj, ev);
+}
+
+void PopUpMessage::appendMessageText(const QString &text)
+{
+    if (m_messageBrowser)
+    {
+        m_messageBrowser->append(text);
+    }
 }

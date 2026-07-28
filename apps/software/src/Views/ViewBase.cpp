@@ -16,6 +16,8 @@ namespace Kub3::UI::Views
         connect(m_viewModel.get(), &ViewModels::BaseViewModel::s_createPopUp, this, &ViewBase::ps_createPopUp);
         connect(m_viewModel.get(), &ViewModels::BaseViewModel::s_createPopUpWithText, this, &ViewBase::ps_createPopUpWithText);
         connect(m_viewModel.get(), &ViewModels::BaseViewModel::s_closePopUp, this, &ViewBase::ps_closePopUp);
+        connect(m_viewModel.get(), &ViewModels::BaseViewModel::s_updatePopUpMessage, m_popUpMessage.get(), &PopUpMessage::setMessageText);
+        connect(m_viewModel.get(), &ViewModels::BaseViewModel::s_appendPopUpMessage, m_popUpMessage.get(), &PopUpMessage::appendMessageText);
     }
 
     void ViewBase::showEvent(QShowEvent *event)

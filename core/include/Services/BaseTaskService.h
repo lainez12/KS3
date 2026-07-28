@@ -5,8 +5,8 @@
 #include <queue>
 #include <utility>
 
-#include "IService.h"
-#include "ITask.h"
+#include <Services/IService.h>
+#include <Services/ITask.h>
 #include <utils.h>
 
 /**
@@ -122,6 +122,11 @@ namespace Kub3::Services
             return m_errorReason;
         }
 
+        void setLogCallback(typename TInterface::LogCallback cb) override
+        {
+            m_logCallback = std::move(cb);
+        }
+
     protected:
         // Protected API for inheriting services (Drawer, Alignment, etc...) to use
 
@@ -136,6 +141,10 @@ namespace Kub3::Services
          */
         void enqueueTask(Unique<ITask> task, uint8_t lane = 0)
         {
+            // INJECTION: Bind the Task's logging to the Service's logging mechanism.
+            // Because BaseTaskService owns the task, capturing 'this' is perfectly memory-safe.
+            task->setLogCallback([this](LogLevel lvl, const std::string &msg) { this->postLog(lvl, msg); });
+
             // Dynamically allocate new lanes if a higher lane index is requested
             if (lane >= m_lanes.size())
             {
@@ -241,14 +250,28 @@ namespace Kub3::Services
             m_lanes.clear();
         }
 
+        void postLog(LogLevel level, const std::string &msg)
+        {
+            if (m_logCallback)
+            {
+                m_logCallback(level, msg);
+            }
+        }
+
+        void postInfo(const std::string &msg) { postLog(LogLevel::Info, msg); }
+        void postSuccess(const std::string &msg) { postLog(LogLevel::Success, msg); }
+        void postWarning(const std::string &msg) { postLog(LogLevel::Warning, msg); }
+        void postError(const std::string &msg) { postLog(LogLevel::Error, msg); }
+
     protected:
         ServiceStatus m_status = ServiceStatus::Idle; ///< Current operational status of the service
         std::string m_errorReason;                    ///< Error message if the sequence failed or aborted
 
     private:
-        std::deque<std::queue<Unique<ITask>>> m_lanes; ///< Multi-lane structure holding tasks for parallel execution
-        QElapsedTimer m_watchdog;                      ///< Timer tracking sequence execution duration
-        int32_t m_timeoutMs = 0;                       ///< Allocated maximum sequence time (0 implies no timeout)
+        std::deque<std::queue<Unique<ITask>>> m_lanes;  ///< Multi-lane structure holding tasks for parallel execution
+        QElapsedTimer m_watchdog;                       ///< Timer tracking sequence execution duration
+        int32_t m_timeoutMs = 0;                        ///< Allocated maximum sequence time (0 implies no timeout)
+        typename TInterface::LogCallback m_logCallback; ///< Telemetry callback
     };
 
 } // namespace Kub3::Services

@@ -28,6 +28,7 @@ namespace Kub3::Services
         handleSingleMotorLogic(m_xMotorBundle, readCenterPosition(m_xMotorBundle, V_X_STAGE_CENTER_MM));
         handleSingleMotorLogic(m_yMotorBundle, readCenterPosition(m_yMotorBundle, V_Y_STAGE_CENTER_MM));
         handleSingleMotorLogic(m_thetaMotorBundle, readCenterPosition(m_thetaMotorBundle, V_THETA_STAGE_CENTER_MM));
+        postInfo("Re-centering alignment axes...");
     }
 
     bool AlignmentStagesHomingTask::tick(void)

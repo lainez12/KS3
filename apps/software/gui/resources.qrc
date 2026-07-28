@@ -94,5 +94,7 @@
         <file>icons/warning-fond-blanc.svg</file>
         <file>icons/warning-fond-rouge.svg</file>
         <file>images/bg.png</file>
+        <file>icons/loading-orange.svg</file>
+        <file>icons/line-squared-blue.svg</file>
     </qresource>
 </RCC>

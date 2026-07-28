@@ -80,7 +80,7 @@
      <item row="4" column="0">
       <layout class="QHBoxLayout" name="horizontalLayout_11">
        <item>
-        <widget class="QLabel" name="label_OK_MASK">
+        <widget class="Kub3::UI::Views::SpinningLabel" name="lblMaskStatus">
          <property name="maximumSize">
           <size>
            <width>28</width>
@@ -155,7 +155,7 @@
      <item row="4" column="1">
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QLabel" name="label_OK_WAFER">
+        <widget class="Kub3::UI::Views::SpinningLabel" name="lblWaferStatus">
          <property name="maximumSize">
           <size>
            <width>28</width>
@@ -195,7 +195,7 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QPushButton" name="saveHorizontalityBtn">
+        <widget class="QPushButton" name="btnSaveHorizontality">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -228,7 +228,7 @@
           <string/>
          </property>
          <property name="class" stdset="0">
-          <string>button-blue</string>
+          <string>outline-btn-blue</string>
          </property>
         </widget>
        </item>
@@ -241,7 +241,7 @@
           <number>6</number>
          </property>
          <item>
-          <widget class="QLabel" name="lblAutolevelOkTick">
+          <widget class="Kub3::UI::Views::SpinningLabel" name="lblAutolevelStatus">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -279,7 +279,7 @@
         </layout>
        </item>
        <item>
-        <widget class="QPushButton" name="loadHorizontalityBtn">
+        <widget class="QPushButton" name="btnLoadHorizontality">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -312,7 +312,7 @@
           <string/>
          </property>
          <property name="class" stdset="0">
-          <string>button-blue</string>
+          <string>outline-btn-blue</string>
          </property>
         </widget>
        </item>
@@ -346,7 +346,7 @@
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="maskModuleActionBtn">
+        <widget class="QPushButton" name="btnLoadMaskToExposure">
          <property name="enabled">
           <bool>true</bool>
          </property>
@@ -375,7 +375,7 @@
           <string/>
          </property>
          <property name="class" stdset="0">
-          <string>button-blue</string>
+          <string>outline-btn-blue</string>
          </property>
         </widget>
        </item>
@@ -422,7 +422,7 @@
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="waferModuleActionBtn">
+        <widget class="QPushButton" name="btnLoadWaferToExposure">
          <property name="enabled">
           <bool>true</bool>
          </property>
@@ -451,7 +451,7 @@
           <string/>
          </property>
          <property name="class" stdset="0">
-          <string>button-blue</string>
+          <string>outline-btn-blue</string>
          </property>
         </widget>
        </item>
@@ -495,7 +495,7 @@
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="autoLevelingModuleActionBtn">
+        <widget class="QPushButton" name="btnStartAutoleveling">
          <property name="enabled">
           <bool>true</bool>
          </property>
@@ -524,7 +524,7 @@
           <string/>
          </property>
          <property name="class" stdset="0">
-          <string>button-blue</string>
+          <string>outline-btn-blue</string>
          </property>
         </widget>
        </item>
@@ -562,7 +562,7 @@
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="maskModuleCancelBtn">
+        <widget class="QPushButton" name="btnCancelMaskLoadToExposure">
          <property name="minimumSize">
           <size>
            <width>0</width>
@@ -586,7 +586,7 @@
           <string/>
          </property>
          <property name="class" stdset="0">
-          <string>button-blue</string>
+          <string>outline-btn-blue</string>
          </property>
         </widget>
        </item>
@@ -624,7 +624,7 @@
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="waferModuleCancelBtn">
+        <widget class="QPushButton" name="btnCancelWaferLoadToExposure">
          <property name="minimumSize">
           <size>
            <width>0</width>
@@ -648,7 +648,7 @@
           <string/>
          </property>
          <property name="class" stdset="0">
-          <string>button-blue</string>
+          <string>outline-btn-blue</string>
          </property>
         </widget>
        </item>
@@ -686,7 +686,7 @@
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="autolevelModuleCancelBtn">
+        <widget class="QPushButton" name="btnCancelAutolevel">
          <property name="minimumSize">
           <size>
            <width>0</width>
@@ -710,7 +710,7 @@
           <string/>
          </property>
          <property name="class" stdset="0">
-          <string>button-blue</string>
+          <string>outline-btn-blue</string>
          </property>
         </widget>
        </item>
@@ -756,7 +756,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="exposureModeBtn">
+      <widget class="QPushButton" name="btnExposureMode">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -779,7 +779,7 @@
         <string/>
        </property>
        <property name="class" stdset="0">
-        <string/>
+        <string>btn-blue</string>
        </property>
       </widget>
      </item>
@@ -803,6 +803,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Kub3::UI::Views::SpinningLabel</class>
+   <extends>QLabel</extends>
+   <header location="global">Views/Components/SpinningLabel.h</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="../resources.qrc"/>
   <include location="../resources.qrc"/>

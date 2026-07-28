@@ -31,6 +31,7 @@ namespace Kub3::Services
                          Shared<HAL::MS::IMachineStatusRepo> repo,
                          const Config::process_config_t &processConfig);
 
+        void setLogCallback(LogCallback cb) override { m_logCallback = std::move(cb); };
         void tick() override;
         void stop() override;
 
@@ -53,6 +54,7 @@ namespace Kub3::Services
         void loadConfigurations(Shared<HAL::Act::ActuatorRegistry> registry, const Config::process_config_t &processConfig);
 
     private:
+        LogCallback m_logCallback;
         bool m_isLocked = false;
         Shared<HAL::MS::IMachineStatusRepo> m_repo;
         std::unordered_map<AlignmentStageId, motor_alignment_config_t> m_motorsConfigurations;

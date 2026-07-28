@@ -248,9 +248,14 @@ namespace Kub3
         QObject::connect(m_mainWindow.get(), &MainWindow::s_requestResetError, m_masterFSM, &MFSM::MasterFSM::ps_requestResetError);
         QObject::connect(m_mainWindow.get(), &MainWindow::s_requestPowerOff, m_masterFSM, &MFSM::MasterFSM::ps_systemPowerOff);
         // --- HomeViewModel
-        QObject::connect(m_homeVM.get(), &VM::HomeViewModel::s_cancelOperation, m_masterFSM, &MFSM::MasterFSM::ps_requestAbortOperation);
-        QObject::connect(m_homeVM.get(), &VM::HomeViewModel::s_initializationRequest, m_masterFSM, &MFSM::MasterFSM::ps_requestInitialization);
-        QObject::connect(m_homeVM.get(), &VM::HomeViewModel::s_cmdRunDrawerOperation, m_masterFSM, &MFSM::MasterFSM::ps_requestOperateDrawer);
+        m_homeVM->bindConnection(m_homeVM.get(), &VM::HomeViewModel::s_cancelOperation, m_masterFSM, &MFSM::MasterFSM::ps_requestAbortOperation);
+        m_homeVM->bindConnection(m_homeVM.get(), &VM::HomeViewModel::s_initializationRequest, m_masterFSM, &MFSM::MasterFSM::ps_requestInitialization);
+        m_homeVM->bindConnection(m_homeVM.get(), &VM::HomeViewModel::s_cmdRunDrawerOperation, m_masterFSM, &MFSM::MasterFSM::ps_requestOperateDrawer);
+        // --- Exposure Menu View Model
+        m_exposureMenuVM->bindConnection(m_exposureMenuVM.get(), &VM::ExposureMenuViewModel::s_cmdOperateStowage, m_masterFSM, &MFSM::MasterFSM::ps_requestStowage);
+        m_exposureMenuVM->bindConnection(m_exposureMenuVM.get(), &VM::ExposureMenuViewModel::s_cmdStartAutolevel, m_masterFSM, &MFSM::MasterFSM::ps_requestAutolevel);
+        m_exposureMenuVM->bindConnection(m_exposureMenuVM.get(), &VM::ExposureMenuViewModel::s_cmdCancelOperation, m_masterFSM, &MFSM::MasterFSM::ps_requestAbortOperation);
+        m_exposureMenuVM->bindConnection(m_masterFSM, &MFSM::MasterFSM::s_processMessageBroadcast, m_exposureMenuVM.get(), &VM::ExposureMenuViewModel::ps_onProcessMessageBroadcast);
         // --- VisualisationViewModel
         // QObject::connect(m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::cmdRunCameraMovement, m_masterFSM, &MFSM::MasterFSM::ps_requestPADCameraMovement);
         QObject::connect(m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::cmdRunAlignmentStageMovement, m_masterFSM, &MFSM::MasterFSM::ps_requestPADAlignmentStageMovement);
@@ -274,13 +279,18 @@ namespace Kub3
         // @note: `QObject::connect` connections are permanent while `bindConnection` only activates connections when the view is shown
         QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_errorOccurred, m_mainWindow.get(), &MainWindow::ps_errorOccurred);
         // --- Home View Model
-        QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_systemStateChanged, m_homeVM.get(), &VM::HomeViewModel::ps_onSystemStateChanged);
-        QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_operationalSubstateChanged, m_homeVM.get(), &VM::HomeViewModel::ps_onOperationalSubstateChanged);
+        QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_systemStateKindChanged, m_homeVM.get(), &VM::HomeViewModel::ps_onSystemStateChanged);
+        QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_operationalSubstateKindChanged, m_homeVM.get(), &VM::HomeViewModel::ps_onOperationalSubstateKindChanged);
         m_homeVM->bindConnection(m_masterFSM, &MFSM::MasterFSM::s_operationCanceled, m_homeVM.get(), &VM::HomeViewModel::ps_operationEnded);
         m_homeVM->bindConnection(m_masterFSM, &MFSM::MasterFSM::s_errorOccurred, m_homeVM.get(), &VM::HomeViewModel::ps_errorOccurred);
         m_homeVM->bindConnection(m_masterFSM, &MFSM::MasterFSM::s_initializationSuccess, m_homeVM.get(), &VM::HomeViewModel::ps_initializationSuccess);
         m_homeVM->bindConnection(m_masterFSM, &MFSM::MasterFSM::s_serviceOpSuccess, m_homeVM.get(), &VM::HomeViewModel::ps_operationEnded);
         m_homeVM->bindConnection(m_masterFSM, &MFSM::MasterFSM::s_serviceOpError, m_homeVM.get(), &VM::HomeViewModel::ps_operationEnded);
+        m_homeVM->bindConnection(m_masterFSM, &MFSM::MasterFSM::s_processMessageBroadcast, m_homeVM.get(), &VM::HomeViewModel::ps_onProcessMessageBroadcast);
+        // --- Exposure View Model
+        QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_systemStateKindChanged, m_exposureMenuVM.get(), &VM::ExposureMenuViewModel::ps_onSystemStateChanged);
+        QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_operationalSubstateChanged, m_exposureMenuVM.get(), &VM::ExposureMenuViewModel::ps_onOperationalSubstateChanged);
+        QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_postureChanged, m_exposureMenuVM.get(), &VM::ExposureMenuViewModel::ps_onPostureChanged);
         // --- Machine Status View Model
         msvm->bindConnection(m_hwManager.get(), &HAL::HardwareManager::s_cameraFrameReady,
                              msvm, &VM::BaseVisionViewModel::ps_onCameraFrameReceived);

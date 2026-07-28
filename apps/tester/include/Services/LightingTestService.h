@@ -21,6 +21,7 @@ namespace Kub3::Tools::Tester
         ~LightingTestService() override = default;
 
         // --- IService Interface ---
+        void setLogCallback(LogCallback cb) override { m_logCallback = std::move(cb); };
         void tick(void) override;
         void stop(void) override;
         [[nodiscard]] Services::ServiceStatus getStatus(void) const noexcept override
@@ -39,6 +40,7 @@ namespace Kub3::Tools::Tester
         [[nodiscard]] const std::vector<std::string> &getAvailableLights() const;
 
     private:
+        LogCallback m_logCallback;
         Shared<HAL::Act::ActuatorRegistry> m_registry;
         std::vector<std::string> m_knownLightIds;
 

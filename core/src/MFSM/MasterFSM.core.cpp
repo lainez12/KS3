@@ -32,16 +32,44 @@ namespace Kub3::MFSM
         m_exposureService(std::move(exposureService)),
         m_logicTimer(this)
     {
+        // Telemetry router
+        auto logRouter = [this](LogLevel level, const std::string &msg) {
+            Common::ProcessMessageLevel mappedLevel;
+            switch (level)
+            {
+            case LogLevel::Info:
+                mappedLevel = Common::ProcessMessageLevel::Info;
+                break;
+            case LogLevel::Success:
+                mappedLevel = Common::ProcessMessageLevel::Success;
+                break;
+            case LogLevel::Warning:
+                mappedLevel = Common::ProcessMessageLevel::Warning;
+                break;
+            case LogLevel::Error:
+                mappedLevel = Common::ProcessMessageLevel::Error;
+                break;
+            }
+
+            emit s_processMessageBroadcast(Common::ProcessMessage{
+                .text  = QString::fromStdString(msg),
+                .level = mappedLevel,
+            });
+        };
+
+        m_homingService->setLogCallback(logRouter);
+        m_drawerService->setLogCallback(logRouter);
+        m_stowageService->setLogCallback(logRouter);
+        m_alignmentService->setLogCallback(logRouter);
+        m_visionService->setLogCallback(logRouter);
+        m_contactService->setLogCallback(logRouter);
+        m_exposureService->setLogCallback(logRouter);
+
         // Hard-wire the FSM Logic Loop every LOGIC_TIMER_PERIOD_MS milliseconds
         // Zero Thread Blocking: The logic loop must never sleep/wait.
         m_logicTimer.setInterval(LOGIC_TIMER_PERIOD_MS);
         m_logicTimer.setTimerType(Qt::PreciseTimer);
         connect(&m_logicTimer, &QTimer::timeout, this, &MasterFSM::onLogicTick);
-        connect(this, &MasterFSM::s_postureChanged, [](const Kub3::MFSM::SystemPosture &posture) {
-            qDebug().noquote() << "Updated posture:\n\tWafer=" << posture.wafer
-                               << "\n\tMask=" << posture.mask
-                               << "\n\tVision=" << posture.vision;
-        });
     }
 
     void MasterFSM::start(void)
@@ -91,7 +119,7 @@ namespace Kub3::MFSM
             {
                 // A focused operation change (e.g., Idle -> DrawerOp)
                 const auto &opState = std::get<StateOperational>(m_state);
-                onOperationalStateEntered(opState, opState.subState);
+                onOperationalSubstateEntered(opState, opState.subState);
             }
         }
     }
@@ -139,17 +167,22 @@ namespace Kub3::MFSM
         });
     }
 
-    void MasterFSM::ps_requestStowage(int targetInt)
+    void MasterFSM::ps_requestStowage(StowageTarget tgt)
     {
         dispatch(CmdOperateStowage{
-            .target = static_cast<Services::StowageTarget>(targetInt),
+            .target = tgt,
         });
     }
 
-    void MasterFSM::ps_requestUnstowage(int targetInt)
+    void MasterFSM::ps_requestAutolevel()
+    {
+        dispatch(CmdStartAutolevel{});
+    }
+
+    void MasterFSM::ps_requestUnstowage(StowageTarget tgt)
     {
         dispatch(CmdOperateUnstowage{
-            .target = static_cast<Services::StowageTarget>(targetInt),
+            .target = tgt,
         });
     }
 

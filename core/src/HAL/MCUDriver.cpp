@@ -57,9 +57,20 @@ namespace Kub3::HAL
         while (Optional<Com::packet_t> packetOpt = m_parser->tryExtractPacket())
         {
             if (packetOpt->isValid)
-                emit s_packetReady(packetOpt.value()); // Emit the full, validated packet to the subscribers
+            {
+                // Reconstruct the full clean packet for the logger
+                {
+                    QByteArray fullPacket;
+
+                    fullPacket.append(static_cast<char>(packetOpt->length));
+                    fullPacket.append(packetOpt->payload);
+                    emit s_parsedRxData(fullPacket); // Send contiguous bytes to log
+                }
+                // Emit the full, validated packet to the subscribers
+                emit s_packetReady(packetOpt.value());
+            }
             else
-                qCritical() << "Corrupted packet parsed"; // TODO: better logging & handling
+                qCritical() << "Corrupted packet parsed";
         }
     }
 
@@ -72,8 +83,13 @@ namespace Kub3::HAL
             [weakThis, payload]() {
                 if (weakThis)
                 {
-                    auto packet = weakThis->m_parser->buildPacket(payload);
-                    weakThis->m_comm->send(std::move(packet));
+                    QByteArray packet  = weakThis->m_parser->buildPacket(payload);
+                    QByteArray logCopy = packet;
+
+                    if (weakThis->m_comm->send(std::move(packet)))
+                    {
+                        emit weakThis->s_rawDataSent(logCopy); // Log only if data has been sent
+                    }
                 }
             },
             connType);

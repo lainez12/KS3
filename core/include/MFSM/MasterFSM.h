@@ -5,12 +5,12 @@
 #include <QString>
 #include <QTimer>
 
+#include <Common/ProcessMessage.h>
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
 #include <MFSM/events.h>
 #include <MFSM/posture.h>
 #include <MFSM/states.macro.h>
 #include <MFSM/states.operational.h>
-
 #include <Services/Alignment/IAlignmentService.h>
 #include <Services/Contact/IContactService.h>
 #include <Services/Drawers/IDrawerService.h>
@@ -51,11 +51,14 @@ namespace Kub3::MFSM
 
     signals:
         // --- Tier 2 (Logic) -> Tier 1 (UI) Outputs ---
-        void s_systemStateChanged(SystemStateKind kind);
-        void s_operationalSubstateChanged(OperationalStateKind kind);
+        void s_systemStateKindChanged(SystemStateKind kind);
+        void s_operationalSubstateKindChanged(OperationalStateKind kind);
+        void s_operationalSubstateChanged(const OperationalState &state);
         void s_postureChanged(const MFSM::SystemPosture &posture); // To drive UI indicators
         void s_operationCanceled();
-
+        // Logging/telemetry
+        void s_processMessageBroadcast(const Common::ProcessMessage &msg);
+        void s_clearProcessLogs(); // To wipe the QTextBrowser when a new sequence starts
         void s_initializationSuccess();
         void s_serviceOpSuccess();
         void s_serviceOpError(const QString &);
@@ -83,8 +86,9 @@ namespace Kub3::MFSM
         // TODO: define correct parameter types
         // Hardware sequences
         void ps_requestOperateDrawer(DrawerTarget tgt, bool eject);
-        void ps_requestStowage(int targetInt);
-        void ps_requestUnstowage(int targetInt);
+        void ps_requestStowage(StowageTarget tgt);
+        void ps_requestAutolevel();
+        void ps_requestUnstowage(StowageTarget tgt);
         void ps_requestExposure(const Services::ExposurePayload &payload);
 
         // Camera configuration
@@ -114,7 +118,7 @@ namespace Kub3::MFSM
 
         // State Entry Triggers (Side effects, service routing)
         void onStateEntered(const SystemState &newState);
-        void onOperationalStateEntered(const StateOperational &parentState, const OperationalState &newSubState);
+        void onOperationalSubstateEntered(const StateOperational &parentState, const OperationalState &newSubState);
 
         // --- Continuous Tick Handlers ---
         void onStateBootingTick(StateBooting &bootState);

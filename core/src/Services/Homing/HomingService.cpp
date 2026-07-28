@@ -1,4 +1,5 @@
 // HAL
+#include "Services/Homing/IHomingService.h"
 #include <HAL/MachineStatus/actuators_labels.h>
 #include <HAL/MachineStatus/sensors_labels.h>
 #include <HAL/MachineStatus/utils.h>
@@ -21,6 +22,7 @@
 #include <Services/Homing/tasks/Homing/WaferHomingTask.h>
 #include <Services/Homing/tasks/Homing/ZMotorsHomingTask.h>
 
+#include <Common/ProcessMessage.h>
 #include <Config/helper.h>
 
 #define CAMERAS_TASKS_QUEUE_LANE 1
@@ -103,6 +105,7 @@ namespace Kub3::Services
 #endif
 
         this->startSequence(INITIALIZATION_TIMEOUT);
+        postInfo("Running initialization...");
     }
 
     void HomingService::home(HomingTarget::Type target)
@@ -274,7 +277,7 @@ namespace Kub3::Services
             buildWaferSequence(initialization);
             break;
         }
-        case HomingTarget::MASK_CONVEYOR | HomingTarget::WAFER_CONVEYOR:
+        case HomingTarget::CONVEYORS:
         {
             buildConveyorsSequence(initialization);
             break;
@@ -299,7 +302,7 @@ namespace Kub3::Services
             buildDeckSequence(initialization);
             break;
         }
-        case HomingTarget::CAMERAS | HomingTarget::DECK:
+        case HomingTarget::VISUALIZATION_BLOCK:
         {
             buildCamerasSequence(initialization, CAMERAS_TASKS_QUEUE_LANE);
             buildDeckSequence(initialization, DECK_TASKS_QUEUE_LANE);

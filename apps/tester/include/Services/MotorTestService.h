@@ -33,6 +33,7 @@ namespace Kub3::Tools::Tester
         ~MotorTestService() override                          = default;
 
         // --- IService Implementation ---
+        void setLogCallback(LogCallback cb) override { m_logCallback = std::move(cb); };
         void tick(void) override;
         void stop(void) override;
         [[nodiscard]] Services::ServiceStatus getStatus(void) const noexcept override;
@@ -64,6 +65,7 @@ namespace Kub3::Tools::Tester
         }
 
     private:
+        LogCallback m_logCallback;
         Shared<HAL::Act::ActuatorRegistry> m_actuatorRegistry;
         const std::vector<std::string> m_knownMotorIds;
 

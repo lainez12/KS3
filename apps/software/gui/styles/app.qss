@@ -265,7 +265,7 @@ QLabel#machineLogoSubtrateSize {
 
 .btn-blue, .btn-blue-lg {
     border: 2px solid @blue;
-    border-radius: 25px;
+    border-radius: 15px;
     background-color: @blue;
     color: @white;
     font: 20px;
@@ -277,9 +277,10 @@ QLabel#machineLogoSubtrateSize {
     border-width: 6px;
     font: 24px;
     font-weight: 700;
+    border-radius: 25px;
 }
 
-.btn-blue-lg:disabled {
+.btn-blue:disabled, .btn-blue-lg:disabled {
     border-color: @blue-disabled;
     background-color: @blue-disabled;
 }
@@ -307,7 +308,7 @@ QLabel#machineLogoSubtrateSize {
 
 .outline-btn-blue, .outline-btn-blue-lg {
     border: 2px solid @blue;
-    border-radius: 25px;
+    border-radius: 15px;
     background-color: @white;
     color: @blue;
     font: 20px;
@@ -317,6 +318,7 @@ QLabel#machineLogoSubtrateSize {
 
 .outline-btn-blue-lg {
     border-width: 6px;
+    border-radius: 25px;
     font: 24px;
     font-weight: 700;
 }

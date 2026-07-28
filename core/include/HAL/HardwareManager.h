@@ -16,6 +16,11 @@
 #include <HAL/Vision/identifiers.h>
 #include <utils.h>
 
+namespace Kub3::HAL::Com
+{
+    class MCULogger;
+}
+
 namespace Kub3::HAL
 {
 
@@ -23,6 +28,7 @@ namespace Kub3::HAL
         Unique<QThread> thread;
         Shared<MCUDriver> driver;
         Unique<Com::PacketRouter> router;
+        Com::MCULogger *logger = nullptr;
     };
 
     struct CameraSubsystemNode {
@@ -116,6 +122,9 @@ namespace Kub3::HAL
         std::vector<std::string> m_registeredMotorIds;
         std::vector<std::string> m_registeredFocalIds;
         std::vector<std::string> m_registeredLightIds;
+
+        // Logging
+        QThread *m_mcusLoggerThread = nullptr;
     };
 
 }

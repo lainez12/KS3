@@ -43,12 +43,14 @@ namespace Kub3::MFSM
         Optional<WaferPosture> newWaferPosture   = std::nullopt;
         Optional<MaskPosture> newMaskPosture     = std::nullopt;
         Optional<VisionPosture> newVisionPosture = std::nullopt;
+        Optional<bool> newLevelingValid          = std::nullopt;
 
         [[nodiscard]] bool hasValue(void) const
         {
             return this->newWaferPosture.has_value() ||
                    this->newMaskPosture.has_value() ||
-                   this->newVisionPosture.has_value();
+                   this->newVisionPosture.has_value() ||
+                   this->newLevelingValid.has_value();
         }
     };
 
@@ -56,6 +58,7 @@ namespace Kub3::MFSM
         WaferPosture wafer   = WaferPosture::Unknown;
         MaskPosture mask     = MaskPosture::Unknown;
         VisionPosture vision = VisionPosture::Unknown;
+        bool isLevelingValid = false;
 
         [[nodiscard]] bool isFullyKnown() const
         {
@@ -72,14 +75,17 @@ namespace Kub3::MFSM
                 this->mask = s.newMaskPosture.value();
             if (s.newVisionPosture.has_value())
                 this->vision = s.newVisionPosture.value();
+            if (s.newLevelingValid.has_value())
+                this->isLevelingValid = s.newLevelingValid.value();
         }
 
         [[nodiscard]] SystemPosture invalidate(const ExpectedSystemPosture &e) const
         {
             return SystemPosture{
-                .wafer  = e.newWaferPosture.has_value() ? WaferPosture::Unknown : this->wafer,
-                .mask   = e.newMaskPosture.has_value() ? MaskPosture::Unknown : this->mask,
-                .vision = e.newVisionPosture.has_value() ? VisionPosture::Unknown : this->vision,
+                .wafer           = e.newWaferPosture.has_value() ? WaferPosture::Unknown : this->wafer,
+                .mask            = e.newMaskPosture.has_value() ? MaskPosture::Unknown : this->mask,
+                .vision          = e.newVisionPosture.has_value() ? VisionPosture::Unknown : this->vision,
+                .isLevelingValid = e.newLevelingValid.has_value() ? false : this->isLevelingValid,
             };
         }
     };

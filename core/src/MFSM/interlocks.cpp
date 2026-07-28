@@ -2,6 +2,8 @@
 #include <MFSM/interlocks.h>
 #include <Services/Stowage/StowageService.h>
 
+#define OK Ok<Unit>({})
+
 namespace Kub3::Interlocks
 {
 
@@ -16,12 +18,17 @@ namespace Kub3::Interlocks
         if (p.wafer == WaferPosture::AlignmentZone)
             return Err("Action Rejected - Cannot operate drawer while Wafer is in the following posture: ALIGNMENT ZONE");
 
-        return Ok<Unit>({});
+        return OK;
     }
 
-    Result<Unit, const char *> canOperateStowage(const SystemPosture &p, Services::StowageTarget target)
+    Result<Unit, const char *> canOperateStowage(const SystemPosture &p, StowageTarget target)
     {
-        if (target & Services::StowageTarget::WAFER)
+        if (target == StowageTarget::None)
+        {
+            return Err("Action Rejected - Invalid payload. Cannot stow nothing.");
+        }
+
+        if (has_flag(target, StowageTarget::Wafer))
         {
             // Rule: Wafer cannot be stowed (raised to alignment) if Mask is not stowed (secured)
             if (p.mask != MaskPosture::Exposure)
@@ -35,18 +42,18 @@ namespace Kub3::Interlocks
                 return Err("Action Rejected - Cannot perform stowage while Wafer is in the following posture: DRAWER MIDWAY");
         }
 
-        if (target & Services::StowageTarget::MASK)
+        if (has_flag(target, StowageTarget::Mask))
         {
             if (p.mask == MaskPosture::Unknown)
                 return Err("Action Rejected - Cannot perform stowage while Mask is in the following posture: UNKNOWN");
         }
 
-        return Ok<Unit>({});
+        return OK;
     }
 
-    Result<Unit, const char *> canOperateUnstowage(const SystemPosture &p, Services::StowageTarget target)
+    Result<Unit, const char *> canOperateUnstowage(const SystemPosture &p, StowageTarget target)
     {
-        if (target & Services::StowageTarget::MASK)
+        if (has_flag(target, StowageTarget::Mask))
         {
             // Rule: Mask cannot be unstowed if Wafer is stowed (secured)
             if (p.wafer == WaferPosture::ElevatorMidway)
@@ -64,7 +71,7 @@ namespace Kub3::Interlocks
                 return Err("Action Rejected - Cannot unstow Mask while it is in the following posture: UNKNOWN");
         }
 
-        if (target & Services::StowageTarget::WAFER)
+        if (has_flag(target, StowageTarget::Wafer))
         {
             if (p.wafer == WaferPosture::Ejected)
                 return Err("Action Rejected - Cannot unstow Wafer while it is in the following posture: EJECTED");
@@ -76,7 +83,16 @@ namespace Kub3::Interlocks
                 return Err("Action Rejected - Cannot unstow Wafer while it is in the following posture: UNKNOWN");
         }
 
-        return Ok<Unit>({});
+        return OK;
+    }
+
+    Result<Unit, const char *> canOperateAutolevel(const SystemPosture &p)
+    {
+        if (p.mask != MaskPosture::Exposure)
+            return Err("Action Rejected - Unable to autolevel while the mask is not stowed in exposure position");
+        if (p.wafer != WaferPosture::AlignmentZone)
+            return Err("Action Rejected - Unable to autolevel while the wafer is not in alignment zone");
+        return OK;
     }
 
     Result<Unit, const char *> canEnterAlignment(const SystemPosture &p)
@@ -85,7 +101,7 @@ namespace Kub3::Interlocks
         if (p.mask != MaskPosture::Exposure || p.wafer != WaferPosture::AlignmentZone)
             return Err("Action Rejected - Mask and Wafer must be stowed before Alignment.");
 
-        return Ok<Unit>({});
+        return OK;
     }
 
     Result<Unit, const char *> canApplyContact(const SystemPosture &p)
@@ -97,7 +113,7 @@ namespace Kub3::Interlocks
         if (p.mask != MaskPosture::Exposure)
             return Err("Action Rejected - Mask is not in the required posture: EXPOSURE");
 
-        return Ok<Unit>({});
+        return OK;
     }
 
     Result<Unit, const char *> canStartExposure(const SystemPosture &p)
@@ -107,7 +123,7 @@ namespace Kub3::Interlocks
         if (p.vision != VisionPosture::Homed)
             return Err("Action Rejected - Move Vision deck to Home before Exposure (Optical obstruction).");
 
-        return Ok<Unit>({});
+        return OK;
     }
 
     Result<Unit, const char *> canMoveAlignmentStage(const SystemPosture &p)
@@ -116,7 +132,9 @@ namespace Kub3::Interlocks
         if (p.wafer != WaferPosture::AlignmentZone)
             return Err("Action Rejected - Stages must be in Alignment Zone for X/Y/Theta movement.");
 
-        return Ok<Unit>({});
+        return OK;
     }
 
 }
+
+#undef OK
