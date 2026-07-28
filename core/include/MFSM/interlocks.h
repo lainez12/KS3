@@ -14,8 +14,11 @@ namespace Kub3::Interlocks
     Result<Unit, const char *> canOperateDrawer(const MFSM::SystemPosture &p, DrawerTarget target, bool isEject);
 
     // --- Stowage Interlocks ---
-    Result<Unit, const char *> canOperateStowage(const MFSM::SystemPosture &p, Services::StowageTarget target);
-    Result<Unit, const char *> canOperateUnstowage(const MFSM::SystemPosture &p, Services::StowageTarget target);
+    Result<Unit, const char *> canOperateStowage(const MFSM::SystemPosture &p, StowageTarget target);
+    Result<Unit, const char *> canOperateUnstowage(const MFSM::SystemPosture &p, StowageTarget target);
+
+    // --- Horizontality Interlocks ---
+    Result<Unit, const char *> canOperateAutolevel(const MFSM::SystemPosture &p);
 
     // --- Mode & Sequence Interlocks ---
     Result<Unit, const char *> canEnterAlignment(const MFSM::SystemPosture &p);

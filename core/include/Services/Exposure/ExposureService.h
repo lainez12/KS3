@@ -10,8 +10,10 @@ namespace Kub3::Services
     public:
         ExposureService(Shared<HAL::Act::ActuatorRegistry> registry);
 
+        void setLogCallback(LogCallback cb) override { m_logCallback = std::move(cb); };
         void tick(void) override;
         void stop(void) override;
+
         [[nodiscard]] ServiceStatus getStatus(void) const noexcept override
         {
             return m_status;
@@ -24,6 +26,7 @@ namespace Kub3::Services
         void startExposure(ExposurePayload payload) override;
 
     private:
+        LogCallback m_logCallback;
         Shared<HAL::Act::UVExposureHead> m_uvHead;
         ServiceStatus m_status    = ServiceStatus::Idle;
         uint32_t m_remainingTicks = 0;

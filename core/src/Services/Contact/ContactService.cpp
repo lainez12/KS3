@@ -5,11 +5,11 @@
 #include <HAL/MachineStatus/sensors_labels.h>
 #include <HAL/MachineStatus/utils.h>
 #include <HAL/MachineStatus/virtual_labels.h>
-
 #include <Services/Contact/ContactService.h>
 #include <Services/Contact/tasks/AdmittanceControlTask.h>
 #include <Services/Contact/tasks/FastApproachTask.h>
 #include <Services/Contact/tasks/SaveCurrentPlanTask.h>
+#include <utils.h>
 
 namespace Kub3::Services
 {
@@ -235,6 +235,13 @@ namespace Kub3::Services
         }
     }
 
+    void ContactService::retractFromContact(void)
+    {
+        this->clearTasks();
+        qCritical() << "[ContactService::retractFromContact] not implemented.";
+        // this->startSequence();
+    }
+
     void ContactService::buildAutolevelingLanes(void)
     {
         auto abortCb        = [this](std::string reason) { m_taskAbortReason = std::move(reason); };
@@ -296,6 +303,7 @@ namespace Kub3::Services
 
     void ContactService::initializeMachineValues(void)
     {
+        m_repo->setValueRaw(V_HORIZONTALITY_SAVED, false);
         m_repo->setValueRaw(V_LEFT_Z_HORIZONTALITY_DELTA, 0);
         m_repo->setValueRaw(V_RIGHT_Z_HORIZONTALITY_DELTA, 0);
         m_repo->setValueRaw(V_BACK_Z_HORIZONTALITY_DELTA, 0);

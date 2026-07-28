@@ -1,4 +1,5 @@
 #include <MFSM/MasterFSM.h>
+#include <Services/Contact/ContactService.h>
 #include <Services/Stowage/StowageService.h>
 #include <utils.h>
 
@@ -11,7 +12,7 @@ namespace Kub3::MFSM
     void MasterFSM::onStateEntered(const SystemState &newState)
     {
         // Broadcast entered state
-        emit s_systemStateChanged(kindOf(newState));
+        emit s_systemStateKindChanged(kindOf(newState));
 
         // Perform Physical Macro State Entry Actions
         const auto entryActionsMuseum = overloadedCallable{
@@ -19,7 +20,7 @@ namespace Kub3::MFSM
             [&](const StateWaitingInitialization &) { /* no-op */ },
             [&](const StateInitializing &) { m_homingService->initialize(); },
             // Chain the entry action down into the sub-FSM so the initial sub-state (Idle) fires
-            [&](const StateOperational &s) { this->onOperationalStateEntered(s, s.subState); },
+            [&](const StateOperational &s) { this->onOperationalSubstateEntered(s, s.subState); },
             [&](const StateError &s) {
                 this->stopAllServices(); // Non-blocking Services stop
                 // TODO: Add a emergency stop service to perform full HAL stop
@@ -57,12 +58,13 @@ namespace Kub3::MFSM
     // ==========================================================================
     // OPERATIONAL SUB-STATE ENTRY ACTIONS
     // ==========================================================================
-    void MasterFSM::onOperationalStateEntered(const StateOperational &parentState, const OperationalState &newSubState)
+    void MasterFSM::onOperationalSubstateEntered(const StateOperational &parentState, const OperationalState &newSubState)
     {
         using HT = Services::HomingTarget::Type;
 
         // Broadcast operational state
-        emit s_operationalSubstateChanged(kindOf(newSubState));
+        emit s_operationalSubstateChanged(newSubState);
+        emit s_operationalSubstateKindChanged(kindOf(newSubState));
 
         // Trigger Physical Micro Side-Effects
         const auto entryActionsMuseum = overloadedCallable{
@@ -80,13 +82,19 @@ namespace Kub3::MFSM
             [&](const StateStowing &s) { m_stowageService->startStowage(s.target); },
             [&](const StateUnstowing &s) {
                 HT target = static_cast<HT>(
-                    (s.target & Services::StowageTarget::WAFER ? (HT::ALIGNMENT_STAGES | HT::Z_MOTORS) : 0x0) |
-                    (s.target & Services::StowageTarget::MASK ? HT::MASK_CONVEYOR : 0x0));
+                    (has_flag(s.target, StowageTarget::Wafer) ? (HT::ALIGNMENT_STAGES | HT::Z_MOTORS) : 0x0) |
+                    (has_flag(s.target, StowageTarget::Mask) ? HT::MASK_CONVEYOR : 0x0));
 
                 m_homingService->home(target);
             },
+            [&](const StateAutoleveling &s) {
+                m_contactService->startContactRoutine(Services::AutolevelingPayload{});
+            },
+            [&](const StateRetractingZ &s) {
+                m_contactService->retractFromContact();
+            },
             [&](const StatePreparingAlignment &s) {
-                qInfo() << "MFSM: Preparing for Alignment - Positioning Vision Hardware.";
+                emit s_processMessageBroadcast({QString("Preparing for Alignment - Positioning Vision Hardware.")});
                 // Move vision deck above the substrate in order to be able to observe it.
                 // TODO: Code deck movement in `IVisionService` (lock all pad movements while automated)
                 // m_visionService->moveBlockTo(ACTIVE_POS);
@@ -96,13 +104,15 @@ namespace Kub3::MFSM
                 m_alignmentService->setHardwareLock((s.phase != ContactPhase::Free || m_contactService->isInContact()));
             },
             [&](const StatePreparingExposure &) {
-                qInfo() << "MFSM: Preparing for Exposure - Clearing Vision Hardware.";
+                emit s_processMessageBroadcast({"Preparing for Exposure: Moving Vision Hardware to Home."});
                 // Vision deck is in the led lights path. Home it safely before firing UV.
                 m_homingService->home(static_cast<HT>(HT::DECK | HT::CAMERAS));
             },
-            [&](const StateExposureReady &) { qInfo() << "MFSM: Vision is clear. Ready to fire UV Exposure."; },
+            [&](const StateExposureReady &) {
+                emit s_processMessageBroadcast({QString("Vision is clear. Ready to fire UV Exposure.")});
+            },
             [&](const StateExposing &s) {
-                qInfo() << "MFSM: Firing UV Exposure.";
+                emit s_processMessageBroadcast({QString("Firing UV Exposure.")});
                 m_exposureService->startExposure(s.payload);
             }};
 

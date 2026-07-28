@@ -25,7 +25,7 @@ IndentWidth: 4
 NamespaceIndentation: All
 PackConstructorInitializers: CurrentLine
 TabWidth: 4
-AllowShortFunctionsOnASingleLine: Empty
+AllowShortFunctionsOnASingleLine: Inline
 AllowShortBlocksOnASingleLine: Empty
 AlignConsecutiveAssignments: true
 AlignConsecutiveMacros: true

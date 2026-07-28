@@ -1,11 +1,10 @@
 #pragma once
 
+#include <Common/Enums.h>
 #include <Services/IService.h>
 
 namespace Kub3::Services
 {
-
-    enum StowageTarget : uint32_t;
 
     class IStowageService : public IService
     {

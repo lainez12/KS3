@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QEvent>
+#include <QTextBrowser>
 #include <QWidget>
 
 #include <ViewModels/PopUpTypes.h>
@@ -21,6 +22,7 @@ public:
 
     void setTitleText(const QString &title);
     void setMessageText(const QString &message);
+    void appendMessageText(const QString &text);
     void setButtons(const PopUpActions &buttons);
 
     void showMessage();
@@ -36,15 +38,15 @@ private:
     void refreshButtons();
 
 private:
-    QWidget *m_card              = nullptr;
-    QWidget *m_header            = nullptr;
-    QWidget *m_body              = nullptr;
-    QWidget *m_buttonsContainer  = nullptr;
-    QLabel *m_titleLabel         = nullptr;
-    QLabel *m_messageLabel       = nullptr;
-    QVBoxLayout *m_cardLayout    = nullptr;
-    QHBoxLayout *m_headerLayout  = nullptr;
-    QHBoxLayout *m_buttonsLayout = nullptr;
+    QWidget *m_card                = nullptr;
+    QWidget *m_header              = nullptr;
+    QWidget *m_body                = nullptr;
+    QWidget *m_buttonsContainer    = nullptr;
+    QLabel *m_titleLabel           = nullptr;
+    QTextBrowser *m_messageBrowser = nullptr;
+    QVBoxLayout *m_cardLayout      = nullptr;
+    QHBoxLayout *m_headerLayout    = nullptr;
+    QHBoxLayout *m_buttonsLayout   = nullptr;
 
     QString m_titleText;
     QString m_messageText;

@@ -17,6 +17,7 @@ qt_add_library(Kub3Core STATIC
     src/Views/Components/DoubleRatioSlider.cpp
     src/Views/Components/KeyboardFilter.cpp
     src/Views/Traits/PadReceiverViewTrait.cpp
+    src/Views/Components/SpinningLabel.cpp
     src/ViewModels/BaseViewModel.cpp
     src/ViewModels/BaseVisionViewModel.cpp
     src/MFSM/MasterFSM.actions.cpp
@@ -62,6 +63,7 @@ qt_add_library(Kub3Core STATIC
     src/HAL/Com/MockCommunicator.cpp
     src/HAL/Com/LengthBasedParser.cpp
     src/HAL/Com/PacketRouter.cpp
+    src/HAL/Com/MCULogger.cpp
     src/HAL/Vision/HikrobotCamera/HikrobotCamera.cpp
     src/HAL/Actuators/Lights/CameraLightingLed.cpp
     src/HAL/Actuators/Lights/UVExposureHead.cpp
@@ -78,6 +80,8 @@ qt_add_library(Kub3Core STATIC
     # Headers
     include/utils.h
     include/Common/Enums.h
+    include/Common/ProcessMessage.h
+    include/Common/Result.h
     include/Common/TestToken.h
     include/Config/ConfigLoader.h
     include/Config/ConfigSaver.h
@@ -96,6 +100,7 @@ qt_add_library(Kub3Core STATIC
     include/Views/Components/CameraStreamWidget.h
     include/Views/Components/DoubleRatioSlider.h
     include/Views/Components/KeyboardFilter.h
+    include/Views/Components/SpinningLabel.h
     include/Views/Traits/PadReceiverViewTrait.h
     include/ViewModels/BaseViewModel.h
     include/ViewModels/BaseVisionViewModel.h
@@ -163,6 +168,7 @@ qt_add_library(Kub3Core STATIC
     include/HAL/Com/IProtocolParser.h
     include/HAL/Com/LengthBasedParser.h
     include/HAL/Com/PacketRouter.h
+    include/HAL/Com/MCULogger.h
     include/HAL/Sensors/ISensor.h
     include/HAL/Sensors/Sensor.h
     include/HAL/Vision/ICamera.h

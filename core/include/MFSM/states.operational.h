@@ -32,13 +32,23 @@ namespace Kub3::MFSM
     };
 
     struct StateStowing {
-        Services::StowageTarget target;
+        StowageTarget target;
         ExpectedSystemPosture expectedSuccess;
         ExpectedSystemPosture expectedAbort;
     };
 
     struct StateUnstowing {
-        Services::StowageTarget target;
+        StowageTarget target;
+        ExpectedSystemPosture expectedSuccess;
+        ExpectedSystemPosture expectedAbort;
+    };
+
+    struct StateAutoleveling {
+        ExpectedSystemPosture expectedSuccess;
+        ExpectedSystemPosture expectedAbort;
+    };
+
+    struct StateRetractingZ {
         ExpectedSystemPosture expectedSuccess;
         ExpectedSystemPosture expectedAbort;
     };
@@ -87,6 +97,8 @@ namespace Kub3::MFSM
         StateDrawerOp,
         StateStowing,
         StateUnstowing,
+        StateAutoleveling,
+        StateRetractingZ,
         StatePreparingAlignment,
         StateAlignment,
         StatePreparingExposure,
@@ -122,3 +134,6 @@ namespace Kub3::MFSM
     }
 
 } // namespace Kub3::MFSM
+
+Q_DECLARE_METATYPE(Kub3::MFSM::OperationalState)
+Q_DECLARE_METATYPE(Kub3::MFSM::OperationalStateKind)

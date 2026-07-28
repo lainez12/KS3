@@ -61,10 +61,10 @@ namespace Kub3::MFSM
         DrawerOperation operation;
     };
     struct CmdOperateStowage {
-        Services::StowageTarget target;
+        StowageTarget target;
     };
     struct CmdOperateUnstowage {
-        Services::StowageTarget target;
+        StowageTarget target;
     };
 
     // --- ALIGNMENT & CONTACT COMMANDS ---

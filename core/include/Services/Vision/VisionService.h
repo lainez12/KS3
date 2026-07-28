@@ -53,6 +53,7 @@ namespace Kub3::Services
                       Shared<HAL::MS::IMachineStatusRepo> repo,
                       const Config::process_config_t &processConfig);
 
+        void setLogCallback(LogCallback cb) override { m_logCallback = std::move(cb); };
         void tick(void) override;
         void stop(void) override;
 
@@ -94,6 +95,7 @@ namespace Kub3::Services
         bool deckVisualisationLimitReached(void) const;
 
     private:
+        LogCallback m_logCallback;
         Shared<HAL::Act::ActuatorRegistry> m_registry;
         Shared<HAL::MS::IMachineStatusRepo> m_repo;
         Config::vision_process_config_t m_conf;

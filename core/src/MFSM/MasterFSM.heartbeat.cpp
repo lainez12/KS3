@@ -47,9 +47,9 @@ namespace Kub3::MFSM
 
         static const std::vector<BootDependency> requiredDependencies = {
 #if defined(KUB_MODEL_8)
-            {MCU_ARDUINO1_ID, MCU_ARDUINO1_READY},
-            {MCU_ARDUINO2_ID, MCU_ARDUINO2_READY},
-            {MCU_ARDUINO3_ID, MCU_ARDUINO3_READY}
+        // {MCU_ARDUINO1_ID, MCU_ARDUINO1_READY},
+        // {MCU_ARDUINO2_ID, MCU_ARDUINO2_READY},
+        // {MCU_ARDUINO3_ID, MCU_ARDUINO3_READY}
 #endif
         };
 
@@ -148,6 +148,8 @@ namespace Kub3::MFSM
             [&](StateDrawerOp &s) { onBasicOperatingServiceTick(s, m_drawerService.get()); },
             [&](StateStowing &s) { onBasicOperatingServiceTick(s, m_stowageService.get()); },
             [&](StateUnstowing &s) { onBasicOperatingServiceTick(s, m_homingService.get()); },
+            [&](StateAutoleveling &s) { onBasicOperatingServiceTick(s, m_contactService.get()); },
+            [&](StateRetractingZ &s) { onBasicOperatingServiceTick(s, m_contactService.get()); },
             [&](StatePreparingAlignment &s) { onBasicOperatingServiceTick(s, m_visionService.get()); },
             [&](StateAlignment &s) {
                 // Alignment mode is highly interactive: multiple services tick simultaneously.
