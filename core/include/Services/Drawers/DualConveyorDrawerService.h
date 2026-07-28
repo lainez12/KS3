@@ -2,7 +2,6 @@
 #pragma once
 
 #include <QElapsedTimer>
-#include <memory>
 
 #include <Config/conf.h>
 #include <HAL/Actuators/ActuatorRegistry.h>
@@ -48,9 +47,6 @@ namespace Kub3::Services
         Config::kinematic_profile_t m_maskFastProfile;
         Config::kinematic_profile_t m_maskFineProfile;
         Config::kinematic_profile_t m_maskContactProfile;
-        // Threshold values
-        int32_t m_waferEjectionFinePosThreshold;
-        int32_t m_maskEjectionFinePosThreshold;
     };
 
 }

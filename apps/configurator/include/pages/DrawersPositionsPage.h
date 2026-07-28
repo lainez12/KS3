@@ -27,7 +27,9 @@ namespace Kub3::Components
     private:
         QVBoxLayout *m_layout = nullptr;
 
-        QDoubleSpinBox *m_cm3Reset = nullptr;
+        QDoubleSpinBox *m_cm3Reset               = nullptr;
+        QDoubleSpinBox *m_maskEjectSlowingPosMm  = nullptr;
+        QDoubleSpinBox *m_waferEjectSlowingPosMm = nullptr;
     };
 
 } // namespace Kub3::Components
