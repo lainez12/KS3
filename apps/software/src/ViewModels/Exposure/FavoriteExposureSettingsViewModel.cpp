@@ -34,7 +34,17 @@ namespace Kub3::UI::ViewModels::Exposure
 
                 PresetExposure preset                 = presetRes.unwrap();
                 FavoriteExposureSettingButton *button = new FavoriteExposureSettingButton(preset.name, presetDetailsToStr(preset));
-                connect(button, &FavoriteExposureSettingButton::deleteButtonClicked, this, [this, preset]() { qDebug() << "Delete button clicked for preset:" << preset.name; });
+                connect(button, &FavoriteExposureSettingButton::deleteButtonClicked, this, [this, preset, button]() {
+                    emit s_createPopUpWithText("Delete Favorite Setting", {{"Yes", [this, preset, button]() {
+                                                                                deleteExposurePreset(preset.name);
+                                                                                button->setVisible(false);
+                                                                                emit s_closePopUp();
+                                                                            }},
+                                                                           {"No", [this]() {
+                                                                                emit s_closePopUp();
+                                                                            }}},
+                                               "Are you sure you want to delete '" + preset.name + "'?");
+                });
                 presetButtons.append(button);
             }
         }
@@ -64,6 +74,33 @@ namespace Kub3::UI::ViewModels::Exposure
 
         emit s_exposurePresetLoaded(chosenRes.unwrap());
         return Ok<Unit>({});
+    }
+
+    void FavoriteExposureSettingsViewModel::deleteExposurePreset(const QString &presetName)
+    {
+        QJsonArray presetsArray;
+        auto loadRes = loadPresetsFromFile(storagePath(), &presetsArray);
+
+        if (loadRes.is_err())
+        {
+            qCritical() << "Failed to load preset file:" << loadRes.unwrap_err();
+            emit s_createPopUpWithText("Error", {{"OK", []() {}}}, "Failed to delete the selected preset.");
+            return;
+        }
+
+        if (!deleteByName(presetsArray, presetName))
+        {
+            qCritical() << "Failed to delete preset:" << presetName;
+            emit s_createPopUpWithText("Error", {{"OK", []() {}}}, "Failed to delete the selected preset.");
+            return;
+        }
+
+        auto saveRes = savePresetsToFile(storagePath(), presetsArray);
+        if (saveRes.is_err())
+        {
+            qCritical() << "Failed to save preset file after deletion:" << saveRes.unwrap_err();
+            emit s_createPopUpWithText("Error", {{"OK", []() {}}}, "Failed to delete the selected preset.");
+        }
     }
 
 } // namespace Kub3::UI::ViewModels::Exposure

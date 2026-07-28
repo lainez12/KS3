@@ -75,6 +75,7 @@ namespace Kub3::UI::ViewModels::Exposure
         static void replaceExistingPreset(QJsonArray &presetsArray, const PresetExposure &preset);
 
         static Result<PresetExposure, QString> getPresetByName(const QJsonArray &presetsArray, const QString &presetName);
+        static bool deleteByName(QJsonArray &presetsArray, const QString &presetName);
 
         static QJsonObject presetToJson(const PresetExposure &preset);
 

@@ -155,6 +155,20 @@ namespace Kub3::UI::ViewModels::Exposure
         return Err(QStringLiteral("The preset with name '%1' was not found.").arg(presetName));
     }
 
+    bool ExposureBaseViewModel::deleteByName(QJsonArray &presetsArray, const QString &presetName)
+    {
+        for (int i = 0; i < presetsArray.size(); ++i)
+        {
+            QJsonObject presetObject = presetsArray[i].toObject();
+            if (presetObject.value(QLatin1String(kNameKey)).toString() == presetName)
+            {
+                presetsArray.removeAt(i);
+                return true;
+            }
+        }
+        return false;
+    }
+
     Result<Unit, QString> ExposureBaseViewModel::savePresetsToFile(const QString &path, const QJsonArray &presetsArray)
     {
         QJsonObject rootObject;

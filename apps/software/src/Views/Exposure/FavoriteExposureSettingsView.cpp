@@ -205,8 +205,6 @@ void FavoriteExposureSettingsView::onValidateButtonClicked()
 
 void FavoriteExposureSettingsView::populateViewWithCurrentPreset()
 {
-    QList<FavoriteExposureSettingButton *> favoriteButtons;
-    QString errorMessage;
     auto *vm = getViewModel<FavoriteExposureSettingsViewModel>();
 
     const auto res = vm->getAllExposureSettings();
