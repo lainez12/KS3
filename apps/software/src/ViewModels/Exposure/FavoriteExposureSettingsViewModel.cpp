@@ -34,6 +34,7 @@ namespace Kub3::UI::ViewModels::Exposure
 
                 PresetExposure preset                 = presetRes.unwrap();
                 FavoriteExposureSettingButton *button = new FavoriteExposureSettingButton(preset.name, presetDetailsToStr(preset));
+                connect(button, &FavoriteExposureSettingButton::deleteButtonClicked, this, [this, preset]() { qDebug() << "Delete button clicked for preset:" << preset.name; });
                 presetButtons.append(button);
             }
         }
