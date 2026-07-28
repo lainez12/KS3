@@ -15,6 +15,7 @@ namespace Kub3::UI::ViewModels::Exposure
 
     public:
         PresetExposure getCurrentPreset() const;
+        uint32_t getTemperature() const;
 
     public slots:
         void ps_launchExposure(const PresetExposure &preset);

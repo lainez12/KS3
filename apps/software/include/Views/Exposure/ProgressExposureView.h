@@ -32,12 +32,15 @@ namespace Kub3::UI::Views::ViewsExposure
         void onBackButtonClicked();
         void onValidateButtonClicked() override;
         void updateProgressBar();
+        void updateTemp();
 
     private:
         Ui::ProgressExposureView *ui;
         QTimer m_progressTimer;
+        QTimer m_tempTimer;
         QElapsedTimer m_elapsedTimer;
         uint32_t m_durationInMS = 0;
+        ProgressExposureViewModel *vm;
     };
 
 } // namespace Kub3::UI::Views
