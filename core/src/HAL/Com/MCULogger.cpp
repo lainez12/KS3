@@ -7,16 +7,17 @@
 
 namespace Kub3::HAL::Com
 {
-    MCULogger::MCULogger(const QString &mcuName, MCUDriver *driver, const QString &logDir, QObject *parent) :
-        QObject(parent),
-        m_logDir(logDir)
+    MCULogger::MCULogger(const QString &mcuName, MCUDriver *driver, QObject *parent) :
+        QObject(parent)
     {
-        QDir dir(m_logDir);
+        const QString logsDirPath = KUB3_LOGS_PATH;
+        QDir dir(logsDirPath);
+
         if (!dir.exists())
             dir.mkpath(".");
 
         QString timestamp = QDateTime::currentDateTime().toString("yyyy-MM-dd_hh-mm-ss");
-        m_file.setFileName(QString("%1/%2_%3.log").arg(m_logDir, mcuName, timestamp));
+        m_file.setFileName(QString("%1/%2_%3.log").arg(logsDirPath, mcuName, timestamp));
 
         m_textBuffer.reserve(MAX_BUFFER_SIZE + 1024); // Pre-allocate to prevent reallocation hit
 

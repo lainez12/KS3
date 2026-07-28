@@ -17,7 +17,7 @@ namespace Kub3::HAL::Com
     {
         Q_OBJECT
     public:
-        explicit MCULogger(const QString &mcuName, MCUDriver *driver, const QString &logDir, QObject *parent = nullptr);
+        explicit MCULogger(const QString &mcuName, MCUDriver *driver, QObject *parent = nullptr);
         ~MCULogger();
 
     public slots:
@@ -29,7 +29,6 @@ namespace Kub3::HAL::Com
         void appendToBuffer(const QString &direction, const QByteArray &data);
         void writeChunkToDisk();
 
-        QString m_logDir;
         QFile m_file;
         QByteArray m_textBuffer;
 

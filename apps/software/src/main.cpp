@@ -93,7 +93,7 @@ int main(int argc, char *argv[])
     qInfo() << "  KUB3 Control Software";
     qInfo() << "  Version:" << KUB3_VERSION_STR;
     qInfo() << "  Model:" << KUB_MODEL_STR;
-    qInfo() << "  Log path:" << Logger::file_location();
+    qInfo() << "  Log path:" << KUB3_LOGS_PATH;
     qInfo() << "  Configurator path:" << KUB3_CONFIGURATOR_BIN_PATH;
     qInfo() << "========================================";
 

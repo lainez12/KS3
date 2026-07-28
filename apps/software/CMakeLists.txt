@@ -196,6 +196,12 @@ else()
     )
 endif()
 
+if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND NOT CMAKE_PRODUCTION_BUILD)
+    target_compile_definitions(Kub3Core PUBLIC KUB3_LOGS_PATH="${CMAKE_CURRENT_BINARY_DIR}/logs")
+else()
+    target_compile_definitions(Kub3Core PUBLIC KUB3_LOGS_PATH="/var/log/kub3")
+endif()
+
 # Install App
 install(TARGETS Kub3Software RUNTIME DESTINATION bin)
 

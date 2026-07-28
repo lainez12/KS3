@@ -257,12 +257,7 @@ namespace Kub3::HAL
         this->createArduino1Actuators(config, arduino1Driver, router.get());
 
         // Inject logger
-#ifdef BUILD_DEBUG
-        QString logDir = QCoreApplication::applicationDirPath() + "/logs";
-#else
-        QString logDir = "/var/log/kub3";
-#endif
-        auto logger = new Com::MCULogger("Arduino1", arduino1Driver.get(), logDir);
+        auto logger = new Com::MCULogger("arduino1", arduino1Driver.get());
 
         // Move logger to the logger thread
         logger->moveToThread(m_mcusLoggerThread);
@@ -423,12 +418,7 @@ namespace Kub3::HAL
         this->createArduino2Actuators(config, arduino2Driver, router.get());
 
         // Inject logger
-#ifdef BUILD_DEBUG
-        QString logDir = QCoreApplication::applicationDirPath() + "/logs";
-#else
-        QString logDir = "/var/log/kub3";
-#endif
-        auto logger = new Com::MCULogger("Arduino2", arduino2Driver.get(), logDir);
+        auto logger = new Com::MCULogger("arduino2", arduino2Driver.get());
 
         // Move logger to the logger thread
         logger->moveToThread(m_mcusLoggerThread);
@@ -565,12 +555,7 @@ namespace Kub3::HAL
         this->createArduino3Actuators(config, arduino3Driver, router.get());
 
         // Inject logger
-#ifdef BUILD_DEBUG
-        QString logDir = QCoreApplication::applicationDirPath() + "/logs";
-#else
-        QString logDir = "/var/log/kub3";
-#endif
-        auto logger = new Com::MCULogger("Arduino3", arduino3Driver.get(), logDir);
+        auto logger = new Com::MCULogger("arduino3", arduino3Driver.get());
 
         // Move logger to the logger thread
         logger->moveToThread(m_mcusLoggerThread);
