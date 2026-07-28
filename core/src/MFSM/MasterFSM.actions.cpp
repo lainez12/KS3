@@ -94,7 +94,7 @@ namespace Kub3::MFSM
                 m_contactService->retractFromContact();
             },
             [&](const StatePreparingAlignment &s) {
-                emit s_processMessageBroadcast({Common::ProcessMessageLevel::Info, QString("Preparing for Alignment - Positioning Vision Hardware.")});
+                emit s_processMessageBroadcast({QString("Preparing for Alignment - Positioning Vision Hardware.")});
                 // Move vision deck above the substrate in order to be able to observe it.
                 // TODO: Code deck movement in `IVisionService` (lock all pad movements while automated)
                 // m_visionService->moveBlockTo(ACTIVE_POS);
@@ -104,15 +104,15 @@ namespace Kub3::MFSM
                 m_alignmentService->setHardwareLock((s.phase != ContactPhase::Free || m_contactService->isInContact()));
             },
             [&](const StatePreparingExposure &) {
-                emit s_processMessageBroadcast({Common::ProcessMessageLevel::Info, "Preparing for Exposure: Moving Vision Hardware to Home."});
+                emit s_processMessageBroadcast({"Preparing for Exposure: Moving Vision Hardware to Home."});
                 // Vision deck is in the led lights path. Home it safely before firing UV.
                 m_homingService->home(static_cast<HT>(HT::DECK | HT::CAMERAS));
             },
             [&](const StateExposureReady &) {
-                emit s_processMessageBroadcast({Common::ProcessMessageLevel::Info, QString("Vision is clear. Ready to fire UV Exposure.")});
+                emit s_processMessageBroadcast({QString("Vision is clear. Ready to fire UV Exposure.")});
             },
             [&](const StateExposing &s) {
-                emit s_processMessageBroadcast({Common::ProcessMessageLevel::Info, QString("Firing UV Exposure.")});
+                emit s_processMessageBroadcast({QString("Firing UV Exposure.")});
                 m_exposureService->startExposure(s.payload);
             }};
 

@@ -39,6 +39,7 @@ namespace Kub3::UI::ViewModels
         void ps_initializationSuccess();
         void ps_errorOccurred(const MFSM::ErrorPayload &payload);
         void ps_operationEnded();
+        void ps_onProcessMessageBroadcast(const Kub3::Common::ProcessMessage &msg) override;
 
     private:
         void evaluateLocks();

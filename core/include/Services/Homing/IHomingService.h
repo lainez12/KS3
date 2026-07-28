@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Common/Enums.h>
 #include <Services/IService.h>
 
 namespace Kub3
@@ -14,14 +15,16 @@ namespace Kub3::Services
     {
         enum Type : uint32_t
         {
-            NONE             = 0x0,
-            MASK_CONVEYOR    = 1u << 0,
-            WAFER_CONVEYOR   = 1u << 1,
-            Z_MOTORS         = 1u << 2,
-            ALIGNMENT_STAGES = 1u << 3,
-            CAMERAS          = 1u << 4,
-            DECK             = 1u << 5,
-            ALL              = MASK_CONVEYOR | WAFER_CONVEYOR | Z_MOTORS | ALIGNMENT_STAGES | CAMERAS | DECK,
+            NONE                = 0x0,
+            MASK_CONVEYOR       = 1u << 0,
+            WAFER_CONVEYOR      = 1u << 1,
+            CONVEYORS           = MASK_CONVEYOR | WAFER_CONVEYOR,
+            Z_MOTORS            = 1u << 2,
+            ALIGNMENT_STAGES    = 1u << 3,
+            CAMERAS             = 1u << 4,
+            DECK                = 1u << 5,
+            VISUALIZATION_BLOCK = CAMERAS | DECK,
+            ALL                 = MASK_CONVEYOR | WAFER_CONVEYOR | Z_MOTORS | ALIGNMENT_STAGES | CAMERAS | DECK,
         };
 
         // TODO: handle granular requests:

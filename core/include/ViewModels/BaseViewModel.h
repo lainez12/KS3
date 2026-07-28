@@ -40,6 +40,8 @@ namespace Kub3::UI::ViewModels
         void s_createPopUp(const QString &title, const PopUpActions &buttons);
         void s_createPopUpWithText(const QString &title, const PopUpActions &buttons, const QString &initialText);
         void s_closePopUp();
+        void s_updatePopUpMessage(const QString &text);
+        void s_appendPopUpMessage(const QString &htmlText);
 
     public slots:
         virtual void ps_onProcessMessageBroadcast(const Common::ProcessMessage &msg) {};

@@ -52,8 +52,9 @@ namespace Kub3::MFSM
             }
 
             emit s_processMessageBroadcast(Common::ProcessMessage{
+                .text  = QString::fromStdString(msg),
                 .level = mappedLevel,
-                .text  = QString::fromStdString(msg)});
+            });
         };
 
         m_homingService->setLogCallback(logRouter);

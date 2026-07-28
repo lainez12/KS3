@@ -56,7 +56,7 @@ namespace Kub3::UI::ViewModels
                         .callback = [this]() { this->uiRequestCancel(); },
                     },
                 },
-                "Initialization in progress");
+                "Starting initialization...");
         }
         else if (prevState == SysKind::Initializing &&
                  (m_currentSysState == SysKind::WaitingInitialization ||
@@ -89,14 +89,15 @@ namespace Kub3::UI::ViewModels
         const char *tgtStr = (tgt == DrawerTarget::Mask) ? "Mask" : "Wafer";
         const char *opStr  = eject ? "ejection" : "insertion";
 
-        emit s_createPopUp(
+        emit s_createPopUpWithText(
             QString("%1 %2 in progress").arg(tgtStr).arg(opStr),
             {
                 popup_action_t{
                     .text     = "Cancel",
                     .callback = [this]() { this->uiRequestCancel(); },
                 },
-            });
+            },
+            "Preparing operation...");
         emit s_cmdRunDrawerOperation(tgt, eject);
     }
 
@@ -119,6 +120,45 @@ namespace Kub3::UI::ViewModels
     void HomeViewModel::ps_operationEnded()
     {
         emit s_closePopUp();
+    }
+
+    void HomeViewModel::ps_onProcessMessageBroadcast(const Kub3::Common::ProcessMessage &msg)
+    {
+        // FILTERING: Home screen only cares about telemetry if it's currently showing a popup for Initialization or a Drawer Operation.
+        const bool isInitializing = (m_currentSysState == MFSM::SystemStateKind::Initializing);
+        const bool isDrawerOp     = (m_currentSysState == MFSM::SystemStateKind::Operational) &&
+                                    (m_currentOpSubstate == MFSM::OperationalStateKind::DrawerOp);
+
+        if (!isInitializing && !isDrawerOp)
+        {
+            return;
+        }
+
+        // FORMATTING
+        QString color  = "#1976D2"; // Default blue
+        QString prefix = "";
+
+        if (msg.level == Common::ProcessMessageLevel::Error)
+        {
+            color  = "#F44336";
+            prefix = "❌";
+        }
+        else if (msg.level == Common::ProcessMessageLevel::Warning)
+        {
+            color  = "#FF9800";
+            prefix = "⚠️";
+        }
+        else if (msg.level == Common::ProcessMessageLevel::Success)
+        {
+            color  = "#4CAF50";
+            prefix = "✔";
+        }
+
+        QString html = QString("<div style=\"color:%1; text-align: left;\">%2 %3</div>")
+                           .arg(color, prefix, msg.text.toHtmlEscaped());
+
+        // Update the active popup dynamically
+        emit s_appendPopUpMessage(html);
     }
 
 }

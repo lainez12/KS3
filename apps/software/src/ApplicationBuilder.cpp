@@ -284,6 +284,7 @@ namespace Kub3
         m_homeVM->bindConnection(m_masterFSM, &MFSM::MasterFSM::s_initializationSuccess, m_homeVM.get(), &VM::HomeViewModel::ps_initializationSuccess);
         m_homeVM->bindConnection(m_masterFSM, &MFSM::MasterFSM::s_serviceOpSuccess, m_homeVM.get(), &VM::HomeViewModel::ps_operationEnded);
         m_homeVM->bindConnection(m_masterFSM, &MFSM::MasterFSM::s_serviceOpError, m_homeVM.get(), &VM::HomeViewModel::ps_operationEnded);
+        m_homeVM->bindConnection(m_masterFSM, &MFSM::MasterFSM::s_processMessageBroadcast, m_homeVM.get(), &VM::HomeViewModel::ps_onProcessMessageBroadcast);
         // --- Exposure View Model
         QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_systemStateKindChanged, m_exposureMenuVM.get(), &VM::ExposureMenuViewModel::ps_onSystemStateChanged);
         QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_operationalSubstateChanged, m_exposureMenuVM.get(), &VM::ExposureMenuViewModel::ps_onOperationalSubstateChanged);

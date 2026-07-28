@@ -13,7 +13,7 @@ namespace Kub3::Common
     };
 
     struct ProcessMessage {
-        ProcessMessageLevel level;
         QString text;
+        ProcessMessageLevel level = ProcessMessageLevel::Info;
     };
 }
