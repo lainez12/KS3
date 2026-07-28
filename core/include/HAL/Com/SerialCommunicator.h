@@ -7,11 +7,11 @@
 
 namespace Kub3::HAL::Com
 {
-    class SerialCommunicator : public ICommunicator
+    class SerialCommunicator final : public ICommunicator
     {
     public:
         SerialCommunicator(const QString &portName, size_t baudrate);
-        ~SerialCommunicator() override final;
+        ~SerialCommunicator() override;
 
         bool open() override final;
         void close() override final;

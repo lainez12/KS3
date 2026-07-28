@@ -63,6 +63,7 @@ qt_add_library(Kub3Core STATIC
     src/HAL/Com/MockCommunicator.cpp
     src/HAL/Com/LengthBasedParser.cpp
     src/HAL/Com/PacketRouter.cpp
+    src/HAL/Com/MCULogger.cpp
     src/HAL/Vision/HikrobotCamera/HikrobotCamera.cpp
     src/HAL/Actuators/Lights/CameraLightingLed.cpp
     src/HAL/Actuators/Lights/UVExposureHead.cpp
@@ -167,6 +168,7 @@ qt_add_library(Kub3Core STATIC
     include/HAL/Com/IProtocolParser.h
     include/HAL/Com/LengthBasedParser.h
     include/HAL/Com/PacketRouter.h
+    include/HAL/Com/MCULogger.h
     include/HAL/Sensors/ISensor.h
     include/HAL/Sensors/Sensor.h
     include/HAL/Vision/ICamera.h

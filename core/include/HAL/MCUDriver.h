@@ -1,11 +1,10 @@
 #pragma once
 
 #include <QObject>
-#include <memory>
 
-#include "HAL/Com/ICommunicator.h"
-#include "HAL/Com/IProtocolParser.h"
-#include "utils.h"
+#include <HAL/Com/ICommunicator.h>
+#include <HAL/Com/IProtocolParser.h>
+#include <utils.h>
 
 namespace Kub3::HAL
 {
@@ -23,6 +22,8 @@ namespace Kub3::HAL
     signals:
         void s_packetReady(const Com::packet_t &packet);
         void s_hardwareError(const QString &reason);
+        void s_parsedRxData(const QByteArray &fullPacket);
+        void s_rawDataSent(const QByteArray &data);
 
         // Communicator proxy signals
         void s_connected(void);

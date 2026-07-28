@@ -1,3 +1,4 @@
+#include <QCoreApplication>
 #include <QDebug>
 #include <QRect>
 
@@ -8,6 +9,7 @@
 #include <HAL/Actuators/Switches/LogicSwitch.h>
 #include <HAL/Actuators/Valves/SolenoidValve.h>
 #include <HAL/Com/LengthBasedParser.h>
+#include <HAL/Com/MCULogger.h>
 #include <HAL/Com/SerialCommunicator.h>
 #include <HAL/HardwareManager.h>
 #include <HAL/MachineStatus/actuators_labels.h>
@@ -45,6 +47,10 @@ namespace Kub3::HAL
         m_repo(std::move(repo)),
         m_actuatorRegistry(std::make_shared<Act::ActuatorRegistry>())
     {
+        m_mcusLoggerThread = new QThread(this);
+        m_mcusLoggerThread->setObjectName("MCUsSharedLoggerThread");
+        m_mcusLoggerThread->start(QThread::LowPriority);
+
 // TODO: Build the machine based on the CMake configuration
 #if defined(KUB_MODEL_8)
         setupArduino1Subsystem(config);
@@ -77,6 +83,22 @@ namespace Kub3::HAL
 
     void HardwareManager::stopAll()
     {
+        for (auto &[key, subsys] : m_subsystems)
+        {
+            if (subsys.logger)
+            {
+                QMetaObject::invokeMethod(subsys.logger, &Com::MCULogger::flush, Qt::BlockingQueuedConnection);
+                subsys.logger->deleteLater();
+                subsys.logger = nullptr;
+            }
+        }
+
+        if (m_mcusLoggerThread && m_mcusLoggerThread->isRunning())
+        {
+            m_mcusLoggerThread->quit();
+            m_mcusLoggerThread->wait();
+        }
+
         auto stopThreadHelper = [this](QThread *thread, std::function<void(void)> stopMethod) {
             if (!thread || !thread->isRunning())
                 return;
@@ -234,6 +256,16 @@ namespace Kub3::HAL
         this->createArduino1Sensors(router.get());
         this->createArduino1Actuators(config, arduino1Driver, router.get());
 
+        // Inject logger
+#ifdef BUILD_DEBUG
+        QString logDir = QCoreApplication::applicationDirPath() + "/logs";
+#else
+        QString logDir = "/var/log/kub3";
+#endif
+        auto logger = new Com::MCULogger("Arduino1", arduino1Driver.get(), logDir);
+
+        // Move logger to the logger thread
+        logger->moveToThread(m_mcusLoggerThread);
         // Move MCUDriver to its own thread
         arduino1Driver->moveToThread(thread.get());
 
@@ -253,6 +285,7 @@ namespace Kub3::HAL
             .thread = std::move(thread),
             .driver = std::move(arduino1Driver),
             .router = std::move(router),
+            .logger = logger,
         };
     }
 
@@ -389,6 +422,16 @@ namespace Kub3::HAL
         this->createArduino2Sensors(router.get());
         this->createArduino2Actuators(config, arduino2Driver, router.get());
 
+        // Inject logger
+#ifdef BUILD_DEBUG
+        QString logDir = QCoreApplication::applicationDirPath() + "/logs";
+#else
+        QString logDir = "/var/log/kub3";
+#endif
+        auto logger = new Com::MCULogger("Arduino2", arduino2Driver.get(), logDir);
+
+        // Move logger to the logger thread
+        logger->moveToThread(m_mcusLoggerThread);
         // Move MCUDriver to its own thread
         arduino2Driver->moveToThread(thread.get());
 
@@ -408,6 +451,7 @@ namespace Kub3::HAL
             .thread = std::move(thread),
             .driver = std::move(arduino2Driver),
             .router = std::move(router),
+            .logger = logger,
         };
     }
 
@@ -520,6 +564,16 @@ namespace Kub3::HAL
         this->createArduino3Sensors(router.get());
         this->createArduino3Actuators(config, arduino3Driver, router.get());
 
+        // Inject logger
+#ifdef BUILD_DEBUG
+        QString logDir = QCoreApplication::applicationDirPath() + "/logs";
+#else
+        QString logDir = "/var/log/kub3";
+#endif
+        auto logger = new Com::MCULogger("Arduino3", arduino3Driver.get(), logDir);
+
+        // Move logger to the logger thread
+        logger->moveToThread(m_mcusLoggerThread);
         // Move MCUDriver to its own thread
         arduino3Driver->moveToThread(thread.get());
 
@@ -534,6 +588,7 @@ namespace Kub3::HAL
             .thread = std::move(thread),
             .driver = std::move(arduino3Driver),
             .router = std::move(router),
+            .logger = logger,
         };
     }
 
