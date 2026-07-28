@@ -326,6 +326,8 @@ namespace Kub3::Config
         // =============================
         settings.beginGroup(CONF_PROCESS_DRAWERS_POSITIONS);
         loadField(settings, CONF_PROCESS_CM3_RESET_POS_MM, config.drawers.cm3_reset_pos_mm, strict, activeLogs, &qToDouble);
+        loadField(settings, CONF_PROCESS_MASK_CONV_EJECT_DECEL_POS_MM, config.drawers.mask_conv_eject_decel_pos_mm, strict, activeLogs, &qToDouble);
+        loadField(settings, CONF_PROCESS_WAFER_CONV_EJECT_DECEL_POS_MM, config.drawers.wafer_conv_eject_decel_pos_mm, strict, activeLogs, &qToDouble);
         settings.endGroup();
 
         // =============================

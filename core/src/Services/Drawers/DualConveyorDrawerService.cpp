@@ -59,14 +59,14 @@ namespace Kub3::Services
         {
             UNWRAP_OR_ABORT(waferMotor, m_registry->get<HAL::Act::IPositionMotor>(WAFER_DRAWER_MOTOR));
             enqueueTask<WaferEjectionTask>(
-                m_repo, waferMotor, m_waferFastProfile, m_waferFineProfile, m_waferEjectionFinePosThreshold);
+                m_repo, waferMotor, m_waferFastProfile, m_waferFineProfile, m_processConfig.drawers.wafer_conv_eject_decel_pos_mm);
         }
 
         if (target == DrawerTarget::Mask || target == DrawerTarget::Both)
         {
             UNWRAP_OR_ABORT(maskMotor, m_registry->get<HAL::Act::IPositionMotor>(MASK_DRAWER_MOTOR));
             enqueueTask<MaskEjectionTask>(
-                m_repo, maskMotor, m_maskFastProfile, m_maskFineProfile, m_maskEjectionFinePosThreshold);
+                m_repo, maskMotor, m_maskFastProfile, m_maskFineProfile, m_processConfig.drawers.mask_conv_eject_decel_pos_mm);
         }
 
         this->startSequence();

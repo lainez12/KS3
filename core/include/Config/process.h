@@ -1,11 +1,9 @@
 #pragma once
 
-#include <array>
 #include <format>
 #include <stdexcept>
 #include <string>
 #include <unordered_map>
-#include <variant>
 
 #include <Config/default/process.h>
 #include <Config/kinematics.h>
@@ -112,7 +110,9 @@ namespace Kub3::Config
 
     typedef struct drawer_process_config_s {
         // Reset positions
-        double cm3_reset_pos_mm = CONF_PROCESS_CM3_RESET_POS_MM_DEFAULT;
+        double cm3_reset_pos_mm              = CONF_PROCESS_CM3_RESET_POS_MM_DEFAULT;
+        double mask_conv_eject_decel_pos_mm  = CONF_PROCESS_MASK_CONV_EJECT_DECEL_POS_MM_DEFAULT;
+        double wafer_conv_eject_decel_pos_mm = CONF_PROCESS_WAFER_CONV_EJECT_DECEL_POS_MM_DEFAULT;
     } drawer_process_config_t;
 
     // ------------------------------------------

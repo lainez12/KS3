@@ -272,7 +272,7 @@ void ConfigWindow::populateUI()
     m_categoryMap[FORCE_CATEGORY].push_back({"Conversions", forceConvIndex});
     m_categoryMap[Z_CATEGORY].push_back({"Algorithmic Limits", zAxisIndex});
     m_categoryMap[ALIGNMENT_CATEGORY].push_back({"Calibration Positions", alignIdx});
-    m_categoryMap[CONVEYORS_CATEGORY].push_back({"Calibration Positions", drawersIdx});
+    m_categoryMap[CONVEYORS_CATEGORY].push_back({"Process Positions", drawersIdx});
     m_categoryMap[CAMERAS_CATEGORY].push_back({"General Settings", camGenIndex});
     m_categoryMap[PAD_CATEGORY].push_back({"Short presses", padMovementIndex});
 

@@ -1,6 +1,7 @@
 #include <QDebug>
 #include <QSettings>
 #include <QString>
+#include <cstdint>
 #include <filesystem>
 #include <format>
 #include <stdexcept>
@@ -212,6 +213,8 @@ namespace Kub3::Config
             // SAVE DRAWERS POSITIONS
             settings.beginGroup(CONF_PROCESS_DRAWERS_POSITIONS);
             settings.setValue(CONF_PROCESS_CM3_RESET_POS_MM, config.drawers.cm3_reset_pos_mm);
+            settings.setValue(CONF_PROCESS_MASK_CONV_EJECT_DECEL_POS_MM, config.drawers.mask_conv_eject_decel_pos_mm);
+            settings.setValue(CONF_PROCESS_WAFER_CONV_EJECT_DECEL_POS_MM, config.drawers.wafer_conv_eject_decel_pos_mm);
             settings.endGroup(); // CONF_PROCESS_DRAWERS_POSITIONS
 
             // SAVE FORCE LIMITS
