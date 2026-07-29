@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QDebug>
 #include <QElapsedTimer>
 #include <memory>
 #include <queue>
@@ -60,15 +61,13 @@ namespace Kub3::Services
                 return;
             }
 
-            bool allLanesEmpty = true;
+            bool hasForegroundTasks = false;
 
             // Pump the active task in every lane
             for (auto &lane : m_lanes)
             {
                 if (lane.empty())
                     continue;
-
-                allLanesEmpty = false;
 
                 // Tick the task at the front of this specific lane
                 bool isCurrentTaskDone = lane.front()->tick();
@@ -80,12 +79,19 @@ namespace Kub3::Services
                     if (!lane.empty())
                         lane.front()->start(); // Start the next task in this lane
                 }
+
+                // If the lane is still active and holds a foreground task, the sequence stays alive
+                if (!lane.empty() && !lane.front()->isBackground())
+                {
+                    hasForegroundTasks = true;
+                }
             }
 
             // If all queues in all lanes are empty, the entire service is done
-            if (allLanesEmpty)
+            if (!hasForegroundTasks)
             {
                 m_status = ServiceStatus::Success;
+                clearTasks(); // Explicitly clean up to trigger destructors on remaining background tasks
             }
         }
 
@@ -141,14 +147,22 @@ namespace Kub3::Services
          */
         void enqueueTask(Unique<ITask> task, uint8_t lane = 0)
         {
-            // INJECTION: Bind the Task's logging to the Service's logging mechanism.
-            // Because BaseTaskService owns the task, capturing 'this' is perfectly memory-safe.
+            // INJECTION: Bind the Task's aborting/logging to the Service's aborting/logging mechanism.
+            task->setAbortCallback([this](const std::string &reason) { this->abortSequence(reason); });
             task->setLogCallback([this](LogLevel lvl, const std::string &msg) { this->postLog(lvl, msg); });
 
             // Dynamically allocate new lanes if a higher lane index is requested
             if (lane >= m_lanes.size())
             {
                 m_lanes.resize(lane + 1);
+            }
+
+            // DEV-SAFETY: Warn developers if they try to queue something behind a non-ending task in the same lane
+            if (!m_lanes[lane].empty() && m_lanes[lane].back()->isBackground())
+            {
+                qWarning() << "Enqueued a task behind a background task on lane"
+                           << std::to_string(static_cast<uint32_t>(lane))
+                           << ". This new task will never be reached.";
             }
             m_lanes[lane].push(std::move(task));
         }
@@ -201,7 +215,7 @@ namespace Kub3::Services
             m_errorReason.clear();
             m_watchdog.start();
 
-            bool hasTasks = false;
+            bool hasForegroundTasks = false;
 
             // Start the front task of every active lane
             for (auto &lane : m_lanes)
@@ -209,12 +223,18 @@ namespace Kub3::Services
                 if (!lane.empty())
                 {
                     lane.front()->start();
-                    hasTasks = true;
+                    if (!lane.front()->isBackground())
+                    {
+                        hasForegroundTasks = true;
+                    }
                 }
             }
 
-            if (!hasTasks) // Started with all queues empty
+            if (!hasForegroundTasks) // Started with all queues empty
+            {
                 m_status = ServiceStatus::Success;
+                clearTasks(); // Instantly wipe tasks so background ones don't zombie forever
+            }
         }
 
         /**

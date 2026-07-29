@@ -8,7 +8,12 @@
 #include <HAL/MachineStatus/virtual_labels.h>
 #include <Services/Stowage/StowageService.h>
 #include <Services/Stowage/tasks/StowageCenterStagesTask.h>
+#include <Services/Stowage/tasks/StowageEnableMaskVacuumWhenNeededTask.h>
+#include <Services/Stowage/tasks/StowageMaskToArdkoCountPositionTask.h>
+#include <Services/Stowage/tasks/StowageMoveMaskConvToUnconstrainedTask.h>
 #include <Services/Stowage/tasks/StowageMoveZToLimitTask.h>
+#include <Services/Stowage/tasks/StowageRecordMaskPositionsTask.h>
+#include <Services/Stowage/tasks/StowageWaitForMaskVacuumTask.h>
 #include <Services/tasks/ToggleValveTask.h>
 
 #define STOP_MOTOR_PTR(motor, motorId)                                                   \
@@ -33,8 +38,11 @@ namespace Kub3::Services
         this->initializeMachineValues();
         this->initializeMotorsBundles();
 
-        UNWRAP_OR_THROW(vacValve, m_registry->get<HAL::Act::IValve>(WAFER_VACUUM_VALVE), "[StowageService] Failed to load Wafer Vacuum Valve: ");
-        m_waferVacuumValve = vacValve;
+        UNWRAP_OR_THROW(waferVacuumValve, m_registry->get<HAL::Act::IValve>(WAFER_VACUUM_VALVE), "[StowageService] Failed to load Wafer Vacuum Valve: ");
+        UNWRAP_OR_THROW(maskVacuumValve, m_registry->get<HAL::Act::IValve>(MASK_VACUUM_VALVE), "[StowageService] Failed to load Mask Vacuum Valve: ");
+
+        m_waferVacuumValve = waferVacuumValve;
+        m_maskVacuumValve  = maskVacuumValve;
     }
 
     void StowageService::startStowage(StowageTarget target)
@@ -60,7 +68,29 @@ namespace Kub3::Services
 
     bool StowageService::buildMaskStowageTaskQueue(void)
     {
-        // TODO: code
+        if (allArdkoActive() && HAL::MS::readBool(m_repo, MASK_VACUUM_ACTIVE)) // Check if already loaded
+            return true;                                                       // Nothing to do
+        if (HAL::MS::readBool(m_repo, CM3))
+        {
+            postWarning("No mask holder detected. Skipping.");
+            return true;
+        }
+        if (!HAL::MS::readBool(m_repo, CM2))
+        {
+            abortSequence("Stowage procedure rejected: Mask drawer not is not inserted.");
+            return false;
+        }
+
+        if (anyArdkoActive())
+        {
+            enqueueTask<StowageMaskToArdkoCountPositionTask, 0>(m_repo, 0, m_maskBundle); // Go back to no ardko active
+        }
+        enqueueTask<StowageMaskToArdkoCountPositionTask, 0>(m_repo, 4, m_maskBundle); // Climb to vacuuming position (4 ardkos active)
+        enqueueTask<StowageWaitForMaskVacuumTask, 0>(m_repo);
+        enqueueTask<StowageMoveMaskConvToUnconstrainedTask, 0>(m_repo, m_maskBundle);
+        enqueueTask<StowageEnableMaskVacuumWhenNeededTask, 1>(m_repo, m_maskVacuumValve, m_maskBundle);
+        enqueueTask<StowageRecordMaskPositionsTask, 2>(m_repo, m_maskBundle);
+
         return true;
     }
 
@@ -119,7 +149,8 @@ namespace Kub3::Services
 
     void StowageService::initializeMachineValues(void)
     {
-        m_repo->setValueRaw(V_ARDKO_CONTACT_MASK_POSITION, static_cast<int32_t>(0));
+        m_repo->setValueRaw(V_MASK_CONV_UNCONSTRAINED_POS_MM, static_cast<double>(0.0));
+        m_repo->setValueRaw(V_MASK_CONV_RECEPTION_POS_MM, static_cast<double>(0.0));
         m_repo->setValueRaw(V_TARE_FORCE_LEFT_ADC, static_cast<uint16_t>(0));
         m_repo->setValueRaw(V_TARE_FORCE_RIGHT_ADC, static_cast<uint16_t>(0));
         m_repo->setValueRaw(V_TARE_FORCE_BACK_ADC, static_cast<uint16_t>(0));
@@ -133,6 +164,7 @@ namespace Kub3::Services
         UNWRAP_OR_THROW(xMotor, m_registry->get<HAL::Act::IPositionMotor>(X_STAGE_MOTOR), "[StowageService] Failed to load X Stage Motor: ");
         UNWRAP_OR_THROW(yMotor, m_registry->get<HAL::Act::IPositionMotor>(Y_STAGE_MOTOR), "[StowageService] Failed to load Y Stage Motor: ");
         UNWRAP_OR_THROW(thetaMotor, m_registry->get<HAL::Act::IPositionMotor>(THETA_STAGE_MOTOR), "[StowageService] Failed to load Theta Stage Motor: ");
+        UNWRAP_OR_THROW(maskMotor, m_registry->get<HAL::Act::IPositionMotor>(MASK_DRAWER_MOTOR), "[StowageService] Failed to load Mask Conveyor Motor: ");
 
         // TODO: split kinematic profiles per motor (requires re-architecturing)
         m_zMotorsBundle = z_motors_bundle_t{
@@ -158,6 +190,26 @@ namespace Kub3::Services
             .kinematic        = m_conf.getKinematicProfile(THETA_STAGE_MOTOR, "normal"),
             .centerPositionMm = m_conf.alignment.theta_stage_center_pos_mm,
         };
+        m_maskBundle = stowage_mask_motor_bundle_t{
+            .motor      = maskMotor,
+            .kinematics = m_conf.getKinematicProfile(MASK_DRAWER_MOTOR, "fine"),
+        };
+    }
+
+    bool StowageService::allArdkoActive(void)
+    {
+        return HAL::MS::readBool(m_repo, ARDKO_BACK_LEFT_LIMIT) &&
+               HAL::MS::readBool(m_repo, ARDKO_BACK_RIGHT_LIMIT) &&
+               HAL::MS::readBool(m_repo, ARDKO_FRONT_LEFT_LIMIT) &&
+               HAL::MS::readBool(m_repo, ARDKO_FRONT_RIGHT_LIMIT);
+    }
+
+    bool StowageService::anyArdkoActive(void)
+    {
+        return HAL::MS::readBool(m_repo, ARDKO_BACK_LEFT_LIMIT) ||
+               HAL::MS::readBool(m_repo, ARDKO_BACK_RIGHT_LIMIT) ||
+               HAL::MS::readBool(m_repo, ARDKO_FRONT_LEFT_LIMIT) ||
+               HAL::MS::readBool(m_repo, ARDKO_FRONT_RIGHT_LIMIT);
     }
 
 }

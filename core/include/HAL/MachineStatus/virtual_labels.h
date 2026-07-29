@@ -4,7 +4,8 @@
 #define V_TARE_FORCE_RIGHT_ADC "virtualTareForceRightADC"
 #define V_TARE_FORCE_BACK_ADC  "virtualTareForceBackADC"
 
-#define V_ARDKO_CONTACT_MASK_POSITION "virtualArdkoContactMaskPosition"
+#define V_MASK_CONV_UNCONSTRAINED_POS_MM "virtualMaskConveyorUncontrainedPositionMm"
+#define V_MASK_CONV_RECEPTION_POS_MM     "virtualMaskConveyorReceptionPositionMm"
 
 #define V_LEFT_Z_HORIZONTALITY_DELTA  "virtualLeftZHorizontalityDelta"
 #define V_RIGHT_Z_HORIZONTALITY_DELTA "virtualRightZHorizontalityDelta"
