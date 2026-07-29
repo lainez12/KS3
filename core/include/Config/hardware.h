@@ -33,9 +33,11 @@ namespace Kub3::Config
     } stepper_hw_properties_t;
 
     typedef struct dc_motor_hw_properties_s {
-        double screwPitchMm        = 0.0;
-        double maxVelocityMmS      = 0.0;
-        double maxAccelerationMmS2 = 0.0;
+        double screwPitchMm        = CONF_HW_SCREW_PITCH_MM_DEFAULT;
+        double maxVelocityMmS      = CONF_HW_MAX_VELOCITY_MM_S_DEFAULT;
+        double maxAccelerationMmS2 = CONF_HW_MAX_ACCELERATION_MM_S2_DEFAULT;
+        uint16_t maxPositiveTorque = CONF_HW_MOTOR_MAX_POSITIVE_TORQUE_DEFAULT;
+        uint16_t maxNegativeTorque = CONF_HW_MOTOR_MAX_NEGATIVE_TORQUE_DEFAULT;
     } dc_motor_hw_properties_t;
 
     using motor_hw_properties_t = std::variant<

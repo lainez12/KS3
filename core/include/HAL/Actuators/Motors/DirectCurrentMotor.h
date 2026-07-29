@@ -45,6 +45,7 @@ namespace Kub3::HAL::Act
         void onControlTick(void);
 
     private:
+        void sendTorqueLimits() const;
         uint16_t computePwm(double velocityMmS) const;
         void sendPayload(const QByteArray &payload) const;
 

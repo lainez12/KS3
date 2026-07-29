@@ -24,9 +24,13 @@
 #define CONF_HW_SCREW_PITCH_MM         "screw_pitch_mm"
 #define CONF_HW_MAX_VELOCITY_MM_S      "max_velocity_mm_s"
 #define CONF_HW_MAX_ACCELERATION_MM_S2 "max_acceleration_mm_s2"
-#define CONF_HW_ENCODER_TOPS_PER_REV   "encoder_tops_per_rev"
+// --- With encoder
+#define CONF_HW_ENCODER_TOPS_PER_REV "encoder_tops_per_rev"
 // --- Steppers
 #define CONF_HW_MOTOR_STEPS_PER_REV "steps_per_rev"
+// --- Direct Current
+#define CONF_HW_MOTOR_MAX_POSITIVE_TORQUE "max_positive_torque"
+#define CONF_HW_MOTOR_MAX_NEGATIVE_TORQUE "max_negative_torque"
 
 // CONF_HW_CAMERAS inner keys
 #define CONF_HW_SERIAL_NUMBER       "serial_number"
