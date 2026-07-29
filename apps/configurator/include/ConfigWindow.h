@@ -1,10 +1,11 @@
 #pragma once
 
+#include <functional>
+#include <map>
+#include <vector>
+
 #include <QListWidgetItem>
 #include <QWidget>
-#include <functional>
-#include <memory>
-#include <vector>
 
 #include <Config/conf.h>
 #include <pages/AdminConfigPage.h>
