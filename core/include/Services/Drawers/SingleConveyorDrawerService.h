@@ -13,7 +13,6 @@
 namespace Kub3::Services
 {
 
-    // TODO: add process config as ctor parameter
     class SingleConveyorDrawerService final : public BaseTaskService<IDrawerService>
     {
     public:

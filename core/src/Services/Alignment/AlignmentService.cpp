@@ -7,26 +7,21 @@ namespace
 {
 
     using Kub3::AlignmentStageId;
-    using Kub3::HAL::Act::MotorDirection;
     using Kub3::Services::AlignmentDirection;
-
-    template <typename E>
-    constexpr std::size_t to_index(E e) noexcept
-    {
-        return static_cast<std::size_t>(std::underlying_type_t<E>(e));
-    }
-
-    // TODO: change the mechanism to get the limit ID as this is extremely error prone is the used enums are update
-
-    static constexpr std::array<std::array<const char *, 2>, 3> stopIdMap{
-        {/* --------- [0] = POSITIVE LIMIT, [1] = NEGATIVE LIMIT */
-         /* X --- */ {X_STAGE_LEFT_LIMIT, X_STAGE_RIGHT_LIMIT},
-         /* Y --- */ {Y_STAGE_BACK_LIMIT, Y_STAGE_FRONT_LIMIT},
-         /* THETA */ {THETA_STAGE_ANTI_CLOCKWISE_LIMIT, THETA_STAGE_CLOCKWISE_LIMIT}}};
 
     constexpr const char *stopId(AlignmentStageId s, AlignmentDirection d) noexcept
     {
-        return stopIdMap[to_index(s)][to_index(d)];
+        switch (s)
+        {
+        case AlignmentStageId::X:
+            return (d == AlignmentDirection::POSITIVE) ? X_STAGE_LEFT_LIMIT : X_STAGE_RIGHT_LIMIT;
+        case AlignmentStageId::Y:
+            return (d == AlignmentDirection::POSITIVE) ? Y_STAGE_BACK_LIMIT : Y_STAGE_FRONT_LIMIT;
+        case AlignmentStageId::THETA:
+            return (d == AlignmentDirection::POSITIVE) ? THETA_STAGE_ANTI_CLOCKWISE_LIMIT : THETA_STAGE_CLOCKWISE_LIMIT;
+        }
+
+        return nullptr; // Fallback to prevent compiler warnings
     }
 
 }
@@ -81,7 +76,18 @@ namespace Kub3::Services
         if (it == m_motorsConfigurations.end() || !it->second.motor)
             return;
 
-        const bool limitReached               = HAL::MS::readBool(m_repo, stopId(axis, dir));
+        const char *limitSensorId = stopId(axis, dir);
+
+        if (!limitSensorId)
+        {
+            qCritical() << "[AlignmentService] Attempted to move an unhandled axis or direction. Halting for safety.";
+            it->second.watchdogTicks = 0;
+            if (it->second.motor->isMoving())
+                it->second.motor->emergencyStop();
+            return;
+        }
+
+        const bool limitReached               = HAL::MS::readBool(m_repo, limitSensorId);
         motor_alignment_config_t &motorConfig = it->second;
 
         if (limitReached)

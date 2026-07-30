@@ -2,9 +2,7 @@
 
 #include <QElapsedTimer>
 #include <QTimer>
-#include <memory>
 #include <string>
-#include <vector>
 
 #include <Algorithms/Kinematic/IKinematicGenerator.h>
 #include <Config/conf.h>
@@ -45,7 +43,7 @@ namespace Kub3::HAL::Act
         void resetEncoder(const double offsetMm = 0.0) override;
 
         // Getters
-        bool isMoving(void) const;
+        bool isMoving(void) const override;
         [[nodiscard]] std::string_view getEncoderId(void) const override
         {
             return m_encoderId;

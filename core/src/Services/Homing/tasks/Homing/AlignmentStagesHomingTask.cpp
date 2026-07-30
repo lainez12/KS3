@@ -20,10 +20,11 @@ namespace Kub3::Services
         const bool z1 = HAL::MS::readBool(m_repo, Z1);
         const bool z2 = HAL::MS::readBool(m_repo, Z2);
 
-        // Between Z1 and Z2 is the danger zone.
-        // TODO: Maybe reject demand a bit less aggressively
-        if (z1 && !z2)
-            throw std::runtime_error("CRITICAL: Attempted to move alignment stages while Z is inside the collision zone.");
+        if (z1 && !z2) // Between Z1 and Z2 is the danger zone.
+        {
+            abort("[AlignmentStagesHomingTask] Attempt to move alignment stages while in stowage zone.");
+            return; // Not necessary but anyway
+        }
 
         handleSingleMotorLogic(m_xMotorBundle, readCenterPosition(m_xMotorBundle, V_X_STAGE_CENTER_MM));
         handleSingleMotorLogic(m_yMotorBundle, readCenterPosition(m_yMotorBundle, V_Y_STAGE_CENTER_MM));

@@ -2,7 +2,6 @@
 
 #include <QElapsedTimer>
 #include <QTimer>
-#include <memory>
 #include <string>
 #include <string_view>
 
@@ -40,6 +39,7 @@ namespace Kub3::HAL::Act
 
         // Getters
         [[nodiscard]] bool isMoving(void) const override;
+        static std::function<void(const QByteArray &)> createFeedbackHandler(Shared<DirectCurrentMotor> motor);
 
     private slots:
         void onControlTick(void);
@@ -48,6 +48,7 @@ namespace Kub3::HAL::Act
         void sendTorqueLimits() const;
         uint16_t computePwm(double velocityMmS) const;
         void sendPayload(const QByteArray &payload) const;
+        void resetInternalState(void);
 
     private:
         const std::string m_id;

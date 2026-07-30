@@ -252,10 +252,11 @@ namespace Kub3::Services
         // Approach until contact threshold is touched.
         this->enqueueTask<FastApproachTask>(m_zMotors, maxForceGetter, m_conf.contact_threshold_gf, m_freeProfile);
         // Synchronous movement up to target force.
-        this->enqueueTask<AdmittanceControlTask>(m_zMotors, forceGetter, abortCb,
-                                                 buildAdmittanceConfig(forceGF, m_conf.autolevel_force_tolerance_gf), // TODO: define another tolerance threshold
-                                                 AdmittanceControlTask::Mode::BasicContact,
-                                                 m_contactProfile);
+        this->enqueueTask<AdmittanceControlTask>(
+            m_zMotors, forceGetter, abortCb,
+            buildAdmittanceConfig(forceGF, m_conf.autolevel_force_tolerance_gf),
+            AdmittanceControlTask::Mode::BasicContact,
+            m_contactProfile);
     }
 
     void ContactService::buildHorizontalityLanes(void)
