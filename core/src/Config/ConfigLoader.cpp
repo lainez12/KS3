@@ -70,9 +70,14 @@ namespace Kub3::Config
         return v.toDouble();
     }
 
-    static uint qToUint(const QVariant &v)
+    static uint32_t qToUint(const QVariant &v)
     {
         return v.toUInt();
+    }
+
+    static uint16_t qToUint16(const QVariant &v)
+    {
+        return static_cast<uint16_t>(v.toUInt());
     }
 
     static bool qToBool(const QVariant &v)
@@ -155,6 +160,8 @@ namespace Kub3::Config
                 loadField(settings, CONF_HW_SCREW_PITCH_MM, hw.screwPitchMm, strict, activeLogs, &qToDouble);
                 loadField(settings, CONF_HW_MAX_VELOCITY_MM_S, hw.maxVelocityMmS, strict, activeLogs, &qToDouble);
                 loadField(settings, CONF_HW_MAX_ACCELERATION_MM_S2, hw.maxAccelerationMmS2, strict, activeLogs, &qToDouble);
+                loadField(settings, CONF_HW_MOTOR_MAX_POSITIVE_TORQUE, hw.maxPositiveTorque, strict, activeLogs, &qToUint16);
+                loadField(settings, CONF_HW_MOTOR_MAX_NEGATIVE_TORQUE, hw.maxNegativeTorque, strict, activeLogs, &qToUint16);
 
                 CHECK_CONFIG_VALUE(hw.screwPitchMm == 0.0, motor.id, hw.screwPitchMm, "screw pitch", strict);
 

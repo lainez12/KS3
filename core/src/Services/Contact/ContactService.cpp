@@ -185,21 +185,6 @@ namespace Kub3::Services
         }
     }
 
-    void ContactService::tareForceSensor(TestToken, ForceSensor fs)
-    {
-        if ((fs & ForceSensor::Left) != ForceSensor::None)
-            m_repo->setValueRaw(V_TARE_FORCE_LEFT_ADC, HAL::MS::readUInt16(m_repo, FORCE_LEFT_ADC));
-        if ((fs & ForceSensor::Right) != ForceSensor::None)
-            m_repo->setValueRaw(V_TARE_FORCE_RIGHT_ADC, HAL::MS::readUInt16(m_repo, FORCE_RIGHT_ADC));
-        if ((fs & ForceSensor::Back) != ForceSensor::None)
-            m_repo->setValueRaw(V_TARE_FORCE_BACK_ADC, HAL::MS::readUInt16(m_repo, FORCE_BACK_ADC));
-    }
-
-    void ContactService::toggleForceSensors(TestToken, bool en)
-    {
-        this->_toggleForceSensors(en);
-    }
-
     // ==========================================
     // BASE TASK SERVICE IMPLEMENTATIONS
     // ==========================================
@@ -230,7 +215,6 @@ namespace Kub3::Services
         std::visit(museum, kind);
         if (setupSuccess)
         {
-            this->_toggleForceSensors(true);
             this->startSequence();
         }
     }
@@ -316,9 +300,11 @@ namespace Kub3::Services
             if (!sw)
                 continue;
 
-            if (en)
+            const bool isEnabled = sw->isOn();
+
+            if (en && !isEnabled)
                 sw->turnOn();
-            else
+            else if (isEnabled)
                 sw->turnOff();
         }
     }
@@ -376,6 +362,22 @@ namespace Kub3::Services
         return getMaxCurrentForceGF() > m_conf.contact_threshold_gf;
     }
 
+    void ContactService::processBackgroundAutomations(void)
+    {
+        const bool waferInserted = HAL::MS::readBool(m_repo, CW2);
+
+        if (!waferInserted) // Pre-condition check
+        {
+            return;
+        }
+
+        const bool enable = HAL::MS::readBool(m_repo, Z_LEFT_LOW_LIMIT) |
+                            HAL::MS::readBool(m_repo, Z_RIGHT_LOW_LIMIT) |
+                            HAL::MS::readBool(m_repo, Z_BACK_LOW_LIMIT);
+
+        this->_toggleForceSensors(enable);
+    }
+
     bool ContactService::isProcessForceExceeded(void) const
     {
         return getMaxCurrentForceGF() > m_conf.max_process_force_gf;
@@ -389,6 +391,26 @@ namespace Kub3::Services
     inline constexpr bool ContactService::isMovingTowardsContact(ZDirection dir) const
     {
         return dir == ZDirection::Up;
+    }
+
+} // namespace Kub3::Services
+
+namespace Kub3::Services
+{
+
+    void ContactService::tareForceSensor(TestToken, ForceSensor fs)
+    {
+        if ((fs & ForceSensor::Left) != ForceSensor::None)
+            m_repo->setValueRaw(V_TARE_FORCE_LEFT_ADC, HAL::MS::readUInt16(m_repo, FORCE_LEFT_ADC));
+        if ((fs & ForceSensor::Right) != ForceSensor::None)
+            m_repo->setValueRaw(V_TARE_FORCE_RIGHT_ADC, HAL::MS::readUInt16(m_repo, FORCE_RIGHT_ADC));
+        if ((fs & ForceSensor::Back) != ForceSensor::None)
+            m_repo->setValueRaw(V_TARE_FORCE_BACK_ADC, HAL::MS::readUInt16(m_repo, FORCE_BACK_ADC));
+    }
+
+    void ContactService::toggleForceSensors(TestToken, bool en)
+    {
+        this->_toggleForceSensors(en);
     }
 
 } // namespace Kub3::Services

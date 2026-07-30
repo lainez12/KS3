@@ -39,6 +39,9 @@ namespace Kub3::Services
         void moveZManual(ZDirection dir) override;
         void stopZManual(void) override;
         [[nodiscard]] bool isInContact(void) const override;
+        void processBackgroundAutomations(void) override;
+
+        // Test methods
         void tareForceSensor(TestToken, ForceSensor fs) override;
         void toggleForceSensors(TestToken, bool en) override;
 

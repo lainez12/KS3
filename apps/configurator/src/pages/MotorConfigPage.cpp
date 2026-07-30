@@ -1,7 +1,6 @@
 #include <QInputDialog>
 #include <QLabel>
 #include <QMessageBox>
-#include <format>
 
 #include <Config/keys/hardware.h>
 #include <pages/MotorConfigPage.h>
@@ -27,10 +26,11 @@ namespace Kub3::Components
     MotorConfigPage::MotorConfigPage(const Kub3::Config::motor_config_t &hwConf,
                                      const Kub3::Config::KinematicProfiles &kinConf,
                                      const QStringList &allMotorIds,
-                                     QWidget *parent) : QWidget(parent),
-                                                        m_profiles(kinConf),
-                                                        m_allMotorIds(allMotorIds),
-                                                        m_currentMotorId(QString::fromStdString(hwConf.id))
+                                     QWidget *parent) :
+        QWidget(parent),
+        m_profiles(kinConf),
+        m_allMotorIds(allMotorIds),
+        m_currentMotorId(QString::fromStdString(hwConf.id))
     {
         setupUI(m_currentMotorId);
         loadInitialData(hwConf);
@@ -90,11 +90,13 @@ namespace Kub3::Components
         m_dcScrewPitch = createDoubleSpinBox(0.01);
         m_dcMaxVel     = createDoubleSpinBox();
         m_dcMaxAcc     = createDoubleSpinBox();
-        m_dcEncTops    = createSpinBox();
+        m_maxTorquePos = createSpinBox(0, 4095);
+        m_maxTorqueNeg = createSpinBox(0, 4095);
         dcForm->addRow("Screw Pitch (mm):", m_dcScrewPitch);
         dcForm->addRow("Max Velocity (mm/s):", m_dcMaxVel);
         dcForm->addRow("Max Acceleration (mm/s²):", m_dcMaxAcc);
-        dcForm->addRow("Encoder Tops Per Rev:", m_dcEncTops);
+        dcForm->addRow("Torque Limit (Forward/Positive movement):", m_maxTorquePos);
+        dcForm->addRow("Torque Limit (Backward/Negative movement):", m_maxTorqueNeg);
         m_typeStack->addWidget(dcPage);
 
         layout->addWidget(m_typeStack);
@@ -189,6 +191,8 @@ namespace Kub3::Components
             m_dcScrewPitch->setValue(dc.screwPitchMm);
             m_dcMaxVel->setValue(dc.maxVelocityMmS);
             m_dcMaxAcc->setValue(dc.maxAccelerationMmS2);
+            m_maxTorquePos->setValue(dc.maxPositiveTorque);
+            m_maxTorqueNeg->setValue(dc.maxNegativeTorque);
         }
     }
 
@@ -420,6 +424,8 @@ namespace Kub3::Components
             dc.screwPitchMm        = m_dcScrewPitch->value();
             dc.maxVelocityMmS      = m_dcMaxVel->value();
             dc.maxAccelerationMmS2 = m_dcMaxAcc->value();
+            dc.maxPositiveTorque   = m_maxTorquePos->value();
+            dc.maxNegativeTorque   = m_maxTorqueNeg->value();
             outHw.hwProperties     = dc;
         }
 

@@ -4,7 +4,6 @@
 #include <MFSM/MasterFSM.h>
 #include <MFSM/interlocks.h>
 #include <Services/Stowage/StowageService.h>
-#include <type_traits>
 #include <utils.h>
 
 namespace Kub3::MFSM
