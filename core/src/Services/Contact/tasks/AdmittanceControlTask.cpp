@@ -1,8 +1,7 @@
-#include <Services/Contact/tasks/AdmittanceControlTask.h>
-
 #include <QDebug>
-#include <algorithm>
 #include <cmath>
+
+#include <Services/Contact/tasks/AdmittanceControlTask.h>
 
 namespace Kub3::Services
 {

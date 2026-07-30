@@ -19,7 +19,7 @@ namespace Kub3::Services
         bool tick(void) override;
 
     private:
-        void moveTowardsLimit(void);
+        void moveTowardsHomingLimit(void);
 
     protected:
         Shared<HAL::Act::IMotor> m_deckMotor;

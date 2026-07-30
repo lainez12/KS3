@@ -1,12 +1,11 @@
 #pragma once
 
-#include <array>
-
 #include <HAL/Actuators/Motors/IMotor.h>
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
 #include <Services/Homing/tasks/Homing/ZMotorsHomingTask.h>
 #include <Services/Homing/tasks/ZMotorsReachLimitTask.h>
 #include <Services/ITask.h>
+#include <cstdint>
 #include <utils.h>
 
 namespace Kub3::Services
@@ -22,7 +21,8 @@ namespace Kub3::Services
 
     private:
         Shared<HAL::MS::IMachineStatusRepo> m_repo;
-        uint16_t m_ticksCount = 0;
+        uint16_t m_ticksCount    = 0;
+        uint32_t m_meanValues[3] = {0, 0, 0};
     };
 
 }

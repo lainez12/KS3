@@ -23,7 +23,6 @@ namespace Kub3::Services
         m_processConfig(processConfig)
     {
         loadMotorsKinematicProfiles();
-        loadThresholds();
     }
 
     void DualConveyorDrawerService::insert(DrawerTarget target)
@@ -97,13 +96,6 @@ namespace Kub3::Services
         m_maskFastProfile    = m_processConfig.getKinematicProfile(MASK_DRAWER_MOTOR, "normal");
         m_maskFineProfile    = m_processConfig.getKinematicProfile(MASK_DRAWER_MOTOR, "fine");
         m_maskContactProfile = m_processConfig.getKinematicProfile(MASK_DRAWER_MOTOR, "contact");
-    }
-
-    void DualConveyorDrawerService::loadThresholds(void)
-    {
-        // TODO: code
-        // m_waferEjectionFinePosThreshold = m_processConfig.getEncoderThreshold("ejection_slowdown_threshold");
-        // m_maskEjectionFinePosThreshold  = m_processConfig.getEncoderThreshold("ejection_slowdown_threshold");
     }
 
 }

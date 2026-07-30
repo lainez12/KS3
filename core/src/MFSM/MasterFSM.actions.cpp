@@ -23,7 +23,6 @@ namespace Kub3::MFSM
             [&](const StateOperational &s) { this->onOperationalSubstateEntered(s, s.subState); },
             [&](const StateError &s) {
                 this->stopAllServices(); // Non-blocking Services stop
-                // TODO: Add a emergency stop service to perform full HAL stop
                 emit s_errorOccurred(ErrorPayload{
                     .kind           = ErrorKind::Global,
                     .severity       = s.severity,
@@ -34,7 +33,6 @@ namespace Kub3::MFSM
             [&](const StateEmergencyStop &s) {
                 qCritical() << "MFSM: EMERGENCY STOP ENTERED - Stopping all hardware.";
                 this->stopAllServices();
-                // TODO: Add a emergency stop service to perform full HAL stop
                 emit s_errorOccurred(ErrorPayload{
                     .kind           = ErrorKind::Global,
                     .severity       = ErrorSeverity::Fatal,
@@ -94,10 +92,9 @@ namespace Kub3::MFSM
                 m_contactService->retractFromContact();
             },
             [&](const StatePreparingAlignment &s) {
-                emit s_processMessageBroadcast({QString("Preparing for Alignment - Positioning Vision Hardware.")});
+                emit s_processMessageBroadcast({"Preparing for Alignment - Positioning Vision Hardware."});
                 // Move vision deck above the substrate in order to be able to observe it.
-                // TODO: Code deck movement in `IVisionService` (lock all pad movements while automated)
-                // m_visionService->moveBlockTo(ACTIVE_POS);
+                m_visionService->moveBlockToVisualisationPosition();
             },
             [&](const StateAlignment &s) {
                 // If we enter alignment and are not contact-free: lock the hardware

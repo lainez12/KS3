@@ -44,7 +44,7 @@ namespace Kub3::Services
         void buildCamerasSequence(bool init, uint8_t lane = 0);
         void buildDeckSequence(bool init, uint8_t lane = 0);
 
-    private: // TODO: Could be general and defined in a `utils` ?
+    private:
         enum class CameraMotorIdArg
         {
             LeftX,

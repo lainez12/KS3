@@ -101,6 +101,24 @@ namespace Kub3::HAL::Act
         return m_controlTimer.isActive();
     }
 
+    std::function<void(const QByteArray &)> DirectCurrentMotor::createFeedbackHandler(Shared<DirectCurrentMotor> motor)
+    {
+        // TODO:
+        // - Currently no way to know the message kind using the current communication protocol
+        // - Thankfully for now only one exists: motor stopped
+
+        return [weakMotor = Weak<DirectCurrentMotor>(motor)](const QByteArray &payload) {
+            if (auto safeMotor = weakMotor.lock())
+            {
+                if (!payload.isEmpty())
+                {
+                    qDebug().nospace() << "[DirectCurrentMotor](" << safeMotor->m_id << ") Received feedback: Torque limit stopped.";
+                    QMetaObject::invokeMethod(safeMotor.get(), [m = safeMotor]() { m->resetInternalState(); }, Qt::AutoConnection);
+                }
+            }
+        };
+    }
+
     void DirectCurrentMotor::onControlTick(void)
     {
         const int64_t currentNsecs = m_dtTimer.nsecsElapsed();
@@ -172,6 +190,12 @@ namespace Kub3::HAL::Act
         const double rawPwm = std::round(ratio * 4095.0);
 
         return static_cast<uint16_t>(std::clamp(rawPwm, 0.0, 4095.0));
+    }
+
+    void DirectCurrentMotor::resetInternalState(void)
+    {
+        m_controlTimer.stop();
+        m_lastTickNsecs = 0;
     }
 
 } // namespace Kub3::HAL::Act

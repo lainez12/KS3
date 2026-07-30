@@ -104,7 +104,9 @@ namespace Kub3::Services
         }
 
         if (HAL::MS::readBool(m_repo, Z2)) // Check if already loaded
-            return true;                   // Nothing to do
+        {
+            return true; // Nothing to do
+        }
 
         if (!HAL::MS::readBool(m_repo, WAFER_ON)) // Lower than Z2 and WAFER_ON
         {

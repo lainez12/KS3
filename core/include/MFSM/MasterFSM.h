@@ -83,7 +83,6 @@ namespace Kub3::MFSM
         void ps_requestEmergencyStop(void);
         void ps_systemPowerOff(void);
 
-        // TODO: define correct parameter types
         // Hardware sequences
         void ps_requestOperateDrawer(DrawerTarget tgt, bool eject);
         void ps_requestStowage(StowageTarget tgt);
