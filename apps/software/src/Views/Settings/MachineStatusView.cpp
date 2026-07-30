@@ -149,9 +149,8 @@ void MachineStatusView::populateBoolSensorsMap(void)
     m_boolSensorsMap.emplace(ARDKO_FRONT_RIGHT_LIMIT, ui->ardkoFrontRightValue);
 
     // Solenoid valves state (opened/closed)
-    // TODO: complete valve states
-    // m_boolSensorsMap.emplace(MASK_VACUUM_VALVE_STATUS, ui->);
-    // m_boolSensorsMap.emplace(WAFER_VACUUM_VALVE_STATUS, ui->);
+    m_boolSensorsMap.emplace(MASK_VACUUM_VALVE_STATUS, ui->maskVacuumValve);
+    m_boolSensorsMap.emplace(WAFER_VACUUM_VALVE_STATUS, ui->waferVacuumValve);
     m_boolSensorsMap.emplace(WAFER_COMPRESSED_AIR_VALVE_STATUS, ui->waferCompressedAirValveValue);
 
     // Pressure thresholds

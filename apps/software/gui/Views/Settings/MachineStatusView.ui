@@ -222,6 +222,11 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
        <property name="text">
         <string>WAFER drawer sensors</string>
        </property>
@@ -489,6 +494,11 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
        <property name="text">
         <string>MASK drawer sensors</string>
        </property>
@@ -575,300 +585,7 @@
      <property name="horizontalSpacing">
       <number>18</number>
      </property>
-     <item row="7" column="0" colspan="2">
-      <widget class="QLabel" name="waferExposureTitle">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>WAFER Exposure sensors</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
-       </property>
-       <property name="class" stdset="0">
-        <string>text-medium color-blue</string>
-       </property>
-      </widget>
-     </item>
-     <item row="18" column="1">
-      <widget class="QLabel" name="waferCompressedAirValue">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>ND</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="0" colspan="2">
-      <spacer name="verticalSpacer_6">
-       <property name="orientation">
-        <enum>Qt::Orientation::Vertical</enum>
-       </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::Policy::Fixed</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item row="3" column="1">
-      <widget class="QLabel" name="ardkoBackRightValue">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="layoutDirection">
-        <enum>Qt::LayoutDirection::LeftToRight</enum>
-       </property>
-       <property name="text">
-        <string>ND</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="15" column="1">
-      <widget class="QLabel" name="waferVacuumValue">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="layoutDirection">
-        <enum>Qt::LayoutDirection::LeftToRight</enum>
-       </property>
-       <property name="text">
-        <string>ND</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="9" column="1">
-      <widget class="QLabel" name="forceLeftValue">
-       <property name="font">
-        <font>
-         <fontweight>DemiBold</fontweight>
-        </font>
-       </property>
-       <property name="layoutDirection">
-        <enum>Qt::LayoutDirection::LeftToRight</enum>
-       </property>
-       <property name="text">
-        <string>ND</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-       </property>
-       <property name="class" stdset="0">
-        <string>positions-machine-status-text</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0">
-      <widget class="QLabel" name="ardkoBackRightLabel">
-       <property name="text">
-        <string>ARDKO BR</string>
-       </property>
-       <property name="class" stdset="0">
-        <string>text-small color-orange</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="0">
-      <widget class="QLabel" name="ardkoFrontLeftLabel">
-       <property name="text">
-        <string>ARDKO FL</string>
-       </property>
-       <property name="class" stdset="0">
-        <string>text-small color-orange</string>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="1">
-      <widget class="QLabel" name="ardkoFrontRightValue">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="layoutDirection">
-        <enum>Qt::LayoutDirection::LeftToRight</enum>
-       </property>
-       <property name="text">
-        <string>ND</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="24" column="0" colspan="2">
-      <spacer name="verticalSpacer_7">
-       <property name="orientation">
-        <enum>Qt::Orientation::Vertical</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>40</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item row="15" column="0">
-      <widget class="QLabel" name="waferVacuumLabel">
-       <property name="text">
-        <string>Wafer vacuum</string>
-       </property>
-       <property name="class" stdset="0">
-        <string>text-small color-orange</string>
-       </property>
-      </widget>
-     </item>
-     <item row="10" column="1">
-      <widget class="QLabel" name="forceRightValue">
-       <property name="font">
-        <font>
-         <fontweight>DemiBold</fontweight>
-        </font>
-       </property>
-       <property name="layoutDirection">
-        <enum>Qt::LayoutDirection::LeftToRight</enum>
-       </property>
-       <property name="text">
-        <string>ND</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-       </property>
-       <property name="class" stdset="0">
-        <string>positions-machine-status-text</string>
-       </property>
-      </widget>
-     </item>
-     <item row="11" column="0">
-      <widget class="QLabel" name="forceBackLabel">
-       <property name="text">
-        <string>Force Back</string>
-       </property>
-       <property name="class" stdset="0">
-        <string>text-small color-orange</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="0" colspan="2">
-      <widget class="QLabel" name="maskExposureTitle">
-       <property name="text">
-        <string>MASK Exposure sensors</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
-       </property>
-       <property name="class" stdset="0">
-        <string>text-medium color-blue</string>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="0">
-      <widget class="QLabel" name="ardkoFrontRightLabel">
-       <property name="text">
-        <string>ARDKO FR</string>
-       </property>
-       <property name="class" stdset="0">
-        <string>text-small color-orange</string>
-       </property>
-      </widget>
-     </item>
-     <item row="10" column="0">
-      <widget class="QLabel" name="forceRightLabel">
-       <property name="text">
-        <string>Force Right</string>
-       </property>
-       <property name="class" stdset="0">
-        <string>text-small color-orange</string>
-       </property>
-      </widget>
-     </item>
-     <item row="8" column="0" colspan="2">
-      <widget class="Line" name="line_7">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>8</height>
-        </size>
-       </property>
-       <property name="styleSheet">
-        <string notr="true"/>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Orientation::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="9" column="0">
-      <widget class="QLabel" name="forceLeftLabel">
-       <property name="text">
-        <string>Force Left</string>
-       </property>
-       <property name="class" stdset="0">
-        <string>text-small color-orange</string>
-       </property>
-      </widget>
-     </item>
-     <item row="21" column="1">
-      <widget class="QLabel" name="maskVacuumValue">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="layoutDirection">
-        <enum>Qt::LayoutDirection::LeftToRight</enum>
-       </property>
-       <property name="text">
-        <string>ND</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="1">
-      <widget class="QLabel" name="ardkoFrontLeftValue">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="layoutDirection">
-        <enum>Qt::LayoutDirection::LeftToRight</enum>
-       </property>
-       <property name="text">
-        <string>ND</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="23" column="0" colspan="2">
+     <item row="25" column="0" colspan="2">
       <widget class="QPushButton" name="toggleMaskVacuumBtn">
        <property name="enabled">
         <bool>false</bool>
@@ -899,23 +616,21 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="ardkoBackLeftLabel">
+     <item row="15" column="1">
+      <widget class="QLabel" name="waferVacuumValve">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="layoutDirection">
+        <enum>Qt::LayoutDirection::LeftToRight</enum>
+       </property>
        <property name="text">
-        <string>ARDKO BL</string>
+        <string>ND</string>
        </property>
-       <property name="class" stdset="0">
-        <string>text-small color-orange</string>
-       </property>
-      </widget>
-     </item>
-     <item row="18" column="0">
-      <widget class="QLabel" name="waferCompressedAirLabel">
-       <property name="text">
-        <string>Compressed air</string>
-       </property>
-       <property name="class" stdset="0">
-        <string>text-small color-orange</string>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignCenter</set>
        </property>
       </widget>
      </item>
@@ -937,7 +652,203 @@
        </property>
       </widget>
      </item>
-     <item row="16" column="0" colspan="2">
+     <item row="19" column="0">
+      <widget class="QLabel" name="waferCompressedAirLabel">
+       <property name="text">
+        <string>Compressed air</string>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
+       </property>
+      </widget>
+     </item>
+     <item row="16" column="0">
+      <widget class="QLabel" name="waferVacuumLabel">
+       <property name="text">
+        <string>Wafer vacuum</string>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0" colspan="2">
+      <widget class="QLabel" name="maskExposureTitle">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>MASK Exposure sensors</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-medium color-blue</string>
+       </property>
+      </widget>
+     </item>
+     <item row="12" column="0" colspan="2">
+      <spacer name="verticalSpacer_5">
+       <property name="orientation">
+        <enum>Qt::Orientation::Vertical</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Policy::Fixed</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="8" column="0" colspan="2">
+      <widget class="Line" name="line_7">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>8</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QLabel" name="ardkoBackRightValue">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="layoutDirection">
+        <enum>Qt::LayoutDirection::LeftToRight</enum>
+       </property>
+       <property name="text">
+        <string>ND</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0">
+      <widget class="QLabel" name="ardkoFrontRightLabel">
+       <property name="text">
+        <string>ARDKO FR</string>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="0" colspan="2">
+      <widget class="QLabel" name="waferExposureTitle">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>WAFER Exposure sensors</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-medium color-blue</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <widget class="QLabel" name="ardkoFrontRightValue">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="layoutDirection">
+        <enum>Qt::LayoutDirection::LeftToRight</enum>
+       </property>
+       <property name="text">
+        <string>ND</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="19" column="1">
+      <widget class="QLabel" name="waferCompressedAirValue">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>ND</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0" colspan="2">
+      <widget class="Line" name="line_2">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>8</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="1">
+      <widget class="QLabel" name="forceLeftValue">
+       <property name="font">
+        <font>
+         <fontweight>DemiBold</fontweight>
+        </font>
+       </property>
+       <property name="layoutDirection">
+        <enum>Qt::LayoutDirection::LeftToRight</enum>
+       </property>
+       <property name="text">
+        <string>ND</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+       <property name="class" stdset="0">
+        <string>positions-machine-status-text</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="ardkoBackLeftLabel">
+       <property name="text">
+        <string>ARDKO BL</string>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
+       </property>
+      </widget>
+     </item>
+     <item row="17" column="0" colspan="2">
       <widget class="QPushButton" name="toggleWaferVacuumBtn">
        <property name="enabled">
         <bool>false</bool>
@@ -968,8 +879,93 @@
        </property>
       </widget>
      </item>
-     <item row="12" column="0" colspan="2">
-      <spacer name="verticalSpacer_5">
+     <item row="11" column="1">
+      <widget class="QLabel" name="forceBackValue">
+       <property name="font">
+        <font>
+         <fontweight>DemiBold</fontweight>
+        </font>
+       </property>
+       <property name="layoutDirection">
+        <enum>Qt::LayoutDirection::LeftToRight</enum>
+       </property>
+       <property name="text">
+        <string>ND</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+       <property name="class" stdset="0">
+        <string>positions-machine-status-text</string>
+       </property>
+      </widget>
+     </item>
+     <item row="18" column="1">
+      <widget class="QLabel" name="waferCompressedAirValveValue">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>ND</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="ardkoFrontLeftLabel">
+       <property name="text">
+        <string>ARDKO FL</string>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
+       </property>
+      </widget>
+     </item>
+     <item row="10" column="1">
+      <widget class="QLabel" name="forceRightValue">
+       <property name="font">
+        <font>
+         <fontweight>DemiBold</fontweight>
+        </font>
+       </property>
+       <property name="layoutDirection">
+        <enum>Qt::LayoutDirection::LeftToRight</enum>
+       </property>
+       <property name="text">
+        <string>ND</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+       <property name="class" stdset="0">
+        <string>positions-machine-status-text</string>
+       </property>
+      </widget>
+     </item>
+     <item row="23" column="1">
+      <widget class="QLabel" name="maskVacuumValue">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="layoutDirection">
+        <enum>Qt::LayoutDirection::LeftToRight</enum>
+       </property>
+       <property name="text">
+        <string>ND</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="0" colspan="2">
+      <spacer name="verticalSpacer_6">
        <property name="orientation">
         <enum>Qt::Orientation::Vertical</enum>
        </property>
@@ -980,6 +976,65 @@
         <size>
          <width>20</width>
          <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="23" column="0">
+      <widget class="QLabel" name="maskVacuumLabel">
+       <property name="text">
+        <string>Mask vacuum</string>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QLabel" name="ardkoFrontLeftValue">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="layoutDirection">
+        <enum>Qt::LayoutDirection::LeftToRight</enum>
+       </property>
+       <property name="text">
+        <string>ND</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="16" column="1">
+      <widget class="QLabel" name="waferVacuumValue">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="layoutDirection">
+        <enum>Qt::LayoutDirection::LeftToRight</enum>
+       </property>
+       <property name="text">
+        <string>ND</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="26" column="0" colspan="2">
+      <spacer name="verticalSpacer_7">
+       <property name="orientation">
+        <enum>Qt::Orientation::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
         </size>
        </property>
       </spacer>
@@ -1000,23 +1055,75 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="0" colspan="2">
-      <widget class="Line" name="line_2">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>8</height>
-        </size>
+     <item row="13" column="0" colspan="2">
+      <widget class="QLabel" name="label">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
        </property>
-       <property name="styleSheet">
-        <string notr="true"/>
+       <property name="text">
+        <string>Vacuum / Air</string>
        </property>
-       <property name="orientation">
-        <enum>Qt::Orientation::Horizontal</enum>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-medium color-blue</string>
        </property>
       </widget>
      </item>
-     <item row="20" column="0" colspan="2">
+     <item row="15" column="0">
+      <widget class="QLabel" name="label_20">
+       <property name="text">
+        <string>Wafer vacuum valve</string>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="0">
+      <widget class="QLabel" name="forceBackLabel">
+       <property name="text">
+        <string>Force Back</string>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
+       </property>
+      </widget>
+     </item>
+     <item row="10" column="0">
+      <widget class="QLabel" name="forceRightLabel">
+       <property name="text">
+        <string>Force Right</string>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="0">
+      <widget class="QLabel" name="forceLeftLabel">
+       <property name="text">
+        <string>Force Left</string>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="ardkoBackRightLabel">
+       <property name="text">
+        <string>ARDKO BR</string>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
+       </property>
+      </widget>
+     </item>
+     <item row="21" column="0" colspan="2">
       <widget class="QPushButton" name="toggleWaferAirBtn">
        <property name="enabled">
         <bool>false</bool>
@@ -1050,56 +1157,7 @@
        </property>
       </widget>
      </item>
-     <item row="21" column="0">
-      <widget class="QLabel" name="maskVacuumLabel">
-       <property name="text">
-        <string>Mask vacuum</string>
-       </property>
-       <property name="class" stdset="0">
-        <string>text-small color-orange</string>
-       </property>
-      </widget>
-     </item>
-     <item row="11" column="1">
-      <widget class="QLabel" name="forceBackValue">
-       <property name="font">
-        <font>
-         <fontweight>DemiBold</fontweight>
-        </font>
-       </property>
-       <property name="layoutDirection">
-        <enum>Qt::LayoutDirection::LeftToRight</enum>
-       </property>
-       <property name="text">
-        <string>ND</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-       </property>
-       <property name="class" stdset="0">
-        <string>positions-machine-status-text</string>
-       </property>
-      </widget>
-     </item>
-     <item row="13" column="0" colspan="2">
-      <widget class="QLabel" name="label">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>Vacuum / Air</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
-       </property>
-       <property name="class" stdset="0">
-        <string>text-medium color-blue</string>
-       </property>
-      </widget>
-     </item>
-     <item row="17" column="0">
+     <item row="18" column="0">
       <widget class="QLabel" name="waferCompressedAirValveLabel">
        <property name="text">
         <string>Compressed air valve</string>
@@ -1109,12 +1167,25 @@
        </property>
       </widget>
      </item>
-     <item row="17" column="1">
-      <widget class="QLabel" name="waferCompressedAirValveValue">
+     <item row="22" column="0">
+      <widget class="QLabel" name="label_22">
+       <property name="text">
+        <string>Mask vacuum valve</string>
+       </property>
+       <property name="class" stdset="0">
+        <string>text-small color-orange</string>
+       </property>
+      </widget>
+     </item>
+     <item row="22" column="1">
+      <widget class="QLabel" name="maskVacuumValve">
        <property name="font">
         <font>
          <bold>true</bold>
         </font>
+       </property>
+       <property name="layoutDirection">
+        <enum>Qt::LayoutDirection::LeftToRight</enum>
        </property>
        <property name="text">
         <string>ND</string>
@@ -1855,6 +1926,11 @@
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
        </property>
        <property name="text">
         <string>WAFER 3Z sensors</string>

@@ -231,7 +231,7 @@ namespace Kub3::Config
                         .id           = WAFER_DRAWER_MOTOR,
                         .hwProperties = stepper_hw_properties_t{
                             .stepsPerRev         = 400u,
-                            .screwPitchMm        = 1.234, // TODO: replace when known
+                            .screwPitchMm        = 50.0,
                             .maxVelocityMmS      = 100.0,
                             .maxAccelerationMmS2 = 999.999,
                             .encoderTopsPerRev   = 2000u,
@@ -244,7 +244,7 @@ namespace Kub3::Config
                         .id           = MASK_DRAWER_MOTOR,
                         .hwProperties = stepper_hw_properties_t{
                             .stepsPerRev         = 400u,
-                            .screwPitchMm        = 1.234, // TODO: replace when known
+                            .screwPitchMm        = 50.0,
                             .maxVelocityMmS      = 100.0,
                             .maxAccelerationMmS2 = 999.999,
                             .encoderTopsPerRev   = 2000u,
