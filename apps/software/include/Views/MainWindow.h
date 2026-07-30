@@ -1,5 +1,4 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#pragma once
 
 #include <QHBoxLayout>
 #include <QLabel>
@@ -62,6 +61,8 @@ signals:
 public slots:
     void ps_openView(Kub3::UI::ViewId viewId);
     void ps_errorOccurred(const Kub3::MFSM::ErrorPayload &payload);
+    void ps_popOutView(Kub3::UI::ViewId viewId);
+    void ps_restoreView(Kub3::UI::ViewId viewId);
 
 private slots:
     void onViewButtonConfigsUpdated();
@@ -80,7 +81,7 @@ private:
     void showLogoIfNeeded(Kub3::UI::Views::ViewBase *view);
     NavButton *createNavButton(const Kub3::UI::Views::NavButtonConfig &config);
 
-    void connectViewSignals(Kub3::UI::Views::ViewBase *view);
+    void connectViewSignals(Kub3::UI::Views::ViewBase *view, Kub3::UI::ViewId viewId);
     void disconnectViewSignals(Kub3::UI::Views::ViewBase *view);
 
     void switchShadow(bool enabled);
@@ -104,6 +105,5 @@ private:
     QMap<QString, NavButtonEntry> m_bottomBarButtons;
 
     Kub3::UI::Views::ViewBase *m_currentView = nullptr;
+    QMap<Kub3::UI::ViewId, QPointer<QWidget>> m_popOuts;
 };
-
-#endif // MAINWINDOW_H
