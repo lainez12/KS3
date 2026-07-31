@@ -10,9 +10,9 @@
 #include <Services/BaseTaskService.h>
 #include <Services/Homing/tasks/Homing/AlignmentStagesHomingTask.h>
 #include <Services/Stowage/tasks/StowageMoveZToLimitTask.h>
+#include <Services/Stowage/tasks/structs.h>
 
 #include "./IStowageService.h"
-#include "Services/Stowage/tasks/StowageMaskToArdkoCountPositionTask.h"
 
 namespace Kub3::Services
 {
@@ -26,8 +26,9 @@ namespace Kub3::Services
 
         void startStowage(StowageTarget target) override;
 
-    protected:
+    public:
         void onStop(void) override;
+        void tick(void) override;
 
     private:
         bool buildMaskStowageTaskQueue(void);

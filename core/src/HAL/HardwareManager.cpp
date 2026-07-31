@@ -1,3 +1,4 @@
+#include "HAL/Actuators/Motors/DirectCurrentMotor.h"
 #include <QCoreApplication>
 #include <QDebug>
 #include <QRect>
@@ -17,6 +18,7 @@
 #include <HAL/MachineStatus/utils.h>
 #include <HAL/Sensors/Sensor.h>
 #include <HAL/Vision/Hikrobot/HikrobotCamera.h>
+#include <memory>
 
 using namespace std::string_literals;
 
@@ -37,6 +39,8 @@ static double temperatureParser(const QByteArray &d);
 static uint16_t forceSensorParser(const QByteArray &d);
 static bool forceSensorEnabledParser(const QByteArray &d);
 static int32_t encoderValueParser(const QByteArray &d);
+static uint16_t fansVoltageParser(const QByteArray &d);
+static uint32_t ledLineVoltageParser(const QByteArray &d);
 static bool physicalButtonParser(const QByteArray &d);
 
 namespace Kub3::HAL
@@ -267,7 +271,6 @@ namespace Kub3::HAL
         // Wire MCUDriver connection status signals -> Machine Status Repo value update
         QObject::connect(arduino1Driver.get(), &MCUDriver::s_connected, [&, driver = arduino1Driver]() {
             m_repo->setValueRaw(MCU_ARDUINO1_READY, true);
-            // TODO: refactor MCU code to have one command to send all values at once
             driver->sendCommand(QByteArray("?S"));
             driver->sendCommand(QByteArray("?C"));
         });
@@ -428,7 +431,6 @@ namespace Kub3::HAL
         // Wire MCUDriver connection status signals -> Machine Status Repo value update
         QObject::connect(arduino2Driver.get(), &MCUDriver::s_connected, [&, driver = arduino2Driver]() {
             m_repo->setValueRaw(MCU_ARDUINO2_READY, true);
-            // TODO: refactor MCU code to have one command to send all values at once
             driver->sendCommand(QByteArray("?C"));
             driver->sendCommand(QByteArray("?K"));
         });
@@ -477,8 +479,18 @@ namespace Kub3::HAL
         auto externalTemperature = std::make_shared<Sensor<double>>(m_repo, EXTERNAL_TEMPERATURE, -100.0, &temperatureParser);
         // --- Encoders
         auto camerasDeckEncoder = std::make_shared<Sensor<int32_t>>(m_repo, DECK_MOTOR_ENCODER, static_cast<int32_t>(0), &encoderValueParser);
-
-        // TODO: add "Fans voltage" & "LEDs voltages"
+        // --- Fans voltage
+        auto fansVoltage = std::make_shared<Sensor<uint16_t>>(m_repo, FANS_VOLTAGE, static_cast<uint16_t>(0), &fansVoltageParser);
+        // --- Leds voltage
+        // TODO: Modify either MCU communication protocol or the Sensor<T> variant to be able to split the values in two distinct Sensor<uint16_t>
+        auto innerLedLineVoltage1 = std::make_shared<Sensor<uint32_t>>(m_repo, INNER_LED_LINE_VOLTAGES(0), static_cast<uint32_t>(0), &ledLineVoltageParser);
+        auto innerLedLineVoltage2 = std::make_shared<Sensor<uint32_t>>(m_repo, INNER_LED_LINE_VOLTAGES(1), static_cast<uint32_t>(0), &ledLineVoltageParser);
+        auto innerLedLineVoltage3 = std::make_shared<Sensor<uint32_t>>(m_repo, INNER_LED_LINE_VOLTAGES(2), static_cast<uint32_t>(0), &ledLineVoltageParser);
+        auto innerLedLineVoltage4 = std::make_shared<Sensor<uint32_t>>(m_repo, INNER_LED_LINE_VOLTAGES(3), static_cast<uint32_t>(0), &ledLineVoltageParser);
+        auto outerLedLineVoltage1 = std::make_shared<Sensor<uint32_t>>(m_repo, OUTER_LED_LINE_VOLTAGES(0), static_cast<uint32_t>(0), &ledLineVoltageParser);
+        auto outerLedLineVoltage2 = std::make_shared<Sensor<uint32_t>>(m_repo, OUTER_LED_LINE_VOLTAGES(1), static_cast<uint32_t>(0), &ledLineVoltageParser);
+        auto outerLedLineVoltage3 = std::make_shared<Sensor<uint32_t>>(m_repo, OUTER_LED_LINE_VOLTAGES(2), static_cast<uint32_t>(0), &ledLineVoltageParser);
+        auto outerLedLineVoltage4 = std::make_shared<Sensor<uint32_t>>(m_repo, OUTER_LED_LINE_VOLTAGES(3), static_cast<uint32_t>(0), &ledLineVoltageParser);
 
         // Register sensors
         // --- Physical buttons
@@ -502,8 +514,18 @@ namespace Kub3::HAL
         // --- Temperatures
         this->registerSensor(router, "IT0"s, std::move(internalTemperature));
         this->registerSensor(router, "IT1"s, std::move(externalTemperature));
-        // --- Encoders
-        // TODO: register deck's encoder when communication pattern is defined
+        // --- Fans voltage
+        this->registerSensor(router, "IF"s, std::move(fansVoltage));
+        // --- Internal leds voltage
+        this->registerSensor(router, "IVI\x00"s, std::move(innerLedLineVoltage1));
+        this->registerSensor(router, "IVI\x01"s, std::move(innerLedLineVoltage2));
+        this->registerSensor(router, "IVI\x02"s, std::move(innerLedLineVoltage3));
+        this->registerSensor(router, "IVI\x03"s, std::move(innerLedLineVoltage4));
+        // --- External leds voltage
+        this->registerSensor(router, "IVC\x00"s, std::move(outerLedLineVoltage1));
+        this->registerSensor(router, "IVC\x01"s, std::move(outerLedLineVoltage2));
+        this->registerSensor(router, "IVC\x02"s, std::move(outerLedLineVoltage3));
+        this->registerSensor(router, "IVC\x03"s, std::move(outerLedLineVoltage4));
     }
 
     void HardwareManager::createArduino2Actuators(const Config::hardware_config_t &config, const std::shared_ptr<MCUDriver> &driver, Com::PacketRouter *router)
@@ -523,7 +545,7 @@ namespace Kub3::HAL
         /// --- Exposure head
         auto exposureHead = std::make_shared<Act::UVExposureHead>(UV_EXPOSURE_HEAD, driver);
 
-        // TODO: Add feedback handlers for deck motor, etc...
+        router->registerRoute("CL1", Act::DirectCurrentMotor::createFeedbackHandler(camerasDeckMotor));
 
         /// --- Motors
         m_actuatorRegistry->registerActuator(std::move(camerasDeckMotor));
@@ -797,7 +819,6 @@ static std::string_view arduino1KeyExtractor(const Kub3::HAL::Com::packet_t &pac
 
     const QByteArray &payload = packet.payload;
 
-    // TODO: code key parsing logic
     switch (payload[0])
     {
     case 'S':
@@ -950,11 +971,41 @@ static int32_t encoderValueParser(const QByteArray &d)
 {
     if (d.size() < 4) // Not enough data to read
         return 0;
+
+    // Big-endian
+    // Reconstruct using unsigned 32-bit integers to safely shift bits
+    const uint32_t rawUnsigned =
+        (static_cast<uint32_t>(static_cast<uint8_t>(d[0])) << 24) |
+        (static_cast<uint32_t>(static_cast<uint8_t>(d[1])) << 16) |
+        (static_cast<uint32_t>(static_cast<uint8_t>(d[2])) << 8) |
+        (static_cast<uint32_t>(static_cast<uint8_t>(d[3])));
+
+    // Safely cast the fully assembled bit-pattern to a signed integer as bit shifting
+    // on signed integers is undefined behaviour
+    return static_cast<int32_t>(rawUnsigned);
+}
+
+static uint16_t fansVoltageParser(const QByteArray &d)
+{
+    if (d.size() < 2) // Not enough data to read
+        return 0;
+    // Big-endian 2 bytes reconstruction
+    return (static_cast<uint16_t>(static_cast<uint8_t>(d[0])) << 8) |
+           (static_cast<uint16_t>(static_cast<uint8_t>(d[1])));
+}
+
+static uint32_t ledLineVoltageParser(const QByteArray &d)
+{
+    if (d.size() < 4) // Not enough data to read
+        return 0;
     // Big-endian reconstruction
-    return (static_cast<int32_t>(static_cast<uint8_t>(d[0])) << 24) |
-           (static_cast<int32_t>(static_cast<uint8_t>(d[1])) << 16) |
-           (static_cast<int32_t>(static_cast<uint8_t>(d[2])) << 8) |
-           (static_cast<int32_t>(static_cast<uint8_t>(d[3])));
+    return
+        // Voltage 1: ??? (see communication protocol)
+        (static_cast<uint32_t>(static_cast<uint8_t>(d[0])) << 24) |
+        (static_cast<uint32_t>(static_cast<uint8_t>(d[1])) << 16) |
+        // Voltage 2: resistor's limits
+        (static_cast<uint32_t>(static_cast<uint8_t>(d[2])) << 8) |
+        (static_cast<uint32_t>(static_cast<uint8_t>(d[3])));
 }
 
 static bool physicalButtonParser(const QByteArray &d)

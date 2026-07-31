@@ -1,3 +1,4 @@
+#include "Services/IService.h"
 #include <QDebug>
 
 #include <HAL/Actuators/Focal/IFocal.h>
@@ -5,6 +6,7 @@
 #include <HAL/MachineStatus/sensors_labels.h>
 #include <HAL/MachineStatus/utils.h>
 #include <Services/Vision/VisionService.h>
+#include <qlogging.h>
 
 namespace
 {
@@ -208,6 +210,12 @@ namespace Kub3::Services
 
     void VisionService::moveManual(VisionMotor motor, VisionDirection dir, bool granular)
     {
+        if (m_status == ServiceStatus::Running && m_isDeckMoving)
+        {
+            qWarning() << "[VisionService] Attempt to move cameras manually while an automated routine is running.";
+            return;
+        }
+
         auto it = m_cameraMotors.find(motor);
         if (it == m_cameraMotors.end() || !it->second.motor)
             return;

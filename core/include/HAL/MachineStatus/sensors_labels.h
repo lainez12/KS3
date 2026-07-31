@@ -2,6 +2,8 @@
 
 #if defined(KUB_MODEL_8)
 
+#define __str__(x) #x
+
 // TODO: We could move the value keys like `MCU_ARDUINO2_ID` to another file `mcu_conn_labels.h`
 // We should also explore the fact that holding the values corresponding to those keys is not intuitive
 // and that they could be stored in a different repository. But the current repository is a `MachineStatusRepo`
@@ -98,5 +100,12 @@
 // Temperature sensors
 #define INTERNAL_TEMPERATURE "internalTemperature"
 #define EXTERNAL_TEMPERATURE "externalTemperature"
+
+// Fans voltage
+#define FANS_VOLTAGE "fansVoltage"
+
+// Leds voltages
+#define INNER_LED_LINE_VOLTAGES(idx) __str__(innerLedLineVoltages##idx)
+#define OUTER_LED_LINE_VOLTAGES(idx) __str__(outerLedLineVoltages##idx)
 
 #endif // defined(KUB_MODEL_8)

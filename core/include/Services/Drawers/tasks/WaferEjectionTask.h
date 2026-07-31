@@ -29,7 +29,7 @@ namespace Kub3::Services
         enum class Step
         {
             FastApproach,
-            SlowApproach, // TODO: use with encoder position or better, with moveAbsolute(0)
+            SlowApproach,
             Finished
         };
 

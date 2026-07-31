@@ -111,6 +111,7 @@ qt_add_executable(Kub3Software
     include/Views/Exposure/ProgressExposureView.h
     include/Views/Exposure/SaveExposureSettingsView.h
     include/Views/MainWindow.h
+    include/Views/PopOutWrapper.h
     include/Views/ViewBase.h
     include/Views/KeyboardConnections.h
     include/Views/AlignmentViewBase.h

@@ -4,6 +4,7 @@
 
 #include "ui_MainWindow.h"
 #include <Views/MainWindow.h>
+#include <Views/PopOutWrapper.h>
 
 #define TITLE_BAR "font-size: 40px; font-weight: bold;"
 
@@ -69,14 +70,12 @@ void MainWindow::addView(Kub3::UI::ViewId viewId, Kub3::UI::Views::ViewBase *vie
     ui->stackedWidget->addWidget(view);
     m_views.insert({viewId, view});
 
-    // Établir les connexions de signaux
-    connectViewSignals(view);
+    connectViewSignals(view, viewId);
 }
 
-void MainWindow::connectViewSignals(Kub3::UI::Views::ViewBase *view)
+void MainWindow::connectViewSignals(Kub3::UI::Views::ViewBase *view, Kub3::UI::ViewId viewId)
 {
     connect(view, &Kub3::UI::Views::ViewBase::s_openView, this, &MainWindow::ps_openView);
-
     connect(view, &Kub3::UI::Views::ViewBase::s_goBack, this,
             [this]() {
                 if (ui->stackedWidget->count() > 0)
@@ -84,16 +83,12 @@ void MainWindow::connectViewSignals(Kub3::UI::Views::ViewBase *view)
                     ui->stackedWidget->setCurrentIndex(std::max(0, ui->stackedWidget->currentIndex() - 1));
                 }
             });
-
     connect(view, &Kub3::UI::Views::ViewBase::s_goBackHome, this, [this]() { ps_openView(Kub3::UI::ViewId::EXPOSURE_MODE_VIEW); });
-
     connect(view, &Kub3::UI::Views::ViewBase::s_buttonConfigsUpdated, this, &MainWindow::onViewButtonConfigsUpdated);
-
     connect(view, &Kub3::UI::Views::ViewBase::s_buttonStateChanged, this, &MainWindow::onViewButtonStateChanged);
-
     connect(view, &Kub3::UI::Views::ViewBase::s_switchColorButton, this, &MainWindow::changeButtonColor);
-
     connect(view, &Kub3::UI::Views::ViewBase::s_buttonTextChanged, this, &MainWindow::onViewButtonTextChanged);
+    connect(view, &Kub3::UI::Views::ViewBase::s_requestPopOut, this, [this, viewId]() { ps_popOutView(viewId); });
 }
 
 void MainWindow::disconnectViewSignals(Kub3::UI::Views::ViewBase *view)
@@ -103,6 +98,11 @@ void MainWindow::disconnectViewSignals(Kub3::UI::Views::ViewBase *view)
 
 void MainWindow::ps_openView(Kub3::UI::ViewId viewId)
 {
+    if (m_popOuts.contains(viewId) && m_popOuts[viewId])
+    {
+        m_popOuts[viewId]->close();
+    }
+
     auto it = m_views.find(viewId);
     if (it == m_views.end() || !it->second)
         return;
@@ -158,6 +158,49 @@ void MainWindow::ps_errorOccurred(const Kub3::MFSM::ErrorPayload &payload)
     m_popup->setMessageText(payload.message);
     m_popup->setButtons(btns);
     m_popup->showMessage();
+}
+
+void MainWindow::ps_popOutView(Kub3::UI::ViewId viewId)
+{
+    auto it = m_views.find(viewId);
+    if (it == m_views.end() || !it->second)
+        return;
+
+    if (m_popOuts.contains(viewId))
+        return; // Already popped out
+
+    Kub3::UI::Views::ViewBase *view = it->second;
+
+    // Switch to Home if popping out the active view to avoid a blank screen
+    if (m_currentView == view)
+    {
+        ps_openView(Kub3::UI::ViewId::HOME_VIEW);
+    }
+
+    ui->stackedWidget->removeWidget(view);
+
+    // Create styled wrapper window
+    PopOutWrapper *wrapper = new PopOutWrapper(viewId, view, m_backgroundPixmap, this);
+    m_popOuts[viewId]      = wrapper;
+    wrapper->show();
+
+    // View callback on pop out
+    view->onPoppedOut(true);
+}
+
+void MainWindow::ps_restoreView(Kub3::UI::ViewId viewId)
+{
+    auto it = m_views.find(viewId);
+    if (it == m_views.end() || !it->second)
+        return;
+
+    Kub3::UI::Views::ViewBase *view = it->second;
+
+    // Reparent back to main stacked widget (this removes it from the Wrapper safely)
+    ui->stackedWidget->addWidget(view);
+    // Notify the view so it re-enables the button
+    view->onPoppedOut(false);
+    m_popOuts.remove(viewId);
 }
 
 void MainWindow::updateTopBar(Kub3::UI::Views::ViewBase *view)

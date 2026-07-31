@@ -28,8 +28,8 @@ namespace Kub3::UI::Views
         explicit MachineStatusView(Unique<MachineStatusViewModel> viewModel, QWidget *parent = nullptr);
         ~MachineStatusView() override;
 
-    signals:
-        void s_home(void);
+    public:
+        void onPoppedOut(bool isPoppedOut) override;
 
     public slots:
         void ps_booleanSensorUpdate(const QString &sensorId, bool value);
@@ -37,10 +37,11 @@ namespace Kub3::UI::Views
         void ps_unsignedIntegerSensorUpdate(const QString &sensorId, uint32_t value);
 
     private slots:
-        void on_goBackBtn_clicked(void);
-        void on_openCamerasBtn_clicked(void);
+        void onBtnOpenCamerasClicked(void);
 
     private:
+        void connectButtons(void);
+
         void populateBoolSensorsMap(void);
         void populateIntegerSensorsMap(void);
         void populateUnsignedIntegerSensorsMap(void);
@@ -49,8 +50,8 @@ namespace Kub3::UI::Views
         void updateIntSensorsText(QLabel *label, const int32_t state);
         void updateUIntSensorsText(QLabel *label, const uint32_t state);
 
-        void createNavButtonsConfigs();
-        void configTitleBar();
+        void createNavButtonsConfigs() override;
+        void configTitleBar() override;
 
     private:
         Ui::MachineStatusView *ui;

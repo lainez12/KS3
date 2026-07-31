@@ -46,9 +46,6 @@ namespace Kub3::UI::Modules
         setWindowModality(Qt::ApplicationModal); // Force application modal behavior
         setMinimumSize(800, 480);                // Ensure the modal has a decent minimum size
 
-        // TODO: design a way for viewModels to provide current data to view
-        // TODO: wtf, why did I write that ? :thinking:
-
         // Frame reception
         connect(m_viewModel, &ViewModels::MachineStatusViewModel::s_frameReady, this,
                 [this](const QString &cameraId, const QImage &frame) {

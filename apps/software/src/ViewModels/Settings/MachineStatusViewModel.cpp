@@ -35,7 +35,7 @@ namespace Kub3::UI::ViewModels
             [&](int32_t v) { emit s_integerSensorUpdate(qKey, v); },
             [&](uint16_t v) { emit s_unsignedIntegerSensorUpdate(qKey, v); },
             [&](uint32_t v) { emit s_unsignedIntegerSensorUpdate(qKey, v); },
-            [&](auto) { qWarning() << "[MachineStatusViewModel] unknown sensor changed notification received."; });
+            [&](auto) { qWarning() << "[MachineStatusViewModel] unknown sensor changed notification received:" << key; });
 
         std::visit(museum, valueOpt.value());
     }

@@ -1,10 +1,9 @@
-#include <memory>
-
 #include "ui_MachineStatusView.h"
 
 #include <HAL/MachineStatus/sensors_labels.h>
 #include <Views/Modules/CamerasTestView.h>
 #include <Views/Settings/MachineStatusView.h>
+#include <Views/ViewBase.h>
 
 #define SUCCESS_QLABEL_STYLESHEET "QLabel{ background: green; color : white; }"
 #define FAILURE_QLABEL_STYLESHEET "QLabel{ background: red; color : white; }"
@@ -18,6 +17,7 @@ MachineStatusView::MachineStatusView(Unique<MachineStatusViewModel> viewModel, Q
     configTitleBar();
     createNavButtonsConfigs();
 
+    this->connectButtons();
     this->populateBoolSensorsMap();
     this->populateIntegerSensorsMap();
     this->populateUnsignedIntegerSensorsMap();
@@ -31,6 +31,12 @@ MachineStatusView::MachineStatusView(Unique<MachineStatusViewModel> viewModel, Q
 MachineStatusView::~MachineStatusView()
 {
     delete ui;
+}
+
+void MachineStatusView::onPoppedOut(bool isPoppedOut)
+{
+    ui->btnPopOut->setDisabled(isPoppedOut);
+    ui->btnPopOut->setText(isPoppedOut ? "Currently Popped Out" : "Pop Out to Window");
 }
 
 void MachineStatusView::ps_booleanSensorUpdate(const QString &sensorId, bool value)
@@ -51,12 +57,7 @@ void MachineStatusView::ps_unsignedIntegerSensorUpdate(const QString &sensorId, 
         this->updateUIntSensorsText(it->second, value);
 }
 
-void MachineStatusView::on_goBackBtn_clicked(void)
-{
-    emit s_home();
-}
-
-void MachineStatusView::on_openCamerasBtn_clicked(void)
+void MachineStatusView::onBtnOpenCamerasClicked(void)
 {
     if (!m_viewModel)
         return;
@@ -109,6 +110,12 @@ void MachineStatusView::updateUIntSensorsText(QLabel *label, const uint32_t valu
     label->setText(QString::number(value));
 }
 
+void MachineStatusView::connectButtons(void)
+{
+    connect(ui->btnOpenCameras, &QPushButton::clicked, this, &MachineStatusView::onBtnOpenCamerasClicked);
+    connect(ui->btnPopOut, &QPushButton::clicked, this, &ViewBase::s_requestPopOut);
+}
+
 void MachineStatusView::populateBoolSensorsMap(void)
 {
     // Wafer conveyor limits
@@ -142,9 +149,8 @@ void MachineStatusView::populateBoolSensorsMap(void)
     m_boolSensorsMap.emplace(ARDKO_FRONT_RIGHT_LIMIT, ui->ardkoFrontRightValue);
 
     // Solenoid valves state (opened/closed)
-    // TODO: complete valve states
-    // m_boolSensorsMap.emplace(MASK_VACUUM_VALVE_STATUS, ui->);
-    // m_boolSensorsMap.emplace(WAFER_VACUUM_VALVE_STATUS, ui->);
+    m_boolSensorsMap.emplace(MASK_VACUUM_VALVE_STATUS, ui->maskVacuumValve);
+    m_boolSensorsMap.emplace(WAFER_VACUUM_VALVE_STATUS, ui->waferVacuumValve);
     m_boolSensorsMap.emplace(WAFER_COMPRESSED_AIR_VALVE_STATUS, ui->waferCompressedAirValveValue);
 
     // Pressure thresholds

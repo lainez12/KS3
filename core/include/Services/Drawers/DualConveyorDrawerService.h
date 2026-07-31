@@ -32,7 +32,6 @@ namespace Kub3::Services
         bool isWaferEjected(void);
         bool isMaskInserted(void);
         void loadMotorsKinematicProfiles(void);
-        void loadThresholds(void);
 
     private:
         Shared<HAL::Act::ActuatorRegistry> m_registry;

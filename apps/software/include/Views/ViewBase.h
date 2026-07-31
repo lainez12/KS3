@@ -76,6 +76,7 @@ namespace Kub3::UI::Views
 
     public:
         void resizeEventOverride(QResizeEvent *event);
+        virtual void onPoppedOut(bool isPoppedOut) {}
 
         // --- Display Properties ---
         QString getViewTitle() const;
@@ -102,6 +103,8 @@ namespace Kub3::UI::Views
         void s_buttonStateChanged(const QString &buttonId, bool newState);
         void s_buttonTextChanged(const QString &buttonId, const QString &newText);
         void s_switchColorButton(const QString &buttonId, bool enabledColor);
+
+        void s_requestPopOut();
 
     public slots:
         void ps_showOverlayMsg(QString text);

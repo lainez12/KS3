@@ -235,7 +235,7 @@ namespace Kub3::Services
                     return;
                 }
 
-                enqueueTask<ZMotorsHomingTask>(m_repo, leftZMotorBundle, rightZMotorBundle, backZMotorBundle);
+                enqueueTask<ZMotorsHomingTask>(m_repo, leftZMotorBundle, rightZMotorBundle, backZMotorBundle, m_processConf.elevator.max_z_relative_distance_mm);
             }
         }
 

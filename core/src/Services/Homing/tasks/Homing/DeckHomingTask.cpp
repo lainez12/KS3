@@ -20,7 +20,7 @@ namespace Kub3::Services
             m_deckMotor->emergencyStop();
 
         if (!deckBackLimit)
-            moveTowardsLimit();
+            moveTowardsHomingLimit();
     }
 
     bool DeckHomingTask::tick(void)
@@ -33,12 +33,11 @@ namespace Kub3::Services
             return true;
         }
 
-        moveTowardsLimit();
+        moveTowardsHomingLimit();
         return false;
     }
 
-    // TODO: `moveTowardsLimit` does not mean shit, limits are both ways here
-    void DeckHomingTask::moveTowardsLimit(void)
+    void DeckHomingTask::moveTowardsHomingLimit(void)
     {
         if (m_deckMotor && !m_deckMotor->isMoving())
             m_deckMotor->moveDirection(HAL::Act::MotorDirection::Negative, m_kinematicProfile);

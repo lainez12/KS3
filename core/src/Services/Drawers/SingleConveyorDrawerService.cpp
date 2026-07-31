@@ -19,25 +19,21 @@ namespace Kub3::Services
 
     void SingleConveyorDrawerService::insert(DrawerTarget target)
     {
+        throw std::runtime_error("Not implemented");
         this->clearTasks();
-
-        // TODO: setup sequence using `this->enqueueTask`
-
         this->startSequence();
     }
 
     void SingleConveyorDrawerService::eject(DrawerTarget target)
     {
+        throw std::runtime_error("Not implemented");
         this->clearTasks();
-
-        // TODO: setup sequence using `this->enqueueTask`
-
         this->startSequence();
     }
 
     void SingleConveyorDrawerService::stop(void)
     {
-        // TODO: stop drawer motor
+        throw std::runtime_error("Not implemented");
         BaseTaskService::stop();
     }
 

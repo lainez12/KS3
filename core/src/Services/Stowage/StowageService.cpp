@@ -61,6 +61,32 @@ namespace Kub3::Services
         this->startSequence();
     }
 
+    void StowageService::tick(void)
+    {
+        // Global Z-Motors binding protection
+        if (m_zMotorsBundle.leftMotor && m_zMotorsBundle.rightMotor && m_zMotorsBundle.backMotor)
+        {
+            const double zL       = m_zMotorsBundle.leftMotor->getEncoderPositionMm();
+            const double zR       = m_zMotorsBundle.rightMotor->getEncoderPositionMm();
+            const double zB       = m_zMotorsBundle.backMotor->getEncoderPositionMm();
+            const double maxDelta = m_conf.elevator.max_z_relative_distance_mm;
+
+            if (std::abs(zL - zR) > maxDelta ||
+                std::abs(zR - zB) > maxDelta ||
+                std::abs(zL - zB) > maxDelta)
+            {
+                this->stop();
+                if (this->getStatus() == ServiceStatus::Running)
+                    abortSequence("CRITICAL: Z-Motors relative distance exceeded max limit during stowage.");
+
+                qCritical() << "CRITICAL: Z-Motors binding protection triggered. Motors emergency stopped.";
+                return;
+            }
+        }
+
+        BaseTaskService::tick();
+    }
+
     void StowageService::onStop(void)
     {
         this->stopAllMotors();
@@ -104,7 +130,9 @@ namespace Kub3::Services
         }
 
         if (HAL::MS::readBool(m_repo, Z2)) // Check if already loaded
-            return true;                   // Nothing to do
+        {
+            return true; // Nothing to do
+        }
 
         if (!HAL::MS::readBool(m_repo, WAFER_ON)) // Lower than Z2 and WAFER_ON
         {
