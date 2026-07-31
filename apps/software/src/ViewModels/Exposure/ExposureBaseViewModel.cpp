@@ -35,7 +35,7 @@ namespace Kub3::UI::ViewModels::Exposure
         }
 
         const auto durationCheck = [](const Duration &d) -> bool {
-            return (d.minutes > 0 || d.seconds > 0) && d.seconds < 60;
+            return (d.minutes > 0 || d.milliseconds > 0) && d.milliseconds < 600000;
         };
 
         if (preset.mode == ExposureMode::Continuous)
@@ -155,6 +155,20 @@ namespace Kub3::UI::ViewModels::Exposure
         return Err(QStringLiteral("The preset with name '%1' was not found.").arg(presetName));
     }
 
+    bool ExposureBaseViewModel::deleteByName(QJsonArray &presetsArray, const QString &presetName)
+    {
+        for (int i = 0; i < presetsArray.size(); ++i)
+        {
+            QJsonObject presetObject = presetsArray[i].toObject();
+            if (presetObject.value(QLatin1String(kNameKey)).toString() == presetName)
+            {
+                presetsArray.removeAt(i);
+                return true;
+            }
+        }
+        return false;
+    }
+
     Result<Unit, QString> ExposureBaseViewModel::savePresetsToFile(const QString &path, const QJsonArray &presetsArray)
     {
         QJsonObject rootObject;
@@ -219,7 +233,7 @@ namespace Kub3::UI::ViewModels::Exposure
     {
         QJsonObject json;
         json.insert(QStringLiteral("minutes"), static_cast<int>(duration.minutes));
-        json.insert(QStringLiteral("seconds"), static_cast<int>(duration.seconds));
+        json.insert(QStringLiteral("milliseconds"), static_cast<int>(duration.milliseconds));
         return json;
     }
 
@@ -278,19 +292,22 @@ namespace Kub3::UI::ViewModels::Exposure
     {
         if (preset.mode == ExposureMode::Continuous)
         {
+            QString secondsStr = QString::number(preset.continuous.duration.milliseconds / 1000.0, 'f', 1);
             return QStringLiteral("Exposure duration: %1min %2s\nExposure power: %3%")
                 .arg(preset.continuous.duration.minutes)
-                .arg(preset.continuous.duration.seconds)
+                .arg(secondsStr)
                 .arg(preset.continuous.power);
         }
         else
         {
+            QString secondsOnStr  = QString::number(preset.flashing.durationOn.milliseconds / 1000.0, 'f', 1);
+            QString secondsOffStr = QString::number(preset.flashing.durationOff.milliseconds / 1000.0, 'f', 1);
             return QStringLiteral("Number of cycles: %1\nDuration Ton: %2min %3s\nDuration Toff: %4min %5s\nExposure power: %6%")
                 .arg(preset.flashing.numberOfCycles)
                 .arg(preset.flashing.durationOn.minutes)
-                .arg(preset.flashing.durationOn.seconds)
+                .arg(secondsOnStr)
                 .arg(preset.flashing.durationOff.minutes)
-                .arg(preset.flashing.durationOff.seconds)
+                .arg(secondsOffStr)
                 .arg(preset.flashing.power);
         }
     }
@@ -313,10 +330,10 @@ namespace Kub3::UI::ViewModels::Exposure
         else
             return Err(QStringLiteral("The duration JSON object is missing the 'minutes' field."));
 
-        if (json.contains(QStringLiteral("seconds")))
-            duration.seconds = json.value(QStringLiteral("seconds")).toInt();
+        if (json.contains(QStringLiteral("milliseconds")))
+            duration.milliseconds = json.value(QStringLiteral("milliseconds")).toInt();
         else
-            return Err(QStringLiteral("The duration JSON object is missing the 'seconds' field."));
+            return Err(QStringLiteral("The duration JSON object is missing the 'milliseconds' field."));
 
         return Ok(duration);
     }

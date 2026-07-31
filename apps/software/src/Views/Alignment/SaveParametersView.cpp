@@ -16,7 +16,7 @@ SaveParametersView::SaveParametersView(Unique<SaveParametersViewModel> viewModel
 {
     ui->setupUi(this);
     m_keyboard.setupKeyboardConnections(this);
-    setDefaultTitleBar("Exposure Settings");
+    setDefaultTitleBar("Exposure settings");
     setNewNavButtonsConfigs();
 }
 

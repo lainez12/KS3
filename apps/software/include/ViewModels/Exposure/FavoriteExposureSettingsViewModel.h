@@ -18,6 +18,7 @@ namespace Kub3::UI::ViewModels::Exposure
     public:
         Result<QList<FavoriteExposureSettingButton *>, QString> getAllExposureSettings();
         Result<Unit, QString> uiLoadExposurePreset(const QString &presetName);
+        void deleteExposurePreset(const QString &presetName);
 
     signals:
         void s_exposurePresetLoaded(const PresetExposure &preset);

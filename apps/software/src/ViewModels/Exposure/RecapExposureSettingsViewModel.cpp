@@ -14,6 +14,18 @@ namespace Kub3::UI::ViewModels::Exposure
         m_isPresetValid = validatePreset(preset).is_ok();
     }
 
+    void RecapExposureSettingsViewModel::ui_requestLaunchExposure(void)
+    {
+        if (!m_isPresetSet || !m_isPresetValid)
+        {
+            qWarning() << "[RecapExposureSettingsViewModel] Attempted to launch exposure with an unset or invalid preset.";
+            return;
+        }
+
+        
+        emit s_exposurePresetLaunched(m_currentPreset);
+    }
+
     PresetExposure RecapExposureSettingsViewModel::getCurrentPreset() const
     {
         return m_currentPreset;

@@ -3,21 +3,37 @@
         {
             "Continuous": {
                 "duration": {
-                    "minutes": 0,
-                    "seconds": 1
+                    "milliseconds": 5000,
+                    "minutes": 0
                 },
-                "power": 20
+                "power": 45
             },
             "mode": "Continuous",
             "name": "Continuous#1"
         },
         {
+            "Flashing": {
+                "durationOff": {
+                    "milliseconds": 1500,
+                    "minutes": 0
+                },
+                "durationOn": {
+                    "milliseconds": 2500,
+                    "minutes": 0
+                },
+                "numberOfCycles": 1,
+                "power": 75
+            },
+            "mode": "Flashing",
+            "name": "Flashing#1"
+        },
+        {
             "Continuous": {
                 "duration": {
-                    "minutes": 2,
-                    "seconds": 1
+                    "milliseconds": 3800,
+                    "minutes": 0
                 },
-                "power": 20
+                "power": 60
             },
             "mode": "Continuous",
             "name": "Continuous#2"
@@ -25,10 +41,10 @@
         {
             "Continuous": {
                 "duration": {
-                    "minutes": 0,
-                    "seconds": 15
+                    "milliseconds": 10000,
+                    "minutes": 0
                 },
-                "power": 80
+                "power": 15
             },
             "mode": "Continuous",
             "name": "Continuous#3"
@@ -36,31 +52,15 @@
         {
             "Flashing": {
                 "durationOff": {
-                    "minutes": 0,
-                    "seconds": 5
+                    "milliseconds": 1100,
+                    "minutes": 0
                 },
                 "durationOn": {
-                    "minutes": 0,
-                    "seconds": 5
+                    "milliseconds": 900,
+                    "minutes": 0
                 },
-                "numberOfCycles": 2,
-                "power": 45
-            },
-            "mode": "Flashing",
-            "name": "Flashing#1"
-        },
-        {
-            "Flashing": {
-                "durationOff": {
-                    "minutes": 0,
-                    "seconds": 5
-                },
-                "durationOn": {
-                    "minutes": 0,
-                    "seconds": 5
-                },
-                "numberOfCycles": 2,
-                "power": 45
+                "numberOfCycles": 3,
+                "power": 25
             },
             "mode": "Flashing",
             "name": "Flashing#2"
@@ -68,31 +68,15 @@
         {
             "Flashing": {
                 "durationOff": {
-                    "minutes": 0,
-                    "seconds": 5
+                    "milliseconds": 3000,
+                    "minutes": 0
                 },
                 "durationOn": {
-                    "minutes": 0,
-                    "seconds": 5
+                    "milliseconds": 2000,
+                    "minutes": 0
                 },
-                "numberOfCycles": 2,
-                "power": 45
-            },
-            "mode": "Flashing",
-            "name": "Flashing#3"
-        },
-        {
-            "Flashing": {
-                "durationOff": {
-                    "minutes": 0,
-                    "seconds": 35
-                },
-                "durationOn": {
-                    "minutes": 0,
-                    "seconds": 4
-                },
-                "numberOfCycles": 1,
-                "power": 80
+                "numberOfCycles": 4,
+                "power": 70
             },
             "mode": "Flashing",
             "name": "Flashing#4"
@@ -100,13 +84,29 @@
         {
             "Continuous": {
                 "duration": {
-                    "minutes": 1,
-                    "seconds": 5
+                    "milliseconds": 5000,
+                    "minutes": 1
                 },
-                "power": 45
+                "power": 50
             },
             "mode": "Continuous",
-            "name": "Continuous#4"
+            "name": "Test#1_50%"
+        },
+        {
+            "Flashing": {
+                "durationOff": {
+                    "milliseconds": 1000,
+                    "minutes": 0
+                },
+                "durationOn": {
+                    "milliseconds": 1000,
+                    "minutes": 0
+                },
+                "numberOfCycles": 1,
+                "power": 85
+            },
+            "mode": "Flashing",
+            "name": "Test#2_80%"
         }
     ],
     "version": 1

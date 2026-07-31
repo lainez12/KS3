@@ -51,7 +51,7 @@ void SaveExposureSettingsView::showEvent(QShowEvent *event)
         populateViewWithCurrentPreset();
         setAPresetSavedInThisSession(false);
     }
-    QWidget::showEvent(event);
+    ExposureViewBase::showEvent(event);
 }
 
 void SaveExposureSettingsView::setNewNavButtonsConfigs()

@@ -1,6 +1,6 @@
-#ifndef PROGRESSEXPOSUREVIEW_H
-#define PROGRESSEXPOSUREVIEW_H
+#pragma once
 
+#include <QTimer>
 #include <QWidget>
 #include <ViewModels/Exposure/ProgressExposureViewModel.h>
 
@@ -25,17 +25,23 @@ namespace Kub3::UI::Views::ViewsExposure
 
     public:
         void resizeEvent(QResizeEvent *event) override;
+        void showEvent(QShowEvent *event) override;
 
     private:
         void onBackButtonClicked();
         void onValidateButtonClicked() override;
+        void updateProgressBar();
+        void updateTemp();
 
     private:
         Ui::ProgressExposureView *ui;
+        QTimer m_progressTimer;
+        QTimer m_tempTimer;
+        QElapsedTimer m_elapsedTimer;
+        uint32_t m_durationInMS = 0;
+        ProgressExposureViewModel *vm;
     };
 
 } // namespace Kub3::UI::Views
 
 using ProgressExposureView = Kub3::UI::Views::ViewsExposure::ProgressExposureView;
-
-#endif

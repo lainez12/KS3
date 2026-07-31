@@ -21,6 +21,9 @@ public:
         return m_detailsText;
     }
 
+signals:
+    void deleteButtonClicked();
+
 private:
     void setupUi();
 

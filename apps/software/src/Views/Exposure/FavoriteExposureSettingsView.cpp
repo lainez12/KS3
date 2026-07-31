@@ -108,7 +108,7 @@ FavoriteExposureSettingsView::~FavoriteExposureSettingsView()
 void FavoriteExposureSettingsView::showEvent(QShowEvent *event)
 {
     populateViewWithCurrentPreset();
-    QWidget::showEvent(event);
+    ExposureViewBase::showEvent(event);
 }
 
 void FavoriteExposureSettingsView::setNewNavButtonsConfigs()
@@ -205,8 +205,6 @@ void FavoriteExposureSettingsView::onValidateButtonClicked()
 
 void FavoriteExposureSettingsView::populateViewWithCurrentPreset()
 {
-    QList<FavoriteExposureSettingButton *> favoriteButtons;
-    QString errorMessage;
     auto *vm = getViewModel<FavoriteExposureSettingsViewModel>();
 
     const auto res = vm->getAllExposureSettings();

@@ -17,8 +17,12 @@ namespace Kub3::UI::ViewModels::Exposure
         bool isPresetSetAndValid() const;
         PresetExposure getCurrentPreset() const;
 
+    signals:
+        void s_exposurePresetLaunched(const PresetExposure &preset);
+
     public slots:
         void ps_setExposurePreset(const PresetExposure &preset);
+        void ui_requestLaunchExposure(void);
 
     private:
         PresetExposure m_currentPreset;
