@@ -25,16 +25,6 @@ namespace Kub3::MFSM
         // Unconditional Safety Check (Physical Emergency-Stop and PowerOff Buttons)
         this->checkHardwareSafety();
 
-        const bool isSystemInitialized = !std::holds_alternative<StateBooting>(m_state) &&
-                                         !std::holds_alternative<StateWaitingInitialization>(m_state) &&
-                                         !std::holds_alternative<StateInitializing>(m_state);
-
-        // Execute continuous hardware rules
-        if (isSystemInitialized)
-        {
-            m_contactService->processBackgroundAutomations(); // Enables force sensors when necessary
-        }
-
         // 2. Route the tick to the current active Macro-State
         const auto museum = overloadedCallable{
             [&](StateBooting &s) { this->onStateBootingTick(s); },
@@ -57,9 +47,9 @@ namespace Kub3::MFSM
 
         static const std::vector<BootDependency> requiredDependencies = {
 #if defined(KUB_MODEL_8)
-        // {MCU_ARDUINO1_ID, MCU_ARDUINO1_READY},
-        // {MCU_ARDUINO2_ID, MCU_ARDUINO2_READY},
-        // {MCU_ARDUINO3_ID, MCU_ARDUINO3_READY}
+            {MCU_ARDUINO1_ID, MCU_ARDUINO1_READY},
+            {MCU_ARDUINO2_ID, MCU_ARDUINO2_READY},
+            {MCU_ARDUINO3_ID, MCU_ARDUINO3_READY}
 #endif
         };
 
