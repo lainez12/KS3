@@ -1,3 +1,4 @@
+#include "ViewModels/ExposureModeViewModel.h"
 #include <QCoreApplication>
 #include <QDebug>
 #include <QDir>
@@ -144,7 +145,7 @@ namespace Kub3
         // Building MachineStatusView
         {
             // View models creation
-            ASSIGN_VIEW_MODEL(UI::ViewModels::HomeViewModel, exposureModeVM, m_exposureModeVM, m_repo);
+            ASSIGN_VIEW_MODEL(UI::ViewModels::ExposureModeViewModel, exposureModeVM, m_exposureModeVM, m_repo);
             ASSIGN_VIEW_MODEL(UI::ViewModels::HomeViewModel, homeVM, m_homeVM, m_repo);
             ASSIGN_VIEW_MODEL(UI::ViewModels::MachineStatusViewModel, machineStatusVM, m_machineStatusVM, m_repo);
             ASSIGN_VIEW_MODEL(UI::ViewModels::SettingsViewModel, settingsVM, m_settingsVM, m_repo);
@@ -285,10 +286,13 @@ namespace Kub3
         m_homeVM->bindConnection(m_masterFSM, &MFSM::MasterFSM::s_serviceOpSuccess, m_homeVM.get(), &VM::HomeViewModel::ps_operationEnded);
         m_homeVM->bindConnection(m_masterFSM, &MFSM::MasterFSM::s_serviceOpError, m_homeVM.get(), &VM::HomeViewModel::ps_operationEnded);
         m_homeVM->bindConnection(m_masterFSM, &MFSM::MasterFSM::s_processMessageBroadcast, m_homeVM.get(), &VM::HomeViewModel::ps_onProcessMessageBroadcast);
-        // --- Exposure View Model
+        // --- Exposure Menu View Model (Stowage)
         QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_systemStateKindChanged, m_exposureMenuVM.get(), &VM::ExposureMenuViewModel::ps_onSystemStateChanged);
         QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_operationalSubstateChanged, m_exposureMenuVM.get(), &VM::ExposureMenuViewModel::ps_onOperationalSubstateChanged);
         QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_postureChanged, m_exposureMenuVM.get(), &VM::ExposureMenuViewModel::ps_onPostureChanged);
+        // --- Exposure Mode View Model
+        QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_systemStateKindChanged, m_exposureModeVM.get(), &VM::ExposureModeViewModel::ps_onSystemStateChanged);
+        QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_postureChanged, m_exposureModeVM.get(), &VM::ExposureModeViewModel::ps_onPostureChanged);
         // --- Machine Status View Model
         msvm->bindConnection(m_hwManager.get(), &HAL::HardwareManager::s_cameraFrameReady,
                              msvm, &VM::BaseVisionViewModel::ps_onCameraFrameReceived);

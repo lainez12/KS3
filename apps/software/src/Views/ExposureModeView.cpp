@@ -9,7 +9,7 @@
 #define ID_BTN_BACK     "B"
 #define ID_BTN_BACKMAIN "BM"
 
-ExposureModeView::ExposureModeView(Unique<HomeViewModel> viewModel, QWidget *parent) :
+ExposureModeView::ExposureModeView(Unique<ExposureModeViewModel> viewModel, QWidget *parent) :
     ViewBase(std::move(viewModel), parent),
     ui(new Ui::ExposureModeView)
 {
@@ -18,13 +18,17 @@ ExposureModeView::ExposureModeView(Unique<HomeViewModel> viewModel, QWidget *par
     createNavButtonsConfigs();
     configTitleBar();
 
-    ui->floodBtn->setup("Flood Exposure", "#8a2be2", ":/icons/flood_icon.svg"); // Purple
-    // ui->maskExpBtn->setup("Mask Exposure", "#0000cd", ":/icons/mask-exposure_icon.svg");     // Blue
+    ui->floodBtn->setup("Flood Exposure", "#8a2be2", ":/icons/flood_icon.svg");                             // Purple
     ui->maskAlignBtn->setup("Mask Alignment\nMask Exposure", "#00ced1", ":/icons/mask-alignment_icon.svg"); // Cyan
 
     connect(ui->floodBtn, &ActionBox::clicked, this, &ExposureModeView::onFloodExposureClicked);
-    // connect(ui->maskExpBtn, &ActionBox::clicked, this, &ExposureModeView::onMaskExposureClicked);
     connect(ui->maskAlignBtn, &ActionBox::clicked, this, &ExposureModeView::onMaskAlignmentClicked);
+
+    if (auto vm = this->getViewModel<ExposureModeViewModel>(); !!vm)
+    {
+        connect(vm, &ExposureModeViewModel::s_setAlignmentViewLock, this, &ExposureModeView::setAlignmentViewLock);
+        connect(vm, &ExposureModeViewModel::s_setFloodExposureLock, this, &ExposureModeView::setFloodExposureLock);
+    }
 
     this->updateMachineLogo(this->height());
 }
@@ -32,6 +36,16 @@ ExposureModeView::ExposureModeView(Unique<HomeViewModel> viewModel, QWidget *par
 ExposureModeView::~ExposureModeView()
 {
     delete ui;
+}
+
+void ExposureModeView::setAlignmentViewLock(bool lock)
+{
+    ui->maskAlignBtn->setEnabled(!lock);
+}
+
+void ExposureModeView::setFloodExposureLock(bool lock)
+{
+    ui->floodBtn->setEnabled(!lock);
 }
 
 void ExposureModeView::resizeEvent(QResizeEvent *ev)

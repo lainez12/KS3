@@ -21,10 +21,13 @@ signals:
 protected:
     void resizeEvent(QResizeEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
+    void changeEvent(QEvent *event) override;
 
 private:
     QVBoxLayout *m_layout;
     QLabel *m_icon;
     QLabel *m_text;
     QString m_iconPath;
+    QColor m_enabledColor;
+    const QColor m_disabledColor = QColor(220, 220, 220);
 };

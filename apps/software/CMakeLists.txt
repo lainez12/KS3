@@ -14,6 +14,7 @@ qt_add_executable(Kub3Software
     src/ViewModels/HomeViewModel.cpp
     src/ViewModels/SettingsViewModel.cpp
     src/ViewModels/ExposureMenuViewModel.cpp
+    src/ViewModels/ExposureModeViewModel.cpp
     src/ViewModels/Exposure/ExposureSettingsViewModel.cpp
     src/ViewModels/Exposure/ExposureBaseViewModel.cpp
     src/ViewModels/Exposure/FavoriteExposureSettingsViewModel.cpp
@@ -83,6 +84,7 @@ qt_add_executable(Kub3Software
     include/ViewModels/HomeViewModel.h
     include/ViewModels/SettingsViewModel.h
     include/ViewModels/ExposureMenuViewModel.h
+    include/ViewModels/ExposureModeViewModel.h
     include/ViewModels/Exposure/ExposureSettingsViewModel.h
     include/ViewModels/Exposure/ExposureBaseViewModel.h
     include/ViewModels/Exposure/FavoriteExposureSettingsViewModel.h
