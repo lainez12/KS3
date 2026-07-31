@@ -1,6 +1,7 @@
 #include <QDebug>
 #include <QMetaObject>
 #include <algorithm>
+#include <qstringview.h>
 #include <stdexcept>
 
 #include <HAL/Actuators/Motors/DirectCurrentMotor.h>
@@ -61,6 +62,7 @@ namespace Kub3::HAL::Act
                 m_lastSentPwm.reset();
                 m_lastSentDir.reset();
 
+                this->sendTorqueLimits(); // Send/Resend torque limit before moving
                 if (!m_controlTimer.isActive())
                 {
                     m_kinematicEngine->startVelocityMove(0.0, sign, safeVel, safeAcc);
@@ -138,6 +140,25 @@ namespace Kub3::HAL::Act
             m_lastSentPwm = pwm;
             m_lastSentDir = dir;
         }
+    }
+
+    void DirectCurrentMotor::sendTorqueLimits() const
+    {
+        auto _sendSingleTorqueLimit = [this](const uint16_t limit, const char dirByte) {
+            // Command format: <MOTOR><SENS><TORQUE LIMIT>
+            const QByteArray torqueLimitBytes = QByteArray::number(limit);
+            QByteArray cmd;
+
+            cmd.reserve(2 + torqueLimitBytes.size());
+            cmd.append(static_cast<char>(m_motorByteId));
+            cmd.append(dirByte);
+            cmd.append(torqueLimitBytes);
+
+            this->sendPayload(cmd);
+        };
+
+        _sendSingleTorqueLimit(m_hwConfig.maxNegativeTorque, 'B'); // 'B' for backward (negative movement)
+        _sendSingleTorqueLimit(m_hwConfig.maxPositiveTorque, 'F'); // 'F' for forward (positive movement)
     }
 
     uint16_t DirectCurrentMotor::computePwm(double velocityMmS) const

@@ -75,7 +75,8 @@ namespace Kub3::Components
         QDoubleSpinBox *m_dcScrewPitch = nullptr;
         QDoubleSpinBox *m_dcMaxVel     = nullptr;
         QDoubleSpinBox *m_dcMaxAcc     = nullptr;
-        QSpinBox *m_dcEncTops          = nullptr;
+        QSpinBox *m_maxTorquePos       = nullptr;
+        QSpinBox *m_maxTorqueNeg       = nullptr;
 
         // --- KINEMATICS UI ---
         QListWidget *m_profileList   = nullptr;

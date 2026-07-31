@@ -49,6 +49,7 @@ namespace Kub3::Services
         virtual void moveZManual(ZDirection dir)              = 0;
         virtual void stopZManual(void)                        = 0;
         [[nodiscard]] virtual bool isInContact(void) const    = 0;
+        virtual void processBackgroundAutomations(void)       = 0;
 
         // Test methods
         virtual void toggleForceSensors(TestToken, bool en)     = 0;

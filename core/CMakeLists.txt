@@ -48,6 +48,10 @@ qt_add_library(Kub3Core STATIC
     src/Services/Drawers/tasks/WaferEjectionTask.cpp
     src/Services/Stowage/StowageService.cpp
     src/Services/Stowage/tasks/StowageMoveZToLimitTask.cpp
+    src/Services/Stowage/tasks/StowageEnableMaskVacuumWhenNeededTask.cpp 
+    src/Services/Stowage/tasks/StowageMaskToArdkoCountPositionTask.cpp 
+    src/Services/Stowage/tasks/StowageMoveMaskConvToUnconstrainedTask.cpp 
+    src/Services/Stowage/tasks/StowageRecordMaskPositionsTask.cpp
     src/Services/Alignment/AlignmentService.cpp
     src/Services/Vision/VisionService.cpp
     src/Services/Contact/ContactService.cpp
@@ -143,6 +147,12 @@ qt_add_library(Kub3Core STATIC
     include/Services/Stowage/StowageService.h
     include/Services/Stowage/tasks/StowageCenterStagesTask.h
     include/Services/Stowage/tasks/StowageMoveZToLimitTask.h
+    include/Services/Stowage/tasks/StowageEnableMaskVacuumWhenNeededTask.h
+    include/Services/Stowage/tasks/StowageMaskToArdkoCountPositionTask.h
+    include/Services/Stowage/tasks/StowageMoveMaskConvToUnconstrainedTask.h
+    include/Services/Stowage/tasks/StowageRecordMaskPositionsTask.h
+    include/Services/Stowage/tasks/StowageWaitForMaskVacuumTask.h
+    include/Services/Stowage/tasks/structs.h
     include/Services/Alignment/IAlignmentService.h
     include/Services/Alignment/AlignmentService.h
     include/Services/Vision/IVisionService.h

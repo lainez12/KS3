@@ -12,6 +12,7 @@
 #include <Services/Stowage/tasks/StowageMoveZToLimitTask.h>
 
 #include "./IStowageService.h"
+#include "Services/Stowage/tasks/StowageMaskToArdkoCountPositionTask.h"
 
 namespace Kub3::Services
 {
@@ -37,6 +38,8 @@ namespace Kub3::Services
         [[nodiscard]] bool isAbsoluteTopLimitReached() const;
         void initializeMachineValues(void);
         void initializeMotorsBundles(void);
+        bool allArdkoActive(void);
+        bool anyArdkoActive(void);
 
     private:
         Shared<HAL::Act::ActuatorRegistry> m_registry;
@@ -47,7 +50,9 @@ namespace Kub3::Services
         stage_motor_bundle_t m_xMotorBundle;
         stage_motor_bundle_t m_yMotorBundle;
         stage_motor_bundle_t m_thetaMotorBundle;
+        stowage_mask_motor_bundle_t m_maskBundle;
         Shared<HAL::Act::IValve> m_waferVacuumValve;
+        Shared<HAL::Act::IValve> m_maskVacuumValve;
 
         Config::process_config_t m_conf;
     };
