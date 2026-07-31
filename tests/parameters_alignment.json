@@ -1,0 +1,51 @@
+{
+    "parameters": [
+        {
+            "cameraLeft": {
+                "position": {
+                    "x": 5000,
+                    "y": 0
+                },
+                "visualisation": {
+                    "gain": 10,
+                    "exposure": 50,
+                    "zoom": 5,
+                    "focus": 54,
+                    "light": 45
+                }
+            },
+            "cameraRight": {
+                "position": {
+                    "x": 5000,
+                    "y": 0
+                },
+                "visualisation": {
+                    "gain": 10,
+                    "exposure": 50,
+                    "zoom": 5,
+                    "focus": 54,
+                    "light": 45
+                }
+            },
+            "name": "A1"
+        },
+        {
+            "cameraLeft": {
+                "position": {
+                    "x": 5000,
+                    "y": 0
+                },
+                "visualisation": {}
+            },
+            "cameraRight": {
+                "position": {
+                    "x": 5000,
+                    "y": 0
+                },
+                "visualisation": {}
+            },
+            "name": "A2"
+        }
+    ],
+    "version": 1
+}
