@@ -26,14 +26,23 @@ void CompleteExposureView::resizeEvent(QResizeEvent *ev)
 
 void CompleteExposureView::setNewNavButtonsConfigs()
 {
-    NavButtonConfig homeBtn(
-        "Home",
-        ":/icons/home.svg",
-        "H",
-        std::bind(&CompleteExposureView::onHomeButtonClicked, this));
-    addNavButton("left", homeBtn);
+    NavButtonConfig backToMainBtn(
+        "Back to Main",
+        QColor("#FFF"),
+        QColor("#B2D4F4"),
+        ":/icons/picto.png",
+        "B",
+        std::bind(&CompleteExposureView::onBackToMainButtonClicked, this));
+    backToMainBtn.isTextColorDifferent = true;
+    backToMainBtn.textColor            = QColor("#000");
+    addNavButton("left", backToMainBtn);
 }
 
 void CompleteExposureView::onValidateButtonClicked()
 {
+}
+
+void CompleteExposureView::onBackToMainButtonClicked()
+{
+    emit s_openView(Kub3::UI::ViewId::HOME_VIEW);
 }

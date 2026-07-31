@@ -36,7 +36,7 @@ void RecapExposureSettingsView::showEvent(QShowEvent *event)
         ui->modeExposureLabel->setText(vm->modeToString(preset.mode) + " exposure");
         ui->detailsExposure->setText(vm->presetDetailsToStr(preset));
     }
-    QWidget::showEvent(event);
+    ExposureViewBase::showEvent(event);
 }
 
 void RecapExposureSettingsView::setNewNavButtonsConfigs()
@@ -57,6 +57,12 @@ void RecapExposureSettingsView::onBackButtonClicked(void)
 
 void RecapExposureSettingsView::onValidateButtonClicked(void)
 {
-    getViewModel<RecapExposureSettingsViewModel>()->ui_requestLaunchExposure();
+    auto vm = getViewModel<RecapExposureSettingsViewModel>();
+    if (!vm)
+    {
+        qCritical() << "[RecapExposureSettingsView] Failed to launch exposure.";
+        return;
+    }
+    vm->ui_requestLaunchExposure();
     emit s_openView(Kub3::UI::ViewId::PROGRESS_EXPOSURE_VIEW);
 }

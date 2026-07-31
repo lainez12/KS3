@@ -33,7 +33,7 @@ static std::string_view arduino3KeyExtractor(const Kub3::HAL::Com::packet_t &pac
 static bool limitSwitchParser(const QByteArray &d);
 static bool valveStatusParser(const QByteArray &d);
 static bool pressureSensorParser(const QByteArray &d);
-static int32_t temperatureParser(const QByteArray &d);
+static double temperatureParser(const QByteArray &d);
 static uint16_t forceSensorParser(const QByteArray &d);
 static bool forceSensorEnabledParser(const QByteArray &d);
 static int32_t encoderValueParser(const QByteArray &d);
@@ -473,8 +473,8 @@ namespace Kub3::HAL
         auto waferVacuumActive        = std::make_shared<Sensor<bool>>(m_repo, WAFER_VACUUM_ACTIVE, false, &pressureSensorParser);
         auto waferCompressedAirActive = std::make_shared<Sensor<bool>>(m_repo, WAFER_COMPRESSED_AIR_ACTIVE, false, &pressureSensorParser);
         // --- Temperatures
-        auto internalTemperature = std::make_shared<Sensor<int32_t>>(m_repo, INTERNAL_TEMPERATURE, INT32_MIN, &temperatureParser);
-        auto externalTemperature = std::make_shared<Sensor<int32_t>>(m_repo, EXTERNAL_TEMPERATURE, INT32_MIN, &temperatureParser);
+        auto internalTemperature = std::make_shared<Sensor<double>>(m_repo, INTERNAL_TEMPERATURE, -100.0, &temperatureParser);
+        auto externalTemperature = std::make_shared<Sensor<double>>(m_repo, EXTERNAL_TEMPERATURE, -100.0, &temperatureParser);
         // --- Encoders
         auto camerasDeckEncoder = std::make_shared<Sensor<int32_t>>(m_repo, DECK_MOTOR_ENCODER, static_cast<int32_t>(0), &encoderValueParser);
 
@@ -913,13 +913,17 @@ static bool pressureSensorParser(const QByteArray &d)
     return !d.isEmpty() && d[0] != '0';
 }
 
-static int32_t temperatureParser(const QByteArray &d)
+static double temperatureParser(const QByteArray &d)
 {
     if (d.size() < 2) // Not enough data to read
-        return INT32_MIN;
+        return INT16_MIN;
     // Big-endian reconstruction
-    return (static_cast<int32_t>(static_cast<uint8_t>(d[0])) << 8) |
-           (static_cast<int32_t>(static_cast<uint8_t>(d[1])));
+    int16_t vADC      = (static_cast<int16_t>(static_cast<uint8_t>(d[0])) << 8) |
+                        (static_cast<int16_t>(static_cast<uint8_t>(d[1])));
+    double vPin       = (static_cast<double>(vADC) * 3.3) / 4095.0;
+    double vOutSensor = vPin * 1.545454545454;
+    double tempC      = (vOutSensor - 1.375) / 0.0225;
+    return tempC;
 }
 
 static uint16_t forceSensorParser(const QByteArray &d)

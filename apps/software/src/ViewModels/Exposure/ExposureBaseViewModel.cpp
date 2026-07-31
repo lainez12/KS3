@@ -35,7 +35,7 @@ namespace Kub3::UI::ViewModels::Exposure
         }
 
         const auto durationCheck = [](const Duration &d) -> bool {
-            return (d.minutes > 0 || d.miliseconds > 0) && d.miliseconds < 59999;
+            return (d.minutes > 0 || d.milliseconds > 0) && d.milliseconds < 600000;
         };
 
         if (preset.mode == ExposureMode::Continuous)
@@ -233,7 +233,7 @@ namespace Kub3::UI::ViewModels::Exposure
     {
         QJsonObject json;
         json.insert(QStringLiteral("minutes"), static_cast<int>(duration.minutes));
-        json.insert(QStringLiteral("miliseconds"), static_cast<int>(duration.miliseconds));
+        json.insert(QStringLiteral("milliseconds"), static_cast<int>(duration.milliseconds));
         return json;
     }
 
@@ -292,7 +292,7 @@ namespace Kub3::UI::ViewModels::Exposure
     {
         if (preset.mode == ExposureMode::Continuous)
         {
-            QString secondsStr = QString::number(preset.continuous.duration.miliseconds / 1000.0, 'f', 1);
+            QString secondsStr = QString::number(preset.continuous.duration.milliseconds / 1000.0, 'f', 1);
             return QStringLiteral("Exposure duration: %1min %2s\nExposure power: %3%")
                 .arg(preset.continuous.duration.minutes)
                 .arg(secondsStr)
@@ -300,8 +300,8 @@ namespace Kub3::UI::ViewModels::Exposure
         }
         else
         {
-            QString secondsOnStr  = QString::number(preset.flashing.durationOn.miliseconds / 1000.0, 'f', 1);
-            QString secondsOffStr = QString::number(preset.flashing.durationOff.miliseconds / 1000.0, 'f', 1);
+            QString secondsOnStr  = QString::number(preset.flashing.durationOn.milliseconds / 1000.0, 'f', 1);
+            QString secondsOffStr = QString::number(preset.flashing.durationOff.milliseconds / 1000.0, 'f', 1);
             return QStringLiteral("Number of cycles: %1\nDuration Ton: %2min %3s\nDuration Toff: %4min %5s\nExposure power: %6%")
                 .arg(preset.flashing.numberOfCycles)
                 .arg(preset.flashing.durationOn.minutes)
@@ -330,10 +330,10 @@ namespace Kub3::UI::ViewModels::Exposure
         else
             return Err(QStringLiteral("The duration JSON object is missing the 'minutes' field."));
 
-        if (json.contains(QStringLiteral("miliseconds")))
-            duration.miliseconds = json.value(QStringLiteral("miliseconds")).toInt();
+        if (json.contains(QStringLiteral("milliseconds")))
+            duration.milliseconds = json.value(QStringLiteral("milliseconds")).toInt();
         else
-            return Err(QStringLiteral("The duration JSON object is missing the 'miliseconds' field."));
+            return Err(QStringLiteral("The duration JSON object is missing the 'milliseconds' field."));
 
         return Ok(duration);
     }

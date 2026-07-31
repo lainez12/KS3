@@ -40,7 +40,7 @@ void ProgressExposureView::showEvent(QShowEvent *event)
     vm = getViewModel<ProgressExposureViewModel>();
     if (!vm)
     {
-        QWidget::showEvent(event);
+        ExposureViewBase::showEvent(event);
         return;
     }
     PresetExposure preset = vm->getCurrentPreset();
@@ -59,7 +59,8 @@ void ProgressExposureView::showEvent(QShowEvent *event)
         m_elapsedTimer.restart();
     }
 
-    QWidget::showEvent(event);
+    ExposureViewBase::showEvent(event);
+    vm->ui_launchExposure();
 }
 
 void ProgressExposureView::updateProgressBar()
@@ -72,6 +73,7 @@ void ProgressExposureView::updateProgressBar()
         m_progressTimer.stop();
         m_tempTimer.stop();
         setNavButtonEnabled(ID_BTN_VALIDATE, true);
+        setNavButtonEnabled(ID_BTN_HOME, true);
         return;
     }
 
@@ -83,8 +85,8 @@ void ProgressExposureView::updateProgressBar()
 
 void ProgressExposureView::updateTemp()
 {
-    uint32_t temp = vm->getTemperature();
-    ui->tempLedLabel->setText(QString("%1°C").arg(QString::number(temp)));
+    double temp = vm->getTemperature();
+    ui->tempLedLabel->setText(QString("%1°C").arg(QString::number(temp, 'f', 1)));
 }
 
 void ProgressExposureView::onBackButtonClicked()

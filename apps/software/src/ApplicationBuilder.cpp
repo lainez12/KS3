@@ -270,7 +270,7 @@ namespace Kub3
         QObject::connect(m_exposureSettingsVM.get(), &VM::Exposure::ExposureSettingsViewModel::s_requestSaveExposureSettings, m_saveExposureSettingsVM.get(), &VM::Exposure::SaveExposureSettingsViewModel::ps_saveExposureSettings);
         QObject::connect(m_exposureSettingsVM.get(), &VM::Exposure::ExposureSettingsViewModel::s_requestExposureSettingsByForm, m_recapExposureSettingsVM.get(), &VM::Exposure::RecapExposureSettingsViewModel::ps_setExposurePreset);
         QObject::connect(m_favoriteExposureSettingsVM.get(), &VM::Exposure::FavoriteExposureSettingsViewModel::s_exposurePresetLoaded, m_recapExposureSettingsVM.get(), &VM::Exposure::RecapExposureSettingsViewModel::ps_setExposurePreset);
-        QObject::connect(m_recapExposureSettingsVM.get(), &VM::Exposure::RecapExposureSettingsViewModel::s_launchExposure, m_masterFSM, &MFSM::MasterFSM::ps_requestExposure);
+        m_progressExposureVM->bindConnection(m_progressExposureVM.get(), &VM::Exposure::ProgressExposureViewModel::s_launchExposure, m_masterFSM, &MFSM::MasterFSM::ps_requestExposure);
         QObject::connect(m_recapExposureSettingsVM.get(), &VM::Exposure::RecapExposureSettingsViewModel::s_exposurePresetLaunched, m_progressExposureVM.get(), &VM::Exposure::ProgressExposureViewModel::ps_launchExposure);
         // --- Settings
         QObject::connect(m_configuratorPasswdVM.get(), &VM::Settings::AdminPasswordViewModel::s_authenticationSuccess, &launchConfigurator);

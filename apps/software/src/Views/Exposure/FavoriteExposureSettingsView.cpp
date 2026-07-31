@@ -108,7 +108,7 @@ FavoriteExposureSettingsView::~FavoriteExposureSettingsView()
 void FavoriteExposureSettingsView::showEvent(QShowEvent *event)
 {
     populateViewWithCurrentPreset();
-    QWidget::showEvent(event);
+    ExposureViewBase::showEvent(event);
 }
 
 void FavoriteExposureSettingsView::setNewNavButtonsConfigs()

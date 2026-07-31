@@ -1,5 +1,4 @@
-#ifndef PROGRESSEXPOSUREVIEW_H
-#define PROGRESSEXPOSUREVIEW_H
+#pragma once
 
 #include <QTimer>
 #include <QWidget>
@@ -46,5 +45,3 @@ namespace Kub3::UI::Views::ViewsExposure
 } // namespace Kub3::UI::Views
 
 using ProgressExposureView = Kub3::UI::Views::ViewsExposure::ProgressExposureView;
-
-#endif

@@ -142,18 +142,18 @@ PresetExposure ExposureSettingsView::getCurrentPresetExposure() const
     preset.mode = m_isFlashingMode ? ExposureMode::Flashing : ExposureMode::Continuous;
     if (preset.mode == ExposureMode::Continuous)
     {
-        preset.continuous.duration.minutes     = ui->minContinuouspinBox->value();
-        preset.continuous.duration.miliseconds = ui->segContinuouspinBox->value() * 1000; // Convert seconds to milliseconds
-        preset.continuous.power                = ui->powerContinuouspinBox->value();
+        preset.continuous.duration.minutes      = ui->minContinuouspinBox->value();
+        preset.continuous.duration.milliseconds = ui->segContinuouspinBox->value() * 1000; // Convert seconds to milliseconds
+        preset.continuous.power                 = ui->powerContinuouspinBox->value();
     }
     else
     {
-        preset.flashing.numberOfCycles          = ui->numberCyclespinBox->value();
-        preset.flashing.durationOn.minutes      = ui->minOnFlashingspinBox->value();
-        preset.flashing.durationOn.miliseconds  = ui->segOnFlashingspinBox->value() * 1000; // Convert seconds to milliseconds
-        preset.flashing.durationOff.minutes     = ui->minOffFlashingspinBox->value();
-        preset.flashing.durationOff.miliseconds = ui->segOffFlashingspinBox->value() * 1000; // Convert seconds to milliseconds
-        preset.flashing.power                   = ui->powerFlashingspinBox->value();
+        preset.flashing.numberOfCycles           = ui->numberCyclespinBox->value();
+        preset.flashing.durationOn.minutes       = ui->minOnFlashingspinBox->value();
+        preset.flashing.durationOn.milliseconds  = ui->segOnFlashingspinBox->value() * 1000; // Convert seconds to milliseconds
+        preset.flashing.durationOff.minutes      = ui->minOffFlashingspinBox->value();
+        preset.flashing.durationOff.milliseconds = ui->segOffFlashingspinBox->value() * 1000; // Convert seconds to milliseconds
+        preset.flashing.power                    = ui->powerFlashingspinBox->value();
     }
 
     return preset;

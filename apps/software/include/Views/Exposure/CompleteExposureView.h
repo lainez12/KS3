@@ -28,6 +28,7 @@ namespace Kub3::UI::Views::ViewsExposure
 
     private slots:
         void onValidateButtonClicked() override;
+        void onBackToMainButtonClicked();
 
     private:
         void setNewNavButtonsConfigs();
