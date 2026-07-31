@@ -1,10 +1,11 @@
 #pragma once
 
-#include <QString>
 #include <format>
 #include <string>
 #include <unordered_map>
 #include <variant>
+
+#include <QString>
 
 #include "../utils.h" // @note: keep relative path for compilation
 #include <Config/default/hardware.h>

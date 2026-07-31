@@ -1,3 +1,4 @@
+#include "Config/kinematics.h"
 #include <QDebug>
 
 #include <HAL/Actuators/Motors/IMotor.h>
@@ -120,6 +121,7 @@ namespace Kub3::Services
                 return;
             }
 
+            this->compensateTiltIfNeeded();
             m_manualWatchdogTicks--;
             if (m_manualWatchdogTicks == 0)
             {
@@ -157,13 +159,27 @@ namespace Kub3::Services
             return;
         }
 
-        // Checking contact status to adapt kinematic profile
-        m_currentManualDir  = dir;
-        const auto &profile = isInContact() ? m_contactProfile : m_freeProfile;
-        const auto halDir   = static_cast<HAL::Act::MotorDirection>(dir); // Ok to cast as values are the same
-
-        if (m_manualWatchdogTicks == 0) // Start motors if they were stopped
+        // If direction changes during movement, stop cleanly first
+        if (m_manualWatchdogTicks > 0 && m_currentManualDir != dir)
         {
+            this->stopZManual();
+        }
+
+        // Initialize tilt snapshot and start motors if starting fresh
+        if (m_manualWatchdogTicks == 0)
+        {
+            m_currentManualDir  = dir;
+            m_tiltWarningIssued = false;
+
+            for (size_t i = 0; i < 3; ++i)
+            {
+                if (m_zMotors[i])
+                    m_manualStartZ[i] = m_zMotors[i]->getEncoderPositionMm();
+            }
+
+            const auto &profile = isInContact() ? m_contactProfile : m_freeProfile;
+            const auto halDir   = static_cast<HAL::Act::MotorDirection>(dir);
+
             for (auto &motor : m_zMotors)
             {
                 if (motor)
@@ -171,13 +187,16 @@ namespace Kub3::Services
             }
         }
 
-        // Reset the watchdog
+        // Refresh the watchdog
         m_manualWatchdogTicks = Z_WATCHDOG_TIMEOUT_TICKS;
     }
 
     void ContactService::stopZManual(void)
     {
         m_manualWatchdogTicks = 0; // Disarm watchdog
+        m_tiltWarningIssued   = false;
+        m_manualZPaused[0] = m_manualZPaused[1] = m_manualZPaused[2] = false;
+
         for (auto &motor : m_zMotors)
         {
             if (motor)
@@ -222,8 +241,8 @@ namespace Kub3::Services
     void ContactService::retractFromContact(void)
     {
         this->clearTasks();
+        // TODO: implement
         qCritical() << "[ContactService::retractFromContact] not implemented.";
-        // this->startSequence();
     }
 
     void ContactService::buildAutolevelingLanes(void)
@@ -292,6 +311,66 @@ namespace Kub3::Services
         m_repo->setValueRaw(V_LEFT_Z_HORIZONTALITY_DELTA, 0);
         m_repo->setValueRaw(V_RIGHT_Z_HORIZONTALITY_DELTA, 0);
         m_repo->setValueRaw(V_BACK_Z_HORIZONTALITY_DELTA, 0);
+    }
+
+    void ContactService::compensateTiltIfNeeded(void)
+    {
+        // --- ACTIVE TILT COMPENSATION (Initial Planeity Preservation) ---
+        // Ensure all motors travel the exact same distance to preserve the initial tilt.
+        const Config::kinematic_profile_t profile = isInContact() ? m_contactProfile : m_freeProfile;
+        const double tiltThreshold                = m_zMotors[0]->getPrecisionMm(profile) * 2;
+
+        const double zL = m_zMotors[0]->getEncoderPositionMm();
+        const double zR = m_zMotors[1]->getEncoderPositionMm();
+        const double zB = m_zMotors[2]->getEncoderPositionMm();
+
+        const double distL = std::abs(zL - m_manualStartZ[0]);
+        const double distR = std::abs(zR - m_manualStartZ[1]);
+        const double distB = std::abs(zB - m_manualStartZ[2]);
+
+        const double minDist = std::min({distL, distR, distB});
+        const double maxDist = std::max({distL, distR, distB});
+
+        bool pauseL = false, pauseR = false, pauseB = false;
+
+        if (maxDist - minDist > tiltThreshold)
+        {
+            if (!m_tiltWarningIssued)
+            {
+                postWarning("Z tilt deviation detected. Actively compensating to preserve initial plane...");
+                m_tiltWarningIssued = true;
+            }
+
+            // Pause the motor(s) that are running ahead
+            pauseL = (distL > minDist + tiltThreshold);
+            pauseR = (distR > minDist + tiltThreshold);
+            pauseB = (distB > minDist + tiltThreshold);
+        }
+
+        auto applyTiltCompensation = [&](Shared<HAL::Act::IPositionMotor> &motor, bool shouldPause, int index) {
+            if (!motor)
+                return;
+            if (shouldPause)
+            {
+                if (motor->isMoving())
+                {
+                    motor->emergencyStop();
+                    m_manualZPaused[index] = true;
+                }
+            }
+            else
+            {
+                if (m_manualZPaused[index]) // Only resume if we were the ones to pause it
+                {
+                    motor->moveDirection(static_cast<HAL::Act::MotorDirection>(m_currentManualDir), profile);
+                    m_manualZPaused[index] = false;
+                }
+            }
+        };
+
+        applyTiltCompensation(m_zMotors[0], pauseL, 0);
+        applyTiltCompensation(m_zMotors[1], pauseR, 1);
+        applyTiltCompensation(m_zMotors[2], pauseB, 2);
     }
 
     void ContactService::_toggleForceSensors(bool en)

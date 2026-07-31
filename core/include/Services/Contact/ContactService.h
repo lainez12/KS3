@@ -41,13 +41,14 @@ namespace Kub3::Services
         [[nodiscard]] bool isInContact(void) const override;
         void processBackgroundAutomations(void) override;
 
-        // Test methods
-        void tareForceSensor(TestToken, ForceSensor fs) override;
-        void toggleForceSensors(TestToken, bool en) override;
-
         // BaseTaskService overrides
         void tick(void) override;
         void onStop(void) override;
+
+    public:
+        // Test methods
+        void tareForceSensor(TestToken, ForceSensor fs) override;
+        void toggleForceSensors(TestToken, bool en) override;
 
     private:
         void _toggleForceSensors(bool en);
@@ -57,6 +58,7 @@ namespace Kub3::Services
         Algorithms::Control::admittance_config_t buildAdmittanceConfig(double targetForceGF, double toleranceGF) const;
 
         void initializeMachineValues(void);
+        void compensateTiltIfNeeded(void);
 
         // Internal helpers for contact status
         [[nodiscard]] double getMaxCurrentForceGF(void) const;
@@ -73,15 +75,21 @@ namespace Kub3::Services
         std::array<Shared<HAL::Act::ISwitch>, 3> m_forceSensorsSw;
         std::array<Shared<HAL::Act::IPositionMotor>, 3> m_zMotors;
         uint32_t m_manualWatchdogTicks = 0;
-        ZDirection m_currentManualDir  = ZDirection::Down; // Tracking active manual direction
+        ZDirection m_currentManualDir  = ZDirection::Down;
 
-        Config::kinematic_profile_t m_freeProfile;    // Kinematic profile to use when not in contact
-        Config::kinematic_profile_t m_contactProfile; // Kinematic profile to use when contact has been achieved
+        // Active Tilt Compensation trackers
+        bool m_manualZPaused[3]  = {false, false, false};
+        double m_manualStartZ[3] = {0.0, 0.0, 0.0};
+        bool m_tiltWarningIssued = false;
+
+        Config::kinematic_profile_t m_freeProfile;
+        Config::kinematic_profile_t m_contactProfile;
 
         std::string m_taskAbortReason;
 
         double m_maxMotorsDeltaMm = 0.5;
         double m_requestedForceGF = 0.0;
+
         // Conversion factors (ADC to gram-force)
         double m_adcToGFLeftFactor                     = 1.0;
         double m_adcToGFRightFactor                    = 1.0;
