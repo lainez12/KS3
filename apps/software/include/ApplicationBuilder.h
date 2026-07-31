@@ -18,6 +18,7 @@
 // --- UI
 #include <ViewModels/Exposure/SaveExposureSettingsViewModel.h>
 #include <ViewModels/ExposureMenuViewModel.h>
+#include <ViewModels/ExposureModeViewModel.h>
 #include <ViewModels/HomeViewModel.h>
 #include <ViewModels/Settings/MachineStatusViewModel.h>
 #include <ViewModels/SettingsViewModel.h>
@@ -75,7 +76,7 @@ namespace Kub3
         Unique<MainWindow> m_mainWindow;
         // --- View models
         QPointer<UI::ViewModels::MachineStatusViewModel> m_machineStatusVM;
-        QPointer<UI::ViewModels::HomeViewModel> m_exposureModeVM;
+        QPointer<UI::ViewModels::ExposureModeViewModel> m_exposureModeVM;
         QPointer<UI::ViewModels::HomeViewModel> m_homeVM;
         QPointer<UI::ViewModels::SettingsViewModel> m_settingsVM;
         QPointer<UI::ViewModels::ExposureMenuViewModel> m_exposureMenuVM;

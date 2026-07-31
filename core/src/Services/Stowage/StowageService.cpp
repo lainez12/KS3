@@ -1,3 +1,4 @@
+#include "utils.h"
 #include <QDebug>
 
 #include <HAL/Actuators/Motors/IMotor.h>

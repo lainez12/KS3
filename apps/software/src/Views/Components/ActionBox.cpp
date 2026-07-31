@@ -3,7 +3,8 @@
 
 #include <Views/Components/ActionBox.h>
 
-ActionBox::ActionBox(QWidget *parent) : BottomCroppedCircle(parent)
+ActionBox::ActionBox(QWidget *parent) :
+    BottomCroppedCircle(parent)
 {
     this->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
@@ -33,7 +34,8 @@ ActionBox::ActionBox(QWidget *parent) : BottomCroppedCircle(parent)
 void ActionBox::setup(const QString &text, const QColor &color, const QString &iconPath)
 {
     m_text->setText(text);
-    this->setColor(color);
+    m_enabledColor = color;
+    this->setColor(m_enabledColor);
     this->setIcon(iconPath);
 }
 
@@ -83,4 +85,16 @@ void ActionBox::resizeEvent(QResizeEvent *event)
 void ActionBox::mouseReleaseEvent(QMouseEvent *event)
 {
     emit clicked();
+}
+
+void ActionBox::changeEvent(QEvent *event)
+{
+    if (event->type() == QEvent::EnabledChange)
+    {
+        // Switch color based on enabled state
+        setColor(isEnabled() ? m_enabledColor : m_disabledColor);
+    }
+
+    // Pass the event up to the base class
+    BottomCroppedCircle::changeEvent(event);
 }

@@ -1,9 +1,8 @@
-#ifndef EXPOSUREMODEVIEW_H
-#define EXPOSUREMODEVIEW_H
+#pragma once
 
 #include <QWidget>
 
-#include <ViewModels/HomeViewModel.h>
+#include <ViewModels/ExposureModeViewModel.h>
 #include <Views/Components/NavButton.h>
 
 #include "ViewBase.h"
@@ -18,28 +17,29 @@ namespace Kub3::UI::Views
 
     class ExposureModeView final : public ViewBase
     {
-        using HomeViewModel = Kub3::UI::ViewModels::HomeViewModel;
+        using ExposureModeViewModel = Kub3::UI::ViewModels::ExposureModeViewModel;
 
         Q_OBJECT
 
     public:
-        explicit ExposureModeView(Unique<HomeViewModel> viewModel, QWidget *parent = nullptr);
+        explicit ExposureModeView(Unique<ExposureModeViewModel> viewModel, QWidget *parent = nullptr);
         ~ExposureModeView();
-
-    signals:
 
     public slots:
         void onFloodExposureClicked();
         void onMaskAlignmentClicked();
+
     private slots:
+        void setAlignmentViewLock(bool lock);
+        void setFloodExposureLock(bool lock);
 
     public:
         void resizeEvent(QResizeEvent *event) override;
 
     private:
         void updateMachineLogo(int h);
-        void createNavButtonsConfigs();
-        void configTitleBar();
+        void createNavButtonsConfigs() override;
+        void configTitleBar() override;
 
         void onBackButtonClicked();
         void onBackToMainButtonClicked();
@@ -50,5 +50,3 @@ namespace Kub3::UI::Views
 }
 
 using ExposureModeView = Kub3::UI::Views::ExposureModeView;
-
-#endif // EXPOSUREMODEVIEW_H
