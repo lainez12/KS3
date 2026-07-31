@@ -13,4 +13,9 @@ namespace Kub3::UI::ViewModels::Alignment
     {
     }
 
+    void ContactSelectionViewModel::ui_setSelectedContactMode(ContactMode mode)
+    {
+        emit s_contactModeChanged(mode);
+    }
+
 } // namespace Kub3::UI::ViewModels::Alignment
