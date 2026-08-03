@@ -41,7 +41,6 @@ namespace Kub3::UI::ViewModels::Alignment
         void loadConnections(void) override;
         void uiRequestCameraMovement(CameraId camId, MovementKind kind, CameraDirection dir);
         void uiRequestAlignmentStageMovement(AlignmentStageId stageId, MovementKind kind, AlignmentStageDirection dir);
-
         void uiRequestSaveParameters(const alignment_parameter_t &parameter);
 
     signals:
@@ -50,18 +49,20 @@ namespace Kub3::UI::ViewModels::Alignment
         void s_compressedAirUpdate(bool active);
         void s_vacuumUpdate(bool active);
         void s_pickedUpCoordinatesUpdated(CameraId camId, const coords_2d_t &coordinatesMm);
-        void s_camerasFineModeUpdated(CameraId camId, bool fineModeActive);
+        void s_camerasFineModeUpdated(CameraId camId, bool active);
         void s_substrateFineModeUpdated(bool fineModeActive);
-
         void s_saveParametersAlignment(const alignment_parameter_t &parameter);
 
         void cmdRunCameraMovement(CameraId camId, MovementKind kind, CameraDirection dir);
         void cmdRunAlignmentStageMovement(AlignmentStageId stageId, MovementKind kind, AlignmentStageDirection dir);
+        void cmdRunCameraAbsoluteMovement(CameraId camId, double xPosMm, double yPosMm);
+        void cmdRequestCameraFineMode(CameraId camId, bool active);
+        void cmdRequestSubstrateFineMode(bool active);
 
     public slots:
         // From UI
         void ui_onPickUpXYClicked(CameraId id);
-        void ui_onGoToXYClicked(CameraId id);
+        void ui_onGoToXYClicked(CameraId id, const coords_2d_t &targetPosMm);
         void ui_onCamSpeedClicked(CameraId id);
         void ui_substrateSpeedClicked();
 

@@ -97,8 +97,11 @@ namespace Kub3::MFSM
         void ps_requestCenteredZoomUpdate(const QString &camId, double val);
         void ps_requestROIUpdate(const QString &camId, const QRect &roi);
         // Camera PAD movements
-        // void ps_requestPADCameraMovement(CameraId camId, MovementKind kind, CameraDirection dir);
+        void ps_requestPADCameraMovement(CameraId camId, MovementKind kind, CameraDirection dir);
         void ps_requestPADAlignmentStageMovement(AlignmentStageId stageId, MovementKind kind, AlignmentStageDirection dir);
+        void ps_requestAlignmentSubstrateFineMode(bool active);
+        void ps_requestAlignmentCameraFineMode(CameraId camId, bool active);
+        void ps_requestAlignmentCameraAbsoluteMovement(CameraId camId, double xPosMm, double yPosMm);
 
     private slots:
         // --- The Heartbeat (50Hz) ---
@@ -132,7 +135,7 @@ namespace Kub3::MFSM
         // --- Pad/Static Processors ---
         void processCmdAlignmentPad(const CmdAlignmentPad &cmd);
         void processCmdZPad(const CmdZAxisPad &cmd);
-        void processCmdVisionPad(const CmdVisionPad &cmd);
+        void processCmdVisualisation(const CmdVisualisation &cmd);
 
         // --- Safety Monitors ---
         void checkHardwareSafety(void);

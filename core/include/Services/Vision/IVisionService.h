@@ -13,6 +13,10 @@ namespace Kub3::Services
     // --- Pad Operation Payloads ---
     struct VisionMovePayload {
         VisionDirection dir;
+        bool granular = false;
+    };
+    struct VisionMoveAbsolutePayload {
+        double positionMm;
     };
     struct VisionStopPayload {};
     struct VisionSetKinematicModePayload {
@@ -24,6 +28,7 @@ namespace Kub3::Services
 
     using VisionPayload = std::variant<
         VisionMovePayload,
+        VisionMoveAbsolutePayload,
         VisionStopPayload,
         VisionSetKinematicModePayload,
         VisionSetPushingModePayload>;
@@ -36,6 +41,7 @@ namespace Kub3::Services
         // Movement pure virtual methods
         virtual void moveBlockToVisualisationPosition(void)                                    = 0;
         virtual void moveManual(VisionMotor motor, VisionDirection dir, bool granular = false) = 0;
+        virtual void moveAbsolute(VisionMotor motor, double positionMm)                        = 0;
         virtual void stopManual(VisionMotor motor)                                             = 0;
         virtual void setKinematicMode(VisionMotor motor, bool fineMode)                        = 0;
         virtual void setPushingMode(bool enabled)                                              = 0;
