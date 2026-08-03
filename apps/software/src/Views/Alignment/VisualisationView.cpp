@@ -359,6 +359,7 @@ void VisualisationView::onValidateButtonClicked()
 
 void VisualisationView::onSaveButtonClicked()
 {
+    emit s_saveParameters(getAlignmentParameter());
     emit s_openView(Kub3::UI::ViewId::ALIGNMENT_SAVE_PARAMETERS_VIEW);
 }
 
@@ -419,6 +420,24 @@ void VisualisationView::closeHardForceContactFormIfNeeded(void)
         m_hardForceContactForm->setVisible(false);
         switchColorNavButton("F", true);
     }
+}
+
+AlignmentParameter VisualisationView::getAlignmentParameter()
+{
+    return AlignmentParameter{
+        .cameraLeft = {
+            .position = {
+                .x = ui->sbLeftCamXPos->value(),
+                .y = ui->sbLeftCamYPos->value(),
+            },
+            .visualisation = {}},
+        .cameraRight = {.position = {
+                            .x = ui->sbRightCamXPos->value(),
+                            .y = ui->sbRightCamYPos->value(),
+                        },
+                        .visualisation = {}},
+        .name        = "Current",
+    };
 }
 
 void VisualisationView::navButtonToggled(NavButton *button, QWidget *widget)
