@@ -108,9 +108,10 @@ namespace Kub3::UI::ViewModels::Alignment
 
     void VisualisationViewModel::ps_handleSensorValueChanged(const std::string &key)
     {
-        const auto sendCamPosUpdate = [&](CameraId id, CameraAxis axis) {
+        const auto sendCamPosUpdate = [&](CameraId id, CameraAxis axis, double &valueHolder) {
             if (auto valOpt = HAL::MS::tryRead<double>(m_repo, key); valOpt.has_value())
             {
+                valueHolder = valOpt.value();
                 emit s_cameraPositionUpdate(id, axis, valOpt.value());
             }
         };
@@ -142,16 +143,16 @@ namespace Kub3::UI::ViewModels::Alignment
         switch (Utils::ConstexprStringHash::hash(key))
         {
         case leftCamXEncHash:
-            sendCamPosUpdate(CameraId::LEFT, CameraAxis::X);
+            sendCamPosUpdate(CameraId::LEFT, CameraAxis::X, m_camerasState[CameraId::LEFT].currentPositionMm.x);
             break;
         case leftCamYEncHash:
-            sendCamPosUpdate(CameraId::LEFT, CameraAxis::Y);
+            sendCamPosUpdate(CameraId::LEFT, CameraAxis::Y, m_camerasState[CameraId::LEFT].currentPositionMm.y);
             break;
         case rightCamXEncHash:
-            sendCamPosUpdate(CameraId::RIGHT, CameraAxis::X);
+            sendCamPosUpdate(CameraId::RIGHT, CameraAxis::X, m_camerasState[CameraId::RIGHT].currentPositionMm.x);
             break;
         case rightCamYEncHash:
-            sendCamPosUpdate(CameraId::RIGHT, CameraAxis::Y);
+            sendCamPosUpdate(CameraId::RIGHT, CameraAxis::Y, m_camerasState[CameraId::RIGHT].currentPositionMm.y);
             break;
         case zLeftEncHash:
             onZPositionUpdate(m_zPositionsMm[0], V_Z_LEFT_MASK_POSITION_MM, true);
