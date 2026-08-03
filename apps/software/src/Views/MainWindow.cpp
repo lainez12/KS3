@@ -334,12 +334,12 @@ void MainWindow::onViewButtonStateChanged(const QString &buttonId, bool newState
     }
 }
 
-void MainWindow::changeButtonColor(const QString &buttonId, bool EnabledColor)
+void MainWindow::changeButtonColor(const QString &buttonId, bool active)
 {
     auto it = m_bottomBarButtons.find(buttonId);
     if (it != m_bottomBarButtons.end() && it.value().button)
     {
-        it.value().button->switchColor(EnabledColor);
+        it.value().button->switchColor(active);
     }
 }
 

@@ -26,6 +26,7 @@ namespace Kub3::UI::Views
     {
         using CameraAxis             = ViewModels::Alignment::CameraAxis;
         using VisualisationViewModel = ViewModels::Alignment::VisualisationViewModel;
+        using coords_2d_t            = ViewModels::Alignment::coords_2d_t;
 
         Q_OBJECT
 
@@ -48,6 +49,9 @@ namespace Kub3::UI::Views
         void onCameraPositionUpdate(CameraId camId, CameraAxis axis, double value);
         void onVacuumUpdate(bool active);
         void onCompressedAirUpdate(bool active);
+        void onPickedUpCoordinatesUpdated(CameraId camId, const coords_2d_t &coordinatesMm);
+        void onCamerasFineModeUpdated(CameraId camId, bool fineModeActive);
+        void onSubstrateFineModeUpdated(bool active);
 
     private:
         // Setup routines splitting up the constructor

@@ -17,9 +17,9 @@ public:
         QString text;
         QColor colorEnabled;
         QColor colorDisabled;
-        QString iconPath = "";
-        QFont font = QFont("Arial", 12);
-        uint gapPx = 0;
+        QString iconPath    = "";
+        QFont font          = QFont("Arial", 12);
+        uint gapPx          = 0;
         QString textBgColor = "";
     };
 
@@ -34,7 +34,7 @@ public:
     void setTextColor(const QColor &color);
     void changeColorToDisabled();
     void changeColorToEnabled();
-    void switchColor(bool enabled);
+    void switchColor(bool active);
 
 signals:
     void clicked(void);

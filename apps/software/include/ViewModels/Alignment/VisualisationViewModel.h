@@ -1,7 +1,5 @@
 #pragma once
 
-#include <unordered_map>
-
 #include <Common/Enums.h>
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
 #include <HAL/MachineStatus/sensors_labels.h>
@@ -16,6 +14,17 @@ namespace Kub3::UI::ViewModels::Alignment
         X,
         Y,
     };
+
+    typedef struct coords_2d_s {
+        double x;
+        double y;
+    } coords_2d_t;
+
+    typedef struct camera_data_s {
+        coords_2d_t currentPositionMm     = {.x = 0.0, .y = 0.0};
+        coords_2d_t pickedUpCoordinatesMm = {.x = 0.0, .y = 0.0};
+        bool fineSpeedSelected            = false;
+    } camera_data_t;
 
     class VisualisationViewModel final : public BaseVisionViewModel
     {
@@ -35,18 +44,34 @@ namespace Kub3::UI::ViewModels::Alignment
         void s_cameraPositionUpdate(CameraId camId, CameraAxis axis, double value);
         void s_compressedAirUpdate(bool active);
         void s_vacuumUpdate(bool active);
+        void s_pickedUpCoordinatesUpdated(CameraId camId, const coords_2d_t &coordinatesMm);
+        void s_camerasFineModeUpdated(CameraId camId, bool fineModeActive);
+        void s_substrateFineModeUpdated(bool fineModeActive);
 
         void cmdRunCameraMovement(CameraId camId, MovementKind kind, CameraDirection dir);
         void cmdRunAlignmentStageMovement(AlignmentStageId stageId, MovementKind kind, AlignmentStageDirection dir);
 
     public slots:
+        // From UI
+        void ui_onPickUpXYClicked(CameraId id);
+        void ui_onGoToXYClicked(CameraId id);
+        void ui_onCamSpeedClicked(CameraId id);
+        void ui_substrateSpeedClicked();
+
+        // From logic layer
         void ps_handleSensorValueChanged(const std::string &key);
 
     private:
         Shared<HAL::MS::IMachineStatusRepo> m_repo;
-        std::unordered_map<CameraId, bool> m_activeContinuousCameraMoves                 = {};
-        std::unordered_map<AlignmentStageId, bool> m_activeContinuousAlignmentStageMoves = {};
-        double m_zPositionsMm[3]                                                         = {0, 0, 0};
+
+        // Pad movement related state
+        UMap<CameraId, bool> m_activeContinuousCameraMoves                 = {};
+        UMap<AlignmentStageId, bool> m_activeContinuousAlignmentStageMoves = {};
+
+        // Displayed data state
+        double m_zPositionsMm[3] = {0, 0, 0};
+        UMap<CameraId, camera_data_t> m_camerasState;
+        bool m_substrateFineMode = false;
     };
 
 } // namespace Kub3::UI::ViewModels::Alignment
