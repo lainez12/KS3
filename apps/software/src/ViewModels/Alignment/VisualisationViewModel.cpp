@@ -78,6 +78,34 @@ namespace Kub3::UI::ViewModels::Alignment
         emit cmdRunAlignmentStageMovement(stageId, kind, dir);
     }
 
+    void VisualisationViewModel::ui_onPickUpXYClicked(CameraId id)
+    {
+        const coords_2d_t currentPos = m_camerasState[id].currentPositionMm;
+
+        m_camerasState[id].pickedUpCoordinatesMm = {.x = currentPos.x, .y = currentPos.y};
+        emit s_pickedUpCoordinatesUpdated(id, m_camerasState[id].pickedUpCoordinatesMm);
+    }
+
+    void VisualisationViewModel::ui_onGoToXYClicked(CameraId id)
+    {
+        // m_camerasState[id].pickedUpCoordinatesMm;
+        // TODO request to logic layer
+    }
+
+    void VisualisationViewModel::ui_onCamSpeedClicked(CameraId id)
+    {
+        m_camerasState[id].fineSpeedSelected = !m_camerasState[id].fineSpeedSelected;
+        // TODO propagate to logic layer
+        emit s_camerasFineModeUpdated(id, m_camerasState[id].fineSpeedSelected);
+    }
+
+    void VisualisationViewModel::ui_substrateSpeedClicked()
+    {
+        m_substrateFineMode = !m_substrateFineMode;
+        // TODO propagate to logic layer
+        emit s_substrateFineModeUpdated(m_substrateFineMode);
+    }
+
     void VisualisationViewModel::ps_handleSensorValueChanged(const std::string &key)
     {
         const auto sendCamPosUpdate = [&](CameraId id, CameraAxis axis) {

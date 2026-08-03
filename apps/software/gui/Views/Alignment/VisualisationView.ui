@@ -544,7 +544,7 @@ opacity: 1;</string>
           </widget>
          </item>
          <item>
-          <widget class="QSpinBox" name="spinBox">
+          <widget class="QSpinBox" name="sbLeftCamXPos">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -608,7 +608,7 @@ opacity: 1;</string>
           </widget>
          </item>
          <item>
-          <widget class="QSpinBox" name="spinBox_2">
+          <widget class="QSpinBox" name="sbLeftCamYPos">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -962,7 +962,7 @@ opacity: 1;</string>
           </widget>
          </item>
          <item>
-          <widget class="QSpinBox" name="spinBox_3">
+          <widget class="QSpinBox" name="sbRightCamXPos">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -1026,7 +1026,7 @@ opacity: 1;</string>
           </widget>
          </item>
          <item>
-          <widget class="QSpinBox" name="spinBox_4">
+          <widget class="QSpinBox" name="sbRightCamYPos">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -2613,7 +2613,7 @@ font-size: 20px;</string>
         </spacer>
        </item>
        <item>
-        <widget class="NavButton" name="moveCamLeft" native="true">
+        <widget class="NavButton" name="btnMoveCamLeft" native="true">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
            <horstretch>0</horstretch>
@@ -2642,7 +2642,7 @@ font-size: 20px;</string>
         </spacer>
        </item>
        <item>
-        <widget class="NavButton" name="speedCamLeft" native="true">
+        <widget class="NavButton" name="btnSpeedCamLeft" native="true">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
            <horstretch>0</horstretch>
@@ -2652,7 +2652,7 @@ font-size: 20px;</string>
         </widget>
        </item>
        <item>
-        <widget class="NavButton" name="pickUpLeft" native="true">
+        <widget class="NavButton" name="btnGoToLeft" native="true">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
            <horstretch>0</horstretch>
@@ -2662,7 +2662,7 @@ font-size: 20px;</string>
         </widget>
        </item>
        <item>
-        <widget class="NavButton" name="gotoLeft" native="true">
+        <widget class="NavButton" name="btnPickUpLeft" native="true">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
            <horstretch>0</horstretch>
@@ -2716,7 +2716,7 @@ font-size: 20px;</string>
         </spacer>
        </item>
        <item>
-        <widget class="NavButton" name="speedCamRight" native="true">
+        <widget class="NavButton" name="btnSpeedCamRight" native="true">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
            <horstretch>0</horstretch>
@@ -2729,7 +2729,7 @@ font-size: 20px;</string>
         </widget>
        </item>
        <item>
-        <widget class="NavButton" name="pickUpRight" native="true">
+        <widget class="NavButton" name="btnGoToRight" native="true">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
            <horstretch>0</horstretch>
@@ -2739,7 +2739,7 @@ font-size: 20px;</string>
         </widget>
        </item>
        <item>
-        <widget class="NavButton" name="gotoRight" native="true">
+        <widget class="NavButton" name="btnPickUpRight" native="true">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
            <horstretch>0</horstretch>
@@ -2762,7 +2762,7 @@ font-size: 20px;</string>
         </spacer>
        </item>
        <item>
-        <widget class="NavButton" name="moveCamRight" native="true">
+        <widget class="NavButton" name="btnMoveCamRight" native="true">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
            <horstretch>0</horstretch>

@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <optional>
+#include <unordered_map>
 #include <utility>
 
 #define TODO(msg) throw msg
@@ -154,6 +155,9 @@ using Optional = std::optional<T>;
 
 template <typename K, typename V>
 using Pair = std::pair<K, V>;
+
+template <typename K, typename V>
+using UMap = std::unordered_map<K, V>;
 
 // ---------------------------------------
 // --- C++20 OVERLOADED VISITOR HELPER

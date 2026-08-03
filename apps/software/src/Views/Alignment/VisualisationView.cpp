@@ -9,10 +9,16 @@
 
 #define ORANGE_BTN_SIZE 90
 
-#define ID_BTN_BACK     "B"
-#define ID_BTN_SAVE     "S"
-#define ID_BTN_HOME     "H"
-#define ID_BTN_VALIDATE "V"
+#define ID_BTN_BACK            "B"
+#define ID_BTN_LOAD            "L"
+#define ID_BTN_SAVE            "S"
+#define ID_BTN_HOME            "H"
+#define ID_BTN_VALIDATE        "V"
+#define ID_BTN_SUBSTRATE_SPEED "U"
+#define ID_BTN_VAC_AIR_TOGGLE  "M"
+#define ID_BTN_VISUAL_MARK     "I"
+#define ID_BTN_HARDCONTACT     "F"
+#define ID_BTN_SCREENSHOT      "X"
 
 VisualisationView::VisualisationView(Unique<VisualisationViewModel> viewModel, QWidget *parent) :
     AlignmentViewBase(std::move(viewModel), parent),
@@ -52,8 +58,8 @@ void VisualisationView::setupUI()
 
     // Sub-widget sizing configurations
     QList<NavButton *> navBtns = {
-        ui->moveCamLeft, ui->speedCamLeft, ui->gotoLeft, ui->pickUpLeft,
-        ui->gotoRight, ui->speedCamRight, ui->moveCamRight, ui->pickUpRight};
+        ui->btnMoveCamLeft, ui->btnSpeedCamLeft, ui->btnGoToLeft, ui->btnPickUpLeft,
+        ui->btnGoToRight, ui->btnSpeedCamRight, ui->btnMoveCamRight, ui->btnPickUpRight};
 
     ui->leftCamCtrlBtnsContainer->setFixedHeight(ORANGE_BTN_SIZE + 20);
     ui->rightCamCtrlBtnsContainer->setFixedHeight(ORANGE_BTN_SIZE + 20);
@@ -63,14 +69,14 @@ void VisualisationView::setupUI()
     }
 
     // Setup Action Buttons
-    ui->speedCamRight->setup(NavButton::SetupParams{"Cam. Speed", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/speed-motor-low.svg", QFont("Arial", 12), 8, "#fff"});
-    ui->speedCamLeft->setup(NavButton::SetupParams{"Cam. Speed", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/speed-motor-low.svg", QFont("Arial", 12), 8, "#fff"});
-    ui->pickUpRight->setup(NavButton::SetupParams{"Go to X/Y", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/go-to.svg", QFont("Arial", 12), 8, "#fff"});
-    ui->pickUpLeft->setup(NavButton::SetupParams{"Go to X/Y", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/go-to.svg", QFont("Arial", 12), 8, "#fff"});
-    ui->gotoRight->setup(NavButton::SetupParams{"Pick Up X/Y", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/pick-up-xy.svg", QFont("Arial", 12), 8, "#fff"});
-    ui->gotoLeft->setup(NavButton::SetupParams{"Pick Up X/Y", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/pick-up-xy.svg", QFont("Arial", 12), 8, "#fff"});
-    ui->moveCamRight->setup(NavButton::SetupParams{"Move. Cam", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/move-cam.svg", QFont("Arial", 12), 8, "#fff"});
-    ui->moveCamLeft->setup(NavButton::SetupParams{"Move. Cam", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/move-cam.svg", QFont("Arial", 12), 8, "#fff"});
+    ui->btnSpeedCamRight->setup(NavButton::SetupParams{"Cam. Speed", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/speed-motor-low.svg", QFont("Arial", 12), 8, "#fff"});
+    ui->btnSpeedCamLeft->setup(NavButton::SetupParams{"Cam. Speed", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/speed-motor-low.svg", QFont("Arial", 12), 8, "#fff"});
+    ui->btnPickUpRight->setup(NavButton::SetupParams{"Pick Up X/Y", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/pick-up-xy.svg", QFont("Arial", 12), 8, "#fff"});
+    ui->btnPickUpLeft->setup(NavButton::SetupParams{"Pick Up X/Y", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/pick-up-xy.svg", QFont("Arial", 12), 8, "#fff"});
+    ui->btnGoToRight->setup(NavButton::SetupParams{"Go to X/Y", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/go-to.svg", QFont("Arial", 12), 8, "#fff"});
+    ui->btnGoToLeft->setup(NavButton::SetupParams{"Go to X/Y", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/go-to.svg", QFont("Arial", 12), 8, "#fff"});
+    ui->btnMoveCamRight->setup(NavButton::SetupParams{"Move. Cam", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/move-cam.svg", QFont("Arial", 12), 8, "#fff"});
+    ui->btnMoveCamLeft->setup(NavButton::SetupParams{"Move. Cam", QColor(ORANGE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/move-cam.svg", QFont("Arial", 12), 8, "#fff"});
 
     ui->configCamLeftFrame->setVisible(false);
     ui->configCamRightFrame->setVisible(false);
@@ -97,9 +103,20 @@ void VisualisationView::setupConnections()
     m_keyboard.setupKeyboardConnections(this, "_d");
     m_keyboard.setupKeyboardConnections(this, "_g");
 
-    // Camera / Vision pipeline updates
-    if (auto *vm = dynamic_cast<VisualisationViewModel *>(m_viewModel.get()))
+    // Toggle event connections
+    connect(ui->configCamLeftCheck, &QCheckBox::toggled, this, &VisualisationView::leftCamConfigToggled);
+    connect(ui->configCamRightCheck, &QCheckBox::toggled, this, &VisualisationView::rightCamConfigToggled);
+    connect(ui->btnMoveCamLeft, &NavButton::clicked, [this]() { navButtonToggled(ui->btnMoveCamLeft, ui->moveLeftCamWidget); });
+    connect(ui->btnMoveCamRight, &NavButton::clicked, [this]() { navButtonToggled(ui->btnMoveCamRight, ui->moveRightCamWidget); });
+    // Real Position Map layout updates
+    connect(m_mapPositionCameras, &RealPositionCameras::s_openMap, this, &VisualisationView::mapPositionCamerasOpenMap);
+    connect(m_mapPositionCameras, &RealPositionCameras::s_closeMap, this, &VisualisationView::mapPositionCamerasCloseMap);
+
+    auto *vm = getViewModel<VisualisationViewModel>();
+
+    if (vm)
     {
+        // Camera / Vision pipeline updates
         connect(
             vm,
             &Kub3::UI::ViewModels::BaseVisionViewModel::s_frameReady,
@@ -110,25 +127,23 @@ void VisualisationView::setupConnections()
                 else if (cameraId == UPPER_RIGHT_CAMERA)
                     ui->visioRight->ps_onFrameUpdated(frame);
             });
-    }
 
-    // Toggle event connections
-    connect(ui->configCamLeftCheck, &QCheckBox::toggled, this, &VisualisationView::leftCamConfigToggled);
-    connect(ui->configCamRightCheck, &QCheckBox::toggled, this, &VisualisationView::rightCamConfigToggled);
-    connect(ui->moveCamLeft, &NavButton::clicked, [this]() { navButtonToggled(ui->moveCamLeft, ui->moveLeftCamWidget); });
-    connect(ui->moveCamRight, &NavButton::clicked, [this]() { navButtonToggled(ui->moveCamRight, ui->moveRightCamWidget); });
-    // Real Position Map layout updates
-    connect(m_mapPositionCameras, &RealPositionCameras::s_openMap, this, &VisualisationView::mapPositionCamerasOpenMap);
-    connect(m_mapPositionCameras, &RealPositionCameras::s_closeMap, this, &VisualisationView::mapPositionCamerasCloseMap);
-
-    auto *vm = getViewModel<VisualisationViewModel>();
-
-    if (vm)
-    {
+        // Indicators/Data related
         connect(vm, &VisualisationViewModel::s_maskingDistanceUpdate, this, &VisualisationView::onMaskingDistanceUpdate);
         connect(vm, &VisualisationViewModel::s_cameraPositionUpdate, this, &VisualisationView::onCameraPositionUpdate);
         connect(vm, &VisualisationViewModel::s_vacuumUpdate, this, &VisualisationView::onVacuumUpdate);
         connect(vm, &VisualisationViewModel::s_compressedAirUpdate, this, &VisualisationView::onCompressedAirUpdate);
+        connect(vm, &VisualisationViewModel::s_pickedUpCoordinatesUpdated, this, &VisualisationView::onPickedUpCoordinatesUpdated);
+        connect(vm, &VisualisationViewModel::s_camerasFineModeUpdated, this, &VisualisationView::onCamerasFineModeUpdated);
+        connect(vm, &VisualisationViewModel::s_substrateFineModeUpdated, this, &VisualisationView::onSubstrateFineModeUpdated);
+
+        // Camera's buttons
+        connect(ui->btnPickUpLeft, &NavButton::clicked, [vm]() { vm->ui_onPickUpXYClicked(CameraId::LEFT); });
+        connect(ui->btnPickUpRight, &NavButton::clicked, [vm]() { vm->ui_onPickUpXYClicked(CameraId::RIGHT); });
+        connect(ui->btnGoToLeft, &NavButton::clicked, [vm]() { vm->ui_onGoToXYClicked(CameraId::LEFT); });
+        connect(ui->btnGoToRight, &NavButton::clicked, [vm]() { vm->ui_onGoToXYClicked(CameraId::RIGHT); });
+        connect(ui->btnSpeedCamLeft, &NavButton::clicked, [vm]() { vm->ui_onCamSpeedClicked(CameraId::LEFT); });
+        connect(ui->btnSpeedCamRight, &NavButton::clicked, [vm]() { vm->ui_onCamSpeedClicked(CameraId::RIGHT); });
     }
 }
 
@@ -272,25 +287,32 @@ void VisualisationView::mapPositionCamerasCloseMap()
 
 void VisualisationView::setNewNavButtonsConfigs()
 {
-    NavButtonConfig save("Save", ":/icons/save.svg", "S", std::bind(&VisualisationView::onSaveButtonClicked, this));
+    NavButtonConfig save(
+        "Save", ":/icons/save.svg", ID_BTN_SAVE, std::bind(&VisualisationView::onSaveButtonClicked, this));
     addNavButton("center", save);
 
-    NavButtonConfig load("Load", ":/icons/load.svg", "L", std::bind(&VisualisationView::onLoadButtonClicked, this));
+    NavButtonConfig load(
+        "Load", ":/icons/load.svg", ID_BTN_LOAD, std::bind(&VisualisationView::onLoadButtonClicked, this));
     addNavButton("center", load);
 
-    NavButtonConfig screenshot("Screenshot", ":/icons/screenshot.svg", "P", std::bind(&VisualisationView::onScreenshotButtonClicked, this));
+    NavButtonConfig screenshot(
+        "Screenshot", ":/icons/screenshot.svg", ID_BTN_SCREENSHOT, std::bind(&VisualisationView::onScreenshotButtonClicked, this));
     addNavButton("center", screenshot);
 
-    NavButtonConfig hardForceCont("Hard Force Cont.", QColor(BLUE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/hard-force-contact.svg", "F", [this]() { onHardForceContButtonClicked("Hard Force Cont."); });
+    NavButtonConfig hardForceCont(
+        "Hard Force Cont.", QColor(BLUE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/hard-force-contact.svg", ID_BTN_HARDCONTACT, [this]() { onHardForceContButtonClicked("Hard Force Cont."); });
     addNavButton("center", hardForceCont);
 
-    NavButtonConfig speedMotorSubst("Subst. Speed", QColor(BLUE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/speed-motor-subst.svg", "U", std::bind(&VisualisationView::onSpeedMotorSubstButtonClicked, this));
+    NavButtonConfig speedMotorSubst(
+        "Subst. Speed", QColor(BLUE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/speed-motor-subst.svg", ID_BTN_SUBSTRATE_SPEED, std::bind(&VisualisationView::onSpeedMotorSubstButtonClicked, this));
     addNavButton("center", speedMotorSubst);
 
-    NavButtonConfig switchVacumAir("Vacum - Air.", QColor(BLUE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/vac_air_switch.svg", "M", std::bind(&VisualisationView::onSwitchVacumAirButtonClicked, this));
+    NavButtonConfig switchVacumAir(
+        "Vacum - Air.", QColor(BLUE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/vac_air_switch.svg", ID_BTN_VAC_AIR_TOGGLE, std::bind(&VisualisationView::onSwitchVacumAirButtonClicked, this));
     addNavButton("center", switchVacumAir);
 
-    NavButtonConfig visualMark("Visual Mark", QColor(BLUE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/visual-mark.svg", "I", [this]() { onVisualMarkButtonClicked("Visual Mark"); });
+    NavButtonConfig visualMark(
+        "Visual Mark", QColor(BLUE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/visual-mark.svg", ID_BTN_VISUAL_MARK, [this]() { onVisualMarkButtonClicked("Visual Mark"); });
     addNavButton("center", visualMark);
 }
 
@@ -364,7 +386,16 @@ void VisualisationView::onHardForceContButtonClicked(const QString &buttonId)
     switchColorNavButton(buttonId, isHardForceContactFormVisible);
 }
 
-void VisualisationView::onSpeedMotorSubstButtonClicked() {}
+void VisualisationView::onSpeedMotorSubstButtonClicked()
+{
+    auto vm = getViewModel<VisualisationViewModel>();
+
+    if (vm)
+    {
+        vm->ui_substrateSpeedClicked();
+    }
+}
+
 void VisualisationView::onSwitchVacumAirButtonClicked() {}
 void VisualisationView::onAntiCollisionButtonClicked() {}
 
@@ -433,3 +464,36 @@ void VisualisationView::onVacuumUpdate(bool active)
 
 void VisualisationView::onCompressedAirUpdate(bool active)
 {}
+
+void VisualisationView::onPickedUpCoordinatesUpdated(CameraId camId, const coords_2d_t &coordinatesMm)
+{
+    if (camId == CameraId::LEFT)
+    {
+        ui->sbLeftCamXPos->setValue(coordinatesMm.x);
+        ui->sbLeftCamYPos->setValue(coordinatesMm.y);
+    }
+    else if (camId == CameraId::RIGHT)
+    {
+        ui->sbRightCamXPos->setValue(coordinatesMm.x);
+        ui->sbRightCamYPos->setValue(coordinatesMm.y);
+    }
+}
+
+void VisualisationView::onCamerasFineModeUpdated(CameraId camId, bool fineModeActive)
+{
+    if (camId == CameraId::LEFT)
+    {
+        ui->btnSpeedCamLeft->switchColor(!fineModeActive);
+    }
+    else if (camId == CameraId::RIGHT)
+    {
+        ui->btnSpeedCamRight->switchColor(!fineModeActive);
+    }
+}
+
+void VisualisationView::onSubstrateFineModeUpdated(bool active)
+{
+    // Invert to get the "disabled" color representing the active state
+    // Will need a refactor
+    switchColorNavButton(ID_BTN_SUBSTRATE_SPEED, !active);
+}

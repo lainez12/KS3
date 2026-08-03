@@ -134,12 +134,12 @@ namespace Kub3::UI::Views
         }
     }
 
-    void ViewBase::switchColorNavButton(const QString &buttonId, bool enabled)
+    void ViewBase::switchColorNavButton(const QString &buttonId, bool active)
     {
         NavButtonConfig *button = m_buttonManager.getButton(buttonId);
         if (button)
         {
-            emit s_switchColorButton(buttonId, enabled);
+            emit s_switchColorButton(buttonId, active);
         }
     }
 
