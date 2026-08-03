@@ -15,3 +15,7 @@
 #define V_X_STAGE_CENTER_MM     "virtualXStageCenterMm"
 #define V_Y_STAGE_CENTER_MM     "virtualYStageCenterMm"
 #define V_THETA_STAGE_CENTER_MM "virtualThetaStageCenterMm"
+
+#define V_Z_LEFT_MASK_POSITION_MM  "zLeftMaskPositionMm"
+#define V_Z_RIGHT_MASK_POSITION_MM "zRightMaskPositionMm"
+#define V_Z_BACK_MASK_POSITION_MM  "zBackMaskPositionMm"

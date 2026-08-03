@@ -19,12 +19,13 @@ namespace Ui
     class VisualisationView;
 }
 
-namespace Kub3::UI::Views::ViewsAlignment
+namespace Kub3::UI::Views
 {
 
     class VisualisationView final : public AlignmentViewBase, public PadReceiverViewTrait
     {
-        using VisualisationViewModel = Kub3::UI::ViewModels::Alignment::VisualisationViewModel;
+        using CameraAxis             = ViewModels::Alignment::CameraAxis;
+        using VisualisationViewModel = ViewModels::Alignment::VisualisationViewModel;
 
         Q_OBJECT
 
@@ -43,6 +44,10 @@ namespace Kub3::UI::Views::ViewsAlignment
         void leftCamConfigToggled(bool checked);
         void rightCamConfigToggled(bool checked);
         void navButtonToggled(NavButton *button, QWidget *widget);
+        void onMaskingDistanceUpdate(double distMm);
+        void onCameraPositionUpdate(CameraId camId, CameraAxis axis, double value);
+        void onVacuumUpdate(bool active);
+        void onCompressedAirUpdate(bool active);
 
     private:
         // Setup routines splitting up the constructor
@@ -84,6 +89,6 @@ namespace Kub3::UI::Views::ViewsAlignment
 
 }
 
-using VisualisationView = Kub3::UI::Views::ViewsAlignment::VisualisationView;
+using VisualisationView = Kub3::UI::Views::VisualisationView;
 
 #endif

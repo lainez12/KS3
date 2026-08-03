@@ -1,4 +1,22 @@
+#include "HAL/MachineStatus/virtual_labels.h"
+#include <Common/Enums.h>
+#include <HAL/MachineStatus/sensors_labels.h>
+#include <HAL/MachineStatus/utils.h>
 #include <ViewModels/Alignment/VisualisationViewModel.h>
+#include <utils.h>
+
+namespace
+{
+    constexpr uint32_t leftCamXEncHash       = Kub3::Utils::ConstexprStringHash::hash(LEFT_CAMERA_X_ENCODER_MM);
+    constexpr uint32_t leftCamYEncHash       = Kub3::Utils::ConstexprStringHash::hash(LEFT_CAMERA_Y_ENCODER_MM);
+    constexpr uint32_t rightCamXEncHash      = Kub3::Utils::ConstexprStringHash::hash(RIGHT_CAMERA_X_ENCODER_MM);
+    constexpr uint32_t rightCamYEncHash      = Kub3::Utils::ConstexprStringHash::hash(RIGHT_CAMERA_Y_ENCODER_MM);
+    constexpr uint32_t zLeftEncHash          = Kub3::Utils::ConstexprStringHash::hash(Z_LEFT_ENCODER_MM);
+    constexpr uint32_t zRightEncHash         = Kub3::Utils::ConstexprStringHash::hash(Z_RIGHT_ENCODER_MM);
+    constexpr uint32_t zBackEncHash          = Kub3::Utils::ConstexprStringHash::hash(Z_BACK_ENCODER_MM);
+    constexpr uint32_t waferVacuumActiveHash = Kub3::Utils::ConstexprStringHash::hash(WAFER_VACUUM_ACTIVE);
+    constexpr uint32_t waferAirActiveHash    = Kub3::Utils::ConstexprStringHash::hash(WAFER_COMPRESSED_AIR_ACTIVE);
+}
 
 namespace Kub3::UI::ViewModels::Alignment
 {
@@ -9,8 +27,18 @@ namespace Kub3::UI::ViewModels::Alignment
     {
     }
 
-    VisualisationViewModel::~VisualisationViewModel()
+    void VisualisationViewModel::loadConnections(void)
     {
+        BaseViewModel::loadConnections();
+
+        // Update values on view displayed
+        ps_handleSensorValueChanged(Z_LEFT_ENCODER_MM);
+        ps_handleSensorValueChanged(LEFT_CAMERA_X_ENCODER_MM);
+        ps_handleSensorValueChanged(LEFT_CAMERA_Y_ENCODER_MM);
+        ps_handleSensorValueChanged(RIGHT_CAMERA_X_ENCODER_MM);
+        ps_handleSensorValueChanged(RIGHT_CAMERA_Y_ENCODER_MM);
+        ps_handleSensorValueChanged(WAFER_VACUUM_ACTIVE);
+        ps_handleSensorValueChanged(WAFER_COMPRESSED_AIR_ACTIVE);
     }
 
     void VisualisationViewModel::uiRequestCameraMovement(CameraId camId, MovementKind kind, CameraDirection dir)
@@ -48,6 +76,67 @@ namespace Kub3::UI::ViewModels::Alignment
 
         // Send request for movement
         emit cmdRunAlignmentStageMovement(stageId, kind, dir);
+    }
+
+    void VisualisationViewModel::ps_handleSensorValueChanged(const std::string &key)
+    {
+        const auto sendCamPosUpdate = [&](CameraId id, CameraAxis axis) {
+            if (auto valOpt = HAL::MS::tryRead<double>(m_repo, key); valOpt.has_value())
+            {
+                emit s_cameraPositionUpdate(id, axis, valOpt.value());
+            }
+        };
+
+        const auto emitBoolUpdateSignal = [&](void (VisualisationViewModel::*_signal)(bool)) {
+            if (auto valOpt = HAL::MS::tryRead<bool>(m_repo, key); valOpt.has_value())
+            {
+                emit(this->*_signal)(valOpt.value());
+            }
+        };
+
+        const auto onZPositionUpdate = [&](double &valueHolder, const char *refValKey, bool update = false) {
+            if (!refValKey)
+                return;
+
+            auto refValOpt = HAL::MS::tryRead<double>(m_repo, refValKey);
+            auto valOpt    = HAL::MS::tryRead<double>(m_repo, key);
+
+            if (!refValOpt.has_value() || !valOpt.has_value())
+                return;
+
+            valueHolder = valOpt.value();
+            if (update)
+            {
+                emit s_maskingDistanceUpdate(refValOpt.value() - valueHolder);
+            }
+        };
+
+        switch (Utils::ConstexprStringHash::hash(key))
+        {
+        case leftCamXEncHash:
+            sendCamPosUpdate(CameraId::LEFT, CameraAxis::X);
+            break;
+        case leftCamYEncHash:
+            sendCamPosUpdate(CameraId::LEFT, CameraAxis::Y);
+            break;
+        case rightCamXEncHash:
+            sendCamPosUpdate(CameraId::RIGHT, CameraAxis::X);
+            break;
+        case rightCamYEncHash:
+            sendCamPosUpdate(CameraId::RIGHT, CameraAxis::Y);
+            break;
+        case zLeftEncHash:
+            onZPositionUpdate(m_zPositionsMm[0], V_Z_LEFT_MASK_POSITION_MM, true);
+            break;
+        case waferVacuumActiveHash:
+            emitBoolUpdateSignal(&VisualisationViewModel::s_vacuumUpdate);
+            break;
+        case waferAirActiveHash:
+            emitBoolUpdateSignal(&VisualisationViewModel::s_compressedAirUpdate);
+            break;
+        default:
+            break;
+        }
     }
 
 } // namespace Kub3::UI::ViewModels::Alignment

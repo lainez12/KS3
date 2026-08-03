@@ -4,6 +4,7 @@
 #include <Views/Components/Colors.h>
 #include <Views/Components/RealPositionCameras.h>
 
+#include "Common/Enums.h"
 #include "ui_VisualisationView.h"
 
 #define ORANGE_BTN_SIZE 90
@@ -114,13 +115,21 @@ void VisualisationView::setupConnections()
     // Toggle event connections
     connect(ui->configCamLeftCheck, &QCheckBox::toggled, this, &VisualisationView::leftCamConfigToggled);
     connect(ui->configCamRightCheck, &QCheckBox::toggled, this, &VisualisationView::rightCamConfigToggled);
-
     connect(ui->moveCamLeft, &NavButton::clicked, [this]() { navButtonToggled(ui->moveCamLeft, ui->moveLeftCamWidget); });
     connect(ui->moveCamRight, &NavButton::clicked, [this]() { navButtonToggled(ui->moveCamRight, ui->moveRightCamWidget); });
-
     // Real Position Map layout updates
     connect(m_mapPositionCameras, &RealPositionCameras::s_openMap, this, &VisualisationView::mapPositionCamerasOpenMap);
     connect(m_mapPositionCameras, &RealPositionCameras::s_closeMap, this, &VisualisationView::mapPositionCamerasCloseMap);
+
+    auto *vm = getViewModel<VisualisationViewModel>();
+
+    if (vm)
+    {
+        connect(vm, &VisualisationViewModel::s_maskingDistanceUpdate, this, &VisualisationView::onMaskingDistanceUpdate);
+        connect(vm, &VisualisationViewModel::s_cameraPositionUpdate, this, &VisualisationView::onCameraPositionUpdate);
+        connect(vm, &VisualisationViewModel::s_vacuumUpdate, this, &VisualisationView::onVacuumUpdate);
+        connect(vm, &VisualisationViewModel::s_compressedAirUpdate, this, &VisualisationView::onCompressedAirUpdate);
+    }
 }
 
 void VisualisationView::setupBindings()
@@ -389,3 +398,38 @@ void VisualisationView::navButtonToggled(NavButton *button, QWidget *widget)
         widget->setVisible(!widget->isVisible());
     }
 }
+
+void VisualisationView::onMaskingDistanceUpdate(double distanceMm)
+{
+    const double distanceUm = distanceMm * 1000.0;
+
+    ui->lblMaskingDistValue->setText(
+        QString("%1 µm")
+            .arg(QString::number(distanceUm, 'f', 1)));
+}
+
+void VisualisationView::onCameraPositionUpdate(CameraId camId, CameraAxis axis, double value)
+{
+    const auto formattedPos = QString::number(value, 'f', 3);
+
+    if (camId == CameraId::LEFT)
+    {
+        if (axis == CameraAxis::X)
+            ui->lblLeftCamXPos->setText(QString("X: %1 mm").arg(formattedPos));
+        else if (axis == CameraAxis::Y)
+            ui->lblLeftCamYPos->setText(QString("Y: %1 mm").arg(formattedPos));
+    }
+    else if (camId == CameraId::RIGHT)
+    {
+        if (axis == CameraAxis::X)
+            ui->lblRightCamXPos->setText(QString("X: %1 mm").arg(formattedPos));
+        else if (axis == CameraAxis::Y)
+            ui->lblRightCamYPos->setText(QString("Y: %1 mm").arg(formattedPos));
+    }
+}
+
+void VisualisationView::onVacuumUpdate(bool active)
+{}
+
+void VisualisationView::onCompressedAirUpdate(bool active)
+{}

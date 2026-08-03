@@ -47,9 +47,9 @@ namespace Kub3::MFSM
 
         static const std::vector<BootDependency> requiredDependencies = {
 #if defined(KUB_MODEL_8)
-            {MCU_ARDUINO1_ID, MCU_ARDUINO1_READY},
-            {MCU_ARDUINO2_ID, MCU_ARDUINO2_READY},
-            {MCU_ARDUINO3_ID, MCU_ARDUINO3_READY}
+        // {MCU_ARDUINO1_ID, MCU_ARDUINO1_READY},
+        // {MCU_ARDUINO2_ID, MCU_ARDUINO2_READY},
+        // {MCU_ARDUINO3_ID, MCU_ARDUINO3_READY}
 #endif
         };
 
@@ -192,7 +192,7 @@ namespace Kub3::MFSM
         {
             // C++20 SFINAE/Concepts-lite magic:
             // If this particular sub-state struct has an 'expectedSuccess' posture payload,
-            // merge it into the global SystemPosture before signaling success!
+            // merge it into the global SystemPosture before signaling success
             if constexpr (requires { state.expectedSuccess; })
             {
                 if (auto *opState = std::get_if<StateOperational>(&m_state))

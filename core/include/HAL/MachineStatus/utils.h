@@ -9,5 +9,10 @@ namespace Kub3::HAL::MS
     int32_t readInt32(const Shared<Kub3::HAL::MS::IMachineStatusRepo> &repo, const std::string &key);
     uint32_t readUInt32(const Shared<Kub3::HAL::MS::IMachineStatusRepo> &repo, const std::string &key);
     uint16_t readUInt16(const Shared<Kub3::HAL::MS::IMachineStatusRepo> &repo, const std::string &key);
-    Optional<double> tryReadDouble(const Shared<Kub3::HAL::MS::IMachineStatusRepo> &repo, const std::string &key);
+
+    template <typename T>
+    Optional<T> tryRead(const Shared<Kub3::HAL::MS::IMachineStatusRepo> &repo, const std::string &key)
+    {
+        return repo->getValue<T>(key);
+    }
 }

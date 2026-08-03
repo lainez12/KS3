@@ -12,7 +12,7 @@ namespace Ui
     class LoadParametersView;
 } // namespace UI
 
-namespace Kub3::UI::Views::ViewsAlignment
+namespace Kub3::UI::Views
 {
     class LoadParametersView final : public AlignmentViewBase
     {
@@ -38,6 +38,6 @@ namespace Kub3::UI::Views::ViewsAlignment
 
 } // namespace Kub3::UI::Views
 
-using LoadParametersView = Kub3::UI::Views::ViewsAlignment::LoadParametersView;
+using LoadParametersView = Kub3::UI::Views::LoadParametersView;
 
 #endif

@@ -77,17 +77,17 @@ namespace Kub3::HAL
 #if defined(KUB_MODEL_8)
         // Arduino1 subsystem
         void setupArduino1Subsystem(const Config::hardware_config_t &config);
-        void createArduino1Sensors(Com::PacketRouter *router);
+        void createArduino1Sensors(const Kub3::Config::hardware_config_t &config, Com::PacketRouter *router);
         void createArduino1Actuators(const Config::hardware_config_t &config, const std::shared_ptr<MCUDriver> &driver, Com::PacketRouter *router);
 
         // Arduino2 subsystem
         void setupArduino2Subsystem(const Config::hardware_config_t &config);
-        void createArduino2Sensors(Com::PacketRouter *router);
+        void createArduino2Sensors(const Kub3::Config::hardware_config_t &config, Com::PacketRouter *router);
         void createArduino2Actuators(const Config::hardware_config_t &config, const std::shared_ptr<MCUDriver> &driver, Com::PacketRouter *router);
 
         // Arduino3 subsystem
         void setupArduino3Subsystem(const Config::hardware_config_t &config);
-        void createArduino3Sensors(Com::PacketRouter *router);
+        void createArduino3Sensors(const Kub3::Config::hardware_config_t &config, Com::PacketRouter *router);
         void createArduino3Actuators(const Config::hardware_config_t &config, const std::shared_ptr<MCUDriver> &driver, Com::PacketRouter *router);
 
         // Cameras subsystem
@@ -95,6 +95,7 @@ namespace Kub3::HAL
 #endif // defined(KUB_MODEL_8)
 
         void registerSensor(Com::PacketRouter *router, std::string &&route, Shared<Kub3::HAL::Sensors::ISensor> sensor);
+
         Shared<Act::StepperMotor> createStepperMotor(
             const Config::hardware_config_t &config,
             const QString &motorId,
