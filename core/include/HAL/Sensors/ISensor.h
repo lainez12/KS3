@@ -2,7 +2,7 @@
 
 #include <QObject>
 
-#include "HAL/MachineStatus/IMachineStatusRepo.h"
+#include <HAL/MachineStatus/IMachineStatusRepo.h>
 
 namespace Kub3::HAL::Sensors
 {
@@ -11,7 +11,8 @@ namespace Kub3::HAL::Sensors
     {
         Q_OBJECT
     public:
-        explicit ISensor(QObject *parent = nullptr) : QObject(parent) {};
+        explicit ISensor(QObject *parent = nullptr) :
+            QObject(parent){};
         virtual ~ISensor() = default;
 
         // Entry point for packet routing

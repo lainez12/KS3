@@ -1,6 +1,6 @@
 #include <QDebug>
 
-#include "HAL/MachineStatus/utils.h"
+#include <HAL/MachineStatus/utils.h>
 
 namespace Kub3::HAL::MS
 {
@@ -55,11 +55,6 @@ namespace Kub3::HAL::MS
         }
 
         return optVal.value();
-    }
-
-    Optional<double> tryReadDouble(const Shared<Kub3::HAL::MS::IMachineStatusRepo> &repo, const std::string &key)
-    {
-        return repo->getValue<double>(key);
     }
 
 }

@@ -1,13 +1,13 @@
 #pragma once
 
-#include "HAL/MachineStatus/IMachineStatusRepo.h"
-#include "ISensor.h"
+#include <HAL/MachineStatus/IMachineStatusRepo.h>
+#include <HAL/Sensors/ISensor.h>
 
 namespace Kub3::HAL::Sensors
 {
 
     template <typename T>
-    class Sensor final : public ISensor
+    class Sensor : public ISensor
     {
     public:
         using Mapper = std::function<T(const QByteArray &)>;
@@ -34,17 +34,15 @@ namespace Kub3::HAL::Sensors
 
             T value = m_mapper(data);
 
-            // if (m_key == FORCE_BACK_ADC || m_key == FORCE_LEFT_ADC || m_key == FORCE_RIGHT_ADC)
-            // {
-            //     qInfo() << m_key << "force with val:" << value;
-            // }
             m_repo->setValue<T>(m_key, value);
         }
 
-    private:
-        const std::string m_key;
+    protected:
         Mapper m_mapper;
         Shared<MS::IMachineStatusRepo> m_repo;
+
+    private:
+        const std::string m_key;
     };
 
 }
