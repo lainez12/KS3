@@ -13,6 +13,9 @@ namespace Kub3::UI::Views
         explicit AlignmentViewBase(Unique<ViewModels::BaseViewModel> viewModel, QWidget *parent = nullptr);
         virtual ~AlignmentViewBase() = default;
 
+    public:
+        void showEvent(QShowEvent *event) override;
+
     private:
         void configTitleBar() override;
 

@@ -1,7 +1,9 @@
 #include <QString>
 
+#include <QDebug>
 #include <Views/Alignment/SaveParametersView.h>
 #include <Views/Components/Colors.h>
+#include <Views/Components/DoubleClickButton.h>
 
 #include "ui_SaveParametersView.h"
 
@@ -18,6 +20,9 @@ SaveParametersView::SaveParametersView(Unique<SaveParametersViewModel> viewModel
     m_keyboard.setupKeyboardConnections(this);
     setDefaultTitleBar("Exposure settings");
     setNewNavButtonsConfigs();
+
+    QVBoxLayout *layout = new QVBoxLayout(ui->parametersListWidget);
+    ui->parametersListWidget->setLayout(layout);
 }
 
 SaveParametersView::~SaveParametersView()
@@ -28,6 +33,17 @@ SaveParametersView::~SaveParametersView()
 void SaveParametersView::resizeEvent(QResizeEvent *ev)
 {
     QWidget::resizeEvent(ev);
+}
+
+void SaveParametersView::showEvent(QShowEvent *event)
+{
+    ui->lineEdit->setFocus();
+    if (isAParameterSavedInThisSession())
+    {
+        populateViewWithCurrentParameter();
+        setAParameterSavedInThisSession(false);
+    }
+    AlignmentViewBase::showEvent(event);
 }
 
 void SaveParametersView::setNewNavButtonsConfigs()
@@ -47,4 +63,48 @@ void SaveParametersView::onBackButtonClicked()
 
 void SaveParametersView::onValidateButtonClicked()
 {
+}
+
+void SaveParametersView::setAParameterSavedInThisSession(bool saved)
+{
+    m_parameterSaved = saved;
+}
+
+bool SaveParametersView::isAParameterSavedInThisSession() const
+{
+    return m_parameterSaved;
+}
+
+void SaveParametersView::populateViewWithCurrentParameter()
+{
+    auto vm = getViewModel<SaveParametersViewModel>();
+
+    if (!vm)
+    {
+        return;
+    }
+
+    auto res = vm->getAllNamesSavedParameters();
+    if (res.is_err())
+    {
+        qWarning() << "Failed to load parameters:" << res.unwrap_err();
+        return;
+    }
+
+    const auto &parametersArray = *res;
+    clearWidget(ui->parametersListWidget);
+
+    for (const QString &value : parametersArray)
+    {
+        DoubleClickButton *presetButton = new DoubleClickButton(value);
+        m_presetsButton.insert(value, presetButton);
+        qDebug() << "Populating view with current parameter";
+        presetButton->setFixedHeight(50);
+        presetButton->setProperty("class", "button-blue");
+        ui->parametersListWidget->layout()->addWidget(presetButton);
+        connect(presetButton, &DoubleClickButton::doubleClicked, this, [this, value]() {
+            ui->lineEdit->setText(value);
+            ui->lineEdit->setFocus();
+        });
+    }
 }

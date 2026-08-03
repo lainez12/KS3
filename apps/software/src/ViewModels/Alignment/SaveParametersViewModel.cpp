@@ -15,13 +15,20 @@ namespace Kub3::UI::ViewModels::Alignment
     {
     }
 
-    Result<Unit, QString> SaveParametersViewModel::saveParameters(const QJsonObject &parameter, bool replaceExisting)
+    void SaveParametersViewModel::ps_saveParameters(const Persistence::AlignmentParameter &parameter)
     {
-        if (!parameter.contains(QStringLiteral("name")))
-            return Err(QStringLiteral("The parameter JSON object is missing the 'name' field."));
+        m_currentParameter = parameter;
+    }
 
-        const QString parameterName = parameter.value(QStringLiteral("name")).toString().trimmed();
-        if (parameterName.isEmpty())
+    Result<Unit, QString> SaveParametersViewModel::ui_userRequestSaveParameters(const QString &name, bool replaceExisting)
+    {
+        m_currentParameter.name = name;
+        return saveParameters(m_currentParameter, replaceExisting);
+    }
+
+    Result<Unit, QString> SaveParametersViewModel::saveParameters(const Persistence::AlignmentParameter &parameter, bool replaceExisting)
+    {
+        if (parameter.name.trimmed().isEmpty())
             return Err(QStringLiteral("The parameter name cannot be empty."));
 
         const QString path = Persistence::storagePath();
@@ -35,17 +42,39 @@ namespace Kub3::UI::ViewModels::Alignment
             return Err(loadRes.unwrap_err());
 
         QJsonArray parametersArray = loadRes.unwrap();
-        const bool parameterExists  = Persistence::parameterExistsInFile(parametersArray, parameterName);
+        const bool parameterExists  = Persistence::parameterExistsInFile(parametersArray, parameter.name);
 
         if (parameterExists && !replaceExisting)
             return Err(QStringLiteral("A parameter set with the same name already exists. Please choose a different name or enable replacement."));
 
         if (!parameterExists)
-            parametersArray.append(parameter);
+            parametersArray.append(Persistence::parameterToJson(parameter));
         else
-            Persistence::replaceExistingParameter(parametersArray, parameter);
+            Persistence::replaceExistingParameter(parametersArray, Persistence::parameterToJson(parameter));
 
         return Persistence::saveParametersToFile(path, parametersArray);
+    }
+
+    Result<QList<QString>, QString> SaveParametersViewModel::getAllNamesSavedParameters()
+    {
+        auto loadRes = Persistence::loadParametersFromFile(Persistence::storagePath());
+        if (loadRes.is_err())
+            return Err(loadRes.unwrap_err());
+
+        QList<QString> names;
+        for (const QJsonValue &value : loadRes.unwrap())
+        {
+            if (!value.isObject())
+                continue;
+
+            auto parameterRes = Persistence::jsonToParameter(value.toObject());
+            if (parameterRes.is_err())
+                continue;
+
+            names.append(parameterRes.unwrap().name);
+        }
+
+        return Ok(names);
     }
 
     Result<QJsonArray, QString> SaveParametersViewModel::getAllParameters()
