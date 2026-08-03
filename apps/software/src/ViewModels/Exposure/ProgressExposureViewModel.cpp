@@ -1,7 +1,6 @@
 #include <HAL/MachineStatus/sensors_labels.h>
 #include <HAL/MachineStatus/utils.h>
 #include <ViewModels/Exposure/ProgressExposureViewModel.h>
-#include <optional>
 
 namespace Kub3::UI::ViewModels::Exposure
 {
@@ -40,8 +39,8 @@ namespace Kub3::UI::ViewModels::Exposure
 
     double ProgressExposureViewModel::getTemperature() const
     {
-        double tempInt = HAL::MS::tryReadDouble(m_repo, INTERNAL_TEMPERATURE).value_or(0.0);
-        double tempExt = HAL::MS::tryReadDouble(m_repo, EXTERNAL_TEMPERATURE).value_or(0.0);
+        double tempInt = HAL::MS::tryRead<double>(m_repo, INTERNAL_TEMPERATURE).value_or(0.0);
+        double tempExt = HAL::MS::tryRead<double>(m_repo, EXTERNAL_TEMPERATURE).value_or(0.0);
         return (tempInt + tempExt) / 2.0; // Average of internal and external temperatures??
     }
 
@@ -55,9 +54,9 @@ namespace Kub3::UI::ViewModels::Exposure
             uint8_t centerPower = m_currentPreset.continuous.power * 0.5;
             uint8_t crownPower  = m_currentPreset.continuous.power * 0.5;
             payload             = HAL::Act::ContinuousExposureParams{
-                .durationMs     = duration,
-                .centerPowerPct = centerPower,
-                .crownPowerPct  = crownPower};
+                            .durationMs     = duration,
+                            .centerPowerPct = centerPower,
+                            .crownPowerPct  = crownPower};
         }
         else if (m_currentPreset.mode == ExposureMode::Flashing)
         {
@@ -66,11 +65,11 @@ namespace Kub3::UI::ViewModels::Exposure
             uint8_t centerPower = m_currentPreset.flashing.power * 0.5; // TODO
             uint8_t crownPower  = m_currentPreset.flashing.power * 0.5; // TODO
             payload             = HAL::Act::FlashingExposureParams{
-                .cycles         = m_currentPreset.flashing.numberOfCycles,
-                .durationMs     = duration,
-                .pauseTimeMs    = pauseTime,
-                .centerPowerPct = centerPower,
-                .crownPowerPct  = crownPower};
+                            .cycles         = m_currentPreset.flashing.numberOfCycles,
+                            .durationMs     = duration,
+                            .pauseTimeMs    = pauseTime,
+                            .centerPowerPct = centerPower,
+                            .crownPowerPct  = crownPower};
         }
         else
         {

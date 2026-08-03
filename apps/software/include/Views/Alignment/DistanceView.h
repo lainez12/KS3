@@ -13,7 +13,7 @@ namespace Ui
     class DistanceView;
 } // namespace UI
 
-namespace Kub3::UI::Views::ViewsAlignment
+namespace Kub3::UI::Views
 {
     class DistanceView final : public AlignmentViewBase
     {
@@ -37,6 +37,6 @@ namespace Kub3::UI::Views::ViewsAlignment
 
 } // namespace Kub3::UI::Views
 
-using DistanceView = Kub3::UI::Views::ViewsAlignment::DistanceView;
+using DistanceView = Kub3::UI::Views::DistanceView;
 
 #endif

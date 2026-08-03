@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <optional>
+#include <unordered_map>
 #include <utility>
 
 #define TODO(msg) throw msg
@@ -82,6 +83,19 @@ namespace Kub3::Utils
     // --- Constexpr O(1) hash array
     // --------------------------------
 
+    struct ConstexprStringHash {
+        // Compile-time FNV-1a hash function
+        static constexpr uint32_t hash(std::string_view s)
+        {
+            uint32_t h = 2166136261u;
+            for (char c : s)
+            {
+                h = (h ^ static_cast<uint32_t>(c)) * 16777619u;
+            }
+            return h;
+        }
+    };
+
     // A compile-time hash map for const char* / std::string_view
     template <size_t N, size_t Capacity = N * 2> // 50% load factor to minimize collisions
     struct ConstexprHashMap {
@@ -93,23 +107,12 @@ namespace Kub3::Utils
 
         std::array<Entry, Capacity> table{};
 
-        // Compile-time FNV-1a hash function
-        static constexpr uint32_t hash(std::string_view s)
-        {
-            uint32_t h = 2166136261u;
-            for (char c : s)
-            {
-                h = (h ^ static_cast<uint32_t>(c)) * 16777619u;
-            }
-            return h;
-        }
-
         // Constructor builds the hash table at compile time
         constexpr ConstexprHashMap(const std::pair<std::string_view, std::string_view> (&init)[N])
         {
             for (const auto &kv : init)
             {
-                uint32_t h = hash(kv.first) % Capacity;
+                uint32_t h = ConstexprStringHash::hash(kv.first) % Capacity;
 
                 while (table[h].is_valid)
                 {
@@ -122,7 +125,7 @@ namespace Kub3::Utils
         // O(1) lookup
         constexpr std::optional<std::string_view> get(std::string_view key) const
         {
-            uint32_t h     = hash(key) % Capacity;
+            uint32_t h     = ConstexprStringHash::hash(key) % Capacity;
             uint32_t start = h;
 
             while (table[h].is_valid)
@@ -152,6 +155,9 @@ using Optional = std::optional<T>;
 
 template <typename K, typename V>
 using Pair = std::pair<K, V>;
+
+template <typename K, typename V>
+using UMap = std::unordered_map<K, V>;
 
 // ---------------------------------------
 // --- C++20 OVERLOADED VISITOR HELPER

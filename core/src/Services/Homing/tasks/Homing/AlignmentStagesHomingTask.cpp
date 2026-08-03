@@ -60,7 +60,7 @@ namespace Kub3::Services
 
     double AlignmentStagesHomingTask::readCenterPosition(const stage_motor_bundle_t &bundle, const char *label)
     {
-        if (auto centerOpt = HAL::MS::tryReadDouble(m_repo, label))
+        if (auto centerOpt = HAL::MS::tryRead<double>(m_repo, label))
         {
             return *centerOpt;
         }

@@ -1,12 +1,15 @@
-#include "HAL/Actuators/Motors/DirectCurrentMotor.h"
 #include <QCoreApplication>
 #include <QDebug>
 #include <QRect>
+#include <memory>
 
 #include <Algorithms/Kinematic/IKinematicGenerator.h>
+#include <Config/hardware.h>
+#include <Config/kinematics.h>
 #include <HAL/Actuators/Focal/Focal.h>
 #include <HAL/Actuators/Lights/CameraLightingLed.h>
 #include <HAL/Actuators/Lights/UVExposureHead.h>
+#include <HAL/Actuators/Motors/DirectCurrentMotor.h>
 #include <HAL/Actuators/Switches/LogicSwitch.h>
 #include <HAL/Actuators/Valves/SolenoidValve.h>
 #include <HAL/Com/LengthBasedParser.h>
@@ -16,9 +19,9 @@
 #include <HAL/MachineStatus/actuators_labels.h>
 #include <HAL/MachineStatus/sensors_labels.h>
 #include <HAL/MachineStatus/utils.h>
+#include <HAL/Sensors/KinematicEncoderSensor.h>
 #include <HAL/Sensors/Sensor.h>
 #include <HAL/Vision/Hikrobot/HikrobotCamera.h>
-#include <memory>
 
 using namespace std::string_literals;
 
@@ -42,6 +45,8 @@ static int32_t encoderValueParser(const QByteArray &d);
 static uint16_t fansVoltageParser(const QByteArray &d);
 static uint32_t ledLineVoltageParser(const QByteArray &d);
 static bool physicalButtonParser(const QByteArray &d);
+// Helpers
+static double getPositionMotorEncoderConversionFactor(const QString &motorId, const Kub3::Config::hardware_config_t &config);
 
 namespace Kub3::HAL
 {
@@ -257,7 +262,7 @@ namespace Kub3::HAL
         m_sensors.push_back(std::make_shared<HAL::Sensors::Sensor<bool>>(m_repo, MCU_ARDUINO1_READY, false, nullptr));
 
         // Instanciate sensors and actuators software representations
-        this->createArduino1Sensors(router.get());
+        this->createArduino1Sensors(config, router.get());
         this->createArduino1Actuators(config, arduino1Driver, router.get());
 
         // Inject logger
@@ -287,9 +292,11 @@ namespace Kub3::HAL
         };
     }
 
-    void HardwareManager::createArduino1Sensors(Com::PacketRouter *router)
+    void HardwareManager::createArduino1Sensors(const Kub3::Config::hardware_config_t &config, Com::PacketRouter *router)
     {
         using namespace Kub3::HAL::Sensors;
+
+        const auto getEncConvFactor = &getPositionMotorEncoderConversionFactor;
 
         // ===========================================
         // UPWARD PIPELINE (Hardware --> Software)
@@ -312,13 +319,20 @@ namespace Kub3::HAL
         auto thetaStageClockwiseLimit     = std::make_shared<Sensor<bool>>(m_repo, THETA_STAGE_CLOCKWISE_LIMIT, false, &limitSwitchParser);
         auto thetaStageAntiClockwiseLimit = std::make_shared<Sensor<bool>>(m_repo, THETA_STAGE_ANTI_CLOCKWISE_LIMIT, false, &limitSwitchParser);
         // --- Encoders
-        auto leftCameraXEncoder  = std::make_shared<Sensor<int32_t>>(m_repo, LEFT_CAMERA_X_ENCODER, static_cast<int32_t>(0), &encoderValueParser);
-        auto leftCameraYEncoder  = std::make_shared<Sensor<int32_t>>(m_repo, LEFT_CAMERA_Y_ENCODER, static_cast<int32_t>(0), &encoderValueParser);
-        auto rightCameraXEncoder = std::make_shared<Sensor<int32_t>>(m_repo, RIGHT_CAMERA_X_ENCODER, static_cast<int32_t>(0), &encoderValueParser);
-        auto rightCameraYEncoder = std::make_shared<Sensor<int32_t>>(m_repo, RIGHT_CAMERA_Y_ENCODER, static_cast<int32_t>(0), &encoderValueParser);
-        auto xStageEncoder       = std::make_shared<Sensor<int32_t>>(m_repo, X_STAGE_ENCODER, static_cast<int32_t>(0), &encoderValueParser);
-        auto yStageEncoder       = std::make_shared<Sensor<int32_t>>(m_repo, Y_STAGE_ENCODER, static_cast<int32_t>(0), &encoderValueParser);
-        auto thetaStageEncoder   = std::make_shared<Sensor<int32_t>>(m_repo, THETA_STAGE_ENCODER, static_cast<int32_t>(0), &encoderValueParser);
+        auto leftCameraXEncoder = std::make_shared<KinematicEncoderSensor>(
+            m_repo, LEFT_CAMERA_X_ENCODER, LEFT_CAMERA_X_ENCODER_MM, &encoderValueParser, getEncConvFactor(LEFT_CAMERA_X_MOTOR, config));
+        auto leftCameraYEncoder = std::make_shared<KinematicEncoderSensor>(
+            m_repo, LEFT_CAMERA_Y_ENCODER, LEFT_CAMERA_Y_ENCODER_MM, &encoderValueParser, getEncConvFactor(LEFT_CAMERA_Y_MOTOR, config));
+        auto rightCameraXEncoder = std::make_shared<KinematicEncoderSensor>(
+            m_repo, RIGHT_CAMERA_X_ENCODER, RIGHT_CAMERA_X_ENCODER_MM, &encoderValueParser, getEncConvFactor(RIGHT_CAMERA_X_MOTOR, config));
+        auto rightCameraYEncoder = std::make_shared<KinematicEncoderSensor>(
+            m_repo, RIGHT_CAMERA_Y_ENCODER, RIGHT_CAMERA_Y_ENCODER_MM, &encoderValueParser, getEncConvFactor(RIGHT_CAMERA_Y_MOTOR, config));
+        auto xStageEncoder = std::make_shared<KinematicEncoderSensor>(
+            m_repo, X_STAGE_ENCODER, X_STAGE_ENCODER_MM, &encoderValueParser, getEncConvFactor(X_STAGE_MOTOR, config));
+        auto yStageEncoder = std::make_shared<KinematicEncoderSensor>(
+            m_repo, Y_STAGE_ENCODER, Y_STAGE_ENCODER_MM, &encoderValueParser, getEncConvFactor(Y_STAGE_MOTOR, config));
+        auto thetaStageEncoder = std::make_shared<KinematicEncoderSensor>(
+            m_repo, THETA_STAGE_ENCODER, THETA_STAGE_ENCODER_MM, &encoderValueParser, getEncConvFactor(THETA_STAGE_MOTOR, config));
 
         // Register sensors
         // --- Limit switches
@@ -417,7 +431,7 @@ namespace Kub3::HAL
         m_sensors.push_back(std::make_shared<HAL::Sensors::Sensor<bool>>(m_repo, MCU_ARDUINO2_READY, false, nullptr));
 
         // Instanciate sensors and actuators software representations
-        this->createArduino2Sensors(router.get());
+        this->createArduino2Sensors(config, router.get());
         this->createArduino2Actuators(config, arduino2Driver, router.get());
 
         // Inject logger
@@ -447,7 +461,7 @@ namespace Kub3::HAL
         };
     }
 
-    void HardwareManager::createArduino2Sensors(Com::PacketRouter *router)
+    void HardwareManager::createArduino2Sensors(const Kub3::Config::hardware_config_t &config, Com::PacketRouter *router)
     {
         using namespace Kub3::HAL::Sensors;
 
@@ -478,7 +492,7 @@ namespace Kub3::HAL
         auto internalTemperature = std::make_shared<Sensor<double>>(m_repo, INTERNAL_TEMPERATURE, -100.0, &temperatureParser);
         auto externalTemperature = std::make_shared<Sensor<double>>(m_repo, EXTERNAL_TEMPERATURE, -100.0, &temperatureParser);
         // --- Encoders
-        auto camerasDeckEncoder = std::make_shared<Sensor<int32_t>>(m_repo, DECK_MOTOR_ENCODER, static_cast<int32_t>(0), &encoderValueParser);
+        // auto camerasDeckEncoder = std::make_shared<Sensor<int32_t>>(m_repo, DECK_MOTOR_ENCODER, static_cast<int32_t>(0), &encoderValueParser);
         // --- Fans voltage
         auto fansVoltage = std::make_shared<Sensor<uint16_t>>(m_repo, FANS_VOLTAGE, static_cast<uint16_t>(0), &fansVoltageParser);
         // --- Leds voltage
@@ -573,7 +587,7 @@ namespace Kub3::HAL
         m_sensors.push_back(std::make_shared<HAL::Sensors::Sensor<bool>>(m_repo, MCU_ARDUINO3_READY, false, nullptr));
 
         // Instanciate sensors and actuators software representations
-        this->createArduino3Sensors(router.get());
+        this->createArduino3Sensors(config, router.get());
         this->createArduino3Actuators(config, arduino3Driver, router.get());
 
         // Inject logger
@@ -599,9 +613,11 @@ namespace Kub3::HAL
         };
     }
 
-    void HardwareManager::createArduino3Sensors(Com::PacketRouter *router)
+    void HardwareManager::createArduino3Sensors(const Kub3::Config::hardware_config_t &config, Com::PacketRouter *router)
     {
         using namespace Kub3::HAL::Sensors;
+
+        const auto getEncConvFactor = &getPositionMotorEncoderConversionFactor;
 
         // ===========================================
         // UPWARD PIPELINE (Hardware --> Software)
@@ -609,11 +625,16 @@ namespace Kub3::HAL
 
         // Create Sensors
         // --- Encoders
-        auto zLeftEncoder  = std::make_shared<Sensor<int32_t>>(m_repo, Z_LEFT_ENCODER, static_cast<int32_t>(0), &encoderValueParser);
-        auto zRightEncoder = std::make_shared<Sensor<int32_t>>(m_repo, Z_RIGHT_ENCODER, static_cast<int32_t>(0), &encoderValueParser);
-        auto zBackEncoder  = std::make_shared<Sensor<int32_t>>(m_repo, Z_BACK_ENCODER, static_cast<int32_t>(0), &encoderValueParser);
-        auto maskEncoder   = std::make_shared<Sensor<int32_t>>(m_repo, MASK_ENCODER, static_cast<int32_t>(0), &encoderValueParser);
-        auto waferEncoder  = std::make_shared<Sensor<int32_t>>(m_repo, WAFER_ENCODER, static_cast<int32_t>(0), &encoderValueParser);
+        auto zLeftEncoder = std::make_shared<KinematicEncoderSensor>(
+            m_repo, Z_LEFT_ENCODER, Z_LEFT_ENCODER_MM, &encoderValueParser, getEncConvFactor(Z_LEFT_MOTOR, config));
+        auto zRightEncoder = std::make_shared<KinematicEncoderSensor>(
+            m_repo, Z_RIGHT_ENCODER, Z_RIGHT_ENCODER_MM, &encoderValueParser, getEncConvFactor(Z_RIGHT_MOTOR, config));
+        auto zBackEncoder = std::make_shared<KinematicEncoderSensor>(
+            m_repo, Z_BACK_ENCODER, Z_BACK_ENCODER_MM, &encoderValueParser, getEncConvFactor(Z_BACK_MOTOR, config));
+        auto maskEncoder = std::make_shared<KinematicEncoderSensor>(
+            m_repo, MASK_ENCODER, MASK_ENCODER_MM, &encoderValueParser, getEncConvFactor(MASK_DRAWER_MOTOR, config));
+        auto waferEncoder = std::make_shared<KinematicEncoderSensor>(
+            m_repo, WAFER_ENCODER, WAFER_ENCODER_MM, &encoderValueParser, getEncConvFactor(WAFER_DRAWER_MOTOR, config));
         // --- Limit switches
         auto zLeftHighLimit  = std::make_shared<Sensor<bool>>(m_repo, Z_LEFT_HIGH_LIMIT, false, &limitSwitchParser);
         auto zLeftLowLimit   = std::make_shared<Sensor<bool>>(m_repo, Z_LEFT_LOW_LIMIT, false, &limitSwitchParser);
@@ -939,8 +960,8 @@ static double temperatureParser(const QByteArray &d)
     if (d.size() < 2) // Not enough data to read
         return INT16_MIN;
     // Big-endian reconstruction
-    int16_t vADC      = (static_cast<int16_t>(static_cast<uint8_t>(d[0])) << 8) |
-                        (static_cast<int16_t>(static_cast<uint8_t>(d[1])));
+    int16_t vADC = (static_cast<int16_t>(static_cast<uint8_t>(d[0])) << 8) |
+                   (static_cast<int16_t>(static_cast<uint8_t>(d[1])));
     double vPin       = (static_cast<double>(vADC) * 3.3) / 4095.0;
     double vOutSensor = vPin * 1.545454545454;
     double tempC      = (vOutSensor - 1.375) / 0.0225;
@@ -1012,3 +1033,17 @@ static bool physicalButtonParser(const QByteArray &d)
 {
     return true; // @note: Receiving message only when button was pressed
 }
+
+// Helpers
+
+static double getPositionMotorEncoderConversionFactor(const QString &motorId, const Kub3::Config::hardware_config_t &config)
+{
+    if (auto it = config.motors.find(motorId); it != config.motors.end())
+    {
+        if (auto *p = std::get_if<Kub3::Config::stepper_hw_properties_t>(&it->second.hwProperties))
+        {
+            return p->screwPitchMm / static_cast<double>(p->encoderTopsPerRev);
+        }
+    }
+    return 1.0;
+};

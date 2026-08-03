@@ -1,8 +1,9 @@
 // HAL
-#include "Services/Homing/IHomingService.h"
 #include <HAL/MachineStatus/actuators_labels.h>
 #include <HAL/MachineStatus/sensors_labels.h>
 #include <HAL/MachineStatus/utils.h>
+#include <Services/Homing/IHomingService.h>
+#include <utils.h>
 // Services & Tasks
 #include <Services/Homing/HomingService.h>
 #include <Services/Homing/tasks/ZMotorsReachLimitTask.h>
@@ -61,6 +62,7 @@ namespace Kub3::Services
     void HomingService::initialize(void)
     {
         this->clearTasks();
+
 
 #if defined(KUB_MODEL_8)
         // VISUALIZATION-UNRELATED TASKS LANE BUILD

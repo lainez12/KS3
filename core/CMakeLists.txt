@@ -181,6 +181,7 @@ qt_add_library(Kub3Core STATIC
     include/HAL/Com/MCULogger.h
     include/HAL/Sensors/ISensor.h
     include/HAL/Sensors/Sensor.h
+    include/HAL/Sensors/KinematicEncoderSensor.h
     include/HAL/Vision/ICamera.h
     include/HAL/Vision/identifiers.h
     include/HAL/Vision/Hikrobot/HikrobotCamera.h

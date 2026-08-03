@@ -88,7 +88,7 @@ namespace Kub3::UI::Views
         void removeNavButton(const QString &buttonId);
         void clearNavButtons();
         void setNavButtonEnabled(const QString &buttonId, bool enabled);
-        void switchColorNavButton(const QString &buttonId, bool enabled);
+        void switchColorNavButton(const QString &buttonId, bool active);
         void setNavButtonVisible(const QString &buttonId, bool visible);
         void setNavButtonText(const QString &buttonId, const QString &text);
         void setTitleBar(const TitleBarConfig &titleBar);

@@ -15,7 +15,7 @@ namespace Kub3::Services
 
     void StowageMoveMaskConvToUnconstrainedTask::start()
     {
-        if (auto targetPosMmOpt = HAL::MS::tryReadDouble(m_repo, V_MASK_CONV_UNCONSTRAINED_POS_MM))
+        if (auto targetPosMmOpt = HAL::MS::tryRead<double>(m_repo, V_MASK_CONV_UNCONSTRAINED_POS_MM))
         {
             postInfo("Moving mask conveyor to unconstrained position.");
             m_targetPosMm = targetPosMmOpt.value();

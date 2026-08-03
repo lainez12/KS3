@@ -259,7 +259,7 @@ namespace Kub3::Services
                                                  AdmittanceControlTask::Mode::Autoleveling,
                                                  m_contactProfile);
         // Save relative deltas of the reached planeity
-        this->enqueueTask<SaveCurrentPlanTask>(m_zMotors, m_horizontalPlanDeltas);
+        this->enqueueTask<SaveCurrentPlanTask>(m_repo, m_zMotors, m_horizontalPlanDeltas);
     }
 
     void ContactService::buildBasicContactLanes(double forceGF)
