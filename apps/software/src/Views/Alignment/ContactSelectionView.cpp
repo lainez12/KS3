@@ -46,6 +46,6 @@ void ContactSelectionView::onValidateButtonClicked()
         qCritical() << "[ContactSelectionView] ViewModel is null.";
         return;
     }
-    vm->ui_setSelectedContactMode(ui->pushButton_SoftContact->isChecked() ? ContactSelectionViewModel::ContactMode::Soft : ContactSelectionViewModel::ContactMode::Hard);
+    vm->ui_setSelectedContactMode(ui->pushButton_SoftContact->isChecked() ? ContactSelectionViewModel::ContactMode::SOFT : ContactSelectionViewModel::ContactMode::HARD);
     emit s_openView(Kub3::UI::ViewId::ALIGNMENT_VISUALISATION_VIEW);
 }

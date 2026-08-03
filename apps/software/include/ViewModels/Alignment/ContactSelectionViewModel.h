@@ -13,8 +13,8 @@ namespace Kub3::UI::ViewModels::Alignment
     public:
         enum class ContactMode
         {
-            Soft,
-            Hard,
+            SOFT,
+            HARD,
         };
     public:
         explicit ContactSelectionViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent = nullptr);
