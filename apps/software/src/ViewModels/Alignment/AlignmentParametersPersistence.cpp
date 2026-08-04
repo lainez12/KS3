@@ -27,17 +27,18 @@ namespace Kub3::UI::ViewModels::Alignment::Persistence
 
     using alignment_parameter_t = Kub3::UI::ViewModels::Alignment::Persistence::alignment_parameter_t;
 
-    auto cameraPositionToJson(const decltype(alignment_parameter_t{}.cameraLeft.position) &position) -> QJsonObject
+    QJsonObject cameraPositionToJson(const camera_position_t &position)
     {
         QJsonObject json;
+
         json.insert(QLatin1String(kXKey), position.x);
         json.insert(QLatin1String(kYKey), position.y);
         return json;
     }
 
-    Result<decltype(alignment_parameter_t{}.cameraLeft.position), QString> jsonToCameraPosition(const QJsonObject &json)
+    Result<camera_position_t, QString> jsonToCameraPosition(const QJsonObject &json)
     {
-        decltype(alignment_parameter_t{}.cameraLeft.position) position;
+        camera_position_t position;
 
         if (!json.contains(QLatin1String(kXKey)))
             return Err(QStringLiteral("The camera position JSON object is missing the 'x' field."));
@@ -56,7 +57,7 @@ namespace Kub3::UI::ViewModels::Alignment::Persistence
             json.insert(QLatin1String(key), *value);
     }
 
-    QJsonObject cameraVisualisationToJson(const decltype(alignment_parameter_t{}.cameraLeft.visualisation) &visualisation)
+    QJsonObject cameraVisualisationToJson(const camera_visualisation_t &visualisation)
     {
         QJsonObject json;
         insertOptionalInt(json, kGainKey, visualisation.gain);
@@ -75,9 +76,9 @@ namespace Kub3::UI::ViewModels::Alignment::Persistence
         return json.value(QLatin1String(key)).toInt();
     }
 
-    decltype(alignment_parameter_t{}.cameraLeft.visualisation) jsonToCameraVisualisation(const QJsonObject &json)
+    camera_visualisation_t jsonToCameraVisualisation(const QJsonObject &json)
     {
-        decltype(alignment_parameter_t{}.cameraLeft.visualisation) visualisation;
+        camera_visualisation_t visualisation;
         visualisation.gain     = optionalIntFromJson(json, kGainKey);
         visualisation.exposure = optionalIntFromJson(json, kExposureKey);
         visualisation.zoom     = optionalIntFromJson(json, kZoomKey);
@@ -86,7 +87,7 @@ namespace Kub3::UI::ViewModels::Alignment::Persistence
         return visualisation;
     }
 
-    QJsonObject cameraToJson(const decltype(alignment_parameter_t{}.cameraLeft) &camera)
+    QJsonObject cameraToJson(const camera_t &camera)
     {
         QJsonObject json;
         json.insert(QLatin1String(kPositionKey), cameraPositionToJson(camera.position));
@@ -94,9 +95,9 @@ namespace Kub3::UI::ViewModels::Alignment::Persistence
         return json;
     }
 
-    Result<decltype(alignment_parameter_t{}.cameraLeft), QString> jsonToCamera(const QJsonObject &json)
+    Result<camera_t, QString> jsonToCamera(const QJsonObject &json)
     {
-        decltype(alignment_parameter_t{}.cameraLeft) camera;
+        camera_t camera;
 
         if (!json.contains(QLatin1String(kPositionKey)))
             return Err(QStringLiteral("The camera JSON object is missing the 'position' field."));
