@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <functional>
 #include <map>
+#include <qcoreevent.h>
 #include <utility>
 
 namespace Kub3::UI::Views
@@ -14,7 +15,9 @@ namespace Kub3::UI::Views
         class ShowFocusFilter final : public QObject
         {
         public:
-            explicit ShowFocusFilter(QWidget *target) : QObject(target), m_target(target) {}
+            explicit ShowFocusFilter(QWidget *target) :
+                QObject(target),
+                m_target(target) {}
 
         protected:
             bool eventFilter(QObject *watched, QEvent *event) override

@@ -1,12 +1,12 @@
 #pragma once
 
-#include "IVisionService.h"
+#include <unordered_map>
+
 #include <Config/conf.h>
 #include <HAL/Actuators/ActuatorRegistry.h>
 #include <HAL/Actuators/Motors/IPositionMotor.h>
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
-#include <array>
-#include <unordered_map>
+#include <Services/Vision/IVisionService.h>
 
 namespace Kub3::Services
 {
@@ -70,26 +70,22 @@ namespace Kub3::Services
         // IVisionMotor overrides
         void moveBlockToVisualisationPosition(void) override;
         void moveManual(VisionMotor motor, VisionDirection dir, bool granular = false) override;
+        void moveAbsolute(VisionMotor motor, double positionMm) override;
         void stopManual(VisionMotor motor) override;
         void setKinematicMode(VisionMotor motor, bool fineMode) override;
-        void setPushingMode(bool enabled) override
-        {
-            m_pushingModeEnabled = enabled;
-        }
-        void setFocalEnabled(const std::string &focalId, bool enabled);
+        void setPushingMode(bool enabled) override { m_pushingModeEnabled = enabled; }
+        void setFocalEnabled(const std::string &focalId, bool enabled) override;
         void setFocalValue(const std::string &focalId, uint16_t val) override;
 
     private:
         // Collision and pushing logic
-
         void applyPush(VisionMotor pushingMotor, bool fineMode, bool granular = false);
-        [[nodiscard]] bool inCollisionZone(VisionMotor motor, VisionDirection dir) const;
+        [[nodiscard]] bool inCollisionZone(VisionMotor motor, VisionDirection dir, bool granular = false) const;
         [[nodiscard]] bool isMotorBeingPushed(VisionMotor motor, VisionDirection lastDir) const;
         [[nodiscard]] std::optional<std::pair<VisionMotor, VisionDirection>> getAssociatedPushedMotor(VisionMotor motor, VisionDirection lastDir) const;
         void applyAntiCoastingStop(VisionMotor pushedMotor, VisionDirection pushedDir);
 
         // Misc.
-
         bool checkVirtualLimits(VisionMotor motorId, const vision_motor_config_t &config);
         void setupCameraMotor(VisionMotor motorId, const char *motorConfId, const Config::process_config_t &conf);
         bool deckVisualisationLimitReached(void) const;

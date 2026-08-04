@@ -1,3 +1,4 @@
+#include "HAL/MachineStatus/virtual_labels.h"
 #include <QDebug>
 #include <QString>
 
@@ -7,8 +8,10 @@
 namespace Kub3::Services
 {
 
-    SaveCurrentPlanTask::SaveCurrentPlanTask(std::array<Shared<HAL::Act::IPositionMotor>, 3> motors,
+    SaveCurrentPlanTask::SaveCurrentPlanTask(Shared<HAL::MS::IMachineStatusRepo> repo,
+                                             std::array<Shared<HAL::Act::IPositionMotor>, 3> motors,
                                              Optional<plan_deltas_t> &outPlanDeltas) :
+        m_repo(std::move(repo)),
         m_motors(std::move(motors)),
         m_outPlanDeltas(outPlanDeltas)
     {
@@ -26,6 +29,9 @@ namespace Kub3::Services
             .right = highestPos - rightPos,
             .back  = highestPos - backPos,
         };
+        m_repo->setValueRaw(V_Z_LEFT_MASK_POSITION_MM, m_outPlanDeltas->left);
+        m_repo->setValueRaw(V_Z_RIGHT_MASK_POSITION_MM, m_outPlanDeltas->right);
+        m_repo->setValueRaw(V_Z_BACK_MASK_POSITION_MM, m_outPlanDeltas->back);
     }
 
     bool SaveCurrentPlanTask::tick(void)

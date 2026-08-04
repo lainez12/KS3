@@ -13,7 +13,7 @@ namespace Ui
     class ContactSelectionView;
 } // namespace UI
 
-namespace Kub3::UI::Views::ViewsAlignment
+namespace Kub3::UI::Views
 {
     class ContactSelectionView final : public AlignmentViewBase
     {
@@ -36,6 +36,6 @@ namespace Kub3::UI::Views::ViewsAlignment
 
 } // namespace Kub3::UI::Views
 
-using ContactSelectionView = Kub3::UI::Views::ViewsAlignment::ContactSelectionView;
+using ContactSelectionView = Kub3::UI::Views::ContactSelectionView;
 
 #endif

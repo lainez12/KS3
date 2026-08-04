@@ -1,4 +1,5 @@
 #include "ui_NavButton.h"
+
 #include <Views/Components/NavButton.h>
 
 NavButton::NavButton(QWidget *parent) :
@@ -95,9 +96,9 @@ void NavButton::changeColorToEnabled()
     m_circle->setColor(colorEnabled);
 }
 
-void NavButton::switchColor(bool enabled)
+void NavButton::switchColor(bool active)
 {
-    if (enabled)
+    if (active)
     {
         changeColorToEnabled();
     }

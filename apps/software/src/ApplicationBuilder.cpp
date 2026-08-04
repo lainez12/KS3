@@ -258,8 +258,16 @@ namespace Kub3
         m_exposureMenuVM->bindConnection(m_exposureMenuVM.get(), &VM::ExposureMenuViewModel::s_cmdCancelOperation, m_masterFSM, &MFSM::MasterFSM::ps_requestAbortOperation);
         m_exposureMenuVM->bindConnection(m_masterFSM, &MFSM::MasterFSM::s_processMessageBroadcast, m_exposureMenuVM.get(), &VM::ExposureMenuViewModel::ps_onProcessMessageBroadcast);
         // --- VisualisationViewModel
-        // QObject::connect(m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::cmdRunCameraMovement, m_masterFSM, &MFSM::MasterFSM::ps_requestPADCameraMovement);
-        QObject::connect(m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::cmdRunAlignmentStageMovement, m_masterFSM, &MFSM::MasterFSM::ps_requestPADAlignmentStageMovement);
+        m_visualisationVM->bindConnection(m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::cmdRunCameraMovement,
+                                          m_masterFSM, &MFSM::MasterFSM::ps_requestPADCameraMovement);
+        m_visualisationVM->bindConnection(m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::cmdRunAlignmentStageMovement,
+                                          m_masterFSM, &MFSM::MasterFSM::ps_requestPADAlignmentStageMovement);
+        m_visualisationVM->bindConnection(m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::cmdRequestSubstrateFineMode,
+                                          m_masterFSM, &MFSM::MasterFSM::ps_requestAlignmentSubstrateFineMode);
+        m_visualisationVM->bindConnection(m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::cmdRequestCameraFineMode,
+                                          m_masterFSM, &MFSM::MasterFSM::ps_requestAlignmentCameraFineMode);
+        m_visualisationVM->bindConnection(m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::cmdRunCameraAbsoluteMovement,
+                                          m_masterFSM, &MFSM::MasterFSM::ps_requestAlignmentCameraAbsoluteMovement);
         // --- MachineStatusViewModel
         auto *msvm = m_machineStatusVM.get();
         QObject::connect(msvm, &VM::MachineStatusViewModel::s_exposureSliderValueChanged, m_masterFSM, &MFSM::MasterFSM::ps_requestExposureUpdate);
@@ -296,6 +304,9 @@ namespace Kub3
         // --- Exposure Mode View Model
         QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_systemStateKindChanged, m_exposureModeVM.get(), &VM::ExposureModeViewModel::ps_onSystemStateChanged);
         QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_postureChanged, m_exposureModeVM.get(), &VM::ExposureModeViewModel::ps_onPostureChanged);
+        // --- Alignment View Model
+        m_visualisationVM->bindConnection(m_repo.get(), &HAL::MS::IMachineStatusRepo::s_machineValueChanged,
+                                          m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::ps_handleSensorValueChanged);
         // --- Machine Status View Model
         msvm->bindConnection(m_hwManager.get(), &HAL::HardwareManager::s_cameraFrameReady,
                              msvm, &VM::BaseVisionViewModel::ps_onCameraFrameReceived);

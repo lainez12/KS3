@@ -1,13 +1,30 @@
 #pragma once
 
-#include <unordered_map>
-
 #include <Common/Enums.h>
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
+#include <HAL/MachineStatus/sensors_labels.h>
 #include <ViewModels/BaseVisionViewModel.h>
+#include <utils.h>
 
 namespace Kub3::UI::ViewModels::Alignment
 {
+
+    enum class CameraAxis : uint8_t
+    {
+        X,
+        Y,
+    };
+
+    typedef struct coords_2d_s {
+        double x;
+        double y;
+    } coords_2d_t;
+
+    typedef struct camera_data_s {
+        coords_2d_t currentPositionMm     = {.x = 0.0, .y = 0.0};
+        coords_2d_t pickedUpCoordinatesMm = {.x = 0.0, .y = 0.0};
+        bool fineSpeedSelected            = false;
+    } camera_data_t;
 
     class VisualisationViewModel final : public BaseVisionViewModel
     {
@@ -15,20 +32,49 @@ namespace Kub3::UI::ViewModels::Alignment
 
     public:
         explicit VisualisationViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent = nullptr);
-        ~VisualisationViewModel() override;
-
-    signals:
-        void cmdRunCameraMovement(CameraId camId, MovementKind kind, CameraDirection dir);
-        void cmdRunAlignmentStageMovement(AlignmentStageId stageId, MovementKind kind, AlignmentStageDirection dir);
+        ~VisualisationViewModel() override = default;
 
     public:
+        void loadConnections(void) override;
         void uiRequestCameraMovement(CameraId camId, MovementKind kind, CameraDirection dir);
         void uiRequestAlignmentStageMovement(AlignmentStageId stageId, MovementKind kind, AlignmentStageDirection dir);
 
+    signals:
+        void s_maskingDistanceUpdate(double distMm);
+        void s_cameraPositionUpdate(CameraId camId, CameraAxis axis, double value);
+        void s_compressedAirUpdate(bool active);
+        void s_vacuumUpdate(bool active);
+        void s_pickedUpCoordinatesUpdated(CameraId camId, const coords_2d_t &coordinatesMm);
+        void s_camerasFineModeUpdated(CameraId camId, bool active);
+        void s_substrateFineModeUpdated(bool fineModeActive);
+
+        void cmdRunCameraMovement(CameraId camId, MovementKind kind, CameraDirection dir);
+        void cmdRunAlignmentStageMovement(AlignmentStageId stageId, MovementKind kind, AlignmentStageDirection dir);
+        void cmdRunCameraAbsoluteMovement(CameraId camId, double xPosMm, double yPosMm);
+        void cmdRequestCameraFineMode(CameraId camId, bool active);
+        void cmdRequestSubstrateFineMode(bool active);
+
+    public slots:
+        // From UI
+        void ui_onPickUpXYClicked(CameraId id);
+        void ui_onGoToXYClicked(CameraId id, const coords_2d_t &targetPosMm);
+        void ui_onCamSpeedClicked(CameraId id);
+        void ui_substrateSpeedClicked();
+
+        // From logic layer
+        void ps_handleSensorValueChanged(const std::string &key);
+
     private:
         Shared<HAL::MS::IMachineStatusRepo> m_repo;
-        std::unordered_map<CameraId, bool> m_activeContinuousCameraMoves                 = {};
-        std::unordered_map<AlignmentStageId, bool> m_activeContinuousAlignmentStageMoves = {};
+
+        // Pad movement related state
+        UMap<CameraId, bool> m_activeContinuousCameraMoves                 = {};
+        UMap<AlignmentStageId, bool> m_activeContinuousAlignmentStageMoves = {};
+
+        // Displayed data state
+        double m_zPositionsMm[3] = {0, 0, 0};
+        UMap<CameraId, camera_data_t> m_camerasState;
+        bool m_substrateFineMode = false;
     };
 
 } // namespace Kub3::UI::ViewModels::Alignment

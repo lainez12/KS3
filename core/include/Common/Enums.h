@@ -106,6 +106,13 @@ namespace Kub3
         THETA = 0x2
     };
 
+    enum class ZElevatorId : uint32_t
+    {
+        LEFT,
+        RIGHT,
+        BACK,
+    };
+
     enum class AlignmentStageDirection : uint32_t
     {
         X_LEFT,
