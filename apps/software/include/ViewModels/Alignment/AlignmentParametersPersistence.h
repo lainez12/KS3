@@ -36,15 +36,15 @@ namespace Kub3::UI::ViewModels::Alignment::Persistence
 
     QString storagePath();
 
-    Result<Unit, QString> ensureParentDirectory(const QString &path);
-    Result<QJsonArray, QString> loadParametersFromFile(const QString &path);
-    Result<Unit, QString> saveParametersToFile(const QString &path, const QJsonArray &parametersArray);
+    Result<Unit, const char *> ensureParentDirectory(const QString &path);
+    Result<QJsonArray, const char *> loadParametersFromFile(const QString &path);
+    Result<Unit, const char *> saveParametersToFile(const QString &path, const QJsonArray &parametersArray);
 
     QJsonObject parameterToJson(const alignment_parameter_t &parameter);
-    Result<alignment_parameter_t, QString> jsonToParameter(const QJsonObject &json);
+    Result<alignment_parameter_t, const char *> jsonToParameter(const QJsonObject &json);
 
     bool parameterExistsInFile(const QJsonArray &parametersArray, const QString &parameterName);
     void replaceExistingParameter(QJsonArray &parametersArray, const QJsonObject &parameter);
-    Result<QJsonObject, QString> getParameterByName(const QJsonArray &parametersArray, const QString &parameterName);
+    Result<QJsonObject, const char *> getParameterByName(const QJsonArray &parametersArray, const QString &parameterName);
     bool deleteByName(QJsonArray &parametersArray, const QString &parameterName);
 }

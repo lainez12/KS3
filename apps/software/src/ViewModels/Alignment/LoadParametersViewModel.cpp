@@ -14,12 +14,12 @@ namespace Kub3::UI::ViewModels::Alignment
     {
     }
 
-    Result<QJsonArray, QString> LoadParametersViewModel::getAllParameters()
+    Result<QJsonArray, const char *> LoadParametersViewModel::getAllParameters()
     {
         return Persistence::loadParametersFromFile(Persistence::storagePath());
     }
 
-    Result<QJsonObject, QString> LoadParametersViewModel::getParameterByName(const QString &parameterName)
+    Result<QJsonObject, const char *> LoadParametersViewModel::getParameterByName(const QString &parameterName)
     {
         auto loadRes = Persistence::loadParametersFromFile(Persistence::storagePath());
         if (loadRes.is_err())

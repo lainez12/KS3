@@ -34,26 +34,34 @@ namespace Kub3::UI::ViewModels::Alignment
         }
     }
 
-    Result<Unit, QString> SaveParametersViewModel::saveParameters(const Persistence::alignment_parameter_t &parameter, bool replaceExisting)
+    Result<Unit, const char *> SaveParametersViewModel::saveParameters(const Persistence::alignment_parameter_t &parameter, bool replaceExisting)
     {
         if (parameter.name.trimmed().isEmpty())
-            return Err(QStringLiteral("The parameter name cannot be empty."));
+            return Err("The parameter name cannot be empty.");
+
+        static thread_local QByteArray errorStorage;
 
         const QString path = Persistence::storagePath();
 
         auto dirRes = Persistence::ensureParentDirectory(path);
         if (dirRes.is_err())
-            return Err(dirRes.unwrap_err());
+        {
+            errorStorage = dirRes.unwrap_err();
+            return Err(errorStorage.constData());
+        }
 
         auto loadRes = Persistence::loadParametersFromFile(path);
         if (loadRes.is_err())
-            return Err(loadRes.unwrap_err());
+        {
+            errorStorage = loadRes.unwrap_err();
+            return Err(errorStorage.constData());
+        }
 
         QJsonArray parametersArray = loadRes.unwrap();
         const bool parameterExists = Persistence::parameterExistsInFile(parametersArray, parameter.name);
 
         if (parameterExists && !replaceExisting)
-            return Err(QStringLiteral("A parameter set with the same name already exists. Please choose a different name or enable replacement."));
+            return Err("A parameter set with the same name already exists. Please choose a different name or enable replacement.");
 
         if (!parameterExists)
             parametersArray.append(Persistence::parameterToJson(parameter));
@@ -63,7 +71,7 @@ namespace Kub3::UI::ViewModels::Alignment
         return Persistence::saveParametersToFile(path, parametersArray);
     }
 
-    Result<QList<QString>, QString> SaveParametersViewModel::getAllNamesSavedParameters()
+    Result<QList<QString>, const char *> SaveParametersViewModel::getAllNamesSavedParameters()
     {
         auto loadRes = Persistence::loadParametersFromFile(Persistence::storagePath());
         if (loadRes.is_err())
@@ -85,12 +93,12 @@ namespace Kub3::UI::ViewModels::Alignment
         return Ok(names);
     }
 
-    Result<QJsonArray, QString> SaveParametersViewModel::getAllParameters()
+    Result<QJsonArray, const char *> SaveParametersViewModel::getAllParameters()
     {
         return Persistence::loadParametersFromFile(Persistence::storagePath());
     }
 
-    Result<QJsonObject, QString> SaveParametersViewModel::getParameterByName(const QString &parameterName)
+    Result<QJsonObject, const char *> SaveParametersViewModel::getParameterByName(const QString &parameterName)
     {
         auto loadRes = Persistence::loadParametersFromFile(Persistence::storagePath());
         if (loadRes.is_err())

@@ -2,13 +2,13 @@
 #define SAVEPARAMETERSVIEWMODEL_H
 
 #include <Common/Result.h>
-#include <QList>
+#include <HAL/MachineStatus/IMachineStatusRepo.h>
 #include <QJsonArray>
 #include <QJsonObject>
-#include <HAL/MachineStatus/IMachineStatusRepo.h>
+#include <QList>
 #include <QObject>
-#include <ViewModels/BaseViewModel.h>
 #include <ViewModels/Alignment/AlignmentParametersPersistence.h>
+#include <ViewModels/BaseViewModel.h>
 
 namespace Kub3::UI::ViewModels::Alignment
 {
@@ -29,12 +29,12 @@ namespace Kub3::UI::ViewModels::Alignment
 
     public:
         void ui_userRequestSaveParameters(const QString &name, bool replaceExisting = true);
-        Result<QList<QString>, QString> getAllNamesSavedParameters();
-        Result<QJsonArray, QString> getAllParameters();
-        Result<QJsonObject, QString> getParameterByName(const QString &parameterName);
+        Result<QList<QString>, const char *> getAllNamesSavedParameters();
+        Result<QJsonArray, const char *> getAllParameters();
+        Result<QJsonObject, const char *> getParameterByName(const QString &parameterName);
 
     private:
-        Result<Unit, QString> saveParameters(const Persistence::alignment_parameter_t &parameter, bool replaceExisting = true);
+        Result<Unit, const char *> saveParameters(const Persistence::alignment_parameter_t &parameter, bool replaceExisting = true);
 
     private:
         Shared<HAL::MS::IMachineStatusRepo> m_repo;

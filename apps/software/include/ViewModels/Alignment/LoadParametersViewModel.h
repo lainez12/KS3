@@ -1,5 +1,4 @@
-#ifndef LOADPARAMETERSVIEWMODEL_H
-#define LOADPARAMETERSVIEWMODEL_H
+#pragma once
 
 #include <Common/Result.h>
 #include <QJsonArray>
@@ -17,13 +16,11 @@ namespace Kub3::UI::ViewModels::Alignment
         explicit LoadParametersViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent = nullptr);
         ~LoadParametersViewModel() override;
 
-        Result<QJsonArray, QString> getAllParameters();
-        Result<QJsonObject, QString> getParameterByName(const QString &parameterName);
+        Result<QJsonArray, const char *> getAllParameters();
+        Result<QJsonObject, const char *> getParameterByName(const QString &parameterName);
 
     private:
         Shared<HAL::MS::IMachineStatusRepo> m_repo;
     };
 
 } // namespace Kub3::UI::ViewModels::Alignment
-
-#endif

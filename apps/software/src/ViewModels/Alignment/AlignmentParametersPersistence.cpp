@@ -36,14 +36,14 @@ namespace Kub3::UI::ViewModels::Alignment::Persistence
         return json;
     }
 
-    Result<camera_position_t, QString> jsonToCameraPosition(const QJsonObject &json)
+    Result<camera_position_t, const char *> jsonToCameraPosition(const QJsonObject &json)
     {
         camera_position_t position;
 
         if (!json.contains(QLatin1String(kXKey)))
-            return Err(QStringLiteral("The camera position JSON object is missing the 'x' field."));
+            return Err("The camera position JSON object is missing the 'x' field.");
         if (!json.contains(QLatin1String(kYKey)))
-            return Err(QStringLiteral("The camera position JSON object is missing the 'y' field."));
+            return Err("The camera position JSON object is missing the 'y' field.");
 
         position.x = json.value(QLatin1String(kXKey)).toInt();
         position.y = json.value(QLatin1String(kYKey)).toInt();
@@ -95,12 +95,12 @@ namespace Kub3::UI::ViewModels::Alignment::Persistence
         return json;
     }
 
-    Result<camera_t, QString> jsonToCamera(const QJsonObject &json)
+    Result<camera_t, const char *> jsonToCamera(const QJsonObject &json)
     {
         camera_t camera;
 
         if (!json.contains(QLatin1String(kPositionKey)))
-            return Err(QStringLiteral("The camera JSON object is missing the 'position' field."));
+            return Err("The camera JSON object is missing the 'position' field.");
 
         auto positionRes = jsonToCameraPosition(json.value(QLatin1String(kPositionKey)).toObject());
         if (positionRes.is_err())
@@ -122,7 +122,7 @@ namespace Kub3::UI::ViewModels::Alignment::Persistence
         return QStringLiteral(KUB3_SAVES_PARAMETERS_ALIGNMENT_PATH);
     }
 
-    Result<Unit, QString> ensureParentDirectory(const QString &path)
+    Result<Unit, const char *> ensureParentDirectory(const QString &path)
     {
         const QFileInfo fileInfo(path);
         const QDir directory = fileInfo.dir();
@@ -132,10 +132,10 @@ namespace Kub3::UI::ViewModels::Alignment::Persistence
         if (QDir().mkpath(directory.absolutePath()))
             return Ok<Unit>({});
 
-        return Err(QStringLiteral("The destination directory could not be created: %1").arg(directory.absolutePath()));
+        return Err("The destination directory could not be created:");
     }
 
-    Result<QJsonArray, QString> loadParametersFromFile(const QString &path)
+    Result<QJsonArray, const char *> loadParametersFromFile(const QString &path)
     {
         QFile inputFile(path);
 
@@ -143,7 +143,7 @@ namespace Kub3::UI::ViewModels::Alignment::Persistence
             return Ok(QJsonArray{});
 
         if (!inputFile.open(QIODevice::ReadOnly))
-            return Err(QStringLiteral("The parameters file could not be opened for reading: %1").arg(inputFile.errorString()));
+            return Err("The parameters file could not be opened for reading");
 
         const QByteArray rawData = inputFile.readAll();
         inputFile.close();
@@ -155,7 +155,7 @@ namespace Kub3::UI::ViewModels::Alignment::Persistence
         const QJsonDocument document = QJsonDocument::fromJson(rawData, &parseError);
 
         if (parseError.error != QJsonParseError::NoError)
-            return Err(QStringLiteral("The parameters file has an invalid JSON format: %1").arg(parseError.errorString()));
+            return Err("The parameters file has an invalid JSON format");
 
         if (document.isArray())
             return Ok(document.array());
@@ -169,7 +169,7 @@ namespace Kub3::UI::ViewModels::Alignment::Persistence
         return Ok(QJsonArray{});
     }
 
-    Result<Unit, QString> saveParametersToFile(const QString &path, const QJsonArray &parametersArray)
+    Result<Unit, const char *> saveParametersToFile(const QString &path, const QJsonArray &parametersArray)
     {
         QJsonObject rootObject;
         rootObject.insert(QLatin1String(kVersionKey), 1);
@@ -177,11 +177,11 @@ namespace Kub3::UI::ViewModels::Alignment::Persistence
 
         QSaveFile outputFile(path);
         if (!outputFile.open(QIODevice::WriteOnly))
-            return Err(QStringLiteral("The parameters file could not be opened for writing: %1").arg(outputFile.errorString()));
+            return Err("The parameters file could not be opened for writing.");
 
         outputFile.write(QJsonDocument(rootObject).toJson(QJsonDocument::Indented));
         if (!outputFile.commit())
-            return Err(QStringLiteral("The parameters file could not be saved: %1").arg(outputFile.errorString()));
+            return Err("The parameters file could not be saved");
 
         return Ok<Unit>({});
     }
@@ -195,16 +195,16 @@ namespace Kub3::UI::ViewModels::Alignment::Persistence
         return json;
     }
 
-    Result<alignment_parameter_t, QString> jsonToParameter(const QJsonObject &json)
+    Result<alignment_parameter_t, const char *> jsonToParameter(const QJsonObject &json)
     {
         alignment_parameter_t parameter;
 
         if (!json.contains(QLatin1String(kNameKey)))
-            return Err(QStringLiteral("The parameter JSON object is missing the 'name' field."));
+            return Err("The parameter JSON object is missing the 'name' field.");
         if (!json.contains(QLatin1String(kCameraLeftKey)))
-            return Err(QStringLiteral("The parameter JSON object is missing the 'cameraLeft' field."));
+            return Err("The parameter JSON object is missing the 'cameraLeft' field.");
         if (!json.contains(QLatin1String(kCameraRightKey)))
-            return Err(QStringLiteral("The parameter JSON object is missing the 'cameraRight' field."));
+            return Err("The parameter JSON object is missing the 'cameraRight' field.");
 
         parameter.name = json.value(QLatin1String(kNameKey)).toString().trimmed();
 
@@ -219,7 +219,7 @@ namespace Kub3::UI::ViewModels::Alignment::Persistence
         parameter.cameraRight = *cameraRightRes;
 
         if (parameter.name.isEmpty())
-            return Err(QStringLiteral("The parameter name cannot be empty."));
+            return Err("The parameter name cannot be empty.");
 
         return Ok(parameter);
     }
@@ -250,7 +250,7 @@ namespace Kub3::UI::ViewModels::Alignment::Persistence
         }
     }
 
-    Result<QJsonObject, QString> getParameterByName(const QJsonArray &parametersArray, const QString &parameterName)
+    Result<QJsonObject, const char *> getParameterByName(const QJsonArray &parametersArray, const QString &parameterName)
     {
         for (const QJsonValue &value : parametersArray)
         {
@@ -260,7 +260,7 @@ namespace Kub3::UI::ViewModels::Alignment::Persistence
                 return Ok(parameterObject);
         }
 
-        return Err(QStringLiteral("The parameter set with name '%1' was not found.").arg(parameterName));
+        return Err("The parameter was not found.");
     }
 
     bool deleteByName(QJsonArray &parametersArray, const QString &parameterName)
