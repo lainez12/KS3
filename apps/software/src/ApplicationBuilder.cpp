@@ -305,6 +305,7 @@ namespace Kub3
         QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_systemStateKindChanged, m_exposureModeVM.get(), &VM::ExposureModeViewModel::ps_onSystemStateChanged);
         QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_postureChanged, m_exposureModeVM.get(), &VM::ExposureModeViewModel::ps_onPostureChanged);
         // --- Alignment View Model
+        QObject::connect(m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::s_saveParametersAlignment, m_saveParametersVM.get(), &VM::Alignment::SaveParametersViewModel::ps_saveParameters);
         m_visualisationVM->bindConnection(m_repo.get(), &HAL::MS::IMachineStatusRepo::s_machineValueChanged,
                                           m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::ps_handleSensorValueChanged);
         // --- Machine Status View Model

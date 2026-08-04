@@ -7,6 +7,7 @@
 #include <ViewModels/Alignment/VisualisationViewModel.h>
 #include <Views/AlignmentViewBase.h>
 
+#include <ViewModels/Alignment/AlignmentParametersPersistence.h>
 #include <Views/Components/HardForceContactForm.h>
 #include <Views/Components/NavButton.h>
 #include <Views/Components/RealPositionCameras.h>
@@ -27,6 +28,7 @@ namespace Kub3::UI::Views
         using CameraAxis             = ViewModels::Alignment::CameraAxis;
         using VisualisationViewModel = ViewModels::Alignment::VisualisationViewModel;
         using coords_2d_t            = ViewModels::Alignment::coords_2d_t;
+        using alignment_parameter_t  = ViewModels::Alignment::Persistence::alignment_parameter_t;
 
         Q_OBJECT
 
@@ -79,6 +81,8 @@ namespace Kub3::UI::Views
         void onVisualMarkButtonClicked(const QString &buttonId);
         void onMeasurementButtonClicked();
         void closeHardForceContactFormIfNeeded();
+
+        alignment_parameter_t getAlignmentParameter();
 
         // UI helpers
         void updateOverlayPositions();

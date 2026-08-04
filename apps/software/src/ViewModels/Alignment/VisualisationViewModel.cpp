@@ -78,6 +78,11 @@ namespace Kub3::UI::ViewModels::Alignment
         emit cmdRunAlignmentStageMovement(stageId, kind, dir);
     }
 
+    void VisualisationViewModel::uiRequestSaveParameters(const alignment_parameter_t &parameter)
+    {
+        emit s_saveParametersAlignment(parameter);
+    }
+
     void VisualisationViewModel::ui_onPickUpXYClicked(CameraId id)
     {
         const coords_2d_t currentPos = m_camerasState[id].currentPositionMm;

@@ -3,6 +3,7 @@
 #include <Common/Enums.h>
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
 #include <HAL/MachineStatus/sensors_labels.h>
+#include <ViewModels/Alignment/AlignmentParametersPersistence.h>
 #include <ViewModels/BaseVisionViewModel.h>
 #include <utils.h>
 
@@ -28,6 +29,8 @@ namespace Kub3::UI::ViewModels::Alignment
 
     class VisualisationViewModel final : public BaseVisionViewModel
     {
+        using alignment_parameter_t = Persistence::alignment_parameter_t;
+
         Q_OBJECT
 
     public:
@@ -38,6 +41,7 @@ namespace Kub3::UI::ViewModels::Alignment
         void loadConnections(void) override;
         void uiRequestCameraMovement(CameraId camId, MovementKind kind, CameraDirection dir);
         void uiRequestAlignmentStageMovement(AlignmentStageId stageId, MovementKind kind, AlignmentStageDirection dir);
+        void uiRequestSaveParameters(const alignment_parameter_t &parameter);
 
     signals:
         void s_maskingDistanceUpdate(double distMm);
@@ -47,6 +51,7 @@ namespace Kub3::UI::ViewModels::Alignment
         void s_pickedUpCoordinatesUpdated(CameraId camId, const coords_2d_t &coordinatesMm);
         void s_camerasFineModeUpdated(CameraId camId, bool active);
         void s_substrateFineModeUpdated(bool fineModeActive);
+        void s_saveParametersAlignment(const alignment_parameter_t &parameter);
 
         void cmdRunCameraMovement(CameraId camId, MovementKind kind, CameraDirection dir);
         void cmdRunAlignmentStageMovement(AlignmentStageId stageId, MovementKind kind, AlignmentStageDirection dir);
