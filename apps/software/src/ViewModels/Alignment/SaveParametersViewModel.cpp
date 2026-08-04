@@ -15,7 +15,7 @@ namespace Kub3::UI::ViewModels::Alignment
     {
     }
 
-    void SaveParametersViewModel::ps_saveParameters(const Persistence::AlignmentParameter &parameter)
+    void SaveParametersViewModel::ps_saveParameters(const Persistence::alignment_parameter_t &parameter)
     {
         m_currentParameter = parameter;
     }
@@ -26,7 +26,7 @@ namespace Kub3::UI::ViewModels::Alignment
         return saveParameters(m_currentParameter, replaceExisting);
     }
 
-    Result<Unit, QString> SaveParametersViewModel::saveParameters(const Persistence::AlignmentParameter &parameter, bool replaceExisting)
+    Result<Unit, QString> SaveParametersViewModel::saveParameters(const Persistence::alignment_parameter_t &parameter, bool replaceExisting)
     {
         if (parameter.name.trimmed().isEmpty())
             return Err(QStringLiteral("The parameter name cannot be empty."));
@@ -42,7 +42,7 @@ namespace Kub3::UI::ViewModels::Alignment
             return Err(loadRes.unwrap_err());
 
         QJsonArray parametersArray = loadRes.unwrap();
-        const bool parameterExists  = Persistence::parameterExistsInFile(parametersArray, parameter.name);
+        const bool parameterExists = Persistence::parameterExistsInFile(parametersArray, parameter.name);
 
         if (parameterExists && !replaceExisting)
             return Err(QStringLiteral("A parameter set with the same name already exists. Please choose a different name or enable replacement."));

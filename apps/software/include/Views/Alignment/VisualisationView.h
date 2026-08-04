@@ -28,7 +28,7 @@ namespace Kub3::UI::Views
         using CameraAxis             = ViewModels::Alignment::CameraAxis;
         using VisualisationViewModel = ViewModels::Alignment::VisualisationViewModel;
         using coords_2d_t            = ViewModels::Alignment::coords_2d_t;
-        using AlignmentParameter     = ViewModels::Alignment::Persistence::AlignmentParameter;
+        using alignment_parameter_t  = ViewModels::Alignment::Persistence::alignment_parameter_t;
 
         Q_OBJECT
 
@@ -37,7 +37,7 @@ namespace Kub3::UI::Views
         ~VisualisationView();
 
     signals:
-        void s_saveParameters(const AlignmentParameter &parameter);
+        void s_saveParameters(const alignment_parameter_t &parameter);
 
     public slots:
         void mapPositionCamerasOpenMap();
@@ -84,7 +84,7 @@ namespace Kub3::UI::Views
         void onMeasurementButtonClicked();
         void closeHardForceContactFormIfNeeded();
 
-        AlignmentParameter getAlignmentParameter() const;
+        alignment_parameter_t getAlignmentParameter();
 
         // UI helpers
         void updateOverlayPositions();

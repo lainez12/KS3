@@ -422,22 +422,20 @@ void VisualisationView::closeHardForceContactFormIfNeeded(void)
     }
 }
 
-AlignmentParameter VisualisationView::getAlignmentParameter()
+VisualisationView::alignment_parameter_t VisualisationView::getAlignmentParameter()
 {
-    return AlignmentParameter{
-        .cameraLeft = {
-            .position = {
-                .x = ui->sbLeftCamXPos->value(),
-                .y = ui->sbLeftCamYPos->value(),
-            },
-            .visualisation = {}},
-        .cameraRight = {.position = {
-                            .x = ui->sbRightCamXPos->value(),
-                            .y = ui->sbRightCamYPos->value(),
-                        },
-                        .visualisation = {}},
-        .name        = "Current",
-    };
+    alignment_parameter_t parameter{};
+    parameter.name = "Current";
+
+    parameter.cameraLeft.position.x    = ui->sbLeftCamXPos->value();
+    parameter.cameraLeft.position.y    = ui->sbLeftCamYPos->value();
+    parameter.cameraLeft.visualisation = {};
+
+    parameter.cameraRight.position.x    = ui->sbRightCamXPos->value();
+    parameter.cameraRight.position.y    = ui->sbRightCamYPos->value();
+    parameter.cameraRight.visualisation = {};
+
+    return parameter;
 }
 
 void VisualisationView::navButtonToggled(NavButton *button, QWidget *widget)

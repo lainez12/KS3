@@ -21,7 +21,7 @@ namespace Kub3::UI::ViewModels::Alignment
         ~SaveParametersViewModel() override;
 
     public slots:
-        void ps_saveParameters(const Persistence::AlignmentParameter &parameter);
+        void ps_saveParameters(const Persistence::alignment_parameter_t &parameter);
 
     public:
         Result<Unit, QString> ui_userRequestSaveParameters(const QString &name, bool replaceExisting = true);
@@ -30,11 +30,11 @@ namespace Kub3::UI::ViewModels::Alignment
         Result<QJsonObject, QString> getParameterByName(const QString &parameterName);
 
     private:
-        Result<Unit, QString> saveParameters(const Persistence::AlignmentParameter &parameter, bool replaceExisting = true);
+        Result<Unit, QString> saveParameters(const Persistence::alignment_parameter_t &parameter, bool replaceExisting = true);
 
     private:
         Shared<HAL::MS::IMachineStatusRepo> m_repo;
-        Persistence::AlignmentParameter m_currentParameter;
+        Persistence::alignment_parameter_t m_currentParameter;
     };
 
 } // namespace Kub3::UI::ViewModels::Alignment

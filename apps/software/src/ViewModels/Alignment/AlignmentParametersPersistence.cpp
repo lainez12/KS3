@@ -25,9 +25,9 @@ namespace Kub3::UI::ViewModels::Alignment::Persistence
     constexpr auto kFocusKey         = "focus";
     constexpr auto kLightKey         = "light";
 
-    using AlignmentParameter = Kub3::UI::ViewModels::Alignment::Persistence::AlignmentParameter;
+    using alignment_parameter_t = Kub3::UI::ViewModels::Alignment::Persistence::alignment_parameter_t;
 
-    QJsonObject cameraPositionToJson(const AlignmentParameter::CameraPosition &position)
+    auto cameraPositionToJson(const decltype(alignment_parameter_t{}.cameraLeft.position) &position) -> QJsonObject
     {
         QJsonObject json;
         json.insert(QLatin1String(kXKey), position.x);
@@ -35,9 +35,9 @@ namespace Kub3::UI::ViewModels::Alignment::Persistence
         return json;
     }
 
-    Result<AlignmentParameter::CameraPosition, QString> jsonToCameraPosition(const QJsonObject &json)
+    Result<decltype(alignment_parameter_t{}.cameraLeft.position), QString> jsonToCameraPosition(const QJsonObject &json)
     {
-        AlignmentParameter::CameraPosition position;
+        decltype(alignment_parameter_t{}.cameraLeft.position) position;
 
         if (!json.contains(QLatin1String(kXKey)))
             return Err(QStringLiteral("The camera position JSON object is missing the 'x' field."));
@@ -56,7 +56,7 @@ namespace Kub3::UI::ViewModels::Alignment::Persistence
             json.insert(QLatin1String(key), *value);
     }
 
-    QJsonObject cameraVisualisationToJson(const AlignmentParameter::CameraVisualisation &visualisation)
+    QJsonObject cameraVisualisationToJson(const decltype(alignment_parameter_t{}.cameraLeft.visualisation) &visualisation)
     {
         QJsonObject json;
         insertOptionalInt(json, kGainKey, visualisation.gain);
@@ -75,9 +75,9 @@ namespace Kub3::UI::ViewModels::Alignment::Persistence
         return json.value(QLatin1String(key)).toInt();
     }
 
-    AlignmentParameter::CameraVisualisation jsonToCameraVisualisation(const QJsonObject &json)
+    decltype(alignment_parameter_t{}.cameraLeft.visualisation) jsonToCameraVisualisation(const QJsonObject &json)
     {
-        AlignmentParameter::CameraVisualisation visualisation;
+        decltype(alignment_parameter_t{}.cameraLeft.visualisation) visualisation;
         visualisation.gain     = optionalIntFromJson(json, kGainKey);
         visualisation.exposure = optionalIntFromJson(json, kExposureKey);
         visualisation.zoom     = optionalIntFromJson(json, kZoomKey);
@@ -86,7 +86,7 @@ namespace Kub3::UI::ViewModels::Alignment::Persistence
         return visualisation;
     }
 
-    QJsonObject cameraToJson(const AlignmentParameter::Camera &camera)
+    QJsonObject cameraToJson(const decltype(alignment_parameter_t{}.cameraLeft) &camera)
     {
         QJsonObject json;
         json.insert(QLatin1String(kPositionKey), cameraPositionToJson(camera.position));
@@ -94,9 +94,9 @@ namespace Kub3::UI::ViewModels::Alignment::Persistence
         return json;
     }
 
-    Result<AlignmentParameter::Camera, QString> jsonToCamera(const QJsonObject &json)
+    Result<decltype(alignment_parameter_t{}.cameraLeft), QString> jsonToCamera(const QJsonObject &json)
     {
-        AlignmentParameter::Camera camera;
+        decltype(alignment_parameter_t{}.cameraLeft) camera;
 
         if (!json.contains(QLatin1String(kPositionKey)))
             return Err(QStringLiteral("The camera JSON object is missing the 'position' field."));
@@ -185,7 +185,7 @@ namespace Kub3::UI::ViewModels::Alignment::Persistence
         return Ok<Unit>({});
     }
 
-    QJsonObject parameterToJson(const AlignmentParameter &parameter)
+    QJsonObject parameterToJson(const alignment_parameter_t &parameter)
     {
         QJsonObject json;
         json.insert(QLatin1String(kNameKey), parameter.name);
@@ -194,9 +194,9 @@ namespace Kub3::UI::ViewModels::Alignment::Persistence
         return json;
     }
 
-    Result<AlignmentParameter, QString> jsonToParameter(const QJsonObject &json)
+    Result<alignment_parameter_t, QString> jsonToParameter(const QJsonObject &json)
     {
-        AlignmentParameter parameter;
+        alignment_parameter_t parameter;
 
         if (!json.contains(QLatin1String(kNameKey)))
             return Err(QStringLiteral("The parameter JSON object is missing the 'name' field."));
