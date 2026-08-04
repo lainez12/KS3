@@ -1,7 +1,8 @@
-#include "HAL/MachineStatus/virtual_labels.h"
 #include <Common/Enums.h>
 #include <HAL/MachineStatus/sensors_labels.h>
 #include <HAL/MachineStatus/utils.h>
+#include <HAL/MachineStatus/virtual_labels.h>
+#include <MFSM/states.operational.h>
 #include <ViewModels/Alignment/VisualisationViewModel.h>
 #include <utils.h>
 
@@ -41,7 +42,7 @@ namespace Kub3::UI::ViewModels::Alignment
         ps_handleSensorValueChanged(WAFER_COMPRESSED_AIR_ACTIVE);
     }
 
-    void VisualisationViewModel::uiRequestCameraMovement(CameraId camId, MovementKind kind, CameraDirection dir)
+    void VisualisationViewModel::ui_requestCameraMovement(CameraId camId, MovementKind kind, CameraDirection dir)
     {
         if (kind == MovementKind::CONTINUOUS)
             m_activeContinuousCameraMoves[camId] = true;
@@ -58,7 +59,7 @@ namespace Kub3::UI::ViewModels::Alignment
         emit cmdRunCameraMovement(camId, kind, dir);
     }
 
-    void VisualisationViewModel::uiRequestAlignmentStageMovement(
+    void VisualisationViewModel::ui_requestAlignmentStageMovement(
         AlignmentStageId stageId,
         MovementKind kind,
         AlignmentStageDirection dir)
@@ -78,17 +79,22 @@ namespace Kub3::UI::ViewModels::Alignment
         emit cmdRunAlignmentStageMovement(stageId, kind, dir);
     }
 
-    void VisualisationViewModel::uiRequestSaveParameters(const alignment_parameter_t &parameter)
+    void VisualisationViewModel::ui_requestSaveParameters(const alignment_parameter_t &parameter)
     {
         emit s_saveParametersAlignment(parameter);
+    }
+
+    void VisualisationViewModel::ui_proceedToExposure()
+    {
+        emit cmdRequestExposureMode();
     }
 
     void VisualisationViewModel::ui_onPickUpXYClicked(CameraId id)
     {
         const coords_2d_t currentPos = m_camerasState[id].currentPositionMm;
 
-        m_camerasState[id].pickedUpCoordinatesMm = {.x = currentPos.x, .y = currentPos.y};
-        emit s_pickedUpCoordinatesUpdated(id, m_camerasState[id].pickedUpCoordinatesMm);
+        m_camerasState[id].pickedUpCoordinatesMm = currentPos;
+        emit s_pickedUpCoordinatesUpdated(id, currentPos);
     }
 
     void VisualisationViewModel::ui_onGoToXYClicked(CameraId id, const coords_2d_t &targetPosMm)
@@ -171,6 +177,14 @@ namespace Kub3::UI::ViewModels::Alignment
             break;
         default:
             break;
+        }
+    }
+
+    void VisualisationViewModel::ps_operationalSubstateKindChanged(MFSM::OperationalStateKind kind)
+    {
+        if (kind == MFSM::OperationalStateKind::PreparingExposure)
+        {
+            emit s_preparingExposureMode();
         }
     }
 

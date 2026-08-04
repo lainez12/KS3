@@ -181,6 +181,16 @@ namespace Kub3::MFSM
         dispatch(CmdStartAutolevel{});
     }
 
+    void MasterFSM::ps_requestEnterAlignment()
+    {
+        dispatch(CmdEnterAlignmentMode{.autoMode = false});
+    }
+
+    void MasterFSM::ps_requestEnterExposureMode()
+    {
+        dispatch(CmdEnterExposureMode{});
+    }
+
     void MasterFSM::ps_requestUnstowage(StowageTarget tgt)
     {
         dispatch(CmdOperateUnstowage{

@@ -145,6 +145,7 @@ namespace Kub3::MFSM
         CmdZAxisPad,
         CmdVisualisation,
         // --- Exposure
+        CmdEnterExposureMode,
         CmdStartExposure,
 
         // Internal & Services events
