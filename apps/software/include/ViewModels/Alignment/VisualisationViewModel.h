@@ -42,6 +42,7 @@ namespace Kub3::UI::ViewModels::Alignment
         void loadConnections(void) override;
         void ui_requestCameraMovement(CameraId camId, MovementKind kind, CameraDirection dir);
         void ui_requestAlignmentStageMovement(AlignmentStageId stageId, MovementKind kind, AlignmentStageDirection dir);
+        void ui_requestSaveParameters(const alignment_parameter_t &parameter);
         void ui_proceedToExposure();
 
     signals:

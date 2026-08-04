@@ -79,6 +79,11 @@ namespace Kub3::UI::ViewModels::Alignment
         emit cmdRunAlignmentStageMovement(stageId, kind, dir);
     }
 
+    void VisualisationViewModel::ui_requestSaveParameters(const alignment_parameter_t &parameter)
+    {
+        emit s_saveParametersAlignment(parameter);
+    }
+
     void VisualisationViewModel::ui_proceedToExposure()
     {
         emit cmdRequestExposureMode();

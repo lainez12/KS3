@@ -368,7 +368,7 @@ void VisualisationView::onSaveButtonClicked()
     auto vm = getViewModel<VisualisationViewModel>();
     if (vm)
     {
-        vm->uiRequestSaveParameters(getAlignmentParameter());
+        vm->ui_requestSaveParameters(getAlignmentParameter());
     }
     emit s_openView(Kub3::UI::ViewId::ALIGNMENT_SAVE_PARAMETERS_VIEW);
 }

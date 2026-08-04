@@ -213,7 +213,6 @@ namespace Kub3::Services
             m_status      = ServiceStatus::Error;
             return;
         }
-
         m_errorReason.clear();
 
         if (deckVisualisationLimitReached())
