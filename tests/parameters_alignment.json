@@ -7,11 +7,11 @@
                     "y": 0
                 },
                 "visualisation": {
-                    "gain": 10,
                     "exposure": 50,
-                    "zoom": 5,
                     "focus": 54,
-                    "light": 45
+                    "gain": 10,
+                    "light": 45,
+                    "zoom": 5
                 }
             },
             "cameraRight": {
@@ -20,11 +20,11 @@
                     "y": 0
                 },
                 "visualisation": {
-                    "gain": 10,
                     "exposure": 50,
-                    "zoom": 5,
                     "focus": 54,
-                    "light": 45
+                    "gain": 10,
+                    "light": 45,
+                    "zoom": 5
                 }
             },
             "name": "A1"
@@ -35,16 +35,37 @@
                     "x": 5000,
                     "y": 0
                 },
-                "visualisation": {}
+                "visualisation": {
+                }
             },
             "cameraRight": {
                 "position": {
                     "x": 5000,
                     "y": 0
                 },
-                "visualisation": {}
+                "visualisation": {
+                }
             },
             "name": "A2"
+        },
+        {
+            "cameraLeft": {
+                "position": {
+                    "x": 10000,
+                    "y": 10000
+                },
+                "visualisation": {
+                }
+            },
+            "cameraRight": {
+                "position": {
+                    "x": 10000,
+                    "y": 10000
+                },
+                "visualisation": {
+                }
+            },
+            "name": "E1"
         }
     ],
     "version": 1

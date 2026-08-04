@@ -23,6 +23,8 @@ SaveParametersView::SaveParametersView(Unique<SaveParametersViewModel> viewModel
 
     QVBoxLayout *layout = new QVBoxLayout(ui->parametersListWidget);
     ui->parametersListWidget->setLayout(layout);
+    connect(ui->btnCancel, &QPushButton::clicked, this, &SaveParametersView::onBackButtonClicked);
+    connect(ui->btnConfirm, &QPushButton::clicked, this, &SaveParametersView::onConfirmButtonClicked);
 }
 
 SaveParametersView::~SaveParametersView()
@@ -63,6 +65,51 @@ void SaveParametersView::onBackButtonClicked()
 
 void SaveParametersView::onValidateButtonClicked()
 {
+}
+
+void SaveParametersView::onConfirmButtonClicked()
+{
+    if (ui->lineEdit->text().isEmpty())
+    {
+        UPDATE_DYNAMIC_PROPERTY(ui->lineEdit, "class", "error-lineEdit");
+        ui->lineEdit->setFocus();
+        return;
+    }
+
+    QString name = ui->lineEdit->text();
+
+    if (m_presetsButton.contains(name))
+    {
+        ps_createPopUpWithText(
+            "Preset Already Exists",
+            {
+                {"Cancel", [this]() { ps_closePopUp(); }},
+                {"Replace", [this, name]() { this->userConfirmSaveReplacementPreset(name); }},
+            },
+            "Choose a different name or replacement.");
+        return;
+    }
+    auto vm = getViewModel<SaveParametersViewModel>();
+    if (vm)
+    {
+        vm->ui_userRequestSaveParameters(name, true);
+    }
+    ui->lineEdit->clear();
+    onBackButtonClicked();
+}
+
+void SaveParametersView::userConfirmSaveReplacementPreset(const QString &name)
+{
+    auto vm = getViewModel<SaveParametersViewModel>();
+
+    if (vm)
+    {
+        vm->ui_userRequestSaveParameters(name, true);
+    }
+
+    ui->lineEdit->clear();
+    ps_closePopUp();
+    onBackButtonClicked();
 }
 
 void SaveParametersView::setAParameterSavedInThisSession(bool saved)

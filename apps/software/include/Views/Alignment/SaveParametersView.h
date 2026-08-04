@@ -37,6 +37,8 @@ namespace Kub3::UI::Views
     private:
         void setNewNavButtonsConfigs();
         void onValidateButtonClicked() override;
+        void onConfirmButtonClicked();
+        void userConfirmSaveReplacementPreset(const QString &name);
         void onBackButtonClicked() override;
         void setAParameterSavedInThisSession(bool saved);
         bool isAParameterSavedInThisSession() const;
@@ -52,4 +54,3 @@ namespace Kub3::UI::Views
 } // namespace Kub3::UI::Views
 
 using SaveParametersView = Kub3::UI::Views::SaveParametersView;
-

@@ -1045,11 +1045,10 @@ font-size: 30px;</string>
         </size>
        </property>
        <property name="styleSheet">
-        <string notr="true">border: 2px solid #0070DB;
-text-align: left;
-font: normal normal bold 25px/29px Arial;
-letter-spacing: 0px;
-color: #E85420;</string>
+        <string notr="true"/>
+       </property>
+       <property name="class" stdset="0">
+        <string>lineEdit</string>
        </property>
       </widget>
      </item>
