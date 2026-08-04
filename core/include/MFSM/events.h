@@ -87,7 +87,7 @@ namespace Kub3::MFSM
     struct CmdZAxisPad {
         Services::ZAxisPayload operation;
     };
-    struct CmdVisionPad {
+    struct CmdVisualisation { // Includes pad movements
         Services::VisionMotor targetMotor;
         Services::VisionPayload operation;
     };
@@ -143,7 +143,7 @@ namespace Kub3::MFSM
         CmdExitAlignmentMode,
         CmdAlignmentPad,
         CmdZAxisPad,
-        CmdVisionPad,
+        CmdVisualisation,
         // --- Exposure
         CmdStartExposure,
 

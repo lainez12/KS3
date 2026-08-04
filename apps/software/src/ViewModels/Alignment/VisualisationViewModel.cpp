@@ -86,24 +86,25 @@ namespace Kub3::UI::ViewModels::Alignment
         emit s_pickedUpCoordinatesUpdated(id, m_camerasState[id].pickedUpCoordinatesMm);
     }
 
-    void VisualisationViewModel::ui_onGoToXYClicked(CameraId id)
+    void VisualisationViewModel::ui_onGoToXYClicked(CameraId id, const coords_2d_t &targetPosMm)
     {
-        // m_camerasState[id].pickedUpCoordinatesMm;
-        // TODO request to logic layer
+        emit cmdRunCameraAbsoluteMovement(id, targetPosMm.x, targetPosMm.y);
     }
 
     void VisualisationViewModel::ui_onCamSpeedClicked(CameraId id)
     {
-        m_camerasState[id].fineSpeedSelected = !m_camerasState[id].fineSpeedSelected;
-        // TODO propagate to logic layer
-        emit s_camerasFineModeUpdated(id, m_camerasState[id].fineSpeedSelected);
+        const bool newValue = !m_camerasState[id].fineSpeedSelected;
+
+        m_camerasState[id].fineSpeedSelected = newValue; // Internal udpate
+        emit cmdRequestCameraFineMode(id, newValue);     // To logic layer
+        emit s_camerasFineModeUpdated(id, newValue);     // To view
     }
 
     void VisualisationViewModel::ui_substrateSpeedClicked()
     {
-        m_substrateFineMode = !m_substrateFineMode;
-        // TODO propagate to logic layer
-        emit s_substrateFineModeUpdated(m_substrateFineMode);
+        m_substrateFineMode = !m_substrateFineMode;            // Internal update
+        emit cmdRequestSubstrateFineMode(m_substrateFineMode); // To logic layer
+        emit s_substrateFineModeUpdated(m_substrateFineMode);  // To view
     }
 
     void VisualisationViewModel::ps_handleSensorValueChanged(const std::string &key)

@@ -235,17 +235,20 @@ namespace Kub3::MFSM
                     emit s_warningOccurred("Alignment pad only available in Alignment Mode.");
                 }
             },
-            [&](StateOperational &opState, const CmdVisionPad &cmd) {
+            [&](StateOperational &opState, const CmdVisualisation &cmd) {
                 if (auto *alignState = std::get_if<StateAlignment>(&opState.subState))
                 {
                     if (!alignState->isAutoAlignment)
                     {
-                        this->processCmdVisionPad(cmd);
+                        this->processCmdVisualisation(cmd);
                     }
                 }
                 else
                 {
-                    emit s_warningOccurred("Vision pad only available in Alignment Mode.");
+                    static const char *warningMsg = "Vision commands are only available in Alignment Mode.";
+
+                    qWarning() << warningMsg;
+                    emit s_warningOccurred(warningMsg);
                 }
             },
             [&](StateOperational &opState, const CmdZAxisPad &cmd) {

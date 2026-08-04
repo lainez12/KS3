@@ -140,10 +140,10 @@ void VisualisationView::setupConnections()
         // Camera's buttons
         connect(ui->btnPickUpLeft, &NavButton::clicked, [vm]() { vm->ui_onPickUpXYClicked(CameraId::LEFT); });
         connect(ui->btnPickUpRight, &NavButton::clicked, [vm]() { vm->ui_onPickUpXYClicked(CameraId::RIGHT); });
-        connect(ui->btnGoToLeft, &NavButton::clicked, [vm]() { vm->ui_onGoToXYClicked(CameraId::LEFT); });
-        connect(ui->btnGoToRight, &NavButton::clicked, [vm]() { vm->ui_onGoToXYClicked(CameraId::RIGHT); });
         connect(ui->btnSpeedCamLeft, &NavButton::clicked, [vm]() { vm->ui_onCamSpeedClicked(CameraId::LEFT); });
         connect(ui->btnSpeedCamRight, &NavButton::clicked, [vm]() { vm->ui_onCamSpeedClicked(CameraId::RIGHT); });
+        connect(ui->btnGoToLeft, &NavButton::clicked, [this]() { this->onGoToBtnClicked(CameraId::LEFT); });
+        connect(ui->btnGoToRight, &NavButton::clicked, [this]() { this->onGoToBtnClicked(CameraId::RIGHT); });
     }
 }
 
@@ -496,4 +496,25 @@ void VisualisationView::onSubstrateFineModeUpdated(bool active)
     // Invert to get the "disabled" color representing the active state
     // Will need a refactor
     switchColorNavButton(ID_BTN_SUBSTRATE_SPEED, !active);
+}
+
+void VisualisationView::onGoToBtnClicked(CameraId camId)
+{
+    auto *vm = getViewModel<VisualisationViewModel>();
+
+    if (vm)
+    {
+        coords_2d_t targetPosMm;
+
+        switch (camId)
+        {
+        case CameraId::LEFT:
+            targetPosMm = {.x = ui->sbLeftCamXPos->value(), .y = ui->sbLeftCamYPos->value()};
+            break;
+        case CameraId::RIGHT:
+            targetPosMm = {.x = ui->sbRightCamXPos->value(), .y = ui->sbRightCamYPos->value()};
+            break;
+        }
+        vm->ui_onGoToXYClicked(camId, targetPosMm);
+    }
 }

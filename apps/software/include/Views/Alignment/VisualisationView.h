@@ -52,6 +52,7 @@ namespace Kub3::UI::Views
         void onPickedUpCoordinatesUpdated(CameraId camId, const coords_2d_t &coordinatesMm);
         void onCamerasFineModeUpdated(CameraId camId, bool fineModeActive);
         void onSubstrateFineModeUpdated(bool active);
+        void onGoToBtnClicked(CameraId camId);
 
     private:
         // Setup routines splitting up the constructor

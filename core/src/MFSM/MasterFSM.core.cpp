@@ -4,6 +4,8 @@
 #include <HAL/MachineStatus/sensors_labels.h>
 #include <HAL/MachineStatus/utils.h>
 #include <MFSM/MasterFSM.h>
+#include <MFSM/events.h>
+#include <Services/Vision/VisionService.h>
 
 namespace Kub3::MFSM
 {
@@ -239,11 +241,73 @@ namespace Kub3::MFSM
         });
     }
 
+    void MasterFSM::ps_requestPADCameraMovement(CameraId camId, MovementKind kind, CameraDirection dir)
+    {
+        using namespace Services;
+
+        struct Mapping {
+            VisionMotor motor;
+            VisionDirection dir;
+        };
+
+        const auto getMapping = [](CameraId cam, CameraDirection d) -> Mapping {
+            if (cam == CameraId::LEFT)
+            {
+                switch (d)
+                {
+                case CameraDirection::UP:
+                    return {VisionMotor::UpperLeftCameraY, VisionDirection::UpperLeftCamYBack};
+                case CameraDirection::DOWN:
+                    return {VisionMotor::UpperLeftCameraY, VisionDirection::UpperLeftCamYFront};
+                case CameraDirection::LEFT:
+                    return {VisionMotor::UpperLeftCameraX, VisionDirection::UpperLeftCamXLeft};
+                case CameraDirection::RIGHT:
+                    return {VisionMotor::UpperLeftCameraX, VisionDirection::UpperLeftCamXRight};
+                }
+            }
+            else if (cam == CameraId::RIGHT)
+            {
+                switch (d)
+                {
+                case CameraDirection::UP:
+                    return {VisionMotor::UpperRightCameraY, VisionDirection::UpperRightCamYBack};
+                case CameraDirection::DOWN:
+                    return {VisionMotor::UpperRightCameraY, VisionDirection::UpperRightCamYFront};
+                case CameraDirection::LEFT:
+                    return {VisionMotor::UpperRightCameraX, VisionDirection::UpperRightCamXLeft};
+                case CameraDirection::RIGHT:
+                    return {VisionMotor::UpperRightCameraX, VisionDirection::UpperRightCamXRight};
+                }
+            }
+            Q_UNREACHABLE();
+        };
+
+        const Mapping target = getMapping(camId, dir);
+
+        if (kind == MovementKind::STOP)
+        {
+            dispatch(CmdVisualisation{
+                .targetMotor = target.motor,
+                .operation   = VisionStopPayload{},
+            });
+        }
+        else
+        {
+            dispatch(CmdVisualisation{
+                .targetMotor = target.motor,
+                .operation   = VisionMovePayload{
+                      .dir      = target.dir,
+                      .granular = (kind == MovementKind::GRANULAR),
+                },
+            });
+        }
+    }
+
     void MasterFSM::ps_requestPADAlignmentStageMovement(AlignmentStageId stageId, MovementKind kind, AlignmentStageDirection dir)
     {
         using namespace Services;
 
-        auto convert = [](AlignmentStageDirection d) -> AlignmentDirection {
+        const auto convert = [](AlignmentStageDirection d) -> AlignmentDirection {
             switch (d)
             {
             case AlignmentStageDirection::X_LEFT:
@@ -262,19 +326,95 @@ namespace Kub3::MFSM
             Q_UNREACHABLE();
         };
 
-        AlignmentPayload op = AlignmentStopStagePayload{};
-
-        if (kind != MovementKind::STOP)
+        if (kind == MovementKind::STOP)
         {
-            op = AlignmentMoveStagePayload{
-                .dir      = convert(dir),
-                .granular = (kind == MovementKind::GRANULAR),
-            };
+            dispatch(CmdAlignmentPad{
+                .stageId   = stageId,
+                .operation = AlignmentStopStagePayload{},
+            });
+        }
+        else
+        {
+            dispatch(CmdAlignmentPad{
+                .stageId   = stageId,
+                .operation = AlignmentMoveStagePayload{
+                    .dir      = convert(dir),
+                    .granular = (kind == MovementKind::GRANULAR),
+                },
+            });
+        }
+    }
+
+    void MasterFSM::ps_requestAlignmentSubstrateFineMode(bool active)
+    {
+        using namespace Services;
+
+        const auto dispatchForStage = [this, active](AlignmentStageId id) {
+            dispatch(CmdAlignmentPad{
+                .stageId   = id,
+                .operation = AlignmentSetKinematicModePayload{.fineMode = active},
+            });
+        };
+
+        dispatchForStage(AlignmentStageId::X);
+        dispatchForStage(AlignmentStageId::Y);
+        dispatchForStage(AlignmentStageId::THETA);
+    }
+
+    void MasterFSM::ps_requestAlignmentCameraFineMode(CameraId camId, bool active)
+    {
+        using namespace Services;
+
+        const auto dispatchEventForCamera = [this, active](VisionMotor motor) {
+            dispatch(CmdVisualisation{
+                .targetMotor = motor,
+                .operation   = Services::VisionSetKinematicModePayload{.fineMode = active},
+            });
+        };
+
+        if (camId == CameraId::LEFT)
+        {
+            dispatchEventForCamera(VisionMotor::UpperLeftCameraX);
+            dispatchEventForCamera(VisionMotor::UpperLeftCameraY);
+        }
+        else if (camId == CameraId::RIGHT)
+        {
+            dispatchEventForCamera(VisionMotor::UpperRightCameraX);
+            dispatchEventForCamera(VisionMotor::UpperRightCameraY);
+        }
+    }
+
+    void MasterFSM::ps_requestAlignmentCameraAbsoluteMovement(CameraId camId, double xPosMm, double yPosMm)
+    {
+        using namespace Services;
+
+        VisionMotor xMotor;
+        VisionMotor yMotor;
+
+        if (camId == CameraId::LEFT)
+        {
+            xMotor = VisionMotor::UpperLeftCameraX;
+            yMotor = VisionMotor::UpperLeftCameraY;
+        }
+        else if (camId == CameraId::RIGHT)
+        {
+            xMotor = VisionMotor::UpperRightCameraX;
+            yMotor = VisionMotor::UpperRightCameraY;
+        }
+        else
+        {
+            return;
         }
 
-        dispatch(CmdAlignmentPad{
-            .stageId   = stageId,
-            .operation = op,
+        // Dispatch Absolute Movement for X-Axis
+        dispatch(CmdVisualisation{
+            .targetMotor = xMotor,
+            .operation   = VisionMoveAbsolutePayload{.positionMm = xPosMm},
+        });
+        // Dispatch Absolute Movement for Y-Axis
+        dispatch(CmdVisualisation{
+            .targetMotor = yMotor,
+            .operation   = VisionMoveAbsolutePayload{.positionMm = yPosMm},
         });
     }
 
@@ -300,10 +440,12 @@ namespace Kub3::MFSM
             m_contactService->stopZManual();
     }
 
-    void MasterFSM::processCmdVisionPad(const CmdVisionPad &cmd)
+    void MasterFSM::processCmdVisualisation(const CmdVisualisation &cmd)
     {
         if (auto *op = std::get_if<Services::VisionMovePayload>(&cmd.operation))
-            m_visionService->moveManual(cmd.targetMotor, op->dir);
+            m_visionService->moveManual(cmd.targetMotor, op->dir, op->granular);
+        else if (auto *op = std::get_if<Services::VisionMoveAbsolutePayload>(&cmd.operation))
+            m_visionService->moveAbsolute(cmd.targetMotor, op->positionMm);
         else if (auto *op = std::get_if<Services::VisionStopPayload>(&cmd.operation))
             m_visionService->stopManual(cmd.targetMotor);
         else if (auto *op = std::get_if<Services::VisionSetKinematicModePayload>(&cmd.operation))

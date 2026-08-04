@@ -544,7 +544,7 @@ opacity: 1;</string>
           </widget>
          </item>
          <item>
-          <widget class="QSpinBox" name="sbLeftCamXPos">
+          <widget class="QDoubleSpinBox" name="sbLeftCamXPos">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -571,8 +571,14 @@ color: #E85420;
            <property name="buttonSymbols">
             <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
            </property>
+           <property name="decimals">
+            <number>3</number>
+           </property>
+           <property name="minimum">
+            <double>-999.999000000000024</double>
+           </property>
            <property name="maximum">
-            <number>999999999</number>
+            <double>999.990000000000009</double>
            </property>
           </widget>
          </item>
@@ -608,7 +614,7 @@ opacity: 1;</string>
           </widget>
          </item>
          <item>
-          <widget class="QSpinBox" name="sbLeftCamYPos">
+          <widget class="QDoubleSpinBox" name="sbLeftCamYPos">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -635,8 +641,14 @@ color: #E85420;
            <property name="buttonSymbols">
             <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
            </property>
+           <property name="decimals">
+            <number>3</number>
+           </property>
+           <property name="minimum">
+            <double>-999.999000000000024</double>
+           </property>
            <property name="maximum">
-            <number>999999999</number>
+            <double>999.990000000000009</double>
            </property>
           </widget>
          </item>
@@ -962,7 +974,7 @@ opacity: 1;</string>
           </widget>
          </item>
          <item>
-          <widget class="QSpinBox" name="sbRightCamXPos">
+          <widget class="QDoubleSpinBox" name="sbRightCamXPos">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -989,8 +1001,14 @@ color: #E85420;
            <property name="buttonSymbols">
             <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
            </property>
+           <property name="decimals">
+            <number>3</number>
+           </property>
+           <property name="minimum">
+            <double>-999.999000000000024</double>
+           </property>
            <property name="maximum">
-            <number>999999999</number>
+            <double>999.990000000000009</double>
            </property>
           </widget>
          </item>
@@ -1026,7 +1044,7 @@ opacity: 1;</string>
           </widget>
          </item>
          <item>
-          <widget class="QSpinBox" name="sbRightCamYPos">
+          <widget class="QDoubleSpinBox" name="sbRightCamYPos">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -1053,8 +1071,17 @@ color: #E85420;
            <property name="buttonSymbols">
             <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
            </property>
+           <property name="decimals">
+            <number>3</number>
+           </property>
+           <property name="minimum">
+            <double>-999.999000000000024</double>
+           </property>
            <property name="maximum">
-            <number>999999999</number>
+            <double>999.999000000000024</double>
+           </property>
+           <property name="value">
+            <double>0.000000000000000</double>
            </property>
           </widget>
          </item>
