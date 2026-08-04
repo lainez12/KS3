@@ -26,8 +26,12 @@ SaveParametersView::SaveParametersView(Unique<SaveParametersViewModel> viewModel
     connect(ui->btnCancel, &QPushButton::clicked, this, &SaveParametersView::onBackButtonClicked);
     connect(ui->btnConfirm, &QPushButton::clicked, this, &SaveParametersView::onConfirmButtonClicked);
 
-    connect(getViewModel<SaveParametersViewModel>(), &SaveParametersViewModel::s_parameterSaved, this, &SaveParametersView::ps_onParameterSaved);
-    connect(getViewModel<SaveParametersViewModel>(), &SaveParametersViewModel::s_errorSavingParameter, this, &SaveParametersView::ps_onErrorSavingParameter);
+    auto vm = getViewModel<SaveParametersViewModel>();
+    if (vm)
+    {
+        connect(vm, &SaveParametersViewModel::s_parameterSaved, this, &SaveParametersView::ps_onParameterSaved);
+        connect(vm, &SaveParametersViewModel::s_errorSavingParameter, this, &SaveParametersView::ps_onErrorSavingParameter);
+    }
 }
 
 SaveParametersView::~SaveParametersView()
