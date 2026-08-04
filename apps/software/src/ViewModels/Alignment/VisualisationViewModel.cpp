@@ -135,19 +135,26 @@ namespace Kub3::UI::ViewModels::Alignment
             }
         };
 
-        const auto onZPositionUpdate = [&](double &valueHolder, const char *refValKey, bool update = false) {
+        const auto onZPositionUpdate = [&](double &valueHolder, const char *refValKey) {
             if (!refValKey)
                 return;
 
-            auto refValOpt = HAL::MS::tryRead<double>(m_repo, refValKey);
-            auto valOpt    = HAL::MS::tryRead<double>(m_repo, key);
-
-            if (!refValOpt.has_value() || !valOpt.has_value())
+            auto valOpt = HAL::MS::tryRead<double>(m_repo, key);
+            if (!valOpt.has_value())
                 return;
-
             valueHolder = valOpt.value();
-            if (update)
+
+            double highest = std::max({m_zPositionsMm[0], m_zPositionsMm[1], m_zPositionsMm[2]});
+
+            if (valueHolder == highest)
             {
+                auto refValOpt = HAL::MS::tryRead<double>(m_repo, refValKey);
+                if (!refValOpt.has_value())
+                {
+                    qCritical() << "Failed to compute masking distance: reference position is missing.";
+                    return;
+                }
+
                 emit s_maskingDistanceUpdate(refValOpt.value() - valueHolder);
             }
         };
@@ -167,7 +174,13 @@ namespace Kub3::UI::ViewModels::Alignment
             sendCamPosUpdate(CameraId::RIGHT, CameraAxis::Y, m_camerasState[CameraId::RIGHT].currentPositionMm.y);
             break;
         case zLeftEncHash:
-            onZPositionUpdate(m_zPositionsMm[0], V_Z_LEFT_MASK_POSITION_MM, true);
+            onZPositionUpdate(m_zPositionsMm[0], V_Z_LEFT_MASK_POSITION_MM);
+            break;
+        case zRightEncHash:
+            onZPositionUpdate(m_zPositionsMm[1], V_Z_RIGHT_MASK_POSITION_MM);
+            break;
+        case zBackEncHash:
+            onZPositionUpdate(m_zPositionsMm[2], V_Z_BACK_MASK_POSITION_MM);
             break;
         case waferVacuumActiveHash:
             emitBoolUpdateSignal(&VisualisationViewModel::s_vacuumUpdate);
