@@ -28,4 +28,26 @@ namespace Kub3::UI::ViewModels::Alignment
         return Persistence::getParameterByName(loadRes.unwrap(), parameterName);
     }
 
+    Result<QList<QString>, const char *> LoadParametersViewModel::getAllNamesSavedParameters()
+    {
+        auto loadRes = Persistence::loadParametersFromFile(Persistence::storagePath());
+        if (loadRes.is_err())
+            return Err(loadRes.unwrap_err());
+
+        QList<QString> names;
+        for (const QJsonValue &value : loadRes.unwrap())
+        {
+            if (!value.isObject())
+                continue;
+
+            auto parameterRes = Persistence::jsonToParameter(value.toObject());
+            if (parameterRes.is_err())
+                continue;
+
+            names.append(parameterRes.unwrap().name);
+        }
+
+        return Ok(names);
+    }
+
 } // namespace Kub3::UI::ViewModels::Alignment

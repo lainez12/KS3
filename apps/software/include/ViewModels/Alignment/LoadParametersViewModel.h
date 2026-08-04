@@ -18,6 +18,7 @@ namespace Kub3::UI::ViewModels::Alignment
 
         Result<QJsonArray, const char *> getAllParameters();
         Result<QJsonObject, const char *> getParameterByName(const QString &parameterName);
+        Result<QList<QString>, const char *> getAllNamesSavedParameters();
 
     private:
         Shared<HAL::MS::IMachineStatusRepo> m_repo;

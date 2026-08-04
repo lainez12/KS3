@@ -49,7 +49,7 @@
      <item row="0" column="1">
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
-        <widget class="QPushButton" name="pushButton_2">
+        <widget class="QPushButton" name="btnLoad">
          <property name="maximumSize">
           <size>
            <width>175</width>
@@ -70,7 +70,7 @@ font-family: arial;</string>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_3">
+        <widget class="QPushButton" name="btnRename">
          <property name="maximumSize">
           <size>
            <width>175</width>
@@ -91,7 +91,7 @@ font-family: arial;</string>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_4">
+        <widget class="QPushButton" name="btnRemove">
          <property name="maximumSize">
           <size>
            <width>175</width>
@@ -112,7 +112,7 @@ font-family: arial;</string>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton">
+        <widget class="QPushButton" name="btnClose">
          <property name="maximumSize">
           <size>
            <width>175</width>
@@ -156,7 +156,7 @@ font-family: arial;</string>
          <property name="widgetResizable">
           <bool>true</bool>
          </property>
-         <widget class="QWidget" name="scrollAreaWidgetContents">
+         <widget class="QWidget" name="parametersListWidget">
           <property name="geometry">
            <rect>
             <x>0</x>

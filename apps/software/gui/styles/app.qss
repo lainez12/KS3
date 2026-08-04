@@ -489,7 +489,8 @@ QLabel#machineLogoSubtrateSize {
 }
 
 /* VisualisationView */
-#VisualisationView QCheckBox::indicator {
+#VisualisationView QCheckBox::indicator,
+#LoadParametersView QCheckBox::indicator {
     width: 0px;
     height: 0px;
     border: none;
