@@ -1,4 +1,3 @@
-#include "ViewModels/ExposureModeViewModel.h"
 #include <QCoreApplication>
 #include <QDebug>
 #include <QDir>
@@ -8,6 +7,8 @@
 #include <ApplicationBuilder.h>
 
 #include <Config/helper.h>
+#include <MFSM/MasterFSM.h>
+#include <ViewModels/ExposureModeViewModel.h>
 #include <system.h>
 // Services
 #include <Services/Alignment/AlignmentService.h>
@@ -16,7 +17,6 @@
 #include <Services/Homing/HomingService.h>
 #include <Services/Stowage/StowageService.h>
 #include <Services/Vision/VisionService.h>
-
 #if defined(KUB_MODEL_4) || defined(KUB_MODEL_6)
 #include <Services/Drawers/SingleConveyorDrawerService.h>
 #elif defined(KUB_MODEL_8)
@@ -256,7 +256,9 @@ namespace Kub3
         m_exposureMenuVM->bindConnection(m_exposureMenuVM.get(), &VM::ExposureMenuViewModel::s_cmdOperateStowage, m_masterFSM, &MFSM::MasterFSM::ps_requestStowage);
         m_exposureMenuVM->bindConnection(m_exposureMenuVM.get(), &VM::ExposureMenuViewModel::s_cmdStartAutolevel, m_masterFSM, &MFSM::MasterFSM::ps_requestAutolevel);
         m_exposureMenuVM->bindConnection(m_exposureMenuVM.get(), &VM::ExposureMenuViewModel::s_cmdCancelOperation, m_masterFSM, &MFSM::MasterFSM::ps_requestAbortOperation);
-        m_exposureMenuVM->bindConnection(m_masterFSM, &MFSM::MasterFSM::s_processMessageBroadcast, m_exposureMenuVM.get(), &VM::ExposureMenuViewModel::ps_onProcessMessageBroadcast);
+        // --- Exposure Mode View Model
+        m_exposureModeVM->bindConnection(m_exposureModeVM.get(), &VM::ExposureModeViewModel::cmdEnterAlignmentMode,
+                                         m_masterFSM, &MFSM::MasterFSM::ps_requestEnterAlignment);
         // --- VisualisationViewModel
         m_visualisationVM->bindConnection(m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::cmdRunCameraMovement,
                                           m_masterFSM, &MFSM::MasterFSM::ps_requestPADCameraMovement);
@@ -268,6 +270,8 @@ namespace Kub3
                                           m_masterFSM, &MFSM::MasterFSM::ps_requestAlignmentCameraFineMode);
         m_visualisationVM->bindConnection(m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::cmdRunCameraAbsoluteMovement,
                                           m_masterFSM, &MFSM::MasterFSM::ps_requestAlignmentCameraAbsoluteMovement);
+        m_visualisationVM->bindConnection(m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::cmdRequestExposureMode,
+                                          m_masterFSM, &MFSM::MasterFSM::ps_requestEnterExposureMode);
         // --- MachineStatusViewModel
         auto *msvm = m_machineStatusVM.get();
         QObject::connect(msvm, &VM::MachineStatusViewModel::s_exposureSliderValueChanged, m_masterFSM, &MFSM::MasterFSM::ps_requestExposureUpdate);
@@ -301,19 +305,26 @@ namespace Kub3
         QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_systemStateKindChanged, m_exposureMenuVM.get(), &VM::ExposureMenuViewModel::ps_onSystemStateChanged);
         QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_operationalSubstateChanged, m_exposureMenuVM.get(), &VM::ExposureMenuViewModel::ps_onOperationalSubstateChanged);
         QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_postureChanged, m_exposureMenuVM.get(), &VM::ExposureMenuViewModel::ps_onPostureChanged);
+        m_exposureMenuVM->bindConnection(m_masterFSM, &MFSM::MasterFSM::s_processMessageBroadcast, m_exposureMenuVM.get(), &VM::ExposureMenuViewModel::ps_onProcessMessageBroadcast);
         // --- Exposure Mode View Model
-        QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_systemStateKindChanged, m_exposureModeVM.get(), &VM::ExposureModeViewModel::ps_onSystemStateChanged);
-        QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_postureChanged, m_exposureModeVM.get(), &VM::ExposureModeViewModel::ps_onPostureChanged);
-        // --- Alignment View Model
+        QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_systemStateKindChanged,
+                         m_exposureModeVM.get(), &VM::ExposureModeViewModel::ps_onSystemStateChanged);
+        QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_postureChanged,
+                         m_exposureModeVM.get(), &VM::ExposureModeViewModel::ps_onPostureChanged);
+        m_exposureModeVM->bindConnection(m_masterFSM, &MFSM::MasterFSM::s_operationalSubstateKindChanged,
+                                         m_exposureModeVM.get(), &VM::ExposureModeViewModel::ps_onOperationalSubstateKindChanged);
+        // --- Alignment (visualisation) View Model
         m_visualisationVM->bindConnection(m_repo.get(), &HAL::MS::IMachineStatusRepo::s_machineValueChanged,
                                           m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::ps_handleSensorValueChanged);
+        m_visualisationVM->bindConnection(m_masterFSM, &MFSM::MasterFSM::s_operationalSubstateKindChanged,
+                                          m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::ps_operationalSubstateKindChanged);
+        m_visualisationVM->bindConnection(m_hwManager.get(), &HAL::HardwareManager::s_cameraFrameReady,
+                                          m_visualisationVM.get(), &VM::BaseVisionViewModel::ps_onCameraFrameReceived);
         // --- Machine Status View Model
         msvm->bindConnection(m_hwManager.get(), &HAL::HardwareManager::s_cameraFrameReady,
                              msvm, &VM::BaseVisionViewModel::ps_onCameraFrameReceived);
         msvm->bindConnection(m_repo.get(), &HAL::MS::IMachineStatusRepo::s_machineValueChanged,
                              msvm, &VM::MachineStatusViewModel::ps_handleSensorValueChanged);
-        m_visualisationVM->bindConnection(m_hwManager.get(), &HAL::HardwareManager::s_cameraFrameReady,
-                                          m_visualisationVM.get(), &VM::BaseVisionViewModel::ps_onCameraFrameReceived);
 
         return *this;
     }

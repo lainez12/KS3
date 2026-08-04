@@ -21,13 +21,14 @@ ExposureModeView::ExposureModeView(Unique<ExposureModeViewModel> viewModel, QWid
     ui->floodBtn->setup("Flood Exposure", "#8a2be2", ":/icons/flood_icon.svg");                             // Purple
     ui->maskAlignBtn->setup("Mask Alignment\nMask Exposure", "#00ced1", ":/icons/mask-alignment_icon.svg"); // Cyan
 
-    connect(ui->floodBtn, &ActionBox::clicked, this, &ExposureModeView::onFloodExposureClicked);
-    connect(ui->maskAlignBtn, &ActionBox::clicked, this, &ExposureModeView::onMaskAlignmentClicked);
+    connect(ui->floodBtn, &ActionBox::clicked, this, &ExposureModeView::ps_onFloodExposureClicked);
+    connect(ui->maskAlignBtn, &ActionBox::clicked, this, &ExposureModeView::ps_onMaskAlignmentClicked);
 
     if (auto vm = this->getViewModel<ExposureModeViewModel>(); !!vm)
     {
         connect(vm, &ExposureModeViewModel::s_setAlignmentViewLock, this, &ExposureModeView::setAlignmentViewLock);
         connect(vm, &ExposureModeViewModel::s_setFloodExposureLock, this, &ExposureModeView::setFloodExposureLock);
+        connect(vm, &ExposureModeViewModel::s_preparingAlignment, this, &ExposureModeView::onPreparingAlignment);
     }
 
     this->updateMachineLogo(this->height());
@@ -46,6 +47,12 @@ void ExposureModeView::setAlignmentViewLock(bool lock)
 void ExposureModeView::setFloodExposureLock(bool lock)
 {
     ui->floodBtn->setEnabled(!lock);
+}
+
+void ExposureModeView::onPreparingAlignment()
+{
+    if (this->isVisible())
+        emit s_openView(Kub3::UI::ViewId::ALIGNMENT_CONTACT_SELECTION_VIEW);
 }
 
 void ExposureModeView::resizeEvent(QResizeEvent *ev)
@@ -81,6 +88,7 @@ void ExposureModeView::createNavButtonsConfigs()
         std::bind(&ExposureModeView::onBackButtonClicked, this));
     addNavButton("left", backBtn);
 }
+
 void ExposureModeView::configTitleBar()
 {
     setTitleBar(TitleBarConfig{
@@ -104,12 +112,17 @@ void ExposureModeView::onBackToMainButtonClicked()
     emit s_openView(Kub3::UI::ViewId::HOME_VIEW);
 }
 
-void ExposureModeView::onFloodExposureClicked()
+void ExposureModeView::ps_onFloodExposureClicked()
 {
     emit s_openView(Kub3::UI::ViewId::EXPOSURE_SETTINGS_VIEW);
 }
 
-void ExposureModeView::onMaskAlignmentClicked()
+void ExposureModeView::ps_onMaskAlignmentClicked()
 {
-    emit s_openView(Kub3::UI::ViewId::ALIGNMENT_CONTACT_SELECTION_VIEW);
+    ExposureModeViewModel *vm = getViewModel<ExposureModeViewModel>();
+
+    if (vm)
+    {
+        vm->ui_alignmentModeSelected(); // Triggers vision block movement
+    }
 }

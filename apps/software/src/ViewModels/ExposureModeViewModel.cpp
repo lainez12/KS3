@@ -8,6 +8,11 @@ namespace Kub3::UI::ViewModels
         BaseViewModel(parent),
         m_repo(std::move(repo)) {}
 
+    void ExposureModeViewModel::ui_alignmentModeSelected()
+    {
+        emit cmdEnterAlignmentMode();
+    }
+
     void ExposureModeViewModel::ps_onSystemStateChanged(MFSM::SystemStateKind stateKind)
     {
         m_currentSysState = stateKind;
@@ -18,6 +23,17 @@ namespace Kub3::UI::ViewModels
     {
         m_posture = posture;
         updateView();
+    }
+
+    void ExposureModeViewModel::ps_onOperationalSubstateKindChanged(MFSM::OperationalStateKind kind)
+    {
+        // @note: If ever need to update this slot connection in the `ApplicationBuilder` from `m_exposureModeVM->bindConnection` to `QObject::connect`:
+        // - Create a specific signal in the Master FSM to trigger the view change so this one is not triggered while view is hidden.
+        if (kind == MFSM::OperationalStateKind::PreparingAlignment)
+        {
+            // On alignment preparation, notify view
+            emit s_preparingAlignment();
+        }
     }
 
     void ExposureModeViewModel::updateView()

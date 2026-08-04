@@ -53,6 +53,7 @@ namespace Kub3::UI::Views
         void onCamerasFineModeUpdated(CameraId camId, bool fineModeActive);
         void onSubstrateFineModeUpdated(bool active);
         void onGoToBtnClicked(CameraId camId);
+        void onPreparingExposureMode(void);
 
     private:
         // Setup routines splitting up the constructor
