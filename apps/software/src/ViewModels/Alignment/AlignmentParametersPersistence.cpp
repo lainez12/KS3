@@ -119,7 +119,7 @@ namespace Kub3::UI::ViewModels::Alignment::Persistence
 {
     QString storagePath()
     {
-        return QStringLiteral(KUB3_SAVES_PARAMETERS_ALIGNMENT_PATH);
+        return QStringLiteral(KUB3_SAVES_ALIGNMENT_SETTINGS_PATH);
     }
 
     Result<Unit, const char *> ensureParentDirectory(const QString &path)
