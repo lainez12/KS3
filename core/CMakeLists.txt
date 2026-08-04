@@ -235,6 +235,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND NOT CMAKE_PRODUCTION_BUILD)
         KUB3_ADMIN_CONFIG_PATH="${CMAKE_SOURCE_DIR}/tests/admin.ini"
         KUB3_ADMIN_VAULT_PATH="${CMAKE_SOURCE_DIR}/tests/admin_vault.bin"
         KUB3_SAVES_EXPOSURE_SETTINGS_PATH="${CMAKE_SOURCE_DIR}/tests/exposure_settings.json"
+        KUB3_SAVES_ALIGNMENT_SETTINGS_PATH="${CMAKE_SOURCE_DIR}/tests/parameters_alignment.json"
     )
 else()
     if(CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -248,5 +249,6 @@ else()
         KUB3_ADMIN_CONFIG_PATH="/etc/kub3/admin.ini"
         KUB3_ADMIN_VAULT_PATH="/etc/kub3/admin_vault.bin"
         KUB3_SAVES_EXPOSURE_SETTINGS_PATH="/etc/kub3/exposure_settings.json"
+        KUB3_SAVES_ALIGNMENT_SETTINGS_PATH="/etc/kub3/parameters_alignment.json"
     )
 endif()

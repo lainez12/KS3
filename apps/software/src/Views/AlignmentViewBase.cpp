@@ -41,6 +41,11 @@ namespace Kub3::UI::Views
         setNavButtonEnabled(ID_BTN_VALIDATE, false);
     }
 
+    void AlignmentViewBase::showEvent(QShowEvent *event)
+    {
+        ViewBase::showEvent(event);
+    }
+
     void AlignmentViewBase::configTitleBar()
     {
         // setDefaultTitleBar("");

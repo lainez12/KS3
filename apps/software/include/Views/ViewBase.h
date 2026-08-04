@@ -4,6 +4,7 @@
 #include <QHideEvent>
 #include <QShowEvent>
 #include <QString>
+#include <QStyle>
 #include <QVector>
 #include <QWidget>
 #include <memory>

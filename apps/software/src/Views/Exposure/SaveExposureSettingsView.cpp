@@ -90,7 +90,7 @@ void SaveExposureSettingsView::ps_onConfirmButtonClicked()
         ps_createPopUpWithText(
             "Preset Already Exists",
             {
-                {"Cancel", []() {}},
+                {"Cancel", [this]() { ps_closePopUp(); }},
                 {"Replace", [this, name]() { this->userConfirmSaveReplacementPreset(name); }},
             },
             "Choose a different name or replacement.");
