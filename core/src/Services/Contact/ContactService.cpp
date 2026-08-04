@@ -243,6 +243,7 @@ namespace Kub3::Services
         this->clearTasks();
         // TODO: implement
         qCritical() << "[ContactService::retractFromContact] not implemented.";
+        this->startSequence();
     }
 
     void ContactService::buildAutolevelingLanes(void)
