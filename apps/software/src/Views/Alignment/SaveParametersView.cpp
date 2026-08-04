@@ -1,6 +1,6 @@
 #include <QString>
-
 #include <QDebug>
+
 #include <Views/Alignment/SaveParametersView.h>
 #include <Views/Components/Colors.h>
 #include <Views/Components/DoubleClickButton.h>
