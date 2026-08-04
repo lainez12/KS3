@@ -1,4 +1,3 @@
-#include "Services/IService.h"
 #include <QDebug>
 
 #include <HAL/Actuators/Focal/IFocal.h>
@@ -258,7 +257,7 @@ namespace Kub3::Services
             return;
 
         // Check for collisions
-        if (inCollisionZone(motor, dir))
+        if (inCollisionZone(motor, dir, granular))
         {
             if (m_pushingModeEnabled)
                 applyPush(motor, conf.fineMode, granular); // Instantly apply push to the other motor to prevent stutter
@@ -299,7 +298,8 @@ namespace Kub3::Services
         auto it = m_cameraMotors.find(motor);
         if (it == m_cameraMotors.end() || !it->second.motor)
             return;
-        vision_motor_config_t &conf = it->second;
+        vision_motor_config_t &conf                   = it->second;
+        const Config::kinematic_profile_t &kinematics = conf.fineMode ? conf.fineProfile : conf.fastProfile;
 
         // Interrupt any ongoing camera trajectory before taking over
         if (conf.motor->isMoving())
@@ -307,7 +307,7 @@ namespace Kub3::Services
             conf.motor->emergencyStop();
         }
 
-        // 1. Virtual limits pre-check
+        // Virtual limits pre-check
         if (motor == VisionMotor::UpperLeftCameraX && positionMm < m_conf.left_cam_x_virtual_limit_mm)
         {
             qWarning() << "VisionService: Absolute movement rejected. Beyond left virtual limit.";
@@ -319,7 +319,7 @@ namespace Kub3::Services
             return;
         }
 
-        // 2. Anti-collision & Pushing Mode Pre-calculation for Absolute Movement
+        // Anti-collision & Pushing Mode Pre-calculation for Absolute Movement
         if (motor == VisionMotor::UpperLeftCameraX || motor == VisionMotor::UpperRightCameraX)
         {
             auto itLeft  = m_cameraMotors.find(VisionMotor::UpperLeftCameraX);
@@ -352,7 +352,7 @@ namespace Kub3::Services
 
                         // Fire absolute push. Watchdog is zeroed because driver handles trajectory completely
                         itRight->second.watchdogTicks = 0;
-                        itRight->second.motor->moveAbsolute(newRightPos, itRight->second.fineMode ? itRight->second.fineProfile : itRight->second.fastProfile);
+                        itRight->second.motor->moveAbsolute(newRightPos, kinematics);
                     }
                 }
                 // If Right camera is moving leftwards towards the Left camera
@@ -376,17 +376,15 @@ namespace Kub3::Services
 
                         // Fire absolute push.
                         itLeft->second.watchdogTicks = 0;
-                        itLeft->second.motor->moveAbsolute(newLeftPos, itLeft->second.fineMode ? itLeft->second.fineProfile : itLeft->second.fastProfile);
+                        itLeft->second.motor->moveAbsolute(newLeftPos, kinematics);
                     }
                 }
             }
         }
 
-        // 3. Cancel any active velocity watchdog for this motor as it transitions to an absolute trajectory
+        // Cancel any active velocity watchdog for this motor as it transitions to an absolute trajectory
         conf.watchdogTicks = 0;
-        // 4. Execute Movement
-        const auto kinematics = conf.fineMode ? conf.fineProfile : conf.fastProfile;
-        conf.motor->moveAbsolute(positionMm, kinematics);
+        conf.motor->moveAbsolute(positionMm, kinematics); // Execute Movement
     }
 
     void VisionService::stopManual(VisionMotor motor)
@@ -521,7 +519,7 @@ namespace Kub3::Services
     // ANTI-COLLISION & ANTI-COASTING HELPERS
     // ==========================================
 
-    bool VisionService::inCollisionZone(VisionMotor motor, VisionDirection dir) const
+    bool VisionService::inCollisionZone(VisionMotor motor, VisionDirection dir, bool granular) const
     {
         // We only care about X-axis movements for collision
         if (motor != VisionMotor::UpperLeftCameraX && motor != VisionMotor::UpperRightCameraX)
@@ -536,13 +534,27 @@ namespace Kub3::Services
             return true; // Hardware missing, fake collision risk for safety
         }
 
-        // Fetch current positions & compute distance in mm
+        // Identify which kinematics the pushing motor is currently using
+        auto itMoving          = m_cameraMotors.find(motor);
+        const auto &kinematics = (granular || itMoving->second.fineMode) ? itMoving->second.fineProfile : itMoving->second.fastProfile;
+
+        // Compute dynamic anticipation distance (distance anticipation formula + 50Hz software lag)
+        double anticipationMm = 0.0;
+        if (kinematics.accelerationMmS2 > 0.0)
+        {
+            // V^2 / (2*A) (Yields the exact physical shrinkage, we add a 10% safety to it)
+            anticipationMm = (kinematics.targetVelocityMmS * kinematics.targetVelocityMmS) / (2.0 * kinematics.accelerationMmS2);
+            anticipationMm *= 1.1;
+        }
+        // 50Hz logic loop = 20ms delay. Calculate how far it travels in 0.02 seconds at max speed.
+        const double fsmTickLagMm = kinematics.targetVelocityMmS * 0.02;
+        // Fetch current positions & compute distance
         const double posLeftX          = itLeft->second.motor->getEncoderPositionMm();
         const double posRightX         = itRight->second.motor->getEncoderPositionMm();
         const double currentDistanceMm = std::fabs(posRightX - posLeftX);
 
-        // Distance is safely above the threshold, no danger
-        if (currentDistanceMm > m_conf.min_camera_distance_mm)
+        // Check against the dynamic threshold
+        if (currentDistanceMm > m_conf.min_camera_distance_mm + anticipationMm + fsmTickLagMm)
             return false;
 
         // Check direction depending on which camera moves
@@ -550,6 +562,7 @@ namespace Kub3::Services
             return dir == VisionDirection::UpperLeftCamXRight;
         else if (motor == VisionMotor::UpperRightCameraX)
             return dir == VisionDirection::UpperRightCamXLeft;
+
         return false;
     }
 
@@ -632,7 +645,7 @@ namespace Kub3::Services
         return false;
     }
 
-    std::optional<std::pair<VisionMotor, VisionDirection>> VisionService::getAssociatedPushedMotor(VisionMotor motor, VisionDirection lastDir) const
+    Optional<Pair<VisionMotor, VisionDirection>> VisionService::getAssociatedPushedMotor(VisionMotor motor, VisionDirection lastDir) const
     {
         if (!m_pushingModeEnabled)
         {

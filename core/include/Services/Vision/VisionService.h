@@ -80,7 +80,7 @@ namespace Kub3::Services
     private:
         // Collision and pushing logic
         void applyPush(VisionMotor pushingMotor, bool fineMode, bool granular = false);
-        [[nodiscard]] bool inCollisionZone(VisionMotor motor, VisionDirection dir) const;
+        [[nodiscard]] bool inCollisionZone(VisionMotor motor, VisionDirection dir, bool granular = false) const;
         [[nodiscard]] bool isMotorBeingPushed(VisionMotor motor, VisionDirection lastDir) const;
         [[nodiscard]] std::optional<std::pair<VisionMotor, VisionDirection>> getAssociatedPushedMotor(VisionMotor motor, VisionDirection lastDir) const;
         void applyAntiCoastingStop(VisionMotor pushedMotor, VisionDirection pushedDir);
