@@ -26,12 +26,13 @@ namespace Kub3::UI::Views
         ~ExposureModeView();
 
     public slots:
-        void onFloodExposureClicked();
-        void onMaskAlignmentClicked();
+        void ps_onFloodExposureClicked();
+        void ps_onMaskAlignmentClicked();
 
     private slots:
         void setAlignmentViewLock(bool lock);
         void setFloodExposureLock(bool lock);
+        void onPreparingAlignment();
 
     public:
         void resizeEvent(QResizeEvent *event) override;

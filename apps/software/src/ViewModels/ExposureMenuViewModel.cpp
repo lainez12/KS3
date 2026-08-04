@@ -213,8 +213,8 @@ namespace Kub3::UI::ViewModels
         const bool isMaskReady = canStowMask ? isMaskStowed : (m_machinePosture.mask == MFSM::MaskPosture::Homed);
         const bool canContinue = isMaskReady && isWaferInAlignmentZone;
 
-        qDebug() << "Is mask ready:" << isMaskReady << ", isWaferInAlignmentZone:" << isWaferInAlignmentZone;
-
+        qDebug() << "[ExposureMenuViewModel::updateView] Is mask ready:" << isMaskReady
+                 << ", isWaferInAlignmentZone:" << isWaferInAlignmentZone;
         emit s_setContinueToExposureLock(!canContinue);
     }
 

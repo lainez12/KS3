@@ -17,11 +17,19 @@ namespace Kub3::UI::ViewModels
         // Signals to the view
         void s_setAlignmentViewLock(bool lock);
         void s_setFloodExposureLock(bool lock);
+        void s_preparingAlignment();
+
+        // Signals to the FSM
+        void cmdEnterAlignmentMode(void);
 
     public slots:
+        // From the view
+        void ui_alignmentModeSelected();
+
         // From the FSM
         void ps_onSystemStateChanged(MFSM::SystemStateKind stateKind);
         void ps_onPostureChanged(const MFSM::SystemPosture &posture);
+        void ps_onOperationalSubstateKindChanged(MFSM::OperationalStateKind kind);
 
     private:
         void updateView();

@@ -98,8 +98,8 @@ namespace Kub3::Interlocks
     Result<Unit, const char *> canEnterAlignment(const SystemPosture &p)
     {
         // Must have both components in their respective operational zones
-        if (p.mask != MaskPosture::Exposure || p.wafer != WaferPosture::AlignmentZone)
-            return Err("Action Rejected - Mask and Wafer must be stowed before Alignment.");
+        if (p.mask != MaskPosture::Exposure || p.wafer != WaferPosture::AlignmentZone || !p.isLevelingValid)
+            return Err("Action Rejected - Mask and Wafer must be stowed and parallel before Alignment.");
 
         return OK;
     }
