@@ -20,10 +20,18 @@ namespace Kub3::UI::ViewModels::Alignment
         m_currentParameter = parameter;
     }
 
-    Result<Unit, QString> SaveParametersViewModel::ui_userRequestSaveParameters(const QString &name, bool replaceExisting)
+    void SaveParametersViewModel::ui_userRequestSaveParameters(const QString &name, bool replaceExisting)
     {
         m_currentParameter.name = name;
-        return saveParameters(m_currentParameter, replaceExisting);
+        auto result             = saveParameters(m_currentParameter, replaceExisting);
+        if (result.is_ok())
+        {
+            emit s_parameterSaved();
+        }
+        else
+        {
+            emit s_errorSavingParameter(result.unwrap_err());
+        }
     }
 
     Result<Unit, QString> SaveParametersViewModel::saveParameters(const Persistence::alignment_parameter_t &parameter, bool replaceExisting)

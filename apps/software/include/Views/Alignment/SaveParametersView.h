@@ -32,7 +32,8 @@ namespace Kub3::UI::Views
         void showEvent(QShowEvent *event) override;
 
     public slots:
-        /// void ps_onConfirmButtonClicked();
+        void ps_onParameterSaved();
+        void ps_onErrorSavingParameter(const QString &errorMessage);
 
     private:
         void setNewNavButtonsConfigs();

@@ -20,11 +20,15 @@ namespace Kub3::UI::ViewModels::Alignment
         explicit SaveParametersViewModel(Shared<HAL::MS::IMachineStatusRepo> repo, QObject *parent = nullptr);
         ~SaveParametersViewModel() override;
 
+    signals:
+        void s_parameterSaved();
+        void s_errorSavingParameter(const QString &errorMessage);
+
     public slots:
         void ps_saveParameters(const Persistence::alignment_parameter_t &parameter);
 
     public:
-        Result<Unit, QString> ui_userRequestSaveParameters(const QString &name, bool replaceExisting = true);
+        void ui_userRequestSaveParameters(const QString &name, bool replaceExisting = true);
         Result<QList<QString>, QString> getAllNamesSavedParameters();
         Result<QJsonArray, QString> getAllParameters();
         Result<QJsonObject, QString> getParameterByName(const QString &parameterName);

@@ -25,6 +25,9 @@ SaveParametersView::SaveParametersView(Unique<SaveParametersViewModel> viewModel
     ui->parametersListWidget->setLayout(layout);
     connect(ui->btnCancel, &QPushButton::clicked, this, &SaveParametersView::onBackButtonClicked);
     connect(ui->btnConfirm, &QPushButton::clicked, this, &SaveParametersView::onConfirmButtonClicked);
+
+    connect(getViewModel<SaveParametersViewModel>(), &SaveParametersViewModel::s_parameterSaved, this, &SaveParametersView::ps_onParameterSaved);
+    connect(getViewModel<SaveParametersViewModel>(), &SaveParametersViewModel::s_errorSavingParameter, this, &SaveParametersView::ps_onErrorSavingParameter);
 }
 
 SaveParametersView::~SaveParametersView()
@@ -46,6 +49,21 @@ void SaveParametersView::showEvent(QShowEvent *event)
         setAParameterSavedInThisSession(false);
     }
     AlignmentViewBase::showEvent(event);
+}
+
+void SaveParametersView::ps_onParameterSaved()
+{
+    setAParameterSavedInThisSession(true);
+}
+
+void SaveParametersView::ps_onErrorSavingParameter(const QString &errorMessage)
+{
+    ps_createPopUp(
+        "Error Saving Parameter",
+        {
+            {"OK", [this]() { ps_closePopUp(); }},
+        });
+    qWarning() << "Error saving parameter:" << errorMessage;
 }
 
 void SaveParametersView::setNewNavButtonsConfigs()
