@@ -431,13 +431,20 @@ VisualisationView::alignment_parameter_t VisualisationView::getAlignmentParamete
     alignment_parameter_t parameter{};
     parameter.name = "Current";
 
-    parameter.cameraLeft.position.x    = 10000;
-    parameter.cameraLeft.position.y    = 10000;
+    // TODO: Replace with actual values
+
+    parameter.cameraLeft.position.x    = 10000.0;
+    parameter.cameraLeft.position.y    = 10000.0;
     parameter.cameraLeft.visualisation = {};
 
-    parameter.cameraRight.position.x    = 10000;
-    parameter.cameraRight.position.y    = 10000;
-    parameter.cameraRight.visualisation = {};
+    parameter.cameraRight.position.x             = 10000.0;
+    parameter.cameraRight.position.y             = 10000.0;
+    parameter.cameraRight.visualisation          = {};
+    parameter.cameraRight.visualisation.gain     = 95.0;
+    parameter.cameraRight.visualisation.exposure = 63.0;
+    parameter.cameraRight.visualisation.zoom     = 2.0;
+    parameter.cameraRight.visualisation.focus    = 45.0;
+    parameter.cameraRight.visualisation.light    = 70.5;
 
     return parameter;
 }

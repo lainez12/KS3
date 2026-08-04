@@ -11,16 +11,16 @@
 namespace Kub3::UI::ViewModels::Alignment::Persistence
 {
     typedef struct camera_position_s {
-        int x = 0;
-        int y = 0;
+        double x = 0;
+        double y = 0;
     } camera_position_t;
 
     typedef struct camera_visualisation_s {
-        std::optional<int> gain;
-        std::optional<int> exposure;
-        std::optional<int> zoom;
-        std::optional<int> focus;
-        std::optional<int> light;
+        std::optional<double> gain;
+        std::optional<double> exposure;
+        std::optional<double> zoom;
+        std::optional<double> focus;
+        std::optional<double> light;
     } camera_visualisation_t;
 
     typedef struct camera {
