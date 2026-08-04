@@ -36,9 +36,6 @@ namespace Kub3::UI::Views
         explicit VisualisationView(Unique<VisualisationViewModel> viewModel, QWidget *parent = nullptr);
         ~VisualisationView();
 
-    signals:
-        void s_saveParameters(const alignment_parameter_t &parameter);
-
     public slots:
         void mapPositionCamerasOpenMap();
         void mapPositionCamerasCloseMap();

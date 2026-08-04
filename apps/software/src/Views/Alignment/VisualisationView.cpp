@@ -359,7 +359,11 @@ void VisualisationView::onValidateButtonClicked()
 
 void VisualisationView::onSaveButtonClicked()
 {
-    emit s_saveParameters(getAlignmentParameter());
+    auto vm = getViewModel<VisualisationViewModel>();
+    if (vm)
+    {
+        vm->uiRequestSaveParameters(getAlignmentParameter());
+    }
     emit s_openView(Kub3::UI::ViewId::ALIGNMENT_SAVE_PARAMETERS_VIEW);
 }
 
@@ -427,12 +431,12 @@ VisualisationView::alignment_parameter_t VisualisationView::getAlignmentParamete
     alignment_parameter_t parameter{};
     parameter.name = "Current";
 
-    parameter.cameraLeft.position.x    = ui->sbLeftCamXPos->value();
-    parameter.cameraLeft.position.y    = ui->sbLeftCamYPos->value();
+    parameter.cameraLeft.position.x    = 10000;
+    parameter.cameraLeft.position.y    = 10000;
     parameter.cameraLeft.visualisation = {};
 
-    parameter.cameraRight.position.x    = ui->sbRightCamXPos->value();
-    parameter.cameraRight.position.y    = ui->sbRightCamYPos->value();
+    parameter.cameraRight.position.x    = 10000;
+    parameter.cameraRight.position.y    = 10000;
     parameter.cameraRight.visualisation = {};
 
     return parameter;

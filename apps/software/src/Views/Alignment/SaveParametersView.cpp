@@ -98,7 +98,6 @@ void SaveParametersView::populateViewWithCurrentParameter()
     {
         DoubleClickButton *presetButton = new DoubleClickButton(value);
         m_presetsButton.insert(value, presetButton);
-        qDebug() << "Populating view with current parameter";
         presetButton->setFixedHeight(50);
         presetButton->setProperty("class", "button-blue");
         ui->parametersListWidget->layout()->addWidget(presetButton);
