@@ -16,7 +16,7 @@
             "name": "kub3-8-debug",
             "displayName": "KUB3-8 (Debug)",
             "generator": "Unix Makefiles",
-            "binaryDir": "${sourceDir}/build/kub8-debug",
+            "binaryDir": "${sourceDir}/build/kub3-8-debug",
             "cacheVariables": {
                 "CMAKE_PREFIX_PATH": "/home/kloe/Qt/6.8.3/gcc_64",
                 "CMAKE_BUILD_TYPE": "Debug",
@@ -27,7 +27,7 @@
             "name": "kub3-8-release",
             "displayName": "KUB3-8 (Release)",
             "generator": "Unix Makefiles",
-            "binaryDir": "${sourceDir}/build/kub8-release",
+            "binaryDir": "${sourceDir}/build/kub3-8-release",
             "cacheVariables": {
                 "CMAKE_PREFIX_PATH": "/home/kloe/Qt/6.8.3/gcc_64",
                 "CMAKE_BUILD_TYPE": "Release",
@@ -38,8 +38,8 @@
             "name": "kub3-8-production",
             "displayName": "KUB3-8 (Production Deploy)",
             "generator": "Unix Makefiles",
-            "binaryDir": "${sourceDir}/build/kub8-production",
-            "installDir": "${sourceDir}/dist/kub8-production",
+            "binaryDir": "${sourceDir}/build/kub3-8-production",
+            "installDir": "${sourceDir}/dist/kub3-8-production",
             "cacheVariables": {
                 "CMAKE_PREFIX_PATH": "/home/kloe/Qt/6.8.3/gcc_64",
                 "CMAKE_BUILD_TYPE": "Release",
@@ -51,8 +51,8 @@
             "name": "kub3-8-production-dbg",
             "displayName": "KUB3-8 (Debug Production Deploy)",
             "generator": "Unix Makefiles",
-            "binaryDir": "${sourceDir}/build/kub8-production-dbg",
-            "installDir": "${sourceDir}/dist/kub8-production-dbg",
+            "binaryDir": "${sourceDir}/build/kub3-8-production-dbg",
+            "installDir": "${sourceDir}/dist/kub3-8-production-dbg",
             "cacheVariables": {
                 "CMAKE_PREFIX_PATH": "/home/kloe/Qt/6.8.3/gcc_64",
                 "CMAKE_BUILD_TYPE": "Debug",

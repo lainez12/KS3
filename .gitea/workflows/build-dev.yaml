@@ -72,6 +72,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Binaries-${{ matrix.preset }}
-          # IMPORTANT: Update this path to match the "binaryDir" defined in your CMakePresets.json!
-          # For example, if your preset outputs to "build/kub3-8-release", adjust this accordingly:
           path: build/${{ matrix.preset }}/bin/

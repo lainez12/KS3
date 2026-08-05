@@ -12,8 +12,8 @@ NC='\033[0m'
 echo -e "${BLUE}==>${NC} Starting Kub3Software Installation..."
 
 # 1. Locate the versioned tarball
-# Matches patterns like: kub8-v1.2.3-production.tar.gz
-TAR_FILE=$(ls kub*-v*-production*.tar.gz 2>/dev/null | head -n 1)
+# Matches patterns like: kub3-8-v1.2.3-production.tar.gz
+TAR_FILE=$(ls kub*-*-v*-production*.tar.gz 2>/dev/null | head -n 1)
 
 if [ -z "$TAR_FILE" ]; then
     echo -e "${RED}Error:${NC} No versioned production tarball (kub*-v*-production.tar.gz) found."

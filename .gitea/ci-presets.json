@@ -5,7 +5,7 @@
             "name": "kub3-8-debug",
             "displayName": "KUB3-8 (Debug)",
             "generator": "Unix Makefiles",
-            "binaryDir": "${sourceDir}/build/kub8-debug",
+            "binaryDir": "${sourceDir}/build/kub3-8-debug",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
                 "KUB_MODEL": "8"
@@ -15,7 +15,7 @@
             "name": "kub3-8-release",
             "displayName": "KUB3-8 (Release)",
             "generator": "Unix Makefiles",
-            "binaryDir": "${sourceDir}/build/kub8-release",
+            "binaryDir": "${sourceDir}/build/kub3-8-release",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release",
                 "KUB_MODEL": "8"
@@ -25,8 +25,8 @@
             "name": "kub3-8-production",
             "displayName": "KUB3-8 (Production Deploy)",
             "generator": "Unix Makefiles",
-            "binaryDir": "${sourceDir}/build/kub8-production",
-            "installDir": "${sourceDir}/dist/kub8-production",
+            "binaryDir": "${sourceDir}/build/kub3-8-production",
+            "installDir": "${sourceDir}/dist/kub3-8-production",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release",
                 "CMAKE_PRODUCTION_BUILD": true,

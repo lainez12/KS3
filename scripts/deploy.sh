@@ -19,8 +19,10 @@ if [ -z "$1" ]; then
     usage
 fi
 
-MODEL=$1
-shift # Shift to check for additional arguments
+HW_VERSION=$1
+MODEL=$2
+shift
+shift # Double shift to check for additional arguments
 
 # Default to production; change if --debug is provided
 DEBUG_SUFFIX=""
@@ -47,13 +49,13 @@ if [ ! -f ".version" ]; then
 fi
 VERSION=$(cat .version | tr -d '\r' | xargs)
 
-echo -e "${BLUE}==>${NC} Starting ${DEPLOY_TYPE} deployment for ${GREEN}KUB3-$MODEL (Version: $VERSION)${NC}..."
+echo -e "${BLUE}==>${NC} Starting ${DEPLOY_TYPE} deployment for ${GREEN}KUB$HW_VERSION-$MODEL (Version: $VERSION)${NC}..."
 
 # Setup dynamic names based on deployment type
-PRESET="kub3-$MODEL-production$DEBUG_SUFFIX"
-BUILD_DIR="build/kub$MODEL-production$DEBUG_SUFFIX"
-DIST_FOLDER="kub$MODEL-production$DEBUG_SUFFIX"
-TAR_NAME="kub$MODEL-v$VERSION-production$DEBUG_SUFFIX.tar.gz"
+PRESET="kub$HW_VERSION-$MODEL-production$DEBUG_SUFFIX"
+BUILD_DIR="build/kub$HW_VERSION-$MODEL-production$DEBUG_SUFFIX"
+DIST_FOLDER="kub$HW_VERSION-$MODEL-production$DEBUG_SUFFIX"
+TAR_NAME="kub$HW_VERSION-$MODEL-v$VERSION-production$DEBUG_SUFFIX.tar.gz"
 
 # 2. Configure & Build
 NPROC=$(( $(nproc 2>/dev/null || echo 1) - 1 ))
