@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - dev
+      - ci-setup
 
 jobs:
   build:
@@ -72,9 +73,11 @@ jobs:
         run: cmake --install build/${{ matrix.preset }}
 
       # Upload Packaged Release for Production
+      # TODO: implement when server is on the hw server
       - name: Upload Packaged Deployment
-        if: matrix.preset == 'kub3-8-production'
-        uses: actions/upload-artifact@v4
+        if: matrix.preset == 'not-implemented'
+        uses: actions/upload-artifact@v3
         with:
           name: Binaries-${{ matrix.preset }}
           path: dist/${{ matrix.preset }}/
+
