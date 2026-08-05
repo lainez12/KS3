@@ -253,6 +253,22 @@ namespace Kub3::UI::ViewModels::Alignment::Persistence
         }
     }
 
+    bool changeParameterNameInFile(QJsonArray &parametersArray, const QString &oldName, const QString &newName)
+    {
+        for (int i = 0; i < parametersArray.size(); ++i)
+        {
+            const QJsonObject parameterObject = parametersArray[i].toObject();
+            if (parameterObject.value(QLatin1String(kNameKey)).toString() == oldName)
+            {
+                QJsonObject updatedParameter = parameterObject;
+                updatedParameter.insert(QLatin1String(kNameKey), newName);
+                parametersArray[i] = updatedParameter;
+                return true;
+            }
+        }
+        return false;
+    }
+
     Result<QJsonObject, const char *> getParameterByName(const QJsonArray &parametersArray, const QString &parameterName)
     {
         for (const QJsonValue &value : parametersArray)

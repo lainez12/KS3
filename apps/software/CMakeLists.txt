@@ -32,6 +32,7 @@ qt_add_executable(Kub3Software
     src/ViewModels/Settings/OperatingTimesViewModel.cpp
     src/ViewModels/Alignment/LoadParametersViewModel.cpp
     src/ViewModels/Alignment/SaveParametersViewModel.cpp
+    src/ViewModels/Alignment/RenameParametersViewModel.cpp
     src/ViewModels/Alignment/AlignmentParametersPersistence.cpp
     src/ViewModels/Alignment/VisualisationViewModel.cpp
     src/ViewModels/Alignment/DistanceViewModel.cpp
@@ -103,6 +104,7 @@ qt_add_executable(Kub3Software
     include/ViewModels/Settings/OperatingTimesViewModel.h
     include/ViewModels/Alignment/LoadParametersViewModel.h
     include/ViewModels/Alignment/SaveParametersViewModel.h
+    include/ViewModels/Alignment/RenameParametersViewModel.h
     include/ViewModels/Alignment/AlignmentParametersPersistence.h
     include/ViewModels/Alignment/VisualisationViewModel.h
     include/ViewModels/Alignment/DistanceViewModel.h
