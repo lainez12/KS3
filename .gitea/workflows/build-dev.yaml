@@ -73,8 +73,9 @@ jobs:
         run: cmake --install build/${{ matrix.preset }}
 
       # Upload Packaged Release for Production
+      # TODO: implement when server is on the hw server
       - name: Upload Packaged Deployment
-        if: matrix.preset == 'kub3-8-production'
+        if: matrix.preset == 'not-implemented'
         uses: actions/upload-artifact@v3
         with:
           name: Binaries-${{ matrix.preset }}
