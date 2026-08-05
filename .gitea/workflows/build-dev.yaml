@@ -42,6 +42,7 @@ jobs:
           echo "Downloading Qt 6.8.3..."
           aqt install-qt linux desktop 6.8.3 linux_gcc_64 -m qtserialport --outputdir $PWD/Qt
           aqt list-qt linux desktop --modules 6.8.3 linux_gcc_64
+          ls -la $PWD/Qt
 
       - name: Configure CMake
         # - Tell CMake exactly where to find the Qt 6.8 we just downloaded
