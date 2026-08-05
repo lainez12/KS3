@@ -5,6 +5,7 @@
 #include <Common/Enums.h>
 #include <Common/Result.h>
 #include <MFSM/posture.h>
+#include <MFSM/states.macro.h>
 #include <Services/Drawers/IDrawerService.h>
 #include <Services/Stowage/IStowageService.h>
 
@@ -25,6 +26,7 @@ namespace Kub3::Interlocks
     // Result<Unit, const char *> canExitAlignment(const MFSM::SystemPosture &p);
     Result<Unit, const char *> canApplyContact(const MFSM::SystemPosture &p);
     Result<Unit, const char *> canStartExposure(const MFSM::SystemPosture &p);
+    Result<Unit, const char *> canEnableCompressedAir(const MFSM::SystemPosture &p, const MFSM::StateOperational &opState);
 
     // --- Movement Pads ---
     Result<Unit, const char *> canMoveAlignmentStage(const MFSM::SystemPosture &p);

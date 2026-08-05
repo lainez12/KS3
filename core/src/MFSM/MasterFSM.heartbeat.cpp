@@ -156,10 +156,7 @@ namespace Kub3::MFSM
                 m_alignmentService->tick();
                 m_visionService->tick();
                 m_contactService->tick();
-                // Dynamic Hardware Lock: Alignment axes must be frozen if contact is applying/active
-                m_alignmentService->setHardwareLock((s.phase != ContactPhase::Free || m_contactService->isInContact()));
-
-                // Check for sequence completions if we are moving the Z stage
+                // Check for sequence completions if we are moving the Z stage using automations
                 if (s.phase == ContactPhase::ApplyingContact || s.phase == ContactPhase::Separating)
                 {
                     const auto zStatus = m_contactService->getStatus();
@@ -168,6 +165,23 @@ namespace Kub3::MFSM
                     else if (zStatus == Services::ServiceStatus::Error)
                         dispatch(EvServiceError{.reason = m_contactService->getErrorReason()});
                 }
+                else // MANUAL PAD TRACKING: Sync FSM topology with live hardware
+                {
+                    const bool physicalContact = m_contactService->isInContact();
+
+                    if (s.phase == ContactPhase::Free && physicalContact)
+                    {
+                        // User manually jogged the Z-axis UP into the mask
+                        s.phase = ContactPhase::InContact;
+                    }
+                    else if (s.phase == ContactPhase::InContact && !physicalContact)
+                    {
+                        // User manually jogged the Z-axis DOWN, breaking contact
+                        s.phase = ContactPhase::Free;
+                    }
+                }
+                // Dynamic Hardware Lock: Alignment axes must be frozen if contact is applying/active
+                m_alignmentService->setHardwareLock((s.phase != ContactPhase::Free || m_contactService->isInContact()));
             },
             [&](StatePreparingExposure &s) { onBasicOperatingServiceTick(s, m_homingService.get()); }, // `HomingService` is used here to move vision block to home
             [&](StateExposureReady &s) { /* no-op */ },
