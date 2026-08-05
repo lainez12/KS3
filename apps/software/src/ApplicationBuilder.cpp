@@ -281,7 +281,6 @@ namespace Kub3
         QObject::connect(m_favoriteExposureSettingsVM.get(), &VM::Exposure::FavoriteExposureSettingsViewModel::s_exposurePresetLoaded, m_recapExposureSettingsVM.get(), &VM::Exposure::RecapExposureSettingsViewModel::ps_setExposurePreset);
         m_progressExposureVM->bindConnection(m_progressExposureVM.get(), &VM::Exposure::ProgressExposureViewModel::s_launchExposure, m_masterFSM, &MFSM::MasterFSM::ps_requestExposure);
         QObject::connect(m_recapExposureSettingsVM.get(), &VM::Exposure::RecapExposureSettingsViewModel::s_exposurePresetLaunched, m_progressExposureVM.get(), &VM::Exposure::ProgressExposureViewModel::ps_launchExposure);
-        // --- AlignmentViewModels
         // --- Settings
         QObject::connect(m_configuratorPasswdVM.get(), &VM::Settings::AdminPasswordViewModel::s_authenticationSuccess, &launchConfigurator);
 
@@ -306,6 +305,7 @@ namespace Kub3
         QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_postureChanged, m_exposureModeVM.get(), &VM::ExposureModeViewModel::ps_onPostureChanged);
         // --- Alignment View Model
         QObject::connect(m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::s_saveParametersAlignment, m_saveParametersVM.get(), &VM::Alignment::SaveParametersViewModel::ps_saveParameters);
+        QObject::connect(m_loadParametersVM.get(), &VM::Alignment::LoadParametersViewModel::s_loadParameterSelected, m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::ps_handleLoadParameterSelected);
         m_visualisationVM->bindConnection(m_repo.get(), &HAL::MS::IMachineStatusRepo::s_machineValueChanged,
                                           m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::ps_handleSensorValueChanged);
         // --- Machine Status View Model

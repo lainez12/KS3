@@ -100,6 +100,19 @@ void LoadParametersView::populateParametersList()
 
 void LoadParametersView::onBtnLoadClicked()
 {
+    if (m_selectedParameterButtons.size() != 1)
+        return;
+    if (m_selectedParameterButtons.isEmpty())
+        return;
+    auto vm = getViewModel<LoadParametersViewModel>();
+    if (!vm)
+        return;
+
+    const QString &selectedName = m_selectedParameterButtons.firstKey();
+    if (vm->uiRequestedLoadParameter(selectedName))
+    {
+        emit s_openView(Kub3::UI::ViewId::ALIGNMENT_VISUALISATION_VIEW);
+    }
 }
 void LoadParametersView::onBtnRemoveClicked()
 {

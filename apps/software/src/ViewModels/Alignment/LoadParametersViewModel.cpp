@@ -64,4 +64,19 @@ namespace Kub3::UI::ViewModels::Alignment
         return Persistence::saveParametersToFile(Persistence::storagePath(), parametersArray);
     }
 
+    bool LoadParametersViewModel::uiRequestedLoadParameter(const QString &parameterName)
+    {
+        auto parameterRes = getParameterByName(parameterName);
+        if (parameterRes.is_err())
+            return false;
+
+        Result<alignment_parameter_t, const char *> parameter = Persistence::jsonToParameter(parameterRes.unwrap());
+        if (parameter.is_err())
+            return false;
+
+        const alignment_parameter_t &param = parameter.unwrap();
+        emit s_loadParameterSelected(param);
+        return true;
+    }
+
 } // namespace Kub3::UI::ViewModels::Alignment

@@ -65,6 +65,7 @@ namespace Kub3::UI::ViewModels::Alignment
         void ui_onGoToXYClicked(CameraId id, const coords_2d_t &targetPosMm);
         void ui_onCamSpeedClicked(CameraId id);
         void ui_substrateSpeedClicked();
+        void ps_handleLoadParameterSelected(const alignment_parameter_t &parameter);
 
         // From logic layer
         void ps_handleSensorValueChanged(const std::string &key);

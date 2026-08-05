@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QMap>
 #include <QPushButton>
 #include <QWidget>
 #include <ViewModels/Alignment/AlignmentParametersPersistence.h>

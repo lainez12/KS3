@@ -25,7 +25,10 @@ namespace Kub3::UI::ViewModels::Alignment::Persistence
     constexpr auto kFocusKey         = "focus";
     constexpr auto kLightKey         = "light";
 
-    using alignment_parameter_t = Kub3::UI::ViewModels::Alignment::Persistence::alignment_parameter_t;
+    using alignment_parameter_t  = Kub3::UI::ViewModels::Alignment::Persistence::alignment_parameter_t;
+    using camera_position_t      = Kub3::UI::ViewModels::Alignment::Persistence::camera_position_t;
+    using camera_visualisation_t = Kub3::UI::ViewModels::Alignment::Persistence::camera_visualisation_t;
+    using camera_t               = Kub3::UI::ViewModels::Alignment::Persistence::camera_t;
 
     QJsonObject cameraPositionToJson(const camera_position_t &position)
     {

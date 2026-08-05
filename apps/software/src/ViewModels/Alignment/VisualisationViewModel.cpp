@@ -112,6 +112,12 @@ namespace Kub3::UI::ViewModels::Alignment
         emit s_substrateFineModeUpdated(m_substrateFineMode);  // To view
     }
 
+    void VisualisationViewModel::ps_handleLoadParameterSelected(const alignment_parameter_t &parameter)
+    {
+        emit cmdRunCameraAbsoluteMovement(CameraId::LEFT, parameter.cameraLeft.position.x, parameter.cameraLeft.position.y);
+        emit cmdRunCameraAbsoluteMovement(CameraId::RIGHT, parameter.cameraRight.position.x, parameter.cameraRight.position.y);
+    }
+
     void VisualisationViewModel::ps_handleSensorValueChanged(const std::string &key)
     {
         const auto sendCamPosUpdate = [&](CameraId id, CameraAxis axis, double &valueHolder) {
