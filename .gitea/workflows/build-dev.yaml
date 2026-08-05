@@ -37,7 +37,7 @@ jobs:
           pip install aqtinstall
           echo "Downloading Qt 6.8.3..."
           aqt install-qt linux desktop 6.8.3 linux_gcc_64 -m qtserialport --outputdir $PWD/Qt
-          ls -lR $PWD/Qt/gcc_64
+          ls -lR $PWD/Qt/6.8.3/gcc_64
 
       # Copies the CI preset to the root so CMake can find it
       - name: Setup CI CMake Presets
