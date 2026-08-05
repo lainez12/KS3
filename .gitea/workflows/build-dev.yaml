@@ -39,9 +39,9 @@ jobs:
           python3 -m venv aqt-env
           source aqt-env/bin/activate
           pip install aqtinstall
-          aqt list-qt linux desktop --modules 6.8.3 <arch>
           echo "Downloading Qt 6.8.3..."
-          aqt install-qt linux desktop 6.8.3 linux_gcc_64 -m qtserialport qtsvg --outputdir $PWD/Qt
+          aqt install-qt linux desktop 6.8.3 linux_gcc_64 -m qtserialport --outputdir $PWD/Qt
+          aqt list-qt linux desktop --modules 6.8.3 linux_gcc_64
 
       - name: Configure CMake
         # - Tell CMake exactly where to find the Qt 6.8 we just downloaded
