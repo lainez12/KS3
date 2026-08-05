@@ -37,8 +37,7 @@ jobs:
           pip install aqtinstall
           echo "Downloading Qt 6.8.3..."
           aqt install-qt linux desktop 6.8.3 linux_gcc_64 -m qtserialport --outputdir $PWD/Qt
-          aqt list-qt linux desktop --modules 6.8.3 linux_gcc_64
-          ls -lR $PWD/Qt
+          ls -lR $PWD/Qt/gcc_64
 
       # Copies the CI preset to the root so CMake can find it
       - name: Setup CI CMake Presets
@@ -48,7 +47,7 @@ jobs:
         # - Tell CMake exactly where to find the Qt 6.8 we just downloaded
         # - Run the preset
         run: |
-          export Qt6_DIR=$PWD/Qt/6.8.3/linux_gcc_64/lib/cmake/Qt6
+          export Qt6_DIR=$PWD/Qt/6.8.3/gcc_64/lib/cmake/Qt6
           cmake --preset ${{ matrix.preset }}
 
       - name: Build Project
