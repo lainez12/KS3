@@ -66,10 +66,25 @@ jobs:
           echo "Total CPU cores: $MAX_CORES. Building with $JOBS cores."
           cmake --build --preset ${{ matrix.preset }} -j 14
 
-      # (Optional) Install step to gather binaries cleanly in one folder (see deploy.sh script)
+      # Package Production Deploy (Runs ONLY for production)
+      - name: Deployment (Production Only)
+        if: matrix.preset == 'kub3-8-production'
+        run: cmake --install build/${{ matrix.preset }}
 
-      - name: Upload Artifacts
+      # Upload Raw Binaries for Debug / Release
+      - name: Upload Raw Binaries
+        if: matrix.preset != 'kub3-8-production'
         uses: actions/upload-artifact@v4
         with:
           name: Binaries-${{ matrix.preset }}
-          path: build/${{ matrix.preset }}/bin/
+          path: |
+            build/${{ matrix.preset }}/apps/
+            build/${{ matrix.preset }}/core/
+
+      # Upload Packaged Release for Production
+      - name: Upload Packaged Deployment
+        if: matrix.preset == 'kub3-8-production'
+        uses: actions/upload-artifact@v4
+        with:
+          name: Binaries-${{ matrix.preset }}
+          path: dist/${{ matrix.preset }}/
