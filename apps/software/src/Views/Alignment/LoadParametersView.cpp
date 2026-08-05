@@ -1,6 +1,6 @@
 #include <QString>
 
-#include <QCheckBox>
+#include <QPushButton>
 #include <Views/Alignment/LoadParametersView.h>
 #include <Views/Components/Colors.h>
 
@@ -22,6 +22,9 @@ LoadParametersView::LoadParametersView(Unique<LoadParametersViewModel> viewModel
     ui->parametersListWidget->setLayout(layout);
 
     connect(ui->btnClose, &QPushButton::clicked, this, &LoadParametersView::onBackButtonClicked);
+    connect(ui->btnLoad, &QPushButton::clicked, this, &LoadParametersView::onBtnLoadClicked);
+    connect(ui->btnRemove, &QPushButton::clicked, this, &LoadParametersView::onBtnRemoveClicked);
+    connect(ui->btnRename, &QPushButton::clicked, this, &LoadParametersView::onBtnRenameClicked);
 }
 LoadParametersView::~LoadParametersView()
 {
@@ -34,6 +37,9 @@ void LoadParametersView::resizeEvent(QResizeEvent *ev)
 
 void LoadParametersView::showEvent(QShowEvent *ev)
 {
+    ui->btnLoad->setEnabled(false);
+    ui->btnRemove->setEnabled(false);
+    ui->btnRename->setEnabled(false);
     populateParametersList();
     AlignmentViewBase::showEvent(ev);
 }
@@ -74,27 +80,86 @@ void LoadParametersView::populateParametersList()
     // Clear existing buttons
     clearWidget(ui->parametersListWidget);
     m_parametersButtons.clear();
-    m_parametersDeleteButtons.clear();
+    m_selectedParameterButtons.clear();
 
     for (const QString &name : names)
     {
-        QCheckBox *button = new QCheckBox(name, this);
-        button->setObjectName("parameterButton");
+        QPushButton *button = new QPushButton(name, this);
         button->setProperty("class", "button-blue");
+        button->setCheckable(true);
         button->setFixedHeight(80);
         button->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-        connect(button, &QCheckBox::checkStateChanged, this, [this, name, button](Qt::CheckState state) {
-            if (state == Qt::CheckState::Checked)
-            {
-                m_parametersDeleteButtons.insert(name, button);
-            }
-            else
-            {
-                m_parametersDeleteButtons.remove(name);
-            }
+        connect(button, &QPushButton::toggled, this, [this, name, button](bool checked) {
+            onBtnParameterClicked(name, button, checked);
         });
 
         ui->parametersListWidget->layout()->addWidget(button);
         m_parametersButtons.insert(name, button);
+    }
+}
+
+void LoadParametersView::onBtnLoadClicked()
+{
+}
+void LoadParametersView::onBtnRemoveClicked()
+{
+    auto vm = getViewModel<LoadParametersViewModel>();
+    if (!vm)
+        return;
+    for (const QString &name : m_selectedParameterButtons.keys())
+    {
+        QPushButton *button = m_parametersButtons.value(name, nullptr);
+        if (button)
+        {
+            ui->parametersListWidget->layout()->removeWidget(button);
+            button->deleteLater();
+        }
+        auto removeRes = vm->removeParameterByName(name);
+        if (removeRes.is_err())
+        {
+            qWarning() << "Error removing parameter:" << removeRes.unwrap_err();
+        }
+    }
+    m_selectedParameterButtons.clear();
+    updateButtonsStateBasedOnSelection();
+}
+void LoadParametersView::onBtnRenameClicked()
+{
+}
+void LoadParametersView::onBtnParameterClicked(const QString &name, QPushButton *button, bool checked)
+{
+    if (checked)
+    {
+        m_selectedParameterButtons.insert(name, button);
+        ui->btnRemove->setEnabled(true);
+        updateButtonsStateBasedOnSelection();
+    }
+    else
+    {
+        m_selectedParameterButtons.remove(name);
+        updateButtonsStateBasedOnSelection();
+    }
+}
+
+void LoadParametersView::updateButtonsStateBasedOnSelection()
+{
+    int selectedCount = m_selectedParameterButtons.size();
+    if (selectedCount == 0)
+    {
+        ui->btnLoad->setEnabled(false);
+        ui->btnRemove->setEnabled(false);
+        ui->btnRename->setEnabled(false);
+    }
+    else if (selectedCount == 1)
+    {
+        ui->btnLoad->setEnabled(true);
+        ui->btnRemove->setEnabled(true);
+        ui->btnRename->setEnabled(true);
+    }
+    else
+    {
+        ui->btnLoad->setEnabled(false);
+        ui->btnRemove->setEnabled(true);
+        ui->btnRename->setEnabled(false);
     }
 }

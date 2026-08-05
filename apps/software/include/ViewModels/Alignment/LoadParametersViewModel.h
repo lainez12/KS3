@@ -1,9 +1,9 @@
 #pragma once
 
 #include <Common/Result.h>
+#include <HAL/MachineStatus/IMachineStatusRepo.h>
 #include <QJsonArray>
 #include <QJsonObject>
-#include <HAL/MachineStatus/IMachineStatusRepo.h>
 #include <QObject>
 #include <ViewModels/BaseViewModel.h>
 
@@ -19,6 +19,7 @@ namespace Kub3::UI::ViewModels::Alignment
         Result<QJsonArray, const char *> getAllParameters();
         Result<QJsonObject, const char *> getParameterByName(const QString &parameterName);
         Result<QList<QString>, const char *> getAllNamesSavedParameters();
+        Result<Unit, const char *> removeParameterByName(const QString &parameterName);
 
     private:
         Shared<HAL::MS::IMachineStatusRepo> m_repo;

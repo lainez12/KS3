@@ -50,4 +50,18 @@ namespace Kub3::UI::ViewModels::Alignment
         return Ok(names);
     }
 
+    Result<Unit, const char *> LoadParametersViewModel::removeParameterByName(const QString &parameterName)
+    {
+        auto loadRes = Persistence::loadParametersFromFile(Persistence::storagePath());
+        if (loadRes.is_err())
+            return Err(loadRes.unwrap_err());
+
+        QJsonArray parametersArray = loadRes.unwrap();
+        bool removed               = Persistence::deleteByName(parametersArray, parameterName);
+        if (!removed)
+            return Err("Parameter not found");
+
+        return Persistence::saveParametersToFile(Persistence::storagePath(), parametersArray);
+    }
+
 } // namespace Kub3::UI::ViewModels::Alignment

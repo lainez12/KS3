@@ -1,7 +1,6 @@
-#ifndef LOADPARAMETERSVIEW_H
-#define LOADPARAMETERSVIEW_H
+#pragma once
 
-#include <QCheckBox>
+#include <QPushButton>
 #include <QWidget>
 #include <ViewModels/Alignment/AlignmentParametersPersistence.h>
 #include <ViewModels/Alignment/LoadParametersViewModel.h>
@@ -31,20 +30,25 @@ namespace Kub3::UI::Views
         void resizeEvent(QResizeEvent *event) override;
         void showEvent(QShowEvent *event) override;
 
+    private slots:
+        void onBtnLoadClicked();
+        void onBtnRemoveClicked();
+        void onBtnRenameClicked();
+
     private:
         void setNewNavButtonsConfigs();
         void onValidateButtonClicked() override;
         void onBackButtonClicked() override;
         void populateParametersList();
+        void onBtnParameterClicked(const QString &name, QPushButton *button, bool checked);
+        void updateButtonsStateBasedOnSelection();
 
     private:
         Ui::LoadParametersView *ui;
-        QMap<QString, QCheckBox *> m_parametersButtons;
-        QMap<QString, QCheckBox *> m_parametersDeleteButtons;
+        QMap<QString, QPushButton *> m_parametersButtons;
+        QMap<QString, QPushButton *> m_selectedParameterButtons;
     };
 
 } // namespace Kub3::UI::Views
 
 using LoadParametersView = Kub3::UI::Views::LoadParametersView;
-
-#endif
