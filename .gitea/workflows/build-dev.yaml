@@ -1,0 +1,55 @@
+name: Compile Kub3Project
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  build:
+    name: Build ${{ matrix.preset }}
+    runs-on: ubuntu-latest
+
+    # The matrix allows you to run the same job multiple times with different variables.
+    strategy:
+      fail-fast: false # If one build fails, let the others continue
+      matrix:
+        preset: 
+          - kub3-8-release
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup CI CMake Presets
+        # Copies the CI preset to the root so CMake can find it
+        run: cp .gitea/ci-presets.json CMakePresets.json
+
+      - name: Install Dependencies
+        # Installs Qt6, CMake, and build tools in the runner container
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake ninja-build \
+            qt6-base-dev libqt6serialport6-dev libqt6svg6-dev \
+            qt6-tools-dev qt6-tools-dev-tools libcrypt-dev
+
+      - name: Configure CMake
+        run: cmake --preset ${{ matrix.preset }}
+
+      - name: Build Project
+        run: |
+          MAX_CORES=$(nproc)
+          JOBS=$(( MAX_CORES / 2 ))
+          if [ $JOBS -lt 1 ]; then JOBS=1; fi
+          echo "Total CPU cores: $MAX_CORES. Building with $JOBS cores."
+          cmake --build --preset ${{ matrix.preset }} -j 14
+
+      # (Optional) Install step to gather binaries cleanly in one folder (see deploy.sh script)
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Binaries-${{ matrix.preset }}
+          # IMPORTANT: Update this path to match the "binaryDir" defined in your CMakePresets.json!
+          # For example, if your preset outputs to "build/kub3-8-release", adjust this accordingly:
+          path: build/${{ matrix.preset }}/bin/
