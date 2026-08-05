@@ -22,6 +22,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Checkout Hikrobot MVS SDK
+        uses: actions/checkout@v4
+        with:
+          repository: romainbr/hikrobot-mvs-linux-x64
+          path: external-libs/mvs
+          token: ${{ secrets.CI_MVS_CLONE_TOKEN }}
+
       # Installs Qt6, CMake, and build tools in the runner container
       - name: Install System Dependencies
         run: |
@@ -48,6 +55,7 @@ jobs:
         # - Run the preset
         run: |
           export Qt6_DIR=$PWD/Qt/6.8.3/gcc_64/lib/cmake/Qt6
+          export MVS_ROOT=$PWD/external-libs/mvs
           cmake --preset ${{ matrix.preset }}
 
       - name: Build Project
