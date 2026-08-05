@@ -40,13 +40,13 @@ jobs:
           source aqt-env/bin/activate
           pip install aqtinstall
           echo "Downloading Qt 6.8.3..."
-          aqt install-qt linux desktop 6.8.3 gcc_64 -m qtserialport qtsvg --outputdir $PWD/Qt
+          aqt install-qt linux desktop 6.8.3 linux_gcc_64 -m qtserialport qtsvg --outputdir $PWD/Qt
 
       - name: Configure CMake
         # - Tell CMake exactly where to find the Qt 6.8 we just downloaded
         # - Run the preset
         run: |
-          export Qt6_DIR=$PWD/Qt/6.8.0/gcc_64/lib/cmake/Qt6
+          export Qt6_DIR=$PWD/Qt/6.8.3/linux_gcc_64/lib/cmake/Qt6
           cmake --preset ${{ matrix.preset }}
 
       - name: Build Project
