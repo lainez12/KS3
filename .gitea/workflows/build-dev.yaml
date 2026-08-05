@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - dev
+      - ci-setup
 
 jobs:
   build:
@@ -21,8 +22,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Test PWD
+        run: ls -la
+
+      # Copies the CI preset to the root so CMake can find it
       - name: Setup CI CMake Presets
-        # Copies the CI preset to the root so CMake can find it
         run: cp .gitea/ci-presets.json CMakePresets.json
 
       - name: Install Dependencies
