@@ -135,6 +135,24 @@ namespace Kub3::Interlocks
         return OK;
     }
 
+    Result<Unit, const char *> canEnableCompressedAir(const SystemPosture &p, const StateOperational &opState)
+    {
+        (void)p;
+        if (auto *alignState = std::get_if<StateAlignment>(&opState.subState))
+        {
+            if (alignState->phase != ContactPhase::InContact)
+            {
+                qDebug() << "Current contact phase:" << static_cast<int>(alignState->phase);
+                return Err("Action Rejected - Mask and Wafer must be IN CONTACT to apply Air.");
+            }
+        }
+        else
+        {
+            return Err("Action Rejected - Air can only be applied during Alignment Mode.");
+        }
+        return OK;
+    }
+
 }
 
 #undef OK

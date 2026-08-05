@@ -1,10 +1,10 @@
 #include <QString>
 
+#include <Common/Enums.h>
 #include <Views/Alignment/VisualisationView.h>
 #include <Views/Components/Colors.h>
 #include <Views/Components/RealPositionCameras.h>
 
-#include "Common/Enums.h"
 #include "ui_VisualisationView.h"
 
 #define ORANGE_BTN_SIZE 90
@@ -308,9 +308,9 @@ void VisualisationView::setNewNavButtonsConfigs()
         "Subst. Speed", QColor(BLUE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/speed-motor-subst.svg", ID_BTN_SUBSTRATE_SPEED, std::bind(&VisualisationView::onSpeedMotorSubstButtonClicked, this));
     addNavButton("center", speedMotorSubst);
 
-    NavButtonConfig switchVacumAir(
-        "Vacum - Air.", QColor(BLUE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/vac_air_switch.svg", ID_BTN_VAC_AIR_TOGGLE, std::bind(&VisualisationView::onSwitchVacumAirButtonClicked, this));
-    addNavButton("center", switchVacumAir);
+    NavButtonConfig switchVacuumAir(
+        "Vacuum - Air.", QColor(BLUE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/vac_air_switch.svg", ID_BTN_VAC_AIR_TOGGLE, std::bind(&VisualisationView::onSwitchVacuumAirButtonClicked, this));
+    addNavButton("center", switchVacuumAir);
 
     NavButtonConfig visualMark(
         "Visual Mark", QColor(BLUE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/visual-mark.svg", ID_BTN_VISUAL_MARK, [this]() { onVisualMarkButtonClicked("Visual Mark"); });
@@ -407,8 +407,15 @@ void VisualisationView::onSpeedMotorSubstButtonClicked()
     }
 }
 
-void VisualisationView::onSwitchVacumAirButtonClicked() {}
-void VisualisationView::onAntiCollisionButtonClicked() {}
+void VisualisationView::onSwitchVacuumAirButtonClicked()
+{
+    auto vm = getViewModel<VisualisationViewModel>();
+
+    if (vm)
+    {
+        vm->ui_compressedAirSwitchClicked();
+    }
+}
 
 void VisualisationView::onVisualMarkButtonClicked(const QString &buttonId)
 {

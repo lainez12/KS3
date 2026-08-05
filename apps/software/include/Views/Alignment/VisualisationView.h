@@ -77,8 +77,7 @@ namespace Kub3::UI::Views
         void onScreenshotButtonClicked();
         void onHardForceContButtonClicked(const QString &buttonId);
         void onSpeedMotorSubstButtonClicked();
-        void onSwitchVacumAirButtonClicked();
-        void onAntiCollisionButtonClicked();
+        void onSwitchVacuumAirButtonClicked();
         void onVisualMarkButtonClicked(const QString &buttonId);
         void onMeasurementButtonClicked();
         void closeHardForceContactFormIfNeeded();

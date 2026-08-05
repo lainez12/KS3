@@ -84,6 +84,13 @@ namespace Kub3::UI::ViewModels::Alignment
         emit s_saveParametersAlignment(parameter);
     }
 
+    void VisualisationViewModel::ui_compressedAirSwitchClicked()
+    {
+        const bool requestAir = !m_substrateCompressedAirActive;
+
+        emit cmdRequestSubstrateCompressedAir(requestAir);
+    }
+
     void VisualisationViewModel::ui_proceedToExposure()
     {
         emit cmdRequestExposureMode();
@@ -128,10 +135,10 @@ namespace Kub3::UI::ViewModels::Alignment
             }
         };
 
-        const auto emitBoolUpdateSignal = [&](void (VisualisationViewModel::*_signal)(bool)) {
+        const auto onBoolUpdateSignal = [&](void (VisualisationViewModel::*callback)(bool)) {
             if (auto valOpt = HAL::MS::tryRead<bool>(m_repo, key); valOpt.has_value())
             {
-                emit(this->*_signal)(valOpt.value());
+                emit(this->*callback)(valOpt.value());
             }
         };
 
@@ -183,10 +190,18 @@ namespace Kub3::UI::ViewModels::Alignment
             onZPositionUpdate(m_zPositionsMm[2], V_Z_BACK_MASK_POSITION_MM);
             break;
         case waferVacuumActiveHash:
-            emitBoolUpdateSignal(&VisualisationViewModel::s_vacuumUpdate);
+            if (auto valOpt = HAL::MS::tryRead<bool>(m_repo, key); valOpt.has_value())
+            {
+                m_substrateVacuumActive = valOpt.value();
+                emit s_vacuumUpdate(m_substrateVacuumActive);
+            }
             break;
         case waferAirActiveHash:
-            emitBoolUpdateSignal(&VisualisationViewModel::s_compressedAirUpdate);
+            if (auto valOpt = HAL::MS::tryRead<bool>(m_repo, key); valOpt.has_value())
+            {
+                m_substrateCompressedAirActive = valOpt.value();
+                emit s_compressedAirUpdate(m_substrateCompressedAirActive);
+            }
             break;
         default:
             break;

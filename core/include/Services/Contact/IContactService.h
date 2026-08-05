@@ -33,6 +33,7 @@ namespace Kub3::Services
 
     struct ZMovePayload {
         ZDirection direction;
+        bool granular = false;
     };
 
     struct ZStopPayload {};
@@ -44,12 +45,14 @@ namespace Kub3::Services
     public:
         virtual ~IContactService() = default;
 
-        virtual void startContactRoutine(ContactPayload kind) = 0;
-        virtual void retractFromContact(void)                 = 0;
-        virtual void moveZManual(ZDirection dir)              = 0;
-        virtual void stopZManual(void)                        = 0;
-        [[nodiscard]] virtual bool isInContact(void) const    = 0;
-        virtual void processBackgroundAutomations(void)       = 0;
+        virtual void startContactRoutine(ContactPayload kind)                 = 0;
+        virtual void retractFromContact(void)                                 = 0;
+        virtual void moveZManual(ZDirection dir, bool granular = false)       = 0;
+        virtual void stopZManual(void)                                        = 0;
+        virtual void processBackgroundAutomations(void)                       = 0;
+        virtual void setSubstrateCompressedAir(bool enable)                   = 0;
+        [[nodiscard]] virtual bool isInContact(void) const                    = 0;
+        [[nodiscard]] virtual bool isSubstrateCompressedAirActive(void) const = 0;
 
         // Test methods
         virtual void toggleForceSensors(TestToken, bool en)     = 0;

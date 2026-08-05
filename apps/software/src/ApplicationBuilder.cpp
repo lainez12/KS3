@@ -270,6 +270,8 @@ namespace Kub3
                                           m_masterFSM, &MFSM::MasterFSM::ps_requestAlignmentCameraFineMode);
         m_visualisationVM->bindConnection(m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::cmdRunCameraAbsoluteMovement,
                                           m_masterFSM, &MFSM::MasterFSM::ps_requestAlignmentCameraAbsoluteMovement);
+        m_visualisationVM->bindConnection(m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::cmdRequestSubstrateCompressedAir,
+                                          m_masterFSM, &MFSM::MasterFSM::ps_requestSubstrateCompressedAir);
         m_visualisationVM->bindConnection(m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::cmdRequestExposureMode,
                                           m_masterFSM, &MFSM::MasterFSM::ps_requestEnterExposureMode);
         // --- MachineStatusViewModel
