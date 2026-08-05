@@ -71,16 +71,6 @@ jobs:
         if: matrix.preset == 'kub3-8-production'
         run: cmake --install build/${{ matrix.preset }}
 
-      # Upload Raw Binaries for Debug / Release
-      - name: Upload Raw Binaries
-        if: matrix.preset != 'kub3-8-production'
-        uses: actions/upload-artifact@v4
-        with:
-          name: Binaries-${{ matrix.preset }}
-          path: |
-            build/${{ matrix.preset }}/apps/
-            build/${{ matrix.preset }}/core/
-
       # Upload Packaged Release for Production
       - name: Upload Packaged Deployment
         if: matrix.preset == 'kub3-8-production'
