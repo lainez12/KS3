@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - dev
-      - ci-setup
 
 jobs:
   build:
@@ -17,6 +16,7 @@ jobs:
       matrix:
         preset: 
           - kub3-8-release
+          - kub3-8-production
 
     steps:
       - name: Checkout repository
