@@ -25,7 +25,7 @@ namespace Kub3::UI::Views
 
     class VisualisationView final : public AlignmentViewBase, public PadReceiverViewTrait
     {
-        using CameraAxis             = ViewModels::Alignment::CameraAxis;
+        using CameraAxis             = Kub3::CameraAxis;
         using VisualisationViewModel = ViewModels::Alignment::VisualisationViewModel;
         using coords_2d_t            = ViewModels::Alignment::coords_2d_t;
         using alignment_parameter_t  = ViewModels::Alignment::Persistence::alignment_parameter_t;

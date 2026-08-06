@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Common/Enums.h>
 #include <QEvent>
 #include <QPainter>
 #include <QResizeEvent>
@@ -26,8 +27,7 @@ signals:
     void s_closeMap(void);
 
 public slots:
-    void updateLeftPosition(float x, float y);
-    void updateRightPosition(float x, float y);
+    void onCameraPositionUpdate(Kub3::CameraId camId, Kub3::CameraAxis axis, double value);
 
 protected:
     void resizeEvent(QResizeEvent *ev) override;
@@ -36,10 +36,20 @@ private slots:
     void onBtnOpenCloseToggled(bool checked);
 
 private:
+    void updateRightXPosition(double x);
+    void updateRightYPosition(double y);
+    void updateLeftXPosition(double x);
+    void updateLeftYPosition(double y);
+
+private:
     Ui::RealPositionCameras *ui;
     QString m_text;
     QPixmap m_icon;
     int maskSize;
     int areaSize;
+    int widthBackgroundWafer;
+    int heightBackgroundWafer;
+    int widthCam;
+    int heightCam;
     QSize resizingMap;
 };

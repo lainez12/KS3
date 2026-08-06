@@ -99,6 +99,12 @@ namespace Kub3
         RIGHT
     };
 
+    enum class CameraAxis : uint8_t
+    {
+        X,
+        Y,
+    };
+
     enum class AlignmentStageId : uint32_t
     {
         X     = 0x0,

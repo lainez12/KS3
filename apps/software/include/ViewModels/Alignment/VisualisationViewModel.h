@@ -10,13 +10,6 @@
 
 namespace Kub3::UI::ViewModels::Alignment
 {
-
-    enum class CameraAxis : uint8_t
-    {
-        X,
-        Y,
-    };
-
     typedef struct coords_2d_s {
         double x;
         double y;
@@ -31,6 +24,7 @@ namespace Kub3::UI::ViewModels::Alignment
     class VisualisationViewModel final : public BaseVisionViewModel
     {
         using alignment_parameter_t = Persistence::alignment_parameter_t;
+        using CameraAxis            = Kub3::CameraAxis;
 
         Q_OBJECT
 

@@ -1,7 +1,10 @@
 #include "Views/Components/RealPositionCameras.h"
 #include "ui_RealPositionCameras.h"
+#include <Common/Enums.h>
 
 #include <QWidget>
+
+#define ICON_PATH_CAMERA ":/icons/rouge.svg"
 
 RealPositionCameras::RealPositionCameras(QWidget *parent) :
     QWidget(parent),
@@ -15,14 +18,24 @@ RealPositionCameras::RealPositionCameras(QWidget *parent) :
         "background-repeat: no-repeat;"
         "background-position: center;");
 
-    ui->cameraLeftLabel->resize(ui->backgroundWafer->size() / 8);
-    ui->cameraRightLabel->resize(ui->backgroundWafer->size() / 8);
+    QSize resizing(ui->backgroundWafer->size() / 8);
+    ui->cameraLeftLabel->resize(resizing);
+    ui->cameraRightLabel->resize(resizing);
+    ui->cameraLeftLabel->setPixmap(QPixmap(ICON_PATH_CAMERA).scaled(resizing));
+    ui->cameraRightLabel->setPixmap(QPixmap(ICON_PATH_CAMERA).scaled(resizing));
 
     connect(ui->btnOpenClose, &QCheckBox::toggled, this, &RealPositionCameras::onBtnOpenCloseToggled);
 
-    areaSize    = 236314;
-    maskSize    = 228600;
+    // TODO: Find a better way to get the size of the mask and area, maybe from the config file or from the camera itself
+    areaSize = 236314;
+    maskSize = 228600;
+
     resizingMap = ui->backgroundWafer->size() * maskSize / areaSize;
+
+    widthBackgroundWafer  = ui->backgroundWafer->width();
+    heightBackgroundWafer = ui->backgroundWafer->height();
+    widthCam              = ui->cameraRightLabel->width();
+    heightCam             = ui->cameraRightLabel->height();
 }
 
 RealPositionCameras::~RealPositionCameras()
@@ -67,15 +80,53 @@ void RealPositionCameras::onBtnOpenCloseToggled(bool checked)
     ui->btnOpenClose->setIcon(rotatedIcon);
 }
 
-void RealPositionCameras::updateLeftPosition(float x, float y)
+void RealPositionCameras::updateRightXPosition(double x)
 {
-    ui->cameraLeftLabel->move(((ui->backgroundWafer->width() - ui->cameraLeftLabel->width()) / 2) + (x * resizingMap.width() / maskSize) - 2, ((ui->backgroundWafer->height() - ui->cameraLeftLabel->height()) / 2) - (y * resizingMap.height() / maskSize));
-
+    double newX = ((widthBackgroundWafer - widthCam) / 2) + (x * resizingMap.width() / maskSize) + 2;
+    double y    = ui->cameraRightLabel->y();
+    ui->cameraRightLabel->move(newX, y);
     this->update();
 }
 
-void RealPositionCameras::updateRightPosition(float x, float y)
+void RealPositionCameras::updateRightYPosition(double y)
 {
-    ui->cameraRightLabel->move(((ui->backgroundWafer->width() - ui->cameraRightLabel->width()) / 2) + (x * resizingMap.width() / maskSize) + 2, ((ui->backgroundWafer->height() - ui->cameraRightLabel->height()) / 2) - (y * resizingMap.height() / maskSize));
+    double x    = ui->cameraRightLabel->x();
+    double newY = ((heightBackgroundWafer - heightCam) / 2) - (y * resizingMap.height() / maskSize);
+    ui->cameraRightLabel->move(x, newY);
     this->update();
+}
+
+void RealPositionCameras::updateLeftXPosition(double x)
+{
+    double newX = ((widthBackgroundWafer - widthCam) / 2) + (x * resizingMap.width() / maskSize) + 2;
+    double y    = ui->cameraLeftLabel->y();
+    ui->cameraLeftLabel->move(newX, y);
+    this->update();
+}
+
+void RealPositionCameras::updateLeftYPosition(double y)
+{
+    double x    = ui->cameraLeftLabel->x();
+    double newY = ((heightBackgroundWafer - heightCam) / 2) - (y * resizingMap.height() / maskSize);
+    ui->cameraLeftLabel->move(x, newY);
+    this->update();
+}
+
+void RealPositionCameras::onCameraPositionUpdate(Kub3::CameraId camId, Kub3::CameraAxis axis, double value)
+{
+
+    if (camId == Kub3::CameraId::LEFT)
+    {
+        if (axis == Kub3::CameraAxis::X)
+            updateLeftXPosition(value);
+        else if (axis == Kub3::CameraAxis::Y)
+            updateLeftYPosition(value);
+    }
+    else if (camId == Kub3::CameraId::RIGHT)
+    {
+        if (axis == Kub3::CameraAxis::X)
+            updateRightXPosition(value);
+        else if (axis == Kub3::CameraAxis::Y)
+            updateRightYPosition(value);
+    }
 }
