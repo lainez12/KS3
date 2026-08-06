@@ -59,6 +59,7 @@ namespace Kub3::UI::Views
         void onSubstrateFineModeUpdated(bool active);
         void onGoToBtnClicked(CameraId camId);
         void onPreparingExposureMode(void);
+        void onStartContactRoutine(double targetForceGrams);
 
     private:
         // Setup routines splitting up the constructor
@@ -70,6 +71,7 @@ namespace Kub3::UI::Views
         // Hardware movement dispatchers
         void cameraMovement(CameraId camId, MovementKind kind, CameraDirection dir);
         void alignmentStageMovement(AlignmentStageId stageId, MovementKind kind, AlignmentStageDirection dir);
+        void zElevatorMovement(MovementKind kind, ZDirection dir);
 
         // Nav configurations
         void setNewNavButtonsConfigs();

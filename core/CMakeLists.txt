@@ -83,6 +83,7 @@ qt_add_library(Kub3Core STATIC
 
     # Headers
     include/utils.h
+    include/Common/Clock.h
     include/Common/Enums.h
     include/Common/ProcessMessage.h
     include/Common/Result.h

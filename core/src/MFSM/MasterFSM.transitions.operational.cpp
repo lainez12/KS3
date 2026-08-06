@@ -198,9 +198,15 @@ namespace Kub3::MFSM
             // Contact Sequence Tracker
             [&](StateAlignment s, const EvContactSequenceComplete &) -> OperationalState {
                 if (s.phase == ContactPhase::ApplyingContact)
+                {
                     s.phase = ContactPhase::InContact;
+                    setCompressedAirAuthorized(true);
+                }
                 else if (s.phase == ContactPhase::Separating)
+                {
                     s.phase = ContactPhase::Free;
+                    setCompressedAirAuthorized(false);
+                }
                 return s; // Remain in alignment, but phase is updated
             },
 

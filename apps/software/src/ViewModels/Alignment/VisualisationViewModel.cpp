@@ -40,9 +40,20 @@ namespace Kub3::UI::ViewModels::Alignment
         ps_handleSensorValueChanged(RIGHT_CAMERA_Y_ENCODER_MM);
         ps_handleSensorValueChanged(WAFER_VACUUM_ACTIVE);
         ps_handleSensorValueChanged(WAFER_COMPRESSED_AIR_ACTIVE);
+        // Push the limits to the UI on view displayed
+        emit s_setContactMaximumTarget(m_maxContactForceGF);
+        emit s_setContactTolerance(m_contactToleranceGF);
+        // Sync view
+        this->syncContactUX();
     }
 
-    void VisualisationViewModel::ui_requestCameraMovement(CameraId camId, MovementKind kind, CameraDirection dir)
+    void VisualisationViewModel::setContactLimits(double maxForceGF, double toleranceGF)
+    {
+        m_maxContactForceGF  = maxForceGF;
+        m_contactToleranceGF = toleranceGF;
+    }
+
+    void VisualisationViewModel::ui_requestCameraManualMovement(CameraId camId, MovementKind kind, CameraDirection dir)
     {
         if (kind == MovementKind::CONTINUOUS)
             m_activeContinuousCameraMoves[camId] = true;
@@ -56,10 +67,10 @@ namespace Kub3::UI::ViewModels::Alignment
         }
 
         // Send request for movement
-        emit cmdRunCameraMovement(camId, kind, dir);
+        emit cmdRunCameraManualMovement(camId, kind, dir);
     }
 
-    void VisualisationViewModel::ui_requestAlignmentStageMovement(
+    void VisualisationViewModel::ui_requestAlignmentStageManualMovement(
         AlignmentStageId stageId,
         MovementKind kind,
         AlignmentStageDirection dir)
@@ -76,7 +87,22 @@ namespace Kub3::UI::ViewModels::Alignment
         }
 
         // Send request for movement
-        emit cmdRunAlignmentStageMovement(stageId, kind, dir);
+        emit cmdRunAlignmentStageManualMovement(stageId, kind, dir);
+    }
+
+    void VisualisationViewModel::ui_requestZManualMovement(MovementKind kind, ZDirection dir)
+    {
+        if (kind == MovementKind::CONTINUOUS)
+            m_activeContinuousZMove = true;
+        else if (kind == MovementKind::STOP)
+        {
+            if (!m_activeContinuousZMove)
+                return;
+            m_activeContinuousZMove = false;
+        }
+
+        // Send request for movement
+        emit cmdRunZManualMovement(kind, dir);
     }
 
     void VisualisationViewModel::ui_requestSaveParameters(const alignment_parameter_t &parameter)
@@ -123,6 +149,15 @@ namespace Kub3::UI::ViewModels::Alignment
         m_substrateFineMode = !m_substrateFineMode;            // Internal update
         emit cmdRequestSubstrateFineMode(m_substrateFineMode); // To logic layer
         emit s_substrateFineModeUpdated(m_substrateFineMode);  // To view
+    }
+
+    void VisualisationViewModel::ui_startContactRoutine(double targetForceGrams)
+    {
+        if (targetForceGrams <= 0.0 || targetForceGrams > m_maxContactForceGF)
+        {
+            return;
+        }
+        emit cmdRequestContact(targetForceGrams);
     }
 
     void VisualisationViewModel::ps_handleLoadParameterSelected(const alignment_parameter_t &parameter)
@@ -219,6 +254,43 @@ namespace Kub3::UI::ViewModels::Alignment
         if (kind == MFSM::OperationalStateKind::PreparingExposure)
         {
             emit s_preparingExposureMode();
+        }
+    }
+
+    void VisualisationViewModel::ps_onContactPhaseChanged(MFSM::ContactPhase contactPhase)
+    {
+        m_currentContactPhase = contactPhase;
+        this->syncContactUX();
+    }
+
+    void VisualisationViewModel::ps_onCompressedAirAuthorizedChanged(bool authorized)
+    {
+        m_compressedAirAuthorized = authorized;
+        this->syncContactUX();
+    }
+
+    void VisualisationViewModel::syncContactUX(void)
+    {
+        using namespace MFSM;
+
+        if (m_currentContactPhase == ContactPhase::ApplyingContact ||
+            m_currentContactPhase == ContactPhase::Separating)
+        {
+            // Actively moving: Lock the form, disable Air
+            emit s_setContactFormLock(true);
+            emit s_setCompressedAirButtonEnabled(false);
+        }
+        else if (m_currentContactPhase == ContactPhase::InContact)
+        {
+            // Reached target: Unlock the form, but only enable Air if AUTHORIZED
+            emit s_setContactFormLock(false);
+            emit s_setCompressedAirButtonEnabled(m_compressedAirAuthorized); // -> CHANGED THIS LINE
+        }
+        else // ContactPhase::Free
+        {
+            // Not touching: Unlock the form and disable Air
+            emit s_setContactFormLock(false);
+            emit s_setCompressedAirButtonEnabled(false);
         }
     }
 

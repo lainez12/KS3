@@ -17,12 +17,13 @@ class HardForceContactForm : public QWidget
 public:
     explicit HardForceContactForm(QWidget *parent = nullptr);
 
-protected:
 public slots:
-
-private slots:
+    void ps_setMaximum(double maximumGF);
+    void ps_setTolerance(double toleranceGF);
+    void ps_setLock(bool lock);
 
 signals:
+    void s_startContactRoutine(double targetForceGrams);
 
 private:
     Ui::HardForceContactForm *ui;

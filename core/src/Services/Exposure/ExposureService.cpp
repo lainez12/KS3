@@ -1,5 +1,6 @@
 #include <QDebug>
 
+#include <Common/Clock.h>
 #include <HAL/MachineStatus/actuators_labels.h>
 #include <Services/Exposure/ExposureService.h>
 #include <utils.h>
@@ -44,12 +45,12 @@ namespace Kub3::Services
         const auto museum = overloadedCallable{
             [&](const HAL::Act::ContinuousExposureParams &p) {
                 m_uvHead->startContinuousExposure(p);
-                m_remainingTicks = (p.durationMs / 20) + 5; // Add 5 ticks (100ms) safety margin
+                m_remainingTicks = (p.durationMs / LOGIC_TIMER_PERIOD_MS) + 5; // Add 5 ticks (100ms) safety margin
             },
             [&](const HAL::Act::FlashingExposureParams &p) {
                 m_uvHead->startFlashingExposure(p);
                 const uint32_t totalMs = p.cycles * (p.durationMs + p.pauseTimeMs);
-                m_remainingTicks       = (totalMs / 20) + 5;
+                m_remainingTicks       = (totalMs / LOGIC_TIMER_PERIOD_MS) + 5;
             }};
 
         std::visit(museum, payload);
