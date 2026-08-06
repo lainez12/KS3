@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>434</width>
-    <height>364</height>
+    <height>445</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -148,11 +148,17 @@ cameras positions</string>
        <height>381</height>
       </size>
      </property>
-     <widget class="QLabel" name="label">
+     <property name="maximumSize">
+      <size>
+       <width>434</width>
+       <height>381</height>
+      </size>
+     </property>
+     <widget class="QLabel" name="cameraLeftLabel">
       <property name="geometry">
        <rect>
-        <x>120</x>
-        <y>110</y>
+        <x>30</x>
+        <y>300</y>
         <width>41</width>
         <height>41</height>
        </rect>
@@ -170,11 +176,11 @@ cameras positions</string>
        <bool>true</bool>
       </property>
      </widget>
-     <widget class="QLabel" name="label_2">
+     <widget class="QLabel" name="cameraRightLabel">
       <property name="geometry">
        <rect>
-        <x>220</x>
-        <y>84</y>
+        <x>350</x>
+        <y>300</y>
         <width>41</width>
         <height>41</height>
        </rect>

@@ -25,6 +25,10 @@ signals:
     void s_openMap(void);
     void s_closeMap(void);
 
+public slots:
+    void updateLeftPosition(float x, float y);
+    void updateRightPosition(float x, float y);
+
 protected:
     void resizeEvent(QResizeEvent *ev) override;
 
@@ -35,4 +39,7 @@ private:
     Ui::RealPositionCameras *ui;
     QString m_text;
     QPixmap m_icon;
+    int maskSize;
+    int areaSize;
+    QSize resizingMap;
 };

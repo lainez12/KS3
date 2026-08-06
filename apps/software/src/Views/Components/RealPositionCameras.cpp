@@ -15,7 +15,14 @@ RealPositionCameras::RealPositionCameras(QWidget *parent) :
         "background-repeat: no-repeat;"
         "background-position: center;");
 
+    ui->cameraLeftLabel->resize(ui->backgroundWafer->size() / 8);
+    ui->cameraRightLabel->resize(ui->backgroundWafer->size() / 8);
+
     connect(ui->btnOpenClose, &QCheckBox::toggled, this, &RealPositionCameras::onBtnOpenCloseToggled);
+
+    areaSize    = 236314;
+    maskSize    = 228600;
+    resizingMap = ui->backgroundWafer->size() * maskSize / areaSize;
 }
 
 RealPositionCameras::~RealPositionCameras()
@@ -58,4 +65,17 @@ void RealPositionCameras::onBtnOpenCloseToggled(bool checked)
 
     auto rotatedIcon = m_icon.transformed(t);
     ui->btnOpenClose->setIcon(rotatedIcon);
+}
+
+void RealPositionCameras::updateLeftPosition(float x, float y)
+{
+    ui->cameraLeftLabel->move(((ui->backgroundWafer->width() - ui->cameraLeftLabel->width()) / 2) + (x * resizingMap.width() / maskSize) - 2, ((ui->backgroundWafer->height() - ui->cameraLeftLabel->height()) / 2) - (y * resizingMap.height() / maskSize));
+
+    this->update();
+}
+
+void RealPositionCameras::updateRightPosition(float x, float y)
+{
+    ui->cameraRightLabel->move(((ui->backgroundWafer->width() - ui->cameraRightLabel->width()) / 2) + (x * resizingMap.width() / maskSize) + 2, ((ui->backgroundWafer->height() - ui->cameraRightLabel->height()) / 2) - (y * resizingMap.height() / maskSize));
+    this->update();
 }
