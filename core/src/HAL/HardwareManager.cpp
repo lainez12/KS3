@@ -653,9 +653,9 @@ namespace Kub3::HAL
         auto zWaferOnLimit   = std::make_shared<Sensor<bool>>(m_repo, WAFER_ON, false, &limitSwitchParser);
         auto z2Limit         = std::make_shared<Sensor<bool>>(m_repo, Z2, false, &limitSwitchParser);
         // --- Force sensors
-        auto leftForce  = std::make_shared<Sensor<uint16_t>>(m_repo, FORCE_LEFT_ADC, static_cast<uint16_t>(0), &forceSensorParser);
-        auto rightForce = std::make_shared<Sensor<uint16_t>>(m_repo, FORCE_RIGHT_ADC, static_cast<uint16_t>(0), &forceSensorParser);
-        auto backForce  = std::make_shared<Sensor<uint16_t>>(m_repo, FORCE_BACK_ADC, static_cast<uint16_t>(0), &forceSensorParser);
+        auto leftForce  = std::make_shared<Sensor<uint16_t>>(m_repo, FORCE_LEFT_ADC, static_cast<uint16_t>(300), &forceSensorParser);
+        auto rightForce = std::make_shared<Sensor<uint16_t>>(m_repo, FORCE_RIGHT_ADC, static_cast<uint16_t>(300), &forceSensorParser);
+        auto backForce  = std::make_shared<Sensor<uint16_t>>(m_repo, FORCE_BACK_ADC, static_cast<uint16_t>(300), &forceSensorParser);
 
         // Register sensors
         // --- Encoders

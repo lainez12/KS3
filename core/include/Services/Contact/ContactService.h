@@ -79,7 +79,7 @@ namespace Kub3::Services
         std::array<Shared<HAL::Act::ISwitch>, 3> m_forceSensorsSw;
         std::array<Shared<HAL::Act::IPositionMotor>, 3> m_zMotors;
         uint32_t m_manualWatchdogTicks = 0;
-        ZDirection m_currentManualDir  = ZDirection::Down;
+        ZDirection m_currentManualDir  = ZDirection::DOWN;
         double m_requestedForceGF      = 0.0;
         // --- Active Tilt Compensation trackers
         bool m_manualZPaused[3]   = {false, false, false};

@@ -3,7 +3,9 @@
 #include <Common/Enums.h>
 #include <Views/Alignment/VisualisationView.h>
 #include <Views/Components/Colors.h>
+#include <Views/Components/HardForceContactForm.h>
 #include <Views/Components/RealPositionCameras.h>
+#include <Views/Traits/PadReceiverViewTrait.h>
 
 #include "ui_VisualisationView.h"
 
@@ -146,6 +148,20 @@ void VisualisationView::setupConnections()
         connect(ui->btnGoToRight, &NavButton::clicked, [this]() { this->onGoToBtnClicked(CameraId::RIGHT); });
         // Arianne's thread related
         connect(vm, &VisualisationViewModel::s_preparingExposureMode, this, &VisualisationView::onPreparingExposureMode);
+
+        if (m_hardForceContactForm)
+        {
+            connect(m_hardForceContactForm, &HardForceContactForm::s_startContactRoutine,
+                    this, &VisualisationView::onStartContactRoutine);
+            connect(vm, &VisualisationViewModel::s_setContactFormLock,
+                    m_hardForceContactForm, &HardForceContactForm::ps_setLock);
+            connect(vm, &VisualisationViewModel::s_setContactMaximumTarget,
+                    m_hardForceContactForm, &HardForceContactForm::ps_setMaximum);
+            connect(vm, &VisualisationViewModel::s_setContactTolerance,
+                    m_hardForceContactForm, &HardForceContactForm::ps_setTolerance);
+            connect(vm, &VisualisationViewModel::s_setCompressedAirButtonEnabled,
+                    this, [this](bool enabled) { this->setNavButtonEnabled(ID_BTN_VAC_AIR_TOGGLE, enabled); });
+        }
     }
 }
 
@@ -176,6 +192,12 @@ void VisualisationView::setupBindings()
             alignmentStageMovement(stageId, toMovementKind(trigger), dir);
         };
     };
+    // Z Elevator action-binding generator
+    auto bindElevator = [this, toMovementKind](ZDirection dir) {
+        return [this, toMovementKind, dir](UI::Views::PadTrigger trigger) {
+            zElevatorMovement(toMovementKind(trigger), dir);
+        };
+    };
 
     // Logical Pad Mapping to Cameras
     // --- Left camera
@@ -199,6 +221,10 @@ void VisualisationView::setupBindings()
     // --- Theta stage
     link(UI::Views::PadTarget::ThetaStage, UI::Views::PadAction::CW, bindStage(AlignmentStageId::THETA, AlignmentStageDirection::THETA_CW));
     link(UI::Views::PadTarget::ThetaStage, UI::Views::PadAction::CCW, bindStage(AlignmentStageId::THETA, AlignmentStageDirection::THETA_CCW));
+
+    // Logical Pad Mapping to Z Elevators
+    link(UI::Views::PadTarget::ZElevator, UI::Views::PadAction::Up, bindElevator(ZDirection::UP));
+    link(UI::Views::PadTarget::ZElevator, UI::Views::PadAction::Down, bindElevator(ZDirection::DOWN));
 }
 
 void VisualisationView::setupNavButtons()
@@ -210,17 +236,31 @@ void VisualisationView::setupNavButtons()
 
 void VisualisationView::cameraMovement(CameraId camId, MovementKind kind, CameraDirection dir)
 {
-    if (auto *vm = dynamic_cast<VisualisationViewModel *>(m_viewModel.get()))
+    auto vm = getViewModel<VisualisationViewModel>();
+
+    if (vm)
     {
-        vm->ui_requestCameraMovement(camId, kind, dir);
+        vm->ui_requestCameraManualMovement(camId, kind, dir);
     }
 }
 
 void VisualisationView::alignmentStageMovement(AlignmentStageId stageId, MovementKind kind, AlignmentStageDirection dir)
 {
-    if (auto *vm = dynamic_cast<VisualisationViewModel *>(m_viewModel.get()))
+    auto vm = getViewModel<VisualisationViewModel>();
+
+    if (vm)
     {
-        vm->ui_requestAlignmentStageMovement(stageId, kind, dir);
+        vm->ui_requestAlignmentStageManualMovement(stageId, kind, dir);
+    }
+}
+
+void VisualisationView::zElevatorMovement(MovementKind kind, ZDirection dir)
+{
+    auto vm = getViewModel<VisualisationViewModel>();
+
+    if (vm)
+    {
+        vm->ui_requestZManualMovement(kind, dir);
     }
 }
 
@@ -436,7 +476,7 @@ void VisualisationView::closeHardForceContactFormIfNeeded(void)
     if (m_hardForceContactForm->isVisible())
     {
         m_hardForceContactForm->setVisible(false);
-        switchColorNavButton("F", true);
+        switchColorNavButton(ID_BTN_HARDCONTACT, true);
     }
 }
 
@@ -567,5 +607,15 @@ void VisualisationView::onPreparingExposureMode(void)
     {
         // Proceed to open exposure mode view
         emit s_openView(Kub3::UI::ViewId::EXPOSURE_SETTINGS_VIEW);
+    }
+}
+
+void VisualisationView::onStartContactRoutine(double targetForceGrams)
+{
+    auto vm = getViewModel<VisualisationViewModel>();
+
+    if (vm && m_hardForceContactForm)
+    {
+        vm->ui_startContactRoutine(targetForceGrams);
     }
 }

@@ -1,9 +1,8 @@
+#include <QDebug>
+#include <QString>
 #include <QtLogging>
 #include <algorithm>
 #include <cmath>
-
-#include <QDebug>
-#include <QString>
 
 #include <Algorithms/Admittance/AdmittanceController.h>
 
@@ -118,7 +117,11 @@ namespace Kub3::Algorithms::Control
         out.velocities_mm_s[2] = clampVelocity((k_mean_active * e_mean) + (k_tilt_active * e_BRelMean), input.dt_seconds, config);
 
         qDebug().noquote() << QString("\t--- Stiffness ratio: %3; k_mean_active: %1 ; k_tilt_active: %2").arg(k_mean_active).arg(k_tilt_active).arg(ratio);
-
+        if (out.velocities_mm_s[0] == 0.0 && out.velocities_mm_s[1] == 0.0 && out.velocities_mm_s[2] == 0.0)
+        {
+            qWarning() << "[AdmittanceController] Autoleveling stalled by hardware deadband. Forcing convergence.";
+            out.is_converged = true;
+        }
         return out;
     }
 
@@ -133,31 +136,56 @@ namespace Kub3::Algorithms::Control
         admittance_output_t out = {{0.0, 0.0, 0.0}, false, false};
         const double max_f      = getMax(input.forces_gf);
 
-        // Process Limit
+        // Process Limit (Hardware Protection)
         if (max_f > config.max_process_force_gf)
         {
+            qCritical() << "[Admittance: BasicContact] Max process force exceeded. Aborting.";
             out.limit_exceeded_abort = true;
-            return out; // Abort
+            return out;
         }
 
-        // Synchronous Error Math (Based strictly on highest point)
+        // Synchronous Error Math (Based strictly on highest pressure point)
         const double e_max = config.target_force_gf - max_f;
 
-        // Convergence (If highest point reaches target)
+        // Standard Convergence Check
         if (std::abs(e_max) <= config.force_tolerance_gf)
         {
+            qInfo() << "[Admittance: BasicContact] Convergence reached.";
             out.is_converged = true;
             return out;
         }
 
-        // Global Stiffness Scaling
+        // Global Stiffness Scaling (Soft approach -> Stiff contact)
         const double ratio         = getStiffnessRatio(max_f, config.target_force_gf);
         const double k_mean_active = config.k_mean_max - (ratio * (config.k_mean_max - config.k_mean_min));
 
         // Compute SISO Velocity
         const double sync_velocity = clampVelocity(k_mean_active * e_max, input.dt_seconds, config);
 
-        // Output strictly identical velocities to preserve initial plane
+        qDebug().noquote()
+            << QString("[Admittance: BasicContact] Target: %1gF (tol: %2gF);"
+                       "\n\tMax force: %3gF (Err: %4gF);"
+                       "\n\tStiffness ratio: %5; k_active: %6;"
+                       "\n\tComputed Sync V: %7 mm/s")
+                   .arg(config.target_force_gf)
+                   .arg(config.force_tolerance_gf)
+                   .arg(max_f)
+                   .arg(e_max)
+                   .arg(ratio)
+                   .arg(k_mean_active)
+                   .arg(sync_velocity);
+
+        // Deadband Stall Protection (Anti-Freeze Guard)
+        // If the error is outside tolerance, but the computed velocity is killed by the deadband,
+        // we are mathematically stalled. We must report convergence to avoid an infinite task loop.
+        if (sync_velocity == 0.0)
+        {
+            qWarning() << "[Admittance: BasicContact] Stalled by hardware deadband before reaching mathematical tolerance. Forcing convergence.";
+            out.is_converged = true;
+            return out;
+        }
+
+        // Output strictly identical velocities to all 3 motors to preserve the initial plane
         out.velocities_mm_s[0] = sync_velocity;
         out.velocities_mm_s[1] = sync_velocity;
         out.velocities_mm_s[2] = sync_velocity;

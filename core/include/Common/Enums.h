@@ -129,6 +129,12 @@ namespace Kub3
         THETA_CW,
     };
 
+    enum class ZDirection : uint32_t
+    {
+        UP,
+        DOWN,
+    };
+
     enum class MovementKind : uint32_t
     {
         GRANULAR,
