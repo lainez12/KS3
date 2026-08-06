@@ -12,6 +12,7 @@
 #include <Views/Alignment/ContactSelectionView.h>
 #include <Views/Alignment/DistanceView.h>
 #include <Views/Alignment/LoadParametersView.h>
+#include <Views/Alignment/RenameParametersView.h>
 #include <Views/Alignment/SaveParametersView.h>
 #include <Views/Alignment/VisualisationView.h>
 #include <Views/Components/NavButton.h>

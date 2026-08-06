@@ -29,6 +29,9 @@ namespace Kub3::UI::Views
         using VisualisationViewModel = ViewModels::Alignment::VisualisationViewModel;
         using coords_2d_t            = ViewModels::Alignment::coords_2d_t;
         using alignment_parameter_t  = ViewModels::Alignment::Persistence::alignment_parameter_t;
+        using camera_position_t      = ViewModels::Alignment::Persistence::camera_position_t;
+        using camera_visualisation_t = ViewModels::Alignment::Persistence::camera_visualisation_t;
+        using camera_t               = ViewModels::Alignment::Persistence::camera_t;
 
         Q_OBJECT
 

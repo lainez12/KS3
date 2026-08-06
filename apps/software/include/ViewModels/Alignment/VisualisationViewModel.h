@@ -87,6 +87,7 @@ namespace Kub3::UI::ViewModels::Alignment
         void ps_operationalSubstateKindChanged(MFSM::OperationalStateKind kind);
         void ps_onContactPhaseChanged(MFSM::ContactPhase contactPhase);
         void ps_onCompressedAirAuthorizedChanged(bool authorized);
+        void ps_handleLoadParameterSelected(const alignment_parameter_t &parameter);
 
     private:
         void syncContactUX(void);

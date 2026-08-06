@@ -28,4 +28,60 @@ namespace Kub3::UI::ViewModels::Alignment
         return Persistence::getParameterByName(loadRes.unwrap(), parameterName);
     }
 
+    Result<QList<QString>, const char *> LoadParametersViewModel::getAllNamesSavedParameters()
+    {
+        auto loadRes = Persistence::loadParametersFromFile(Persistence::storagePath());
+        if (loadRes.is_err())
+            return Err(loadRes.unwrap_err());
+
+        QList<QString> names;
+        for (const QJsonValue &value : loadRes.unwrap())
+        {
+            if (!value.isObject())
+                continue;
+
+            auto parameterRes = Persistence::jsonToParameter(value.toObject());
+            if (parameterRes.is_err())
+                continue;
+
+            names.append(parameterRes.unwrap().name);
+        }
+
+        return Ok(names);
+    }
+
+    Result<Unit, const char *> LoadParametersViewModel::removeParameterByName(const QString &parameterName)
+    {
+        auto loadRes = Persistence::loadParametersFromFile(Persistence::storagePath());
+        if (loadRes.is_err())
+            return Err(loadRes.unwrap_err());
+
+        QJsonArray parametersArray = loadRes.unwrap();
+        bool removed               = Persistence::deleteByName(parametersArray, parameterName);
+        if (!removed)
+            return Err("Parameter not found");
+
+        return Persistence::saveParametersToFile(Persistence::storagePath(), parametersArray);
+    }
+
+    bool LoadParametersViewModel::uiRequestedLoadParameter(const QString &parameterName)
+    {
+        auto parameterRes = getParameterByName(parameterName);
+        if (parameterRes.is_err())
+            return false;
+
+        Result<alignment_parameter_t, const char *> parameter = Persistence::jsonToParameter(parameterRes.unwrap());
+        if (parameter.is_err())
+            return false;
+
+        const alignment_parameter_t &param = parameter.unwrap();
+        emit s_loadParameterSelected(param);
+        return true;
+    }
+
+    void LoadParametersViewModel::uiRequestedRenameParameter(const QString &parameterName)
+    {
+        emit s_renameParameterSelected(parameterName);
+    }
+
 } // namespace Kub3::UI::ViewModels::Alignment
