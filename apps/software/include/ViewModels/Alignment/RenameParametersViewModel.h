@@ -29,6 +29,7 @@ namespace Kub3::UI::ViewModels::Alignment
     public:
         void ui_userRequestRenameParameters(const QString &name);
         Result<QJsonObject, const char *> getParameterByName(const QString &parameterName);
+        QString getCurrentNameParameter() const;
 
     private:
         Result<Unit, const char *> replaceParameters();

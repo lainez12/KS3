@@ -22,6 +22,7 @@ namespace Kub3::UI::ViewModels::Alignment
 
     signals:
         void s_loadParameterSelected(const alignment_parameter_t &parameter);
+        void s_renameParameterSelected(const QString &parameterName);
 
     public:
         Result<QJsonArray, const char *> getAllParameters();
@@ -29,6 +30,7 @@ namespace Kub3::UI::ViewModels::Alignment
         Result<QList<QString>, const char *> getAllNamesSavedParameters();
         Result<Unit, const char *> removeParameterByName(const QString &parameterName);
         bool uiRequestedLoadParameter(const QString &parameterName);
+        void uiRequestedRenameParameter(const QString &parameterName);
 
     private:
         Shared<HAL::MS::IMachineStatusRepo> m_repo;

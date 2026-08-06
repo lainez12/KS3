@@ -309,6 +309,7 @@ namespace Kub3
         // --- Alignment View Model
         QObject::connect(m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::s_saveParametersAlignment, m_saveParametersVM.get(), &VM::Alignment::SaveParametersViewModel::ps_saveParameters);
         QObject::connect(m_loadParametersVM.get(), &VM::Alignment::LoadParametersViewModel::s_loadParameterSelected, m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::ps_handleLoadParameterSelected);
+        QObject::connect(m_loadParametersVM.get(), &VM::Alignment::LoadParametersViewModel::s_renameParameterSelected, m_renameParametersVM.get(), &VM::Alignment::RenameParametersViewModel::ps_renameParameters);
         m_visualisationVM->bindConnection(m_repo.get(), &HAL::MS::IMachineStatusRepo::s_machineValueChanged,
                                           m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::ps_handleSensorValueChanged);
         // --- Machine Status View Model

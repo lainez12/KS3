@@ -59,13 +59,19 @@ namespace Kub3::UI::ViewModels::Alignment
 
         QJsonArray parametersArray = loadRes.unwrap();
         const bool parameterExists = Persistence::parameterExistsInFile(parametersArray, m_currentNameParameter);
+        const bool newNameExists   = Persistence::parameterExistsInFile(parametersArray, m_newNameParameter);
 
-        if (parameterExists)
+        if (!parameterExists)
         {
-            if (!Persistence::changeParameterNameInFile(parametersArray, m_currentNameParameter, m_newNameParameter))
-            {
-                return Err("Failed to change parameter name.");
-            }
+            return Err("The parameter to rename does not exist.");
+        }
+        if (newNameExists)
+        {
+            return Err("A parameter with the new name already exists.");
+        }
+        if (!Persistence::changeParameterNameInFile(parametersArray, m_currentNameParameter, m_newNameParameter))
+        {
+            return Err("Failed to change parameter name.");
         }
 
         return Persistence::saveParametersToFile(path, parametersArray);
@@ -78,6 +84,11 @@ namespace Kub3::UI::ViewModels::Alignment
             return Err(loadRes.unwrap_err());
 
         return Persistence::getParameterByName(loadRes.unwrap(), parameterName);
+    }
+
+    QString RenameParametersViewModel::getCurrentNameParameter() const
+    {
+        return m_currentNameParameter;
     }
 
 } // namespace Kub3::UI::ViewModels::Alignment

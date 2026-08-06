@@ -79,4 +79,9 @@ namespace Kub3::UI::ViewModels::Alignment
         return true;
     }
 
+    void LoadParametersViewModel::uiRequestedRenameParameter(const QString &parameterName)
+    {
+        emit s_renameParameterSelected(parameterName);
+    }
+
 } // namespace Kub3::UI::ViewModels::Alignment

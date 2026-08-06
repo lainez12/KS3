@@ -26,13 +26,13 @@ namespace Kub3::UI::Views
         ~RenameParametersView();
 
     public:
-        void userConfirmRenameParameter(const QString &name);
         // QWidget overrides
         void resizeEvent(QResizeEvent *event) override;
         void showEvent(QShowEvent *event) override;
 
     public slots:
         void ps_onErrorRenamingParameter(const QString &errorMessage);
+        void ps_onParameterRenamed();
 
     private:
         void setNewNavButtonsConfigs();

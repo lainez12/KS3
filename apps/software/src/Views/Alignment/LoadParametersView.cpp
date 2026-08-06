@@ -102,8 +102,7 @@ void LoadParametersView::onBtnLoadClicked()
 {
     if (m_selectedParameterButtons.size() != 1)
         return;
-    if (m_selectedParameterButtons.isEmpty())
-        return;
+
     auto vm = getViewModel<LoadParametersViewModel>();
     if (!vm)
         return;
@@ -138,6 +137,16 @@ void LoadParametersView::onBtnRemoveClicked()
 }
 void LoadParametersView::onBtnRenameClicked()
 {
+    if (m_selectedParameterButtons.size() != 1)
+        return;
+
+    auto vm = getViewModel<LoadParametersViewModel>();
+    if (!vm)
+        return;
+
+    const QString &selectedName = m_selectedParameterButtons.firstKey();
+    vm->uiRequestedRenameParameter(selectedName);
+    emit s_openView(Kub3::UI::ViewId::ALIGNMENT_RENAME_PARAMETERS_VIEW);
 }
 void LoadParametersView::onBtnParameterClicked(const QString &name, QPushButton *button, bool checked)
 {

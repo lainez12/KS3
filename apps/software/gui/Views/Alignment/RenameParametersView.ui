@@ -73,7 +73,7 @@ border: 0px solid;
 font-size: 30px;</string>
      </property>
      <property name="text">
-      <string>Please give a name to this parameters set:</string>
+      <string>Please give a new name to this parameters set:</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>

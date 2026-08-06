@@ -27,7 +27,7 @@ RenameParametersView::RenameParametersView(Unique<RenameParametersViewModel> vie
     auto vm = getViewModel<RenameParametersViewModel>();
     if (vm)
     {
-        // connect(vm, &RenameParametersViewModel::s_parameterRenamed, this, &RenameParametersView::ps_onParameterSaved);
+        connect(vm, &RenameParametersViewModel::s_parameterRenamed, this, &RenameParametersView::ps_onParameterRenamed);
         connect(vm, &RenameParametersViewModel::s_errorRenamingParameter, this, &RenameParametersView::ps_onErrorRenamingParameter);
     }
 }
@@ -44,6 +44,11 @@ void RenameParametersView::resizeEvent(QResizeEvent *ev)
 
 void RenameParametersView::showEvent(QShowEvent *event)
 {
+    auto vm = getViewModel<RenameParametersViewModel>();
+    if (vm)
+    {
+        ui->lineEdit->setText(vm->getCurrentNameParameter());
+    }
     ui->lineEdit->setFocus();
     AlignmentViewBase::showEvent(event);
 }
@@ -70,7 +75,7 @@ void RenameParametersView::setNewNavButtonsConfigs()
 
 void RenameParametersView::onBackButtonClicked()
 {
-    emit s_openView(Kub3::UI::ViewId::ALIGNMENT_SAVE_PARAMETERS_VIEW);
+    emit s_openView(Kub3::UI::ViewId::ALIGNMENT_LOAD_PARAMETERS_VIEW);
 }
 
 void RenameParametersView::onValidateButtonClicked()
@@ -88,10 +93,21 @@ void RenameParametersView::onConfirmButtonClicked()
 
     QString name = ui->lineEdit->text();
     auto vm      = getViewModel<RenameParametersViewModel>();
-    if (vm)
+    if (!vm)
     {
-        vm->ui_userRequestRenameParameters(name);
+        return;
     }
+    QString currentName = vm->getCurrentNameParameter();
+    if (currentName == name)
+    {
+        onBackButtonClicked();
+        return;
+    }
+    vm->ui_userRequestRenameParameters(name);
+}
+
+void RenameParametersView::ps_onParameterRenamed()
+{
     ui->lineEdit->clear();
     onBackButtonClicked();
 }
