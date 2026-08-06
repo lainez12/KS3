@@ -131,6 +131,7 @@ void VisualisationView::setupConnections()
         // Indicators/Data related
         connect(vm, &VisualisationViewModel::s_maskingDistanceUpdate, this, &VisualisationView::onMaskingDistanceUpdate);
         connect(vm, &VisualisationViewModel::s_cameraPositionUpdate, this, &VisualisationView::onCameraPositionUpdate);
+        connect(vm, &VisualisationViewModel::s_cameraPositionUpdate, m_mapPositionCameras, &RealPositionCameras::onCameraPositionUpdate);
         connect(vm, &VisualisationViewModel::s_vacuumUpdate, this, &VisualisationView::onVacuumUpdate);
         connect(vm, &VisualisationViewModel::s_compressedAirUpdate, this, &VisualisationView::onCompressedAirUpdate);
         connect(vm, &VisualisationViewModel::s_pickedUpCoordinatesUpdated, this, &VisualisationView::onPickedUpCoordinatesUpdated);

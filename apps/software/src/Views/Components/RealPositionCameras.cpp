@@ -4,7 +4,7 @@
 
 #include <QWidget>
 
-#define ICON_PATH_CAMERA ":/icons/rouge.svg"
+#define ICON_PATH_CAMERA ":/icons/peepholered.png"
 
 RealPositionCameras::RealPositionCameras(QWidget *parent) :
     QWidget(parent),
