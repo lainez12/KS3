@@ -63,6 +63,7 @@ qt_add_executable(Kub3Software
     src/Views/Settings/OperatingTimesView.cpp
     src/Views/Alignment/LoadParametersView.cpp
     src/Views/Alignment/SaveParametersView.cpp
+    src/Views/Alignment/RenameParametersView.cpp
     src/Views/Alignment/VisualisationView.cpp
     src/Views/Alignment/DistanceView.cpp
     src/Views/Alignment/ContactSelectionView.cpp
@@ -137,6 +138,7 @@ qt_add_executable(Kub3Software
     include/Views/Settings/OperatingTimesView.h
     include/Views/Alignment/LoadParametersView.h
     include/Views/Alignment/SaveParametersView.h
+    include/Views/Alignment/RenameParametersView.h
     include/Views/Alignment/VisualisationView.h
     include/Views/Alignment/DistanceView.h
     include/Views/Alignment/ContactSelectionView.h
@@ -175,6 +177,7 @@ qt_add_executable(Kub3Software
     gui/Views/Settings/OperatingTimesView.ui
     gui/Views/Alignment/LoadParametersView.ui
     gui/Views/Alignment/SaveParametersView.ui
+    gui/Views/Alignment/RenameParametersView.ui
     gui/Views/Alignment/VisualisationView.ui
     gui/Views/Alignment/DistanceView.ui
     gui/Views/Alignment/ContactSelectionView.ui
