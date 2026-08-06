@@ -40,8 +40,10 @@ namespace Kub3::UI::ViewModels::Alignment
 
     public:
         void loadConnections(void) override;
-        void ui_requestCameraMovement(CameraId camId, MovementKind kind, CameraDirection dir);
-        void ui_requestAlignmentStageMovement(AlignmentStageId stageId, MovementKind kind, AlignmentStageDirection dir);
+        void setContactLimits(double maxForceGF, double toleranceGF);
+        void ui_requestCameraManualMovement(CameraId camId, MovementKind kind, CameraDirection dir);
+        void ui_requestAlignmentStageManualMovement(AlignmentStageId stageId, MovementKind kind, AlignmentStageDirection dir);
+        void ui_requestZManualMovement(MovementKind kind, ZDirection dir);
         void ui_requestSaveParameters(const alignment_parameter_t &parameter);
         void ui_compressedAirSwitchClicked();
         void ui_proceedToExposure();
@@ -56,14 +58,21 @@ namespace Kub3::UI::ViewModels::Alignment
         void s_substrateFineModeUpdated(bool fineModeActive);
         void s_saveParametersAlignment(const alignment_parameter_t &parameter);
         void s_preparingExposureMode(void);
+        void s_setContactFormLock(bool lock);
+        void s_setContactMaximumTarget(double valueGF);
+        void s_setContactTolerance(double valueGF);
+        void s_setCompressedAirButtonEnabled(bool enabled);
 
-        void cmdRunCameraMovement(CameraId camId, MovementKind kind, CameraDirection dir);
-        void cmdRunAlignmentStageMovement(AlignmentStageId stageId, MovementKind kind, AlignmentStageDirection dir);
+        void cmdRunCameraManualMovement(CameraId camId, MovementKind kind, CameraDirection dir);
+        void cmdRunAlignmentStageManualMovement(AlignmentStageId stageId, MovementKind kind, AlignmentStageDirection dir);
+        void cmdRunZManualMovement(MovementKind kind, ZDirection dir);
+
         void cmdRunCameraAbsoluteMovement(CameraId camId, double xPosMm, double yPosMm);
         void cmdRequestCameraFineMode(CameraId camId, bool active);
         void cmdRequestSubstrateFineMode(bool active);
         void cmdRequestSubstrateCompressedAir(bool enable);
         void cmdRequestExposureMode(void);
+        void cmdRequestContact(double targetForceGrams);
 
     public slots:
         // From UI
@@ -71,10 +80,16 @@ namespace Kub3::UI::ViewModels::Alignment
         void ui_onGoToXYClicked(CameraId id, const coords_2d_t &targetPosMm);
         void ui_onCamSpeedClicked(CameraId id);
         void ui_substrateSpeedClicked();
+        void ui_startContactRoutine(double targetForceGrams);
 
         // From logic layer
         void ps_handleSensorValueChanged(const std::string &key);
         void ps_operationalSubstateKindChanged(MFSM::OperationalStateKind kind);
+        void ps_onContactPhaseChanged(MFSM::ContactPhase contactPhase);
+        void ps_onCompressedAirAuthorizedChanged(bool authorized);
+
+    private:
+        void syncContactUX(void);
 
     private:
         Shared<HAL::MS::IMachineStatusRepo> m_repo;
@@ -82,6 +97,7 @@ namespace Kub3::UI::ViewModels::Alignment
         // Pad movement related state
         UMap<CameraId, bool> m_activeContinuousCameraMoves                 = {};
         UMap<AlignmentStageId, bool> m_activeContinuousAlignmentStageMoves = {};
+        bool m_activeContinuousZMove                                       = false;
 
         // Displayed data state
         double m_zPositionsMm[3] = {0, 0, 0};
@@ -89,6 +105,12 @@ namespace Kub3::UI::ViewModels::Alignment
         bool m_substrateFineMode            = false;
         bool m_substrateVacuumActive        = false;
         bool m_substrateCompressedAirActive = false;
+
+        // Contact related
+        double m_maxContactForceGF               = 800.0;
+        double m_contactToleranceGF              = 50.0;
+        MFSM::ContactPhase m_currentContactPhase = MFSM::ContactPhase::Free;
+        bool m_compressedAirAuthorized           = false;
     };
 
 } // namespace Kub3::UI::ViewModels::Alignment

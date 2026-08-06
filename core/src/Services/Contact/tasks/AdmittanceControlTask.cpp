@@ -1,6 +1,7 @@
 #include <QDebug>
 #include <cmath>
 
+#include <Common/Clock.h>
 #include <Services/Contact/tasks/AdmittanceControlTask.h>
 
 namespace Kub3::Services
@@ -34,7 +35,7 @@ namespace Kub3::Services
     {
         using namespace Algorithms::Control;
 
-        double dt_sec = 0.02; // Default to 20ms on first tick
+        double dt_sec = LOGIC_TIMER_PERIOD_MS / 1000.0; // Default to logic timer period on first tick
 
         // Calculate precise dt (handle first tick edge-case and OS jitter)
         if (!m_isFirstTick)

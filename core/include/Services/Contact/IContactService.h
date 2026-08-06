@@ -25,12 +25,6 @@ namespace Kub3::Services
         double back;
     } plan_deltas_t;
 
-    enum class ZDirection
-    {
-        Up   = 0x0,
-        Down = 0x1
-    };
-
     struct ZMovePayload {
         ZDirection direction;
         bool granular = false;

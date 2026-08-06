@@ -5,6 +5,7 @@
 #include <QString>
 #include <QTimer>
 
+#include <Common/Clock.h>
 #include <Common/ProcessMessage.h>
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
 #include <MFSM/events.h>
@@ -18,8 +19,6 @@
 #include <Services/Homing/IHomingService.h>
 #include <Services/Stowage/IStowageService.h>
 #include <Services/Vision/IVisionService.h>
-
-#define LOGIC_TIMER_PERIOD_MS 20u
 
 namespace Kub3::MFSM
 {
@@ -54,7 +53,9 @@ namespace Kub3::MFSM
         void s_systemStateKindChanged(SystemStateKind kind);
         void s_operationalSubstateKindChanged(OperationalStateKind kind);
         void s_operationalSubstateChanged(const OperationalState &state);
-        void s_postureChanged(const MFSM::SystemPosture &posture); // To drive UI indicators
+        void s_postureChanged(const SystemPosture &posture);    // To drive UI indicators
+        void s_contactPhaseChanged(ContactPhase phase);         // To drive UI indicators
+        void s_compressedAirAuthorizedChanged(bool authorized); // To drive UI indicators
         void s_operationCanceled();
         // Logging/telemetry
         void s_processMessageBroadcast(const Common::ProcessMessage &msg);
@@ -88,6 +89,7 @@ namespace Kub3::MFSM
         void ps_requestStowage(StowageTarget tgt);
         void ps_requestAutolevel();
         void ps_requestEnterAlignment();
+        void ps_requestApplyContact(double forceGF);
         void ps_requestSubstrateCompressedAir(bool enable);
         void ps_requestEnterExposureMode();
         void ps_requestUnstowage(StowageTarget tgt);
@@ -102,6 +104,7 @@ namespace Kub3::MFSM
         // Camera PAD movements
         void ps_requestPADCameraMovement(CameraId camId, MovementKind kind, CameraDirection dir);
         void ps_requestPADAlignmentStageMovement(AlignmentStageId stageId, MovementKind kind, AlignmentStageDirection dir);
+        void ps_requestPADZMovement(MovementKind kind, ZDirection dir);
         void ps_requestAlignmentSubstrateFineMode(bool active);
         void ps_requestAlignmentCameraFineMode(CameraId camId, bool active);
         void ps_requestAlignmentCameraAbsoluteMovement(CameraId camId, double xPosMm, double yPosMm);
@@ -130,7 +133,6 @@ namespace Kub3::MFSM
         void onStateInitializationTick(StateInitializing &state);
         void onStateOperationalTick(StateOperational &opState);
         void onStatePreparePowerOffTick(const StatePreparePowerOff &state);
-
         // Template helper for executing basic services (Drawers, Stowage, Exposure)
         template <typename StateT>
         void onBasicOperatingServiceTick(StateT &state, Services::IService *service);
@@ -144,11 +146,15 @@ namespace Kub3::MFSM
         void checkHardwareSafety(void);
         void stopAllServices(void);
         void updateAndBroadcastPosture(const ExpectedSystemPosture &expected, SystemPosture &current);
+        void broadcastContactPhaseIfNeeded(void);
+        void setCompressedAirAuthorized(bool authorized);
 
     private:
         SystemState m_state;                        // HFSM Macro-State (Single Source of Truth)
         Shared<HAL::MS::IMachineStatusRepo> m_repo; // The raw hardware values bus
         QTimer m_logicTimer;                        // 50Hz tick timer
+        ContactPhase m_lastBroadcastedContactPhase = ContactPhase::Free;
+        bool m_compressedAirAuthorized             = false;
 
         // Services (Pure Business Logic)
         Shared<Services::IHomingService> m_homingService;

@@ -1,13 +1,11 @@
 #include <QDebug>
 #include <QMetaObject>
-
 #include <algorithm>
 #include <stdexcept>
 
+#include <Common/Clock.h>
 #include <Config/helper.h>
 #include <HAL/Actuators/Motors/StepperMotor.h>
-
-#define CONTROL_TIMER_VALUE_MS 20 // 50Hz
 
 namespace Kub3::HAL::Act
 {
@@ -63,7 +61,7 @@ namespace Kub3::HAL::Act
 
                     m_lastTickNsecs = 0; // Reset last tick timestamp
                     m_dtTimer.start();   // reset elapsed timer
-                    m_controlTimer.start(CONTROL_TIMER_VALUE_MS);
+                    m_controlTimer.start(MOTOR_CONTROL_TIMER_PERIOD_MS);
                 }
                 else // Motor already moving
                 {
@@ -101,7 +99,7 @@ namespace Kub3::HAL::Act
 
                     m_lastTickNsecs = 0; // Reset last tick timestamp
                     m_dtTimer.start();   // reset elapsed timer
-                    m_controlTimer.start(CONTROL_TIMER_VALUE_MS);
+                    m_controlTimer.start(MOTOR_CONTROL_TIMER_PERIOD_MS);
                 }
                 else // Motor already moving
                 {
@@ -143,7 +141,7 @@ namespace Kub3::HAL::Act
 
                     m_lastTickNsecs = 0; // Reset last tick timestamp
                     m_dtTimer.start();   // reset elapsed timer
-                    m_controlTimer.start(CONTROL_TIMER_VALUE_MS);
+                    m_controlTimer.start(MOTOR_CONTROL_TIMER_PERIOD_MS);
                 }
                 else // Motor already moving
                 {
