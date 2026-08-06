@@ -168,6 +168,7 @@ namespace Kub3
             ASSIGN_VIEW_MODEL(UI::ViewModels::Alignment::VisualisationViewModel, visualisationVM, m_visualisationVM, m_repo);
             ASSIGN_VIEW_MODEL(UI::ViewModels::Alignment::LoadParametersViewModel, loadParametersVM, m_loadParametersVM, m_repo);
             ASSIGN_VIEW_MODEL(UI::ViewModels::Alignment::SaveParametersViewModel, saveParametersVM, m_saveParametersVM, m_repo);
+            ASSIGN_VIEW_MODEL(UI::ViewModels::Alignment::RenameParametersViewModel, renameParametersVM, m_renameParametersVM, m_repo);
 
             // Views creation
             auto *homeView                     = new HomeView(std::move(homeVM), m_mainWindow.get());
@@ -192,6 +193,7 @@ namespace Kub3
             auto *visualisationView            = new VisualisationView(std::move(visualisationVM), m_mainWindow.get());
             auto *loadParametersView           = new LoadParametersView(std::move(loadParametersVM), m_mainWindow.get());
             auto *saveParametersView           = new SaveParametersView(std::move(saveParametersVM), m_mainWindow.get());
+            auto *renameParametersView         = new RenameParametersView(std::move(renameParametersVM), m_mainWindow.get());
             auto *exposureModeView             = new ExposureModeView(std::move(exposureModeVM), m_mainWindow.get());
 
             m_mainWindow->addView(Kub3::UI::ViewId::EXPOSURE_MODE_VIEW, exposureModeView);
@@ -217,6 +219,7 @@ namespace Kub3
             m_mainWindow->addView(Kub3::UI::ViewId::ALIGNMENT_VISUALISATION_VIEW, visualisationView);
             m_mainWindow->addView(Kub3::UI::ViewId::ALIGNMENT_LOAD_PARAMETERS_VIEW, loadParametersView);
             m_mainWindow->addView(Kub3::UI::ViewId::ALIGNMENT_SAVE_PARAMETERS_VIEW, saveParametersView);
+            m_mainWindow->addView(Kub3::UI::ViewId::ALIGNMENT_RENAME_PARAMETERS_VIEW, renameParametersView);
         }
 
         return *this;
