@@ -168,6 +168,7 @@ namespace Kub3
             ASSIGN_VIEW_MODEL(UI::ViewModels::Alignment::VisualisationViewModel, visualisationVM, m_visualisationVM, m_repo);
             ASSIGN_VIEW_MODEL(UI::ViewModels::Alignment::LoadParametersViewModel, loadParametersVM, m_loadParametersVM, m_repo);
             ASSIGN_VIEW_MODEL(UI::ViewModels::Alignment::SaveParametersViewModel, saveParametersVM, m_saveParametersVM, m_repo);
+            ASSIGN_VIEW_MODEL(UI::ViewModels::Alignment::RenameParametersViewModel, renameParametersVM, m_renameParametersVM, m_repo);
 
             // Views creation
             auto *homeView                     = new HomeView(std::move(homeVM), m_mainWindow.get());
@@ -192,6 +193,7 @@ namespace Kub3
             auto *visualisationView            = new VisualisationView(std::move(visualisationVM), m_mainWindow.get());
             auto *loadParametersView           = new LoadParametersView(std::move(loadParametersVM), m_mainWindow.get());
             auto *saveParametersView           = new SaveParametersView(std::move(saveParametersVM), m_mainWindow.get());
+            auto *renameParametersView         = new RenameParametersView(std::move(renameParametersVM), m_mainWindow.get());
             auto *exposureModeView             = new ExposureModeView(std::move(exposureModeVM), m_mainWindow.get());
 
             m_mainWindow->addView(Kub3::UI::ViewId::EXPOSURE_MODE_VIEW, exposureModeView);
@@ -217,6 +219,7 @@ namespace Kub3
             m_mainWindow->addView(Kub3::UI::ViewId::ALIGNMENT_VISUALISATION_VIEW, visualisationView);
             m_mainWindow->addView(Kub3::UI::ViewId::ALIGNMENT_LOAD_PARAMETERS_VIEW, loadParametersView);
             m_mainWindow->addView(Kub3::UI::ViewId::ALIGNMENT_SAVE_PARAMETERS_VIEW, saveParametersView);
+            m_mainWindow->addView(Kub3::UI::ViewId::ALIGNMENT_RENAME_PARAMETERS_VIEW, renameParametersView);
         }
 
         return *this;
@@ -287,7 +290,6 @@ namespace Kub3
         QObject::connect(m_favoriteExposureSettingsVM.get(), &VM::Exposure::FavoriteExposureSettingsViewModel::s_exposurePresetLoaded, m_recapExposureSettingsVM.get(), &VM::Exposure::RecapExposureSettingsViewModel::ps_setExposurePreset);
         m_progressExposureVM->bindConnection(m_progressExposureVM.get(), &VM::Exposure::ProgressExposureViewModel::s_launchExposure, m_masterFSM, &MFSM::MasterFSM::ps_requestExposure);
         QObject::connect(m_recapExposureSettingsVM.get(), &VM::Exposure::RecapExposureSettingsViewModel::s_exposurePresetLaunched, m_progressExposureVM.get(), &VM::Exposure::ProgressExposureViewModel::ps_launchExposure);
-        // --- AlignmentViewModels
         // --- Settings
         QObject::connect(m_configuratorPasswdVM.get(), &VM::Settings::AdminPasswordViewModel::s_authenticationSuccess, &launchConfigurator);
 
@@ -309,15 +311,14 @@ namespace Kub3
         QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_postureChanged, m_exposureMenuVM.get(), &VM::ExposureMenuViewModel::ps_onPostureChanged);
         m_exposureMenuVM->bindConnection(m_masterFSM, &MFSM::MasterFSM::s_processMessageBroadcast, m_exposureMenuVM.get(), &VM::ExposureMenuViewModel::ps_onProcessMessageBroadcast);
         // --- Exposure Mode View Model
-        QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_systemStateKindChanged,
-                         m_exposureModeVM.get(), &VM::ExposureModeViewModel::ps_onSystemStateChanged);
-        QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_postureChanged,
-                         m_exposureModeVM.get(), &VM::ExposureModeViewModel::ps_onPostureChanged);
+        QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_systemStateKindChanged, m_exposureModeVM.get(), &VM::ExposureModeViewModel::ps_onSystemStateChanged);
+        QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_postureChanged, m_exposureModeVM.get(), &VM::ExposureModeViewModel::ps_onPostureChanged);
         m_exposureModeVM->bindConnection(m_masterFSM, &MFSM::MasterFSM::s_operationalSubstateKindChanged,
                                          m_exposureModeVM.get(), &VM::ExposureModeViewModel::ps_onOperationalSubstateKindChanged);
-        // --- Alignment (visualisation) View Model
-        QObject::connect(m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::s_saveParametersAlignment,
-                         m_saveParametersVM.get(), &VM::Alignment::SaveParametersViewModel::ps_saveParameters);
+        // --- Alignment View Model
+        QObject::connect(m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::s_saveParametersAlignment, m_saveParametersVM.get(), &VM::Alignment::SaveParametersViewModel::ps_saveParameters);
+        QObject::connect(m_loadParametersVM.get(), &VM::Alignment::LoadParametersViewModel::s_loadParameterSelected, m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::ps_handleLoadParameterSelected);
+        QObject::connect(m_loadParametersVM.get(), &VM::Alignment::LoadParametersViewModel::s_renameParameterSelected, m_renameParametersVM.get(), &VM::Alignment::RenameParametersViewModel::ps_renameParameters);
         m_visualisationVM->bindConnection(m_repo.get(), &HAL::MS::IMachineStatusRepo::s_machineValueChanged,
                                           m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::ps_handleSensorValueChanged);
         m_visualisationVM->bindConnection(m_masterFSM, &MFSM::MasterFSM::s_operationalSubstateKindChanged,

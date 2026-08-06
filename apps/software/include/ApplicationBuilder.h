@@ -98,6 +98,7 @@ namespace Kub3
         QPointer<UI::ViewModels::Alignment::VisualisationViewModel> m_visualisationVM;
         QPointer<UI::ViewModels::Alignment::LoadParametersViewModel> m_loadParametersVM;
         QPointer<UI::ViewModels::Alignment::SaveParametersViewModel> m_saveParametersVM;
+        QPointer<UI::ViewModels::Alignment::RenameParametersViewModel> m_renameParametersVM;
     };
 
 } // namespace Kub3

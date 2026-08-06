@@ -45,6 +45,7 @@ namespace Kub3::UI::ViewModels::Alignment::Persistence
 
     bool parameterExistsInFile(const QJsonArray &parametersArray, const QString &parameterName);
     void replaceExistingParameter(QJsonArray &parametersArray, const QJsonObject &parameter);
+    bool changeParameterNameInFile(QJsonArray &parametersArray, const QString &oldName, const QString &newName);
     Result<QJsonObject, const char *> getParameterByName(const QJsonArray &parametersArray, const QString &parameterName);
     bool deleteByName(QJsonArray &parametersArray, const QString &parameterName);
 }

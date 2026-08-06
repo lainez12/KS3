@@ -1,5 +1,5 @@
-#include <QString>
 #include <QDebug>
+#include <QString>
 
 #include <Views/Alignment/SaveParametersView.h>
 #include <Views/Components/Colors.h>
@@ -18,7 +18,7 @@ SaveParametersView::SaveParametersView(Unique<SaveParametersViewModel> viewModel
 {
     ui->setupUi(this);
     m_keyboard.setupKeyboardConnections(this);
-    setDefaultTitleBar("Exposure settings");
+    setDefaultTitleBar("Save parameters");
     setNewNavButtonsConfigs();
 
     QVBoxLayout *layout = new QVBoxLayout(ui->parametersListWidget);
