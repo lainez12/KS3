@@ -98,8 +98,8 @@ namespace Kub3::Interlocks
     Result<Unit, const char *> canEnterAlignment(const SystemPosture &p)
     {
         // Must have both components in their respective operational zones
-        if (p.mask != MaskPosture::Exposure || p.wafer != WaferPosture::AlignmentZone)
-            return Err("Action Rejected - Mask and Wafer must be stowed before Alignment.");
+        if (p.mask != MaskPosture::Exposure || p.wafer != WaferPosture::AlignmentZone || !p.isLevelingValid)
+            return Err("Action Rejected - Mask and Wafer must be stowed and parallel before Alignment.");
 
         return OK;
     }
@@ -132,6 +132,24 @@ namespace Kub3::Interlocks
         if (p.wafer != WaferPosture::AlignmentZone)
             return Err("Action Rejected - Stages must be in Alignment Zone for X/Y/Theta movement.");
 
+        return OK;
+    }
+
+    Result<Unit, const char *> canEnableCompressedAir(const SystemPosture &p, const StateOperational &opState)
+    {
+        (void)p;
+        if (auto *alignState = std::get_if<StateAlignment>(&opState.subState))
+        {
+            if (alignState->phase != ContactPhase::InContact)
+            {
+                qDebug() << "Current contact phase:" << static_cast<int>(alignState->phase);
+                return Err("Action Rejected - Mask and Wafer must be IN CONTACT to apply Air.");
+            }
+        }
+        else
+        {
+            return Err("Action Rejected - Air can only be applied during Alignment Mode.");
+        }
         return OK;
     }
 

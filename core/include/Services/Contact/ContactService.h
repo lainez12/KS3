@@ -7,6 +7,7 @@
 #include <HAL/Actuators/ActuatorRegistry.h>
 #include <HAL/Actuators/Motors/IPositionMotor.h>
 #include <HAL/Actuators/Switches/ISwitch.h>
+#include <HAL/Actuators/Valves/IValve.h>
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
 #include <Services/BaseTaskService.h>
 #include <Services/Contact/tasks/AdmittanceControlTask.h>
@@ -36,10 +37,12 @@ namespace Kub3::Services
         // IContactService overrides
         void startContactRoutine(ContactPayload kind) override;
         void retractFromContact(void) override;
-        void moveZManual(ZDirection dir) override;
+        void moveZManual(ZDirection dir, bool granular = false) override;
         void stopZManual(void) override;
-        [[nodiscard]] bool isInContact(void) const override;
         void processBackgroundAutomations(void) override;
+        void setSubstrateCompressedAir(bool enable) override;
+        [[nodiscard]] bool isInContact(void) const override;
+        [[nodiscard]] bool isSubstrateCompressedAirActive(void) const override;
 
         // BaseTaskService overrides
         void tick(void) override;
@@ -72,23 +75,26 @@ namespace Kub3::Services
         Shared<HAL::MS::IMachineStatusRepo> m_repo;
         Config::contact_process_config_t m_conf;
 
+        // Movement/Admittance control
         std::array<Shared<HAL::Act::ISwitch>, 3> m_forceSensorsSw;
         std::array<Shared<HAL::Act::IPositionMotor>, 3> m_zMotors;
         uint32_t m_manualWatchdogTicks = 0;
         ZDirection m_currentManualDir  = ZDirection::Down;
-
-        // Active Tilt Compensation trackers
-        bool m_manualZPaused[3]  = {false, false, false};
-        double m_manualStartZ[3] = {0.0, 0.0, 0.0};
-        bool m_tiltWarningIssued = false;
-
+        double m_requestedForceGF      = 0.0;
+        // --- Active Tilt Compensation trackers
+        bool m_manualZPaused[3]   = {false, false, false};
+        double m_manualStartZ[3]  = {0.0, 0.0, 0.0};
+        bool m_tiltWarningIssued  = false;
+        double m_maxMotorsDeltaMm = 0.5;
+        // --- Kinematic profiles
         Config::kinematic_profile_t m_freeProfile;
         Config::kinematic_profile_t m_contactProfile;
 
-        std::string m_taskAbortReason;
+        // Vacuum/Air
+        Shared<HAL::Act::IValve> m_waferVacuumValve;
+        Shared<HAL::Act::IValve> m_waferAirValve;
 
-        double m_maxMotorsDeltaMm = 0.5;
-        double m_requestedForceGF = 0.0;
+        std::string m_taskAbortReason;
 
         // Conversion factors (ADC to gram-force)
         double m_adcToGFLeftFactor                     = 1.0;

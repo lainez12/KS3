@@ -181,6 +181,21 @@ namespace Kub3::MFSM
         dispatch(CmdStartAutolevel{});
     }
 
+    void MasterFSM::ps_requestEnterAlignment()
+    {
+        dispatch(CmdEnterAlignmentMode{.autoMode = false});
+    }
+
+    void MasterFSM::ps_requestSubstrateCompressedAir(bool enable)
+    {
+        dispatch(CmdSetSubstrateCompressedAir{.enableCompressedAir = enable});
+    }
+
+    void MasterFSM::ps_requestEnterExposureMode()
+    {
+        dispatch(CmdEnterExposureMode{});
+    }
+
     void MasterFSM::ps_requestUnstowage(StowageTarget tgt)
     {
         dispatch(CmdOperateUnstowage{
@@ -435,7 +450,7 @@ namespace Kub3::MFSM
     void MasterFSM::processCmdZPad(const CmdZAxisPad &cmd)
     {
         if (auto *op = std::get_if<Services::ZMovePayload>(&cmd.operation))
-            m_contactService->moveZManual(op->direction);
+            m_contactService->moveZManual(op->direction, op->granular);
         else if (auto *op = std::get_if<Services::ZStopPayload>(&cmd.operation))
             m_contactService->stopZManual();
     }

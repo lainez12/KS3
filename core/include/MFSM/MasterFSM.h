@@ -87,6 +87,9 @@ namespace Kub3::MFSM
         void ps_requestOperateDrawer(DrawerTarget tgt, bool eject);
         void ps_requestStowage(StowageTarget tgt);
         void ps_requestAutolevel();
+        void ps_requestEnterAlignment();
+        void ps_requestSubstrateCompressedAir(bool enable);
+        void ps_requestEnterExposureMode();
         void ps_requestUnstowage(StowageTarget tgt);
         void ps_requestExposure(const Services::ExposurePayload &payload);
 

@@ -1,10 +1,10 @@
 #include <QString>
 
+#include <Common/Enums.h>
 #include <Views/Alignment/VisualisationView.h>
 #include <Views/Components/Colors.h>
 #include <Views/Components/RealPositionCameras.h>
 
-#include "Common/Enums.h"
 #include "ui_VisualisationView.h"
 
 #define ORANGE_BTN_SIZE 90
@@ -136,7 +136,6 @@ void VisualisationView::setupConnections()
         connect(vm, &VisualisationViewModel::s_pickedUpCoordinatesUpdated, this, &VisualisationView::onPickedUpCoordinatesUpdated);
         connect(vm, &VisualisationViewModel::s_camerasFineModeUpdated, this, &VisualisationView::onCamerasFineModeUpdated);
         connect(vm, &VisualisationViewModel::s_substrateFineModeUpdated, this, &VisualisationView::onSubstrateFineModeUpdated);
-
         // Camera's buttons
         connect(ui->btnPickUpLeft, &NavButton::clicked, [vm]() { vm->ui_onPickUpXYClicked(CameraId::LEFT); });
         connect(ui->btnPickUpRight, &NavButton::clicked, [vm]() { vm->ui_onPickUpXYClicked(CameraId::RIGHT); });
@@ -144,6 +143,8 @@ void VisualisationView::setupConnections()
         connect(ui->btnSpeedCamRight, &NavButton::clicked, [vm]() { vm->ui_onCamSpeedClicked(CameraId::RIGHT); });
         connect(ui->btnGoToLeft, &NavButton::clicked, [this]() { this->onGoToBtnClicked(CameraId::LEFT); });
         connect(ui->btnGoToRight, &NavButton::clicked, [this]() { this->onGoToBtnClicked(CameraId::RIGHT); });
+        // Arianne's thread related
+        connect(vm, &VisualisationViewModel::s_preparingExposureMode, this, &VisualisationView::onPreparingExposureMode);
     }
 }
 
@@ -210,7 +211,7 @@ void VisualisationView::cameraMovement(CameraId camId, MovementKind kind, Camera
 {
     if (auto *vm = dynamic_cast<VisualisationViewModel *>(m_viewModel.get()))
     {
-        vm->uiRequestCameraMovement(camId, kind, dir);
+        vm->ui_requestCameraMovement(camId, kind, dir);
     }
 }
 
@@ -218,7 +219,7 @@ void VisualisationView::alignmentStageMovement(AlignmentStageId stageId, Movemen
 {
     if (auto *vm = dynamic_cast<VisualisationViewModel *>(m_viewModel.get()))
     {
-        vm->uiRequestAlignmentStageMovement(stageId, kind, dir);
+        vm->ui_requestAlignmentStageMovement(stageId, kind, dir);
     }
 }
 
@@ -307,9 +308,9 @@ void VisualisationView::setNewNavButtonsConfigs()
         "Subst. Speed", QColor(BLUE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/speed-motor-subst.svg", ID_BTN_SUBSTRATE_SPEED, std::bind(&VisualisationView::onSpeedMotorSubstButtonClicked, this));
     addNavButton("center", speedMotorSubst);
 
-    NavButtonConfig switchVacumAir(
-        "Vacum - Air.", QColor(BLUE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/vac_air_switch.svg", ID_BTN_VAC_AIR_TOGGLE, std::bind(&VisualisationView::onSwitchVacumAirButtonClicked, this));
-    addNavButton("center", switchVacumAir);
+    NavButtonConfig switchVacuumAir(
+        "Vacuum - Air.", QColor(BLUE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/vac_air_switch.svg", ID_BTN_VAC_AIR_TOGGLE, std::bind(&VisualisationView::onSwitchVacuumAirButtonClicked, this));
+    addNavButton("center", switchVacuumAir);
 
     NavButtonConfig visualMark(
         "Visual Mark", QColor(BLUE_COLOR), QColor(TURQUOISE_COLOR), ":/icons/visual-mark.svg", ID_BTN_VISUAL_MARK, [this]() { onVisualMarkButtonClicked("Visual Mark"); });
@@ -354,7 +355,12 @@ void VisualisationView::onBackButtonClicked() {}
 
 void VisualisationView::onValidateButtonClicked()
 {
-    emit s_openView(Kub3::UI::ViewId::EXPOSURE_SETTINGS_VIEW);
+    VisualisationViewModel *vm = getViewModel<VisualisationViewModel>();
+
+    if (vm)
+    {
+        vm->ui_proceedToExposure(); // Triggers vision block movement
+    }
 }
 
 void VisualisationView::onSaveButtonClicked()
@@ -362,7 +368,7 @@ void VisualisationView::onSaveButtonClicked()
     auto vm = getViewModel<VisualisationViewModel>();
     if (vm)
     {
-        vm->uiRequestSaveParameters(getAlignmentParameter());
+        vm->ui_requestSaveParameters(getAlignmentParameter());
     }
     emit s_openView(Kub3::UI::ViewId::ALIGNMENT_SAVE_PARAMETERS_VIEW);
 }
@@ -401,8 +407,15 @@ void VisualisationView::onSpeedMotorSubstButtonClicked()
     }
 }
 
-void VisualisationView::onSwitchVacumAirButtonClicked() {}
-void VisualisationView::onAntiCollisionButtonClicked() {}
+void VisualisationView::onSwitchVacuumAirButtonClicked()
+{
+    auto vm = getViewModel<VisualisationViewModel>();
+
+    if (vm)
+    {
+        vm->ui_compressedAirSwitchClicked();
+    }
+}
 
 void VisualisationView::onVisualMarkButtonClicked(const QString &buttonId)
 {
@@ -544,5 +557,14 @@ void VisualisationView::onGoToBtnClicked(CameraId camId)
             break;
         }
         vm->ui_onGoToXYClicked(camId, targetPosMm);
+    }
+}
+
+void VisualisationView::onPreparingExposureMode(void)
+{
+    if (this->isVisible())
+    {
+        // Proceed to open exposure mode view
+        emit s_openView(Kub3::UI::ViewId::EXPOSURE_SETTINGS_VIEW);
     }
 }

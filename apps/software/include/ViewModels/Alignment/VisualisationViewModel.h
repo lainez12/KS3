@@ -3,6 +3,7 @@
 #include <Common/Enums.h>
 #include <HAL/MachineStatus/IMachineStatusRepo.h>
 #include <HAL/MachineStatus/sensors_labels.h>
+#include <MFSM/states.operational.h>
 #include <ViewModels/Alignment/AlignmentParametersPersistence.h>
 #include <ViewModels/BaseVisionViewModel.h>
 #include <utils.h>
@@ -39,9 +40,11 @@ namespace Kub3::UI::ViewModels::Alignment
 
     public:
         void loadConnections(void) override;
-        void uiRequestCameraMovement(CameraId camId, MovementKind kind, CameraDirection dir);
-        void uiRequestAlignmentStageMovement(AlignmentStageId stageId, MovementKind kind, AlignmentStageDirection dir);
-        void uiRequestSaveParameters(const alignment_parameter_t &parameter);
+        void ui_requestCameraMovement(CameraId camId, MovementKind kind, CameraDirection dir);
+        void ui_requestAlignmentStageMovement(AlignmentStageId stageId, MovementKind kind, AlignmentStageDirection dir);
+        void ui_requestSaveParameters(const alignment_parameter_t &parameter);
+        void ui_compressedAirSwitchClicked();
+        void ui_proceedToExposure();
 
     signals:
         void s_maskingDistanceUpdate(double distMm);
@@ -52,12 +55,15 @@ namespace Kub3::UI::ViewModels::Alignment
         void s_camerasFineModeUpdated(CameraId camId, bool active);
         void s_substrateFineModeUpdated(bool fineModeActive);
         void s_saveParametersAlignment(const alignment_parameter_t &parameter);
+        void s_preparingExposureMode(void);
 
         void cmdRunCameraMovement(CameraId camId, MovementKind kind, CameraDirection dir);
         void cmdRunAlignmentStageMovement(AlignmentStageId stageId, MovementKind kind, AlignmentStageDirection dir);
         void cmdRunCameraAbsoluteMovement(CameraId camId, double xPosMm, double yPosMm);
         void cmdRequestCameraFineMode(CameraId camId, bool active);
         void cmdRequestSubstrateFineMode(bool active);
+        void cmdRequestSubstrateCompressedAir(bool enable);
+        void cmdRequestExposureMode(void);
 
     public slots:
         // From UI
@@ -69,6 +75,7 @@ namespace Kub3::UI::ViewModels::Alignment
 
         // From logic layer
         void ps_handleSensorValueChanged(const std::string &key);
+        void ps_operationalSubstateKindChanged(MFSM::OperationalStateKind kind);
 
     private:
         Shared<HAL::MS::IMachineStatusRepo> m_repo;
@@ -80,7 +87,9 @@ namespace Kub3::UI::ViewModels::Alignment
         // Displayed data state
         double m_zPositionsMm[3] = {0, 0, 0};
         UMap<CameraId, camera_data_t> m_camerasState;
-        bool m_substrateFineMode = false;
+        bool m_substrateFineMode            = false;
+        bool m_substrateVacuumActive        = false;
+        bool m_substrateCompressedAirActive = false;
     };
 
 } // namespace Kub3::UI::ViewModels::Alignment

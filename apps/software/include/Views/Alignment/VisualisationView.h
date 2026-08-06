@@ -58,6 +58,7 @@ namespace Kub3::UI::Views
         void onCamerasFineModeUpdated(CameraId camId, bool fineModeActive);
         void onSubstrateFineModeUpdated(bool active);
         void onGoToBtnClicked(CameraId camId);
+        void onPreparingExposureMode(void);
 
     private:
         // Setup routines splitting up the constructor
@@ -79,8 +80,7 @@ namespace Kub3::UI::Views
         void onScreenshotButtonClicked();
         void onHardForceContButtonClicked(const QString &buttonId);
         void onSpeedMotorSubstButtonClicked();
-        void onSwitchVacumAirButtonClicked();
-        void onAntiCollisionButtonClicked();
+        void onSwitchVacuumAirButtonClicked();
         void onVisualMarkButtonClicked(const QString &buttonId);
         void onMeasurementButtonClicked();
         void closeHardForceContactFormIfNeeded();

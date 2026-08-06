@@ -254,6 +254,14 @@ namespace Kub3::MFSM
             [&](StateOperational &opState, const CmdZAxisPad &cmd) {
                 if (auto *alignState = std::get_if<StateAlignment>(&opState.subState))
                 {
+                    // Safety Guard: Forbid manual Z movement if Air is active
+                    if (std::holds_alternative<Services::ZMovePayload>(cmd.operation) &&
+                        m_contactService->isSubstrateCompressedAirActive())
+                    {
+                        emit s_warningOccurred("Z-Axis pad locked. Compressed air is actively clamping the mask and wafer.");
+                        return;
+                    }
+
                     // Manual Z is strictly prohibited while auto-contact algorithms are moving Z
                     if (alignState->phase == ContactPhase::Free || alignState->phase == ContactPhase::InContact)
                     {
@@ -282,6 +290,20 @@ namespace Kub3::MFSM
                     m_alignmentService->setHardwareLock(true);
                     m_contactService->startContactRoutine(Services::BasicContactPayload{.forceGF = cmd.forceGF});
                 }
+            },
+            [&](StateOperational &opState, const CmdSetSubstrateCompressedAir &cmd) {
+                if (cmd.enableCompressedAir)
+                {
+                    auto r = Interlocks::canEnableCompressedAir(opState.posture, opState);
+
+                    if (!r)
+                    {
+                        qWarning() << r.unwrap_err();
+                        emit s_warningOccurred(r.unwrap_err());
+                        return;
+                    }
+                }
+                m_contactService->setSubstrateCompressedAir(cmd.enableCompressedAir);
             },
 
             // Fallback (Not a static event)

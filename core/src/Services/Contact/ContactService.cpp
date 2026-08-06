@@ -1,4 +1,5 @@
 #include "Config/kinematics.h"
+#include "HAL/Actuators/Valves/IValve.h"
 #include <QDebug>
 
 #include <HAL/Actuators/Motors/IMotor.h>
@@ -45,6 +46,12 @@ namespace Kub3::Services
         m_freeProfile      = processConf.getKinematicProfile(Z_BACK_MOTOR, "normal");
         m_contactProfile   = processConf.getKinematicProfile(Z_BACK_MOTOR, "fine");
         m_maxMotorsDeltaMm = processConf.elevator.max_z_relative_distance_mm;
+
+        // Vacuum/Air switches
+        UNWRAP_OR_THROW(waferVacuumValve, m_registry->get<HAL::Act::IValve>(WAFER_VACUUM_VALVE), "[ContactService] Failed to load wafer vacuum valve: ");
+        UNWRAP_OR_THROW(waferAirValve, m_registry->get<HAL::Act::IValve>(WAFER_COMPRESSED_AIR_VALVE), "[ContactService] Failed to load wafer air valve: ");
+        m_waferVacuumValve = waferVacuumValve;
+        m_waferAirValve    = waferAirValve;
 
         // Conversions factors
         if (auto it = hwConfig.adc_to_gf_factors.find(FORCE_LEFT_ADC); it != hwConfig.adc_to_gf_factors.end())
@@ -144,7 +151,7 @@ namespace Kub3::Services
     // PAD MOVEMENTS IMPLEMENTATIONS
     // ==========================================
 
-    void ContactService::moveZManual(ZDirection dir)
+    void ContactService::moveZManual(ZDirection dir, bool granular)
     {
         // Not accepting pad movements while automated sequence is active
         if (this->getStatus() == ServiceStatus::Running)
@@ -157,6 +164,24 @@ namespace Kub3::Services
         {
             qCritical() << "ContactService: Manual move rejected. Process force limit already exceeded.";
             return;
+        }
+
+        // Granular movements (Step-by-step clicks)
+        if (granular)
+        {
+            // TODO: set correct movement size (from config ?)
+            // Assuming your config has a pad distance for Z, e.g., m_conf.pad.z_distance_mm
+            // If not, you can hardcode a small step like 0.001 (1 µm)
+            const double stepMm             = 0.005; // Example: 5 µm per click
+            const double relativeMovementMm = (dir == ZDirection::Up) ? stepMm : -stepMm;
+            const auto &profile             = isInContact() ? m_contactProfile : m_freeProfile;
+
+            for (auto &motor : m_zMotors)
+            {
+                if (motor)
+                    motor->moveRelative(relativeMovementMm, profile);
+            }
+            return; // Granular moves don't use the watchdog
         }
 
         // If direction changes during movement, stop cleanly first
@@ -243,6 +268,7 @@ namespace Kub3::Services
         this->clearTasks();
         // TODO: implement
         qCritical() << "[ContactService::retractFromContact] not implemented.";
+        this->startSequence();
     }
 
     void ContactService::buildAutolevelingLanes(void)
@@ -437,11 +463,6 @@ namespace Kub3::Services
         return {fL, fR, fB, std::max({fL, fR, fB})};
     }
 
-    bool ContactService::isInContact(void) const
-    {
-        return getMaxCurrentForceGF() > m_conf.contact_threshold_gf;
-    }
-
     void ContactService::processBackgroundAutomations(void)
     {
         const bool waferInserted = HAL::MS::readBool(m_repo, CW2);
@@ -456,6 +477,33 @@ namespace Kub3::Services
                             HAL::MS::readBool(m_repo, Z_BACK_LOW_LIMIT);
 
         this->_toggleForceSensors(enable);
+    }
+
+    void ContactService::setSubstrateCompressedAir(bool enable)
+    {
+        qDebug().noquote().nospace() << "[ContactService::setSubstrateCompressedAir] enable=" << enable << " | contact=" << isInContact();
+
+        // Always force vacuum enabled as compressed air short-circuits it anyway
+        m_waferVacuumValve->open();
+        // Only authorize air when in contact
+        if (enable && isInContact())
+        {
+            m_waferAirValve->open();
+        }
+        else if (!enable)
+        {
+            m_waferAirValve->close();
+        }
+    }
+
+    bool ContactService::isInContact(void) const
+    {
+        return getMaxCurrentForceGF() > m_conf.contact_threshold_gf;
+    }
+
+    bool ContactService::isSubstrateCompressedAirActive(void) const
+    {
+        return HAL::MS::readBool(m_repo, WAFER_COMPRESSED_AIR_ACTIVE);
     }
 
     bool ContactService::isProcessForceExceeded(void) const

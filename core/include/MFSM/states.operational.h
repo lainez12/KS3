@@ -1,5 +1,6 @@
 #pragma once
 
+#include <qstringliteral.h>
 #include <type_traits>
 #include <variant>
 
@@ -85,6 +86,8 @@ namespace Kub3::MFSM
         DrawerOp,
         Stowing,
         Unstowing,
+        Autoleveling,
+        RetractingZ,
         PreparingAlignment,
         Alignment,
         PreparingExposure,
@@ -117,6 +120,10 @@ namespace Kub3::MFSM
                     return OperationalStateKind::DrawerOp;
                 else if constexpr (std::is_same_v<T, StateStowing>)
                     return OperationalStateKind::Stowing;
+                else if constexpr (std::is_same_v<T, StateAutoleveling>)
+                    return OperationalStateKind::Autoleveling;
+                else if constexpr (std::is_same_v<T, StateRetractingZ>)
+                    return OperationalStateKind::RetractingZ;
                 else if constexpr (std::is_same_v<T, StateUnstowing>)
                     return OperationalStateKind::Unstowing;
                 else if constexpr (std::is_same_v<T, StatePreparingAlignment>)
@@ -129,6 +136,38 @@ namespace Kub3::MFSM
                     return OperationalStateKind::ExposureReady;
                 else
                     return OperationalStateKind::Exposing;
+            },
+            state);
+    }
+
+    inline QString toString(const OperationalState &state)
+    {
+        return std::visit(
+            [](const auto &s) -> QString {
+                using T = std::decay_t<decltype(s)>;
+
+                if constexpr (std::is_same_v<T, StateIdle>)
+                    return QStringLiteral("Idle");
+                else if constexpr (std::is_same_v<T, StateDrawerOp>)
+                    return QStringLiteral("DrawerOp");
+                else if constexpr (std::is_same_v<T, StateStowing>)
+                    return QStringLiteral("Stowing");
+                else if constexpr (std::is_same_v<T, StateAutoleveling>)
+                    return QStringLiteral("Autoleveling");
+                else if constexpr (std::is_same_v<T, StateRetractingZ>)
+                    return QStringLiteral("RetractingZ");
+                else if constexpr (std::is_same_v<T, StateUnstowing>)
+                    return QStringLiteral("Unstowing");
+                else if constexpr (std::is_same_v<T, StatePreparingAlignment>)
+                    return QStringLiteral("PreparingAlignment");
+                else if constexpr (std::is_same_v<T, StateAlignment>)
+                    return QStringLiteral("Alignment");
+                else if constexpr (std::is_same_v<T, StatePreparingExposure>)
+                    return QStringLiteral("PreparingExposure");
+                else if constexpr (std::is_same_v<T, StateExposureReady>)
+                    return QStringLiteral("ExposureReady");
+                else
+                    return QStringLiteral("Exposing");
             },
             state);
     }

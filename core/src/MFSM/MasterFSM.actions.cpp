@@ -1,3 +1,4 @@
+#include <Common/Enums.h>
 #include <MFSM/MasterFSM.h>
 #include <Services/Contact/ContactService.h>
 #include <Services/Stowage/StowageService.h>
@@ -63,6 +64,7 @@ namespace Kub3::MFSM
         // Broadcast operational state
         emit s_operationalSubstateChanged(newSubState);
         emit s_operationalSubstateKindChanged(kindOf(newSubState));
+        qInfo() << "[MasterFSM::onOperationalSubstateEntered]" << toString(newSubState);
 
         // Trigger Physical Micro Side-Effects
         const auto entryActionsMuseum = overloadedCallable{
@@ -92,7 +94,7 @@ namespace Kub3::MFSM
                 m_contactService->retractFromContact();
             },
             [&](const StatePreparingAlignment &s) {
-                emit s_processMessageBroadcast({"Preparing for Alignment - Positioning Vision Hardware."});
+                emit s_processMessageBroadcast({"Preparing for Alignment - Positioning Vision Block."});
                 // Move vision deck above the substrate in order to be able to observe it.
                 m_visionService->moveBlockToVisualisationPosition();
             },
@@ -101,7 +103,7 @@ namespace Kub3::MFSM
                 m_alignmentService->setHardwareLock((s.phase != ContactPhase::Free || m_contactService->isInContact()));
             },
             [&](const StatePreparingExposure &) {
-                emit s_processMessageBroadcast({"Preparing for Exposure: Moving Vision Hardware to Home."});
+                emit s_processMessageBroadcast({"Preparing for Exposure: Moving Vision Block to Home."});
                 // Vision deck is in the led lights path. Home it safely before firing UV.
                 m_homingService->home(static_cast<HT>(HT::DECK | HT::CAMERAS));
             },

@@ -1,7 +1,8 @@
-#include "HAL/MachineStatus/virtual_labels.h"
 #include <Common/Enums.h>
 #include <HAL/MachineStatus/sensors_labels.h>
 #include <HAL/MachineStatus/utils.h>
+#include <HAL/MachineStatus/virtual_labels.h>
+#include <MFSM/states.operational.h>
 #include <ViewModels/Alignment/VisualisationViewModel.h>
 #include <utils.h>
 
@@ -41,7 +42,7 @@ namespace Kub3::UI::ViewModels::Alignment
         ps_handleSensorValueChanged(WAFER_COMPRESSED_AIR_ACTIVE);
     }
 
-    void VisualisationViewModel::uiRequestCameraMovement(CameraId camId, MovementKind kind, CameraDirection dir)
+    void VisualisationViewModel::ui_requestCameraMovement(CameraId camId, MovementKind kind, CameraDirection dir)
     {
         if (kind == MovementKind::CONTINUOUS)
             m_activeContinuousCameraMoves[camId] = true;
@@ -58,7 +59,7 @@ namespace Kub3::UI::ViewModels::Alignment
         emit cmdRunCameraMovement(camId, kind, dir);
     }
 
-    void VisualisationViewModel::uiRequestAlignmentStageMovement(
+    void VisualisationViewModel::ui_requestAlignmentStageMovement(
         AlignmentStageId stageId,
         MovementKind kind,
         AlignmentStageDirection dir)
@@ -78,17 +79,29 @@ namespace Kub3::UI::ViewModels::Alignment
         emit cmdRunAlignmentStageMovement(stageId, kind, dir);
     }
 
-    void VisualisationViewModel::uiRequestSaveParameters(const alignment_parameter_t &parameter)
+    void VisualisationViewModel::ui_requestSaveParameters(const alignment_parameter_t &parameter)
     {
         emit s_saveParametersAlignment(parameter);
+    }
+
+    void VisualisationViewModel::ui_compressedAirSwitchClicked()
+    {
+        const bool requestAir = !m_substrateCompressedAirActive;
+
+        emit cmdRequestSubstrateCompressedAir(requestAir);
+    }
+
+    void VisualisationViewModel::ui_proceedToExposure()
+    {
+        emit cmdRequestExposureMode();
     }
 
     void VisualisationViewModel::ui_onPickUpXYClicked(CameraId id)
     {
         const coords_2d_t currentPos = m_camerasState[id].currentPositionMm;
 
-        m_camerasState[id].pickedUpCoordinatesMm = {.x = currentPos.x, .y = currentPos.y};
-        emit s_pickedUpCoordinatesUpdated(id, m_camerasState[id].pickedUpCoordinatesMm);
+        m_camerasState[id].pickedUpCoordinatesMm = currentPos;
+        emit s_pickedUpCoordinatesUpdated(id, currentPos);
     }
 
     void VisualisationViewModel::ui_onGoToXYClicked(CameraId id, const coords_2d_t &targetPosMm)
@@ -128,26 +141,33 @@ namespace Kub3::UI::ViewModels::Alignment
             }
         };
 
-        const auto emitBoolUpdateSignal = [&](void (VisualisationViewModel::*_signal)(bool)) {
+        const auto onBoolUpdateSignal = [&](void (VisualisationViewModel::*callback)(bool)) {
             if (auto valOpt = HAL::MS::tryRead<bool>(m_repo, key); valOpt.has_value())
             {
-                emit(this->*_signal)(valOpt.value());
+                emit(this->*callback)(valOpt.value());
             }
         };
 
-        const auto onZPositionUpdate = [&](double &valueHolder, const char *refValKey, bool update = false) {
+        const auto onZPositionUpdate = [&](double &valueHolder, const char *refValKey) {
             if (!refValKey)
                 return;
 
-            auto refValOpt = HAL::MS::tryRead<double>(m_repo, refValKey);
-            auto valOpt    = HAL::MS::tryRead<double>(m_repo, key);
-
-            if (!refValOpt.has_value() || !valOpt.has_value())
+            auto valOpt = HAL::MS::tryRead<double>(m_repo, key);
+            if (!valOpt.has_value())
                 return;
-
             valueHolder = valOpt.value();
-            if (update)
+
+            double highest = std::max({m_zPositionsMm[0], m_zPositionsMm[1], m_zPositionsMm[2]});
+
+            if (valueHolder == highest)
             {
+                auto refValOpt = HAL::MS::tryRead<double>(m_repo, refValKey);
+                if (!refValOpt.has_value())
+                {
+                    qCritical() << "Failed to compute masking distance: reference position is missing.";
+                    return;
+                }
+
                 emit s_maskingDistanceUpdate(refValOpt.value() - valueHolder);
             }
         };
@@ -167,16 +187,38 @@ namespace Kub3::UI::ViewModels::Alignment
             sendCamPosUpdate(CameraId::RIGHT, CameraAxis::Y, m_camerasState[CameraId::RIGHT].currentPositionMm.y);
             break;
         case zLeftEncHash:
-            onZPositionUpdate(m_zPositionsMm[0], V_Z_LEFT_MASK_POSITION_MM, true);
+            onZPositionUpdate(m_zPositionsMm[0], V_Z_LEFT_MASK_POSITION_MM);
+            break;
+        case zRightEncHash:
+            onZPositionUpdate(m_zPositionsMm[1], V_Z_RIGHT_MASK_POSITION_MM);
+            break;
+        case zBackEncHash:
+            onZPositionUpdate(m_zPositionsMm[2], V_Z_BACK_MASK_POSITION_MM);
             break;
         case waferVacuumActiveHash:
-            emitBoolUpdateSignal(&VisualisationViewModel::s_vacuumUpdate);
+            if (auto valOpt = HAL::MS::tryRead<bool>(m_repo, key); valOpt.has_value())
+            {
+                m_substrateVacuumActive = valOpt.value();
+                emit s_vacuumUpdate(m_substrateVacuumActive);
+            }
             break;
         case waferAirActiveHash:
-            emitBoolUpdateSignal(&VisualisationViewModel::s_compressedAirUpdate);
+            if (auto valOpt = HAL::MS::tryRead<bool>(m_repo, key); valOpt.has_value())
+            {
+                m_substrateCompressedAirActive = valOpt.value();
+                emit s_compressedAirUpdate(m_substrateCompressedAirActive);
+            }
             break;
         default:
             break;
+        }
+    }
+
+    void VisualisationViewModel::ps_operationalSubstateKindChanged(MFSM::OperationalStateKind kind)
+    {
+        if (kind == MFSM::OperationalStateKind::PreparingExposure)
+        {
+            emit s_preparingExposureMode();
         }
     }
 

@@ -2,23 +2,11 @@
     "version": 3,
     "configurePresets": [
         {
-            "name": "kub3-6-debug",
-            "displayName": "KUB3-6 (Debug)",
-            "generator": "Unix Makefiles",
-            "binaryDir": "${sourceDir}/build/kub6-debug",
-            "cacheVariables": {
-                "CMAKE_PREFIX_PATH": "/home/kloe/Qt/6.8.3/gcc_64",
-                "CMAKE_BUILD_TYPE": "Debug",
-                "KUB_MODEL": "6"
-            }
-        },
-        {
             "name": "kub3-8-debug",
             "displayName": "KUB3-8 (Debug)",
             "generator": "Unix Makefiles",
             "binaryDir": "${sourceDir}/build/kub3-8-debug",
             "cacheVariables": {
-                "CMAKE_PREFIX_PATH": "/home/kloe/Qt/6.8.3/gcc_64",
                 "CMAKE_BUILD_TYPE": "Debug",
                 "KUB_MODEL": "8"
             }
@@ -29,7 +17,6 @@
             "generator": "Unix Makefiles",
             "binaryDir": "${sourceDir}/build/kub3-8-release",
             "cacheVariables": {
-                "CMAKE_PREFIX_PATH": "/home/kloe/Qt/6.8.3/gcc_64",
                 "CMAKE_BUILD_TYPE": "Release",
                 "KUB_MODEL": "8"
             }
@@ -41,31 +28,13 @@
             "binaryDir": "${sourceDir}/build/kub3-8-production",
             "installDir": "${sourceDir}/dist/kub3-8-production",
             "cacheVariables": {
-                "CMAKE_PREFIX_PATH": "/home/kloe/Qt/6.8.3/gcc_64",
                 "CMAKE_BUILD_TYPE": "Release",
-                "CMAKE_PRODUCTION_BUILD": true,
-                "KUB_MODEL": "8"
-            }
-        },
-        {
-            "name": "kub3-8-production-dbg",
-            "displayName": "KUB3-8 (Debug Production Deploy)",
-            "generator": "Unix Makefiles",
-            "binaryDir": "${sourceDir}/build/kub3-8-production-dbg",
-            "installDir": "${sourceDir}/dist/kub3-8-production-dbg",
-            "cacheVariables": {
-                "CMAKE_PREFIX_PATH": "/home/kloe/Qt/6.8.3/gcc_64",
-                "CMAKE_BUILD_TYPE": "Debug",
                 "CMAKE_PRODUCTION_BUILD": true,
                 "KUB_MODEL": "8"
             }
         }
     ],
     "buildPresets": [
-        {
-            "name": "kub3-6-debug",
-            "configurePreset": "kub3-6-debug"
-        },
         {
             "name": "kub3-8-debug",
             "configurePreset": "kub3-8-debug"
@@ -77,10 +46,6 @@
         {
             "name": "kub3-8-production",
             "configurePreset": "kub3-8-production"
-        },
-        {
-            "name": "kub3-8-production-dbg",
-            "configurePreset": "kub3-8-production-dbg"
         }
     ]
 }

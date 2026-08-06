@@ -100,6 +100,9 @@ namespace Kub3::MFSM
         HAL::Vision::CameraParamKind kind;
         HAL::Vision::CameraParam value;
     };
+    struct CmdSetSubstrateCompressedAir {
+        bool enableCompressedAir;
+    };
     struct CmdStartExposure {
         Services::ExposurePayload payload;
     };
@@ -144,7 +147,9 @@ namespace Kub3::MFSM
         CmdAlignmentPad,
         CmdZAxisPad,
         CmdVisualisation,
+        CmdSetSubstrateCompressedAir,
         // --- Exposure
+        CmdEnterExposureMode,
         CmdStartExposure,
 
         // Internal & Services events

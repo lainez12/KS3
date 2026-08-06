@@ -1,0 +1,83 @@
+name: Compile Kub3Project
+
+on:
+  push:
+    branches:
+      - dev
+      - ci-setup
+
+jobs:
+  build:
+    name: Build ${{ matrix.preset }}
+    runs-on: ubuntu-latest
+
+    # The matrix allows you to run the same job multiple times with different variables.
+    strategy:
+      fail-fast: false # If one build fails, let the others continue
+      matrix:
+        preset: 
+          - kub3-8-release
+          - kub3-8-production
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Checkout Hikrobot MVS SDK
+        uses: actions/checkout@v4
+        with:
+          repository: romainbr/hikrobot-mvs-linux-x64
+          path: external-libs/mvs
+          token: ${{ secrets.CI_MVS_CLONE_TOKEN }}
+
+      # Installs Qt6, CMake, and build tools in the runner container
+      - name: Install System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake ninja-build \
+            python3-pip python3-venv libcrypt-dev \
+            libgl1-mesa-dev libvulkan-dev libxkbcommon-dev libfontconfig1-dev
+
+      - name: Install Qt 6.8 (via aqtinstall)
+        run: |
+          python3 -m venv aqt-env
+          source aqt-env/bin/activate
+          pip install aqtinstall
+          echo "Downloading Qt 6.8.3..."
+          aqt install-qt linux desktop 6.8.3 linux_gcc_64 -m qtserialport --outputdir $PWD/Qt
+          ls -lR $PWD/Qt/6.8.3/gcc_64
+
+      # Copies the CI preset to the root so CMake can find it
+      - name: Setup CI CMake Presets
+        run: cp .gitea/ci-presets.json CMakePresets.json
+
+      - name: Configure CMake
+        # - Tell CMake exactly where to find the Qt 6.8 we just downloaded
+        # - Run the preset
+        run: |
+          export Qt6_DIR=$PWD/Qt/6.8.3/gcc_64/lib/cmake/Qt6
+          export MVS_ROOT=$PWD/external-libs/mvs
+          cmake --preset ${{ matrix.preset }}
+
+      - name: Build Project
+        run: |
+          MAX_CORES=$(nproc)
+          JOBS=$(( MAX_CORES / 2 ))
+          if [ $JOBS -lt 1 ]; then JOBS=1; fi
+          echo "Total CPU cores: $MAX_CORES. Building with $JOBS cores."
+          cmake --build --preset ${{ matrix.preset }} -j 14
+
+      # Package Production Deploy (Runs ONLY for production)
+      - name: Deployment (Production Only)
+        if: matrix.preset == 'kub3-8-production'
+        run: cmake --install build/${{ matrix.preset }}
+
+      # Upload Packaged Release for Production
+      # TODO: implement when server is on the hw server
+      - name: Upload Packaged Deployment
+        if: matrix.preset == 'not-implemented'
+        uses: actions/upload-artifact@v3
+        with:
+          name: Binaries-${{ matrix.preset }}
+          path: dist/${{ matrix.preset }}/
+
