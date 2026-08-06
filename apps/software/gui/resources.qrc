@@ -87,15 +87,12 @@
         <file>icons/usb-software.svg</file>
         <file>icons/vac_air_switch.svg</file>
         <file>icons/visual-mark.svg</file>
-        <file>icons/wafer4pouce.png</file>
-        <file>icons/wafer4pouces.png</file>
-        <file>icons/wafer6pouce.png</file>
-        <file>icons/wafer6pouces.svg</file>
         <file>icons/warning-blanc.svg</file>
         <file>icons/warning-fond-blanc.svg</file>
         <file>icons/warning-fond-rouge.svg</file>
         <file>images/bg.png</file>
         <file>icons/loading-orange.svg</file>
         <file>icons/line-squared-blue.svg</file>
+        <file>images/wafer8i.svg</file>
     </qresource>
 </RCC>

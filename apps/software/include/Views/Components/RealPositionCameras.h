@@ -41,15 +41,16 @@ private:
     void updateLeftXPosition(double x);
     void updateLeftYPosition(double y);
 
+    void updateCameraPositions();
+
 private:
     Ui::RealPositionCameras *ui;
     QString m_text;
     QPixmap m_icon;
-    int maskSize;
-    int areaSize;
-    int widthBackgroundWafer;
-    int heightBackgroundWafer;
-    int widthCam;
-    int heightCam;
-    QSize resizingMap;
+
+    // Store latest absolute position values (in mm)
+    double m_leftX  = 0.0;
+    double m_leftY  = 0.0;
+    double m_rightX = 0.0;
+    double m_rightY = 0.0;
 };
