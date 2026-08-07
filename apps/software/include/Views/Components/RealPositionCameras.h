@@ -48,9 +48,9 @@ private:
     QString m_text;
     QPixmap m_icon;
 
-    // Store latest absolute position values (in mm)
-    double m_leftX  = 0.0;
-    double m_leftY  = 0.0;
-    double m_rightX = 0.0;
-    double m_rightY = 0.0;
+    // Store latest absolute position values
+    double m_leftXMm  = 0.0;
+    double m_leftYMm  = 0.0;
+    double m_rightXMm = 0.0;
+    double m_rightYMm = 0.0;
 };

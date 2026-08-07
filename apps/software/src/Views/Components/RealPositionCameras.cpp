@@ -99,11 +99,11 @@ void RealPositionCameras::updateCameraPositions()
     double pixelsPerMm = ui->lblWafer200mm->width() / 200.0;
 
     // Standard mappings: +x travels right, +y travels Up (negating UI standard +y down structure)
-    double leftCx = waferCenterX + (m_leftX * pixelsPerMm);
-    double leftCy = waferCenterY - (m_leftY * pixelsPerMm);
+    double leftCx = waferCenterX + (m_leftXMm * pixelsPerMm);
+    double leftCy = waferCenterY - (m_leftYMm * pixelsPerMm);
 
-    double rightCx = waferCenterX + (m_rightX * pixelsPerMm);
-    double rightCy = waferCenterY - (m_rightY * pixelsPerMm);
+    double rightCx = waferCenterX + (m_rightXMm * pixelsPerMm);
+    double rightCy = waferCenterY - (m_rightYMm * pixelsPerMm);
 
     // Update positions mapping the camera center to corresponding logical locations
     ui->cameraLeftLabel->move(static_cast<int>(std::round(leftCx - ui->cameraLeftLabel->width() / 2.0)),
@@ -117,25 +117,25 @@ void RealPositionCameras::updateCameraPositions()
 
 void RealPositionCameras::updateRightXPosition(double x)
 {
-    m_rightX = x;
+    m_rightXMm = x;
     updateCameraPositions();
 }
 
 void RealPositionCameras::updateRightYPosition(double y)
 {
-    m_rightY = y;
+    m_rightYMm = y;
     updateCameraPositions();
 }
 
 void RealPositionCameras::updateLeftXPosition(double x)
 {
-    m_leftX = x;
+    m_leftXMm = x;
     updateCameraPositions();
 }
 
 void RealPositionCameras::updateLeftYPosition(double y)
 {
-    m_leftY = y;
+    m_leftYMm = y;
     updateCameraPositions();
 }
 

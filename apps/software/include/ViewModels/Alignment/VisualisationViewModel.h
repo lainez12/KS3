@@ -24,7 +24,6 @@ namespace Kub3::UI::ViewModels::Alignment
     class VisualisationViewModel final : public BaseVisionViewModel
     {
         using alignment_parameter_t = Persistence::alignment_parameter_t;
-        using CameraAxis            = Kub3::CameraAxis;
 
         Q_OBJECT
 
