@@ -96,6 +96,10 @@ void VisualisationView::setupUI()
     // Hard Force Contact Form setup
     m_hardForceContactForm = new HardForceContactForm(this);
     m_hardForceContactForm->setVisible(false);
+    uiUpdateGainRatio(CameraId::RIGHT);
+    uiUpdateGainRatio(CameraId::RIGHT);
+    uiUpdateGainRatio(CameraId::LEFT);
+    uiUpdateGainRatio(CameraId::LEFT);
 }
 
 void VisualisationView::setupConnections()
@@ -145,6 +149,11 @@ void VisualisationView::setupConnections()
         connect(ui->btnGoToRight, &NavButton::clicked, [this]() { this->onGoToBtnClicked(CameraId::RIGHT); });
         // Arianne's thread related
         connect(vm, &VisualisationViewModel::s_preparingExposureMode, this, &VisualisationView::onPreparingExposureMode);
+
+        connect(ui->btnPlusGainRight, &QPushButton::clicked, [this, vm]() { vm->ui_requestGainUpdate(CameraId::RIGHT, 0.5); uiUpdateGainRatio(CameraId::RIGHT); });
+        connect(ui->btnMinusGainRight, &QPushButton::clicked, [this, vm]() { vm->ui_requestGainUpdate(CameraId::RIGHT, -0.5); uiUpdateGainRatio(CameraId::RIGHT); });
+        connect(ui->btnPlusGainLeft, &QPushButton::clicked, [this, vm]() { vm->ui_requestGainUpdate(CameraId::LEFT, 0.5); uiUpdateGainRatio(CameraId::LEFT); });
+        connect(ui->btnMinusGainLeft, &QPushButton::clicked, [this, vm]() { vm->ui_requestGainUpdate(CameraId::LEFT, -0.5); uiUpdateGainRatio(CameraId::LEFT); });
     }
 }
 
@@ -460,6 +469,21 @@ VisualisationView::alignment_parameter_t VisualisationView::getAlignmentParamete
     parameter.cameraRight.visualisation.light    = 70.5;
 
     return parameter;
+}
+
+void VisualisationView::uiUpdateGainRatio(CameraId camId)
+{
+    auto *vm = getViewModel<VisualisationViewModel>();
+    if (!vm)
+        return;
+    if (CameraId::LEFT == camId)
+    {
+        ui->labelGainLeft->setText(QString("%1%").arg(QString::number(vm->getGainRatio(CameraId::LEFT), 'f', 1)));
+    }
+    else if (CameraId::RIGHT == camId)
+    {
+        ui->labelGainRight->setText(QString("%1%").arg(QString::number(vm->getGainRatio(CameraId::RIGHT), 'f', 1)));
+    }
 }
 
 void VisualisationView::navButtonToggled(NavButton *button, QWidget *widget)

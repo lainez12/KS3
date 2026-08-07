@@ -2,6 +2,7 @@
 #include <HAL/MachineStatus/sensors_labels.h>
 #include <HAL/MachineStatus/utils.h>
 #include <HAL/MachineStatus/virtual_labels.h>
+#include <HAL/Vision/identifiers.h>
 #include <MFSM/states.operational.h>
 #include <ViewModels/Alignment/VisualisationViewModel.h>
 #include <utils.h>
@@ -40,6 +41,9 @@ namespace Kub3::UI::ViewModels::Alignment
         ps_handleSensorValueChanged(RIGHT_CAMERA_Y_ENCODER_MM);
         ps_handleSensorValueChanged(WAFER_VACUUM_ACTIVE);
         ps_handleSensorValueChanged(WAFER_COMPRESSED_AIR_ACTIVE);
+
+        emit s_gainValueChanged(UPPER_RIGHT_CAMERA, m_gainRatioLeft);
+        emit s_gainValueChanged(UPPER_LEFT_CAMERA, m_gainRatioRight);
     }
 
     void VisualisationViewModel::ui_requestCameraMovement(CameraId camId, MovementKind kind, CameraDirection dir)
@@ -94,6 +98,35 @@ namespace Kub3::UI::ViewModels::Alignment
     void VisualisationViewModel::ui_proceedToExposure()
     {
         emit cmdRequestExposureMode();
+    }
+
+    void VisualisationViewModel::ui_requestGainUpdate(CameraId camId, double gainRatio)
+    {
+        if (CameraId::LEFT == camId)
+        {
+            m_gainRatioLeft = m_gainRatioLeft + gainRatio;
+            emit s_gainValueChanged(UPPER_RIGHT_CAMERA, m_gainRatioLeft);
+        }
+        else if (CameraId::RIGHT == camId)
+        {
+            m_gainRatioRight = m_gainRatioRight + gainRatio;
+            emit s_gainValueChanged(UPPER_LEFT_CAMERA, m_gainRatioRight);
+        }
+    }
+
+    double VisualisationViewModel::getGainRatio(CameraId camId) const
+    {
+        if (CameraId::LEFT == camId)
+        {
+            return m_gainRatioLeft;
+            qDebug() << "Gain ratio for LEFT camera: " << m_gainRatioLeft;
+        }
+        else if (CameraId::RIGHT == camId)
+        {
+            return m_gainRatioRight;
+            qDebug() << "Gain ratio for RIGHT camera: " << m_gainRatioRight;
+        }
+        return 0.0;
     }
 
     void VisualisationViewModel::ui_onPickUpXYClicked(CameraId id)

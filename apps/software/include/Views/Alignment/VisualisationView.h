@@ -87,6 +87,8 @@ namespace Kub3::UI::Views
 
         alignment_parameter_t getAlignmentParameter();
 
+        void uiUpdateGainRatio(CameraId camId);
+
         // UI helpers
         void updateOverlayPositions();
 

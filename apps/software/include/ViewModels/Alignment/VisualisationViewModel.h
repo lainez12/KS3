@@ -45,7 +45,8 @@ namespace Kub3::UI::ViewModels::Alignment
         void ui_requestSaveParameters(const alignment_parameter_t &parameter);
         void ui_compressedAirSwitchClicked();
         void ui_proceedToExposure();
-
+        void ui_requestGainUpdate(CameraId camId, double gainRatio);
+        double getGainRatio(CameraId camId) const;
     signals:
         void s_maskingDistanceUpdate(double distMm);
         void s_cameraPositionUpdate(CameraId camId, CameraAxis axis, double value);
@@ -56,6 +57,8 @@ namespace Kub3::UI::ViewModels::Alignment
         void s_substrateFineModeUpdated(bool fineModeActive);
         void s_saveParametersAlignment(const alignment_parameter_t &parameter);
         void s_preparingExposureMode(void);
+
+        void s_gainValueChanged(const QString &cameraId, double gainRatio);
 
         void cmdRunCameraMovement(CameraId camId, MovementKind kind, CameraDirection dir);
         void cmdRunAlignmentStageMovement(AlignmentStageId stageId, MovementKind kind, AlignmentStageDirection dir);
@@ -90,6 +93,10 @@ namespace Kub3::UI::ViewModels::Alignment
         bool m_substrateFineMode            = false;
         bool m_substrateVacuumActive        = false;
         bool m_substrateCompressedAirActive = false;
+
+        // TODO: Define a proper data structure for gain values, instead of using two separate variables
+        double m_gainRatioLeft  = 45.5;
+        double m_gainRatioRight = 45.5;
     };
 
 } // namespace Kub3::UI::ViewModels::Alignment
