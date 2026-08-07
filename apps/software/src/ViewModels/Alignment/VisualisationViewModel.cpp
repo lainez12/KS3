@@ -147,12 +147,10 @@ namespace Kub3::UI::ViewModels::Alignment
         if (CameraId::LEFT == camId)
         {
             return m_gainRatioLeft;
-            qDebug() << "Gain ratio for LEFT camera: " << m_gainRatioLeft;
         }
         else if (CameraId::RIGHT == camId)
         {
             return m_gainRatioRight;
-            qDebug() << "Gain ratio for RIGHT camera: " << m_gainRatioRight;
         }
         return 0.0;
     }
@@ -176,12 +174,10 @@ namespace Kub3::UI::ViewModels::Alignment
         if (CameraId::LEFT == camId)
         {
             return m_exposureRatioLeft;
-            qDebug() << "Exposure ratio for LEFT camera: " << m_exposureRatioLeft;
         }
         else if (CameraId::RIGHT == camId)
         {
             return m_exposureRatioRight;
-            qDebug() << "Exposure ratio for RIGHT camera: " << m_exposureRatioRight;
         }
         return 0.0;
     }
