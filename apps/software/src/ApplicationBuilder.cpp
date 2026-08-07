@@ -278,6 +278,7 @@ namespace Kub3
         m_visualisationVM->bindConnection(m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::cmdRequestExposureMode,
                                           m_masterFSM, &MFSM::MasterFSM::ps_requestEnterExposureMode);
         m_visualisationVM->bindConnection(m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::s_gainValueChanged, m_masterFSM, &MFSM::MasterFSM::ps_requestGainUpdate);
+        m_visualisationVM->bindConnection(m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::s_exposureValueChanged, m_masterFSM, &MFSM::MasterFSM::ps_requestExposureUpdate);
         // --- MachineStatusViewModel
         auto *msvm = m_machineStatusVM.get();
         QObject::connect(msvm, &VM::MachineStatusViewModel::s_exposureSliderValueChanged, m_masterFSM, &MFSM::MasterFSM::ps_requestExposureUpdate);

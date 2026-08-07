@@ -97,9 +97,9 @@ void VisualisationView::setupUI()
     m_hardForceContactForm = new HardForceContactForm(this);
     m_hardForceContactForm->setVisible(false);
     uiUpdateGainRatio(CameraId::RIGHT);
-    uiUpdateGainRatio(CameraId::RIGHT);
     uiUpdateGainRatio(CameraId::LEFT);
-    uiUpdateGainRatio(CameraId::LEFT);
+    uiUpdateExposureRatio(CameraId::RIGHT);
+    uiUpdateExposureRatio(CameraId::LEFT);
 }
 
 void VisualisationView::setupConnections()
@@ -154,6 +154,11 @@ void VisualisationView::setupConnections()
         connect(ui->btnMinusGainRight, &QPushButton::clicked, [this, vm]() { vm->ui_requestGainUpdate(CameraId::RIGHT, -0.5); uiUpdateGainRatio(CameraId::RIGHT); });
         connect(ui->btnPlusGainLeft, &QPushButton::clicked, [this, vm]() { vm->ui_requestGainUpdate(CameraId::LEFT, 0.5); uiUpdateGainRatio(CameraId::LEFT); });
         connect(ui->btnMinusGainLeft, &QPushButton::clicked, [this, vm]() { vm->ui_requestGainUpdate(CameraId::LEFT, -0.5); uiUpdateGainRatio(CameraId::LEFT); });
+
+        connect(ui->btnPlusExposureRight, &QPushButton::clicked, [this, vm]() { vm->ui_requestExposureUpdate(CameraId::RIGHT, 0.5); uiUpdateExposureRatio(CameraId::RIGHT); });
+        connect(ui->btnMinusExposureRight, &QPushButton::clicked, [this, vm]() { vm->ui_requestExposureUpdate(CameraId::RIGHT, -0.5); uiUpdateExposureRatio(CameraId::RIGHT); });
+        connect(ui->btnPlusExposureLeft, &QPushButton::clicked, [this, vm]() { vm->ui_requestExposureUpdate(CameraId::LEFT, 0.5); uiUpdateExposureRatio(CameraId::LEFT); });
+        connect(ui->btnMinusExposureLeft, &QPushButton::clicked, [this, vm]() { vm->ui_requestExposureUpdate(CameraId::LEFT, -0.5); uiUpdateExposureRatio(CameraId::LEFT); });
     }
 }
 
@@ -483,6 +488,21 @@ void VisualisationView::uiUpdateGainRatio(CameraId camId)
     else if (CameraId::RIGHT == camId)
     {
         ui->labelGainRight->setText(QString("%1%").arg(QString::number(vm->getGainRatio(CameraId::RIGHT), 'f', 1)));
+    }
+}
+
+void VisualisationView::uiUpdateExposureRatio(CameraId camId)
+{
+    auto *vm = getViewModel<VisualisationViewModel>();
+    if (!vm)
+        return;
+    if (CameraId::LEFT == camId)
+    {
+        ui->labelExposureLeft->setText(QString("%1%").arg(QString::number(vm->getExposureRatio(CameraId::LEFT), 'f', 1)));
+    }
+    else if (CameraId::RIGHT == camId)
+    {
+        ui->labelExposureRight->setText(QString("%1%").arg(QString::number(vm->getExposureRatio(CameraId::RIGHT), 'f', 1)));
     }
 }
 

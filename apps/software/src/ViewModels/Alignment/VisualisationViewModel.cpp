@@ -44,6 +44,8 @@ namespace Kub3::UI::ViewModels::Alignment
 
         emit s_gainValueChanged(UPPER_RIGHT_CAMERA, m_gainRatioLeft);
         emit s_gainValueChanged(UPPER_LEFT_CAMERA, m_gainRatioRight);
+        emit s_exposureValueChanged(UPPER_RIGHT_CAMERA, m_exposureRatioLeft);
+        emit s_exposureValueChanged(UPPER_LEFT_CAMERA, m_exposureRatioRight);
     }
 
     void VisualisationViewModel::ui_requestCameraMovement(CameraId camId, MovementKind kind, CameraDirection dir)
@@ -125,6 +127,35 @@ namespace Kub3::UI::ViewModels::Alignment
         {
             return m_gainRatioRight;
             qDebug() << "Gain ratio for RIGHT camera: " << m_gainRatioRight;
+        }
+        return 0.0;
+    }
+
+    void VisualisationViewModel::ui_requestExposureUpdate(CameraId camId, double exposureRatio)
+    {
+        if (CameraId::LEFT == camId)
+        {
+            m_exposureRatioLeft = m_exposureRatioLeft + exposureRatio;
+            emit s_exposureValueChanged(UPPER_RIGHT_CAMERA, m_exposureRatioLeft);
+        }
+        else if (CameraId::RIGHT == camId)
+        {
+            m_exposureRatioRight = m_exposureRatioRight + exposureRatio;
+            emit s_exposureValueChanged(UPPER_LEFT_CAMERA, m_exposureRatioRight);
+        }
+    }
+
+    double VisualisationViewModel::getExposureRatio(CameraId camId) const
+    {
+        if (CameraId::LEFT == camId)
+        {
+            return m_exposureRatioLeft;
+            qDebug() << "Exposure ratio for LEFT camera: " << m_exposureRatioLeft;
+        }
+        else if (CameraId::RIGHT == camId)
+        {
+            return m_exposureRatioRight;
+            qDebug() << "Exposure ratio for RIGHT camera: " << m_exposureRatioRight;
         }
         return 0.0;
     }
