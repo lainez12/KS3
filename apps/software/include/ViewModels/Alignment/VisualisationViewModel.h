@@ -10,13 +10,6 @@
 
 namespace Kub3::UI::ViewModels::Alignment
 {
-
-    enum class CameraAxis : uint8_t
-    {
-        X,
-        Y,
-    };
-
     typedef struct coords_2d_s {
         double x;
         double y;

@@ -1444,7 +1444,7 @@ font-weight: 700;
               </spacer>
              </item>
              <item row="1" column="2">
-              <spacer name="horizontalSpacer_4">
+              <spacer name="horizontalRightSpacerToLeftCam">
                <property name="orientation">
                 <enum>Qt::Orientation::Horizontal</enum>
                </property>
@@ -2464,7 +2464,7 @@ font-weight: 700;
               </spacer>
              </item>
              <item row="1" column="0">
-              <spacer name="horizontalSpacer_5">
+              <spacer name="horizontalLeftSpacerToRightCam">
                <property name="orientation">
                 <enum>Qt::Orientation::Horizontal</enum>
                </property>
