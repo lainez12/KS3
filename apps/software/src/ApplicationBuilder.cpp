@@ -142,85 +142,85 @@ namespace Kub3
 
         m_mainWindow = std::make_unique<MainWindow>();
 
-        // Building MachineStatusView
-        {
-            // View models creation
-            ASSIGN_VIEW_MODEL(UI::ViewModels::ExposureModeViewModel, exposureModeVM, m_exposureModeVM, m_repo);
-            ASSIGN_VIEW_MODEL(UI::ViewModels::HomeViewModel, homeVM, m_homeVM, m_repo);
-            ASSIGN_VIEW_MODEL(UI::ViewModels::MachineStatusViewModel, machineStatusVM, m_machineStatusVM, m_repo);
-            ASSIGN_VIEW_MODEL(UI::ViewModels::SettingsViewModel, settingsVM, m_settingsVM, m_repo);
-            ASSIGN_VIEW_MODEL(UI::ViewModels::ExposureMenuViewModel, exposureMenuVM, m_exposureMenuVM, m_repo);
-            ASSIGN_VIEW_MODEL(UI::ViewModels::Exposure::ExposureSettingsViewModel, exposureSettingsVM, m_exposureSettingsVM, m_repo);
-            ASSIGN_VIEW_MODEL(UI::ViewModels::Exposure::FavoriteExposureSettingsViewModel, favoriteExposureSettingsVM, m_favoriteExposureSettingsVM, m_repo);
-            ASSIGN_VIEW_MODEL(UI::ViewModels::Exposure::RecapExposureSettingsViewModel, recapExposureSettingsVM, m_recapExposureSettingsVM, m_repo);
-            ASSIGN_VIEW_MODEL(UI::ViewModels::Exposure::ProgressExposureViewModel, progressExposureVM, m_progressExposureVM, m_repo);
-            ASSIGN_VIEW_MODEL(UI::ViewModels::Exposure::CompleteExposureViewModel, completeExposureVM, m_completeExposureVM, m_repo);
-            ASSIGN_VIEW_MODEL(UI::ViewModels::Exposure::SaveExposureSettingsViewModel, saveExposureSettingsVM, m_saveExposureSettingsVM, m_repo);
-            ASSIGN_VIEW_MODEL(UI::ViewModels::Settings::AdminPasswordViewModel, configuratorPasswdVM, m_configuratorPasswdVM, m_repo);
-            ASSIGN_VIEW_MODEL(UI::ViewModels::Settings::VersionViewModel, versionVM, m_versionVM, m_repo);
-            ASSIGN_VIEW_MODEL(UI::ViewModels::Settings::TemperatureViewModel, temperatureVM, m_temperatureVM, m_repo);
-            ASSIGN_VIEW_MODEL(UI::ViewModels::Settings::OperatingTimesViewModel, operatingTimeVM, m_operatingTimeVM, m_repo);
-            ASSIGN_VIEW_MODEL(UI::ViewModels::Settings::ScreenshotExportViewModel, screenshotVM, m_screenshotVM, m_repo);
-            ASSIGN_VIEW_MODEL(UI::ViewModels::Settings::LedTestViewModel, ledTestVM, m_ledTestVM, m_repo);
-            ASSIGN_VIEW_MODEL(UI::ViewModels::Settings::UpdateSoftwareViewModel, updateSoftwareVM, m_updateSoftwareVM, m_repo);
-            ASSIGN_VIEW_MODEL(UI::ViewModels::Alignment::DistanceViewModel, distanceVM, m_distanceVM, m_repo);
-            ASSIGN_VIEW_MODEL(UI::ViewModels::Alignment::ContactSelectionViewModel, contactSelectionVM, m_contactSelectionVM, m_repo);
-            ASSIGN_VIEW_MODEL(UI::ViewModels::Alignment::VisualisationViewModel, visualisationVM, m_visualisationVM, m_repo);
-            ASSIGN_VIEW_MODEL(UI::ViewModels::Alignment::LoadParametersViewModel, loadParametersVM, m_loadParametersVM, m_repo);
-            ASSIGN_VIEW_MODEL(UI::ViewModels::Alignment::SaveParametersViewModel, saveParametersVM, m_saveParametersVM, m_repo);
-            ASSIGN_VIEW_MODEL(UI::ViewModels::Alignment::RenameParametersViewModel, renameParametersVM, m_renameParametersVM, m_repo);
+        // View models creation
+        ASSIGN_VIEW_MODEL(UI::ViewModels::ExposureModeViewModel, exposureModeVM, m_exposureModeVM, m_repo);
+        ASSIGN_VIEW_MODEL(UI::ViewModels::HomeViewModel, homeVM, m_homeVM, m_repo);
+        ASSIGN_VIEW_MODEL(UI::ViewModels::MachineStatusViewModel, machineStatusVM, m_machineStatusVM, m_repo);
+        ASSIGN_VIEW_MODEL(UI::ViewModels::SettingsViewModel, settingsVM, m_settingsVM, m_repo);
+        ASSIGN_VIEW_MODEL(UI::ViewModels::ExposureMenuViewModel, exposureMenuVM, m_exposureMenuVM, m_repo);
+        ASSIGN_VIEW_MODEL(UI::ViewModels::Exposure::ExposureSettingsViewModel, exposureSettingsVM, m_exposureSettingsVM, m_repo);
+        ASSIGN_VIEW_MODEL(UI::ViewModels::Exposure::FavoriteExposureSettingsViewModel, favoriteExposureSettingsVM, m_favoriteExposureSettingsVM, m_repo);
+        ASSIGN_VIEW_MODEL(UI::ViewModels::Exposure::RecapExposureSettingsViewModel, recapExposureSettingsVM, m_recapExposureSettingsVM, m_repo);
+        ASSIGN_VIEW_MODEL(UI::ViewModels::Exposure::ProgressExposureViewModel, progressExposureVM, m_progressExposureVM, m_repo);
+        ASSIGN_VIEW_MODEL(UI::ViewModels::Exposure::CompleteExposureViewModel, completeExposureVM, m_completeExposureVM, m_repo);
+        ASSIGN_VIEW_MODEL(UI::ViewModels::Exposure::SaveExposureSettingsViewModel, saveExposureSettingsVM, m_saveExposureSettingsVM, m_repo);
+        ASSIGN_VIEW_MODEL(UI::ViewModels::Settings::AdminPasswordViewModel, configuratorPasswdVM, m_configuratorPasswdVM, m_repo);
+        ASSIGN_VIEW_MODEL(UI::ViewModels::Settings::VersionViewModel, versionVM, m_versionVM, m_repo);
+        ASSIGN_VIEW_MODEL(UI::ViewModels::Settings::TemperatureViewModel, temperatureVM, m_temperatureVM, m_repo);
+        ASSIGN_VIEW_MODEL(UI::ViewModels::Settings::OperatingTimesViewModel, operatingTimeVM, m_operatingTimeVM, m_repo);
+        ASSIGN_VIEW_MODEL(UI::ViewModels::Settings::ScreenshotExportViewModel, screenshotVM, m_screenshotVM, m_repo);
+        ASSIGN_VIEW_MODEL(UI::ViewModels::Settings::LedTestViewModel, ledTestVM, m_ledTestVM, m_repo);
+        ASSIGN_VIEW_MODEL(UI::ViewModels::Settings::UpdateSoftwareViewModel, updateSoftwareVM, m_updateSoftwareVM, m_repo);
+        ASSIGN_VIEW_MODEL(UI::ViewModels::Alignment::DistanceViewModel, distanceVM, m_distanceVM, m_repo);
+        ASSIGN_VIEW_MODEL(UI::ViewModels::Alignment::ContactSelectionViewModel, contactSelectionVM, m_contactSelectionVM, m_repo);
+        ASSIGN_VIEW_MODEL(UI::ViewModels::Alignment::VisualisationViewModel, visualisationVM, m_visualisationVM, m_repo);
+        m_visualisationVM->setContactLimits(
+            m_processConfig.contact.max_process_force_gf,
+            m_processConfig.contact.autolevel_force_tolerance_gf);
+        ASSIGN_VIEW_MODEL(UI::ViewModels::Alignment::LoadParametersViewModel, loadParametersVM, m_loadParametersVM, m_repo);
+        ASSIGN_VIEW_MODEL(UI::ViewModels::Alignment::SaveParametersViewModel, saveParametersVM, m_saveParametersVM, m_repo);
+        ASSIGN_VIEW_MODEL(UI::ViewModels::Alignment::RenameParametersViewModel, renameParametersVM, m_renameParametersVM, m_repo);
 
-            // Views creation
-            auto *homeView                     = new HomeView(std::move(homeVM), m_mainWindow.get());
-            auto *machineStatusView            = new MachineStatusView(std::move(machineStatusVM), m_mainWindow.get());
-            auto *exposureMenuView             = new ExposureMenuView(std::move(exposureMenuVM), m_mainWindow.get());
-            auto *settingsView                 = new SettingsView(std::move(settingsVM), m_mainWindow.get());
-            auto *exposureSettingsView         = new ExposureSettingsView(std::move(exposureSettingsVM), m_mainWindow.get());
-            auto *favoriteExposureSettingsView = new FavoriteExposureSettingsView(std::move(favoriteExposureSettingsVM), m_mainWindow.get());
-            auto *recapExposureSettingsView    = new RecapExposureSettingsView(std::move(recapExposureSettingsVM), m_mainWindow.get());
-            auto *progressExposureView         = new ProgressExposureView(std::move(progressExposureVM), m_mainWindow.get());
-            auto *completeExposureView         = new CompleteExposureView(std::move(completeExposureVM), m_mainWindow.get());
-            auto *saveExposureSettingsView     = new SaveExposureSettingsView(std::move(saveExposureSettingsVM), m_mainWindow.get());
-            auto *configuratorPasswdView       = new AdminPasswordView(std::move(configuratorPasswdVM), m_mainWindow.get());
-            auto *versionView                  = new VersionView(std::move(versionVM), m_mainWindow.get());
-            auto *temperatureView              = new TemperatureView(std::move(temperatureVM), m_mainWindow.get());
-            auto *operatingTimeView            = new OperatingTimesView(std::move(operatingTimeVM), m_mainWindow.get());
-            auto *screenshotView               = new ScreenshotExportView(std::move(screenshotVM), m_mainWindow.get());
-            auto *ledTestView                  = new LedTestView(std::move(ledTestVM), m_mainWindow.get());
-            auto *updateSoftwareView           = new UpdateSoftwareView(std::move(updateSoftwareVM), m_mainWindow.get());
-            auto *distanceView                 = new DistanceView(std::move(distanceVM), m_mainWindow.get());
-            auto *contactSelectionView         = new ContactSelectionView(std::move(contactSelectionVM), m_mainWindow.get());
-            auto *visualisationView            = new VisualisationView(std::move(visualisationVM), m_mainWindow.get());
-            auto *loadParametersView           = new LoadParametersView(std::move(loadParametersVM), m_mainWindow.get());
-            auto *saveParametersView           = new SaveParametersView(std::move(saveParametersVM), m_mainWindow.get());
-            auto *renameParametersView         = new RenameParametersView(std::move(renameParametersVM), m_mainWindow.get());
-            auto *exposureModeView             = new ExposureModeView(std::move(exposureModeVM), m_mainWindow.get());
+        // Views creation
+        auto *homeView                     = new HomeView(std::move(homeVM), m_mainWindow.get());
+        auto *machineStatusView            = new MachineStatusView(std::move(machineStatusVM), m_mainWindow.get());
+        auto *exposureMenuView             = new ExposureMenuView(std::move(exposureMenuVM), m_mainWindow.get());
+        auto *settingsView                 = new SettingsView(std::move(settingsVM), m_mainWindow.get());
+        auto *exposureSettingsView         = new ExposureSettingsView(std::move(exposureSettingsVM), m_mainWindow.get());
+        auto *favoriteExposureSettingsView = new FavoriteExposureSettingsView(std::move(favoriteExposureSettingsVM), m_mainWindow.get());
+        auto *recapExposureSettingsView    = new RecapExposureSettingsView(std::move(recapExposureSettingsVM), m_mainWindow.get());
+        auto *progressExposureView         = new ProgressExposureView(std::move(progressExposureVM), m_mainWindow.get());
+        auto *completeExposureView         = new CompleteExposureView(std::move(completeExposureVM), m_mainWindow.get());
+        auto *saveExposureSettingsView     = new SaveExposureSettingsView(std::move(saveExposureSettingsVM), m_mainWindow.get());
+        auto *configuratorPasswdView       = new AdminPasswordView(std::move(configuratorPasswdVM), m_mainWindow.get());
+        auto *versionView                  = new VersionView(std::move(versionVM), m_mainWindow.get());
+        auto *temperatureView              = new TemperatureView(std::move(temperatureVM), m_mainWindow.get());
+        auto *operatingTimeView            = new OperatingTimesView(std::move(operatingTimeVM), m_mainWindow.get());
+        auto *screenshotView               = new ScreenshotExportView(std::move(screenshotVM), m_mainWindow.get());
+        auto *ledTestView                  = new LedTestView(std::move(ledTestVM), m_mainWindow.get());
+        auto *updateSoftwareView           = new UpdateSoftwareView(std::move(updateSoftwareVM), m_mainWindow.get());
+        auto *distanceView                 = new DistanceView(std::move(distanceVM), m_mainWindow.get());
+        auto *contactSelectionView         = new ContactSelectionView(std::move(contactSelectionVM), m_mainWindow.get());
+        auto *visualisationView            = new VisualisationView(std::move(visualisationVM), m_mainWindow.get());
+        auto *loadParametersView           = new LoadParametersView(std::move(loadParametersVM), m_mainWindow.get());
+        auto *saveParametersView           = new SaveParametersView(std::move(saveParametersVM), m_mainWindow.get());
+        auto *renameParametersView         = new RenameParametersView(std::move(renameParametersVM), m_mainWindow.get());
+        auto *exposureModeView             = new ExposureModeView(std::move(exposureModeVM), m_mainWindow.get());
 
-            m_mainWindow->addView(Kub3::UI::ViewId::EXPOSURE_MODE_VIEW, exposureModeView);
-            m_mainWindow->addView(Kub3::UI::ViewId::HOME_VIEW, homeView);
-            m_mainWindow->addView(Kub3::UI::ViewId::EXPOSURE_MENU_VIEW, exposureMenuView);
-            m_mainWindow->addView(Kub3::UI::ViewId::MACHINE_STATUS_VIEW, machineStatusView);
-            m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_VIEW, settingsView);
-            m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_ADMIN_CONFIGURATOR_PASSWD_VIEW, configuratorPasswdView);
-            m_mainWindow->addView(Kub3::UI::ViewId::EXPOSURE_SETTINGS_VIEW, exposureSettingsView);
-            m_mainWindow->addView(Kub3::UI::ViewId::FAVORITE_EXPOSURE_SETTINGS_VIEW, favoriteExposureSettingsView);
-            m_mainWindow->addView(Kub3::UI::ViewId::RECAP_EXPOSURE_SETTINGS_VIEW, recapExposureSettingsView);
-            m_mainWindow->addView(Kub3::UI::ViewId::PROGRESS_EXPOSURE_VIEW, progressExposureView);
-            m_mainWindow->addView(Kub3::UI::ViewId::COMPLETE_EXPOSURE_VIEW, completeExposureView);
-            m_mainWindow->addView(Kub3::UI::ViewId::SAVE_EXPOSURE_SETTINGS_VIEW, saveExposureSettingsView);
-            m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_ABOUT_VIEW, versionView);
-            m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_TEMPERATURE_VIEW, temperatureView);
-            m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_OPERATING_TIMES_VIEW, operatingTimeView);
-            m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_SCREENSHOT_EXPORT_VIEW, screenshotView);
-            m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_LED_TEST_VIEW, ledTestView);
-            m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_UPDATE_SOFTWARE_VIEW, updateSoftwareView);
-            m_mainWindow->addView(Kub3::UI::ViewId::ALIGNMENT_DISTANCE_VIEW, distanceView);
-            m_mainWindow->addView(Kub3::UI::ViewId::ALIGNMENT_CONTACT_SELECTION_VIEW, contactSelectionView);
-            m_mainWindow->addView(Kub3::UI::ViewId::ALIGNMENT_VISUALISATION_VIEW, visualisationView);
-            m_mainWindow->addView(Kub3::UI::ViewId::ALIGNMENT_LOAD_PARAMETERS_VIEW, loadParametersView);
-            m_mainWindow->addView(Kub3::UI::ViewId::ALIGNMENT_SAVE_PARAMETERS_VIEW, saveParametersView);
-            m_mainWindow->addView(Kub3::UI::ViewId::ALIGNMENT_RENAME_PARAMETERS_VIEW, renameParametersView);
-        }
+        m_mainWindow->addView(Kub3::UI::ViewId::EXPOSURE_MODE_VIEW, exposureModeView);
+        m_mainWindow->addView(Kub3::UI::ViewId::HOME_VIEW, homeView);
+        m_mainWindow->addView(Kub3::UI::ViewId::EXPOSURE_MENU_VIEW, exposureMenuView);
+        m_mainWindow->addView(Kub3::UI::ViewId::MACHINE_STATUS_VIEW, machineStatusView);
+        m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_VIEW, settingsView);
+        m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_ADMIN_CONFIGURATOR_PASSWD_VIEW, configuratorPasswdView);
+        m_mainWindow->addView(Kub3::UI::ViewId::EXPOSURE_SETTINGS_VIEW, exposureSettingsView);
+        m_mainWindow->addView(Kub3::UI::ViewId::FAVORITE_EXPOSURE_SETTINGS_VIEW, favoriteExposureSettingsView);
+        m_mainWindow->addView(Kub3::UI::ViewId::RECAP_EXPOSURE_SETTINGS_VIEW, recapExposureSettingsView);
+        m_mainWindow->addView(Kub3::UI::ViewId::PROGRESS_EXPOSURE_VIEW, progressExposureView);
+        m_mainWindow->addView(Kub3::UI::ViewId::COMPLETE_EXPOSURE_VIEW, completeExposureView);
+        m_mainWindow->addView(Kub3::UI::ViewId::SAVE_EXPOSURE_SETTINGS_VIEW, saveExposureSettingsView);
+        m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_ABOUT_VIEW, versionView);
+        m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_TEMPERATURE_VIEW, temperatureView);
+        m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_OPERATING_TIMES_VIEW, operatingTimeView);
+        m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_SCREENSHOT_EXPORT_VIEW, screenshotView);
+        m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_LED_TEST_VIEW, ledTestView);
+        m_mainWindow->addView(Kub3::UI::ViewId::SETTINGS_UPDATE_SOFTWARE_VIEW, updateSoftwareView);
+        m_mainWindow->addView(Kub3::UI::ViewId::ALIGNMENT_DISTANCE_VIEW, distanceView);
+        m_mainWindow->addView(Kub3::UI::ViewId::ALIGNMENT_CONTACT_SELECTION_VIEW, contactSelectionView);
+        m_mainWindow->addView(Kub3::UI::ViewId::ALIGNMENT_VISUALISATION_VIEW, visualisationView);
+        m_mainWindow->addView(Kub3::UI::ViewId::ALIGNMENT_LOAD_PARAMETERS_VIEW, loadParametersView);
+        m_mainWindow->addView(Kub3::UI::ViewId::ALIGNMENT_SAVE_PARAMETERS_VIEW, saveParametersView);
+        m_mainWindow->addView(Kub3::UI::ViewId::ALIGNMENT_RENAME_PARAMETERS_VIEW, renameParametersView);
 
         return *this;
     }
@@ -263,16 +263,20 @@ namespace Kub3
         m_exposureModeVM->bindConnection(m_exposureModeVM.get(), &VM::ExposureModeViewModel::cmdEnterAlignmentMode,
                                          m_masterFSM, &MFSM::MasterFSM::ps_requestEnterAlignment);
         // --- VisualisationViewModel
-        m_visualisationVM->bindConnection(m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::cmdRunCameraMovement,
+        m_visualisationVM->bindConnection(m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::cmdRunCameraManualMovement,
                                           m_masterFSM, &MFSM::MasterFSM::ps_requestPADCameraMovement);
-        m_visualisationVM->bindConnection(m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::cmdRunAlignmentStageMovement,
+        m_visualisationVM->bindConnection(m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::cmdRunAlignmentStageManualMovement,
                                           m_masterFSM, &MFSM::MasterFSM::ps_requestPADAlignmentStageMovement);
+        m_visualisationVM->bindConnection(m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::cmdRunZManualMovement,
+                                          m_masterFSM, &MFSM::MasterFSM::ps_requestPADZMovement);
         m_visualisationVM->bindConnection(m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::cmdRequestSubstrateFineMode,
                                           m_masterFSM, &MFSM::MasterFSM::ps_requestAlignmentSubstrateFineMode);
         m_visualisationVM->bindConnection(m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::cmdRequestCameraFineMode,
                                           m_masterFSM, &MFSM::MasterFSM::ps_requestAlignmentCameraFineMode);
         m_visualisationVM->bindConnection(m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::cmdRunCameraAbsoluteMovement,
                                           m_masterFSM, &MFSM::MasterFSM::ps_requestAlignmentCameraAbsoluteMovement);
+        m_visualisationVM->bindConnection(m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::cmdRequestContact,
+                                          m_masterFSM, &MFSM::MasterFSM::ps_requestApplyContact);
         m_visualisationVM->bindConnection(m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::cmdRequestSubstrateCompressedAir,
                                           m_masterFSM, &MFSM::MasterFSM::ps_requestSubstrateCompressedAir);
         m_visualisationVM->bindConnection(m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::cmdRequestExposureMode,
@@ -317,10 +321,17 @@ namespace Kub3
         QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_postureChanged, m_exposureModeVM.get(), &VM::ExposureModeViewModel::ps_onPostureChanged);
         m_exposureModeVM->bindConnection(m_masterFSM, &MFSM::MasterFSM::s_operationalSubstateKindChanged,
                                          m_exposureModeVM.get(), &VM::ExposureModeViewModel::ps_onOperationalSubstateKindChanged);
-        // --- Alignment View Model
-        QObject::connect(m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::s_saveParametersAlignment, m_saveParametersVM.get(), &VM::Alignment::SaveParametersViewModel::ps_saveParameters);
-        QObject::connect(m_loadParametersVM.get(), &VM::Alignment::LoadParametersViewModel::s_loadParameterSelected, m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::ps_handleLoadParameterSelected);
-        QObject::connect(m_loadParametersVM.get(), &VM::Alignment::LoadParametersViewModel::s_renameParameterSelected, m_renameParametersVM.get(), &VM::Alignment::RenameParametersViewModel::ps_renameParameters);
+        // --- Alignment (visualisation) View Model
+        QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_contactPhaseChanged,
+                         m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::ps_onContactPhaseChanged);
+        QObject::connect(m_masterFSM, &MFSM::MasterFSM::s_compressedAirAuthorizedChanged,
+                         m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::ps_onCompressedAirAuthorizedChanged);
+        QObject::connect(m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::s_saveParametersAlignment,
+                         m_saveParametersVM.get(), &VM::Alignment::SaveParametersViewModel::ps_saveParameters);
+        QObject::connect(m_loadParametersVM.get(), &VM::Alignment::LoadParametersViewModel::s_loadParameterSelected,
+                         m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::ps_handleLoadParameterSelected);
+        QObject::connect(m_loadParametersVM.get(), &VM::Alignment::LoadParametersViewModel::s_renameParameterSelected,
+                         m_renameParametersVM.get(), &VM::Alignment::RenameParametersViewModel::ps_renameParameters);
         m_visualisationVM->bindConnection(m_repo.get(), &HAL::MS::IMachineStatusRepo::s_machineValueChanged,
                                           m_visualisationVM.get(), &VM::Alignment::VisualisationViewModel::ps_handleSensorValueChanged);
         m_visualisationVM->bindConnection(m_masterFSM, &MFSM::MasterFSM::s_operationalSubstateKindChanged,

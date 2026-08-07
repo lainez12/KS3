@@ -3,6 +3,7 @@
 #include <HAL/MachineStatus/sensors_labels.h>
 #include <HAL/MachineStatus/utils.h>
 #include <MFSM/MasterFSM.h>
+#include <Services/IService.h>
 #include <utils.h>
 
 namespace
@@ -47,9 +48,9 @@ namespace Kub3::MFSM
 
         static const std::vector<BootDependency> requiredDependencies = {
 #if defined(KUB_MODEL_8)
-        // {MCU_ARDUINO1_ID, MCU_ARDUINO1_READY},
-        // {MCU_ARDUINO2_ID, MCU_ARDUINO2_READY},
-        // {MCU_ARDUINO3_ID, MCU_ARDUINO3_READY}
+            {MCU_ARDUINO1_ID, MCU_ARDUINO1_READY},
+            {MCU_ARDUINO2_ID, MCU_ARDUINO2_READY},
+            {MCU_ARDUINO3_ID, MCU_ARDUINO3_READY}
 #endif
         };
 
@@ -159,7 +160,8 @@ namespace Kub3::MFSM
                 // Check for sequence completions if we are moving the Z stage using automations
                 if (s.phase == ContactPhase::ApplyingContact || s.phase == ContactPhase::Separating)
                 {
-                    const auto zStatus = m_contactService->getStatus();
+                    const Services::ServiceStatus zStatus = m_contactService->getStatus();
+
                     if (zStatus == Services::ServiceStatus::Success)
                         dispatch(EvContactSequenceComplete{});
                     else if (zStatus == Services::ServiceStatus::Error)
@@ -178,6 +180,7 @@ namespace Kub3::MFSM
                     {
                         // User manually jogged the Z-axis DOWN, breaking contact
                         s.phase = ContactPhase::Free;
+                        this->setCompressedAirAuthorized(false); // Safety net
                     }
                 }
                 // Dynamic Hardware Lock: Alignment axes must be frozen if contact is applying/active
@@ -188,6 +191,7 @@ namespace Kub3::MFSM
             [&](StateExposing &s) { onBasicOperatingServiceTick(s, m_exposureService.get()); }};
 
         std::visit(museum, opState.subState);
+        this->broadcastContactPhaseIfNeeded();
     }
 
     // ==========================================================================
@@ -218,6 +222,29 @@ namespace Kub3::MFSM
         else if (status == Services::ServiceStatus::Error)
         {
             dispatch(EvServiceError{.reason = service->getErrorReason()});
+        }
+    }
+
+    void MasterFSM::broadcastContactPhaseIfNeeded()
+    {
+        ContactPhase currentPhase = ContactPhase::Free;
+
+        if (auto *opState = std::get_if<StateOperational>(&m_state))
+        {
+            const auto phaseVisitor = overloadedCallable{
+                [&](const StateAlignment &s) { currentPhase = s.phase; },
+                [&](const StatePreparingAlignment &s) { currentPhase = s.alignment.phase; },
+                [&](const StatePreparingExposure &s) { currentPhase = s.savedContactPhase; },
+                [&](const StateExposureReady &s) { currentPhase = s.savedContactPhase; },
+                [&](const StateExposing &s) { currentPhase = s.savedContactPhase; },
+                [&](const auto &) { currentPhase = ContactPhase::Free; }};
+            std::visit(phaseVisitor, opState->subState);
+        }
+
+        if (m_lastBroadcastedContactPhase != currentPhase)
+        {
+            m_lastBroadcastedContactPhase = currentPhase;
+            emit s_contactPhaseChanged(currentPhase);
         }
     }
 

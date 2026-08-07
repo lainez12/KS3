@@ -1,5 +1,3 @@
-#include "Config/kinematics.h"
-#include "HAL/Actuators/Valves/IValve.h"
 #include <QDebug>
 
 #include <HAL/Actuators/Motors/IMotor.h>
@@ -13,14 +11,20 @@
 #include <Services/Contact/tasks/SaveCurrentPlanTask.h>
 #include <utils.h>
 
+namespace
+{
+    using namespace Kub3;
+
+    constexpr HAL::Act::MotorDirection toMotorDirection(ZDirection dir)
+    {
+        if (dir == ZDirection::UP)
+            return HAL::Act::MotorDirection::Positive;
+        return HAL::Act::MotorDirection::Negative;
+    }
+}
+
 namespace Kub3::Services
 {
-
-    // Ensures cast from an enum to another aligns with the values we want to provide
-    static_assert(
-        static_cast<int>(ZDirection::Up) == static_cast<int>(HAL::Act::MotorDirection::Positive) &&
-            static_cast<int>(ZDirection::Down) == static_cast<int>(HAL::Act::MotorDirection::Negative),
-        "ZDirection must align with HAL MotorDirection");
 
     ContactService::ContactService(Shared<HAL::Act::ActuatorRegistry> registry,
                                    Shared<HAL::MS::IMachineStatusRepo> repo,
@@ -173,7 +177,7 @@ namespace Kub3::Services
             // Assuming your config has a pad distance for Z, e.g., m_conf.pad.z_distance_mm
             // If not, you can hardcode a small step like 0.001 (1 µm)
             const double stepMm             = 0.005; // Example: 5 µm per click
-            const double relativeMovementMm = (dir == ZDirection::Up) ? stepMm : -stepMm;
+            const double relativeMovementMm = (dir == ZDirection::UP) ? stepMm : -stepMm;
             const auto &profile             = isInContact() ? m_contactProfile : m_freeProfile;
 
             for (auto &motor : m_zMotors)
@@ -203,7 +207,7 @@ namespace Kub3::Services
             }
 
             const auto &profile = isInContact() ? m_contactProfile : m_freeProfile;
-            const auto halDir   = static_cast<HAL::Act::MotorDirection>(dir);
+            const auto halDir   = toMotorDirection(dir);
 
             for (auto &motor : m_zMotors)
             {
@@ -242,14 +246,18 @@ namespace Kub3::Services
             [&](const AutolevelingPayload &) { buildAutolevelingLanes(); },
             [&](const BasicContactPayload &p) {
                 if (p.forceGF > m_conf.max_process_force_gf) {
-                    abortSequence("Requested force exceeds maximum process limit.");
+                    static const char *e = "Requested force exceeds maximum process limit.";
+                    postError(e);
+                    abortSequence(e);
                     setupSuccess = false;
                     return;
                 }
                 buildBasicContactLanes(p.forceGF); },
             [&](const HorizontalityPayload &) {
                 if (!m_horizontalPlanDeltas.has_value()) {
-                    abortSequence("No horizontal plan was saved.");
+                    static const char *e = "No horizontal plan available.";
+                    postError(e);
+                    abortSequence(e);
                     setupSuccess = false;
                     return;
                 }
@@ -518,7 +526,7 @@ namespace Kub3::Services
 
     inline constexpr bool ContactService::isMovingTowardsContact(ZDirection dir) const
     {
-        return dir == ZDirection::Up;
+        return dir == ZDirection::UP;
     }
 
 } // namespace Kub3::Services

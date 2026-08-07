@@ -4,9 +4,8 @@
 #include <qstringview.h>
 #include <stdexcept>
 
+#include <Common/Clock.h>
 #include <HAL/Actuators/Motors/DirectCurrentMotor.h>
-
-#define CONTROL_TIMER_VALUE_MS 20 // 50Hz
 
 namespace Kub3::HAL::Act
 {
@@ -69,7 +68,7 @@ namespace Kub3::HAL::Act
 
                     m_lastTickNsecs = 0;
                     m_dtTimer.start();
-                    m_controlTimer.start(CONTROL_TIMER_VALUE_MS);
+                    m_controlTimer.start(MOTOR_CONTROL_TIMER_PERIOD_MS);
                 }
                 else
                 {

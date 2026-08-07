@@ -99,6 +99,12 @@ namespace Kub3
         RIGHT
     };
 
+    enum class CameraAxis : uint8_t
+    {
+        X,
+        Y,
+    };
+
     enum class AlignmentStageId : uint32_t
     {
         X     = 0x0,
@@ -121,6 +127,12 @@ namespace Kub3
         Y_BACK,
         THETA_CCW,
         THETA_CW,
+    };
+
+    enum class ZDirection : uint32_t
+    {
+        UP,
+        DOWN,
     };
 
     enum class MovementKind : uint32_t

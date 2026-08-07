@@ -261,6 +261,8 @@ namespace Kub3::MFSM
                         emit s_warningOccurred("Z-Axis pad locked. Compressed air is actively clamping the mask and wafer.");
                         return;
                     }
+                    // Operator manually touched the Z-pad. Void the automated air authorization.
+                    this->setCompressedAirAuthorized(false);
 
                     // Manual Z is strictly prohibited while auto-contact algorithms are moving Z
                     if (alignState->phase == ContactPhase::Free || alignState->phase == ContactPhase::InContact)
@@ -300,6 +302,15 @@ namespace Kub3::MFSM
                     {
                         qWarning() << r.unwrap_err();
                         emit s_warningOccurred(r.unwrap_err());
+                        return;
+                    }
+                    if (!m_compressedAirAuthorized)
+                    {
+                        static const char *err = "Action Rejected - Compressed Air requires a successful automated contact sequence. "
+                                                 "Manual adjustments void this authorization.";
+
+                        qWarning() << err;
+                        emit s_warningOccurred(err);
                         return;
                     }
                 }

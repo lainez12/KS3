@@ -66,6 +66,9 @@ namespace Kub3::MFSM
         emit s_operationalSubstateKindChanged(kindOf(newSubState));
         qInfo() << "[MasterFSM::onOperationalSubstateEntered]" << toString(newSubState);
 
+        // Reset compressed air toggle authorization cleanly on any micro-state change
+        this->setCompressedAirAuthorized(false);
+
         // Trigger Physical Micro Side-Effects
         const auto entryActionsMuseum = overloadedCallable{
             // Ensure all operational hardware locks are released

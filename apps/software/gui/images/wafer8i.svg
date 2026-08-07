@@ -1,0 +1,28 @@
+<svg width="100%" viewBox="0 0 504 504" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>An 8-inch silicon wafer with a 6-inch wafer edge overlaid at its center, drawn to scale</title>
+  <desc>A clear, high-contrast silicon wafer disc with a linear gradient reflecting light. The 6-inch inner wafer line is crisp and visible.</desc>
+  <defs>
+    <!-- High-contrast 135deg gradient.
+         We kept your #C6C7DF and #FFFFFF but added darker edges (#9A9DBC)
+         to make the white diagonal "pop" and look more like reflective metal. -->
+    <linearGradient id="waferBase" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#9293a8"/>
+      <stop offset="50%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#8e8fa0"/>
+    </linearGradient>
+    
+  </defs>
+
+  <!-- Main Wafer Body -->
+  <path d="M 206.58 496.2 A 250 250 0 1 1 293.42 496.2 Z" fill="url(#waferBase)" />
+  
+  <!-- Outer Stroke (Darker for crisp border) -->
+  <path d="M 206.58 496.2 A 250 250 0 1 1 293.42 496.2 Z" fill="none" stroke="#676983" stroke-width="1.5" />
+
+  <!-- 6-inch Inner Ring Outlines -->
+  <!-- White highlight (creates a bevel effect) -->
+  <path d="M 217.43 434.65 A 187.5 187.5 0 1 1 282.57 434.65 Z" fill="none" stroke="#FFFFFF" stroke-width="3" opacity="0.8" />
+  
+  <!-- Dark crisp line for the actual boundary, fully opaque so it shows over the white center -->
+  <path d="M 217.43 434.65 A 187.5 187.5 0 1 1 282.57 434.65 Z" fill="none" stroke="#464755" stroke-width="1.5" opacity="1" />
+</svg>

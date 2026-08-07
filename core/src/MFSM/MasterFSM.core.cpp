@@ -5,6 +5,7 @@
 #include <HAL/MachineStatus/utils.h>
 #include <MFSM/MasterFSM.h>
 #include <MFSM/events.h>
+#include <Services/Contact/IContactService.h>
 #include <Services/Vision/VisionService.h>
 
 namespace Kub3::MFSM
@@ -108,10 +109,23 @@ namespace Kub3::MFSM
         }
 
         // 4. Apply State and Trigger Side Effects (Actions)
+#if defined(__GNUC__) && __GNUC__ >= 12 && !defined(__clang__)
+/**
+ * @brief GCC 12+ False Positive Suppression
+ *
+ * GCC's optimizer incorrectly tracks active variant union members during operator=,
+ * erroneously reporting an invalid 'free-nonheap-object' when destroying std::string members.
+ * We temporarily disable the warning locally to allow clean variant assignment.
+ */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wfree-nonheap-object"
+#endif
+        m_state = nextState;
+#if defined(__GNUC__) && __GNUC__ >= 12 && !defined(__clang__)
+#pragma GCC diagnostic pop
+#endif
         if (macroChanged || microChanged)
         {
-            m_state = nextState;
-
             if (macroChanged)
             {
                 // The system state changed (e.g., Booting -> Init, or Operational -> Fault)
@@ -184,6 +198,11 @@ namespace Kub3::MFSM
     void MasterFSM::ps_requestEnterAlignment()
     {
         dispatch(CmdEnterAlignmentMode{.autoMode = false});
+    }
+
+    void MasterFSM::ps_requestApplyContact(double forceGF)
+    {
+        dispatch(CmdApplyContact{.forceGF = forceGF});
     }
 
     void MasterFSM::ps_requestSubstrateCompressedAir(bool enable)
@@ -360,6 +379,23 @@ namespace Kub3::MFSM
         }
     }
 
+    void MasterFSM::ps_requestPADZMovement(MovementKind kind, ZDirection dir)
+    {
+        if (kind == MovementKind::GRANULAR || kind == MovementKind::CONTINUOUS)
+        {
+            dispatch(CmdZAxisPad{
+                .operation = Services::ZMovePayload{
+                    .direction = dir,
+                    .granular  = kind == MovementKind::GRANULAR,
+                },
+            });
+        }
+        else
+        {
+            dispatch(CmdZAxisPad{.operation = Services::ZStopPayload{}});
+        }
+    }
+
     void MasterFSM::ps_requestAlignmentSubstrateFineMode(bool active)
     {
         using namespace Services;
@@ -511,6 +547,15 @@ namespace Kub3::MFSM
         {
             current.merge(expected);
             emit s_postureChanged(current); // Fire signal to update subscribers on posture change
+        }
+    }
+
+    void MasterFSM::setCompressedAirAuthorized(bool authorized)
+    {
+        if (m_compressedAirAuthorized != authorized)
+        {
+            m_compressedAirAuthorized = authorized;
+            emit s_compressedAirAuthorizedChanged(m_compressedAirAuthorized);
         }
     }
 
