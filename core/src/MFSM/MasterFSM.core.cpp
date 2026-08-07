@@ -109,7 +109,21 @@ namespace Kub3::MFSM
         }
 
         // 4. Apply State and Trigger Side Effects (Actions)
+#if defined(__GNUC__) && __GNUC__ >= 12 && !defined(__clang__)
+/**
+ * @brief GCC 12+ False Positive Suppression
+ *
+ * GCC's optimizer incorrectly tracks active variant union members during operator=,
+ * erroneously reporting an invalid 'free-nonheap-object' when destroying std::string members.
+ * We temporarily disable the warning locally to allow clean variant assignment.
+ */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wfree-nonheap-object"
+#endif
         m_state = nextState;
+#if defined(__GNUC__) && __GNUC__ >= 12 && !defined(__clang__)
+#pragma GCC diagnostic pop
+#endif
         if (macroChanged || microChanged)
         {
             if (macroChanged)
